@@ -1,0 +1,17 @@
+spring:
+  jpa:
+    wanted-db:
+      hikari:
+        jdbc-url: jdbc:postgresql://localhost:5437/postgres
+        username: postgres
+        password: ${POSTGRES_PW}
+      properties:
+        hibernate:
+          hbm2ddl.auto: update
+          show_sql: false
+          physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+          jdbc.batch_size: 300
+          order_inserts: true
+          order_updates: true
+server:
+  port: 8082
