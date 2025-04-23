@@ -5,7 +5,7 @@ import java.util.Map;
 public class ReviewException extends BaseApiException{
 
     public ReviewException(ErrorType errorType, String message) {
-        super(errorType, message, null);
+        this(errorType, message, null);
     }
 
     public ReviewException(ErrorType errorType, String message, Map<String, String> details) {

@@ -5,7 +5,7 @@ import java.util.Map;
 public class ProductException extends BaseApiException {
 
     public ProductException(ErrorType errorType, String message) {
-        super(errorType, message, null);
+        this(errorType, message, null);
     }
 
     public ProductException(ErrorType errorType, String message, Map<String, String> details) {
