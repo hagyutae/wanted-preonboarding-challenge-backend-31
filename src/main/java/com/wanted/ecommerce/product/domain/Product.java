@@ -2,11 +2,13 @@ package com.wanted.ecommerce.product.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -16,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "products")
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,12 +32,12 @@ public class Product {
     @Column(unique = true, nullable = false)
     private String slug;
     private String shortDescription;
-    @Lob
     private String fullDescription;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long sellerId;
     private Long brandId;
+    @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
     @OneToMany(mappedBy = "product")

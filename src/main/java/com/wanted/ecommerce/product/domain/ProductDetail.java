@@ -8,8 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Map;
 import lombok.AccessLevel;
@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 @Entity
+@Table(name = "product_details")
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,15 +40,9 @@ public class ProductDetail {
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
     private Map<String, Integer> dimensions;
-
-    @Lob
     private String materials;
     private String countryOfOrigin;
-
-    @Lob
     private String warrantyInfo;
-
-    @Lob
     private String careInstructions;
 
     @Type(JsonType.class)
