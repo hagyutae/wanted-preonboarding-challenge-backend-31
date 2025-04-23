@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "product_options")
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,7 +30,6 @@ public class ProductOption {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_group_id")
     private ProductOptionGroup optionGroup;
-
     private String name;
 
     @Column(precision = 12, scale = 2)
