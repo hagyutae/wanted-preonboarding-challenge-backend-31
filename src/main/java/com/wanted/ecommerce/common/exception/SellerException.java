@@ -1,0 +1,14 @@
+package com.wanted.ecommerce.common.exception;
+
+import java.util.Map;
+
+public class SellerException extends BaseApiException{
+
+    public SellerException(ErrorType errorType, String message) {
+        super(errorType, message, null);
+    }
+
+    public SellerException(ErrorType errorType, String message, Map<String, String> details) {
+        super(errorType, message, details);
+    }
+}
