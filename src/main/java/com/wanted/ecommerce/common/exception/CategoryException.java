@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class CategoryException extends BaseApiException{
     public CategoryException(ErrorType errorType, String message) {
-        super(errorType, message, null);
+        this(errorType, message, null);
     }
 
     public CategoryException(ErrorType errorType, String message, Map<String, String> details) {

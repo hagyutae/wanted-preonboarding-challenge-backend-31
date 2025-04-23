@@ -5,7 +5,7 @@ import java.util.Map;
 public class UserException extends BaseApiException {
 
     public UserException(ErrorType errorType, String message) {
-        super(errorType, message, null);
+        this(errorType, message, null);
     }
 
     public UserException(ErrorType errorType, String message, Map<String, String> details) {
