@@ -12,11 +12,28 @@ public record ErrorInfo<T>(
         @JsonInclude(Include.NON_NULL) T details
 ) {
 
-    public static <T> ErrorInfo<T> error(ErrorType errorType, T details) {
-        return new ErrorInfo<>(errorType.getCode(), errorType.getMessage(), errorType.getHttpStatus(), details);
+    private static <T> ErrorInfo<T> createErrorInfo(ErrorType errorType, T details, String customMessage) {
+        return new ErrorInfo<>(
+                errorType.getCode(),
+                customMessage != null ? customMessage : errorType.getMessage(),
+                errorType.getHttpStatus(),
+                details
+        );
     }
 
-    public static <T> ErrorInfo<T> error(ErrorType errorType) {
-        return ErrorInfo.error(errorType, null);
+    public static <T> ErrorInfo<T> of(ErrorType errorType) {
+        return ErrorInfo.createErrorInfo(errorType, null, null);
+    }
+
+    public static <T> ErrorInfo<T> of(ErrorType errorType, String customMessage) {
+        return ErrorInfo.createErrorInfo(errorType, null, customMessage);
+    }
+
+    public static <T> ErrorInfo<T> ofWithDetails(ErrorType errorType, T details) {
+        return ErrorInfo.createErrorInfo(errorType, details, null);
+    }
+
+    public static <T> ErrorInfo<T> ofWithDetails(ErrorType errorType, T details, String message) {
+        return ErrorInfo.createErrorInfo(errorType, details, message);
     }
 }
