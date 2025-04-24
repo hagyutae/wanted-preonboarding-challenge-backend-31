@@ -1,13 +1,9 @@
 package com.wanted.ecommerce.common.response;
 
 import java.util.Map;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class ApiResponse<T> {
 
@@ -15,6 +11,18 @@ public class ApiResponse<T> {
     private T data;
     private String message;
     private ErrorResponse error;
+
+    protected ApiResponse(boolean success, T data, String message, ErrorResponse error) {
+        this.success = success;
+        this.data = data;
+        this.message = message;
+        this.error = error;
+    }
+
+    protected ApiResponse(T data, String message) {
+        this.data = data;
+        this.message = message;
+    }
 
     public static <T> ApiResponse<T> success(T data, String message) {
         return ApiResponse.<T>builder()

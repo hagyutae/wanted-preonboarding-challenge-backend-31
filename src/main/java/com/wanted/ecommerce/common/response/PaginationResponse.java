@@ -1,17 +1,24 @@
 package com.wanted.ecommerce.common.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class PaginationResponse<T> {
 
-    private List<T> items;
-    private Pagination pagination;
+public class PaginationResponse<T> extends ApiResponse<PaginationData<T>> {
+
+    private PaginationResponse(PaginationData<T> data, String message) {
+        super(data, message);
+    }
+
+    public static <T> PaginationResponse<T> of(List<T> items, Page<T> page, String message) {
+        Pagination pagination = Pagination.builder()
+            .totalItems(page.getTotalElements())
+            .totalPages(page.getTotalPages())
+            .currentPage(page.getNumber() + 1)
+            .perPage(page.getSize())
+            .build();
+
+        PaginationData<T> data = PaginationData.of(items, pagination);
+        return new PaginationResponse<>(data, message);
+    }
 }

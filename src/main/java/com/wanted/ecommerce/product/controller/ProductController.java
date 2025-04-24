@@ -2,7 +2,7 @@ package com.wanted.ecommerce.product.controller;
 
 import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
 import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
-import com.wanted.ecommerce.product.dto.request.ProductRequest;
+import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
+
     @PostMapping
     public ResponseEntity<Object> createProduct(
-        @Valid @RequestBody ProductRequest productRequest
-    ){
+        @Valid @RequestBody ProductCreateRequest productCreateRequest
+    ) {
         return null;
     }
 
@@ -40,7 +41,7 @@ public class ProductController {
         @RequestParam(required = false) Integer brand,
         @RequestParam(required = false) Boolean inStock,
         @RequestParam(required = false) String search
-    ){
+    ) {
 
         return null;
     }
@@ -48,7 +49,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> getProductById(
         @PathVariable Long id
-    ){
+    ) {
         return null;
     }
 
@@ -56,15 +57,15 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProduct(
         @PathVariable Long id,
-        @Valid @RequestBody ProductRequest productRequest
-    ){
+        @Valid @RequestBody ProductCreateRequest productCreateRequest
+    ) {
         return null;
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> DeleteProduct(
         @PathVariable Long id
-    ){
+    ) {
         return null;
     }
 
@@ -72,7 +73,7 @@ public class ProductController {
     public ResponseEntity<Object> addProductOptions(
         @PathVariable Long id,
         @Valid @RequestBody ProductOptionRequest createRequest
-    ){
+    ) {
         return null;
     }
 
@@ -81,7 +82,7 @@ public class ProductController {
         @PathVariable Long id,
         @PathVariable Long optionId,
         @Valid @RequestBody ProductOptionRequest updateRequest
-    ){
+    ) {
         return null;
     }
 
@@ -89,7 +90,7 @@ public class ProductController {
     public ResponseEntity<Object> deleteProductOptions(
         @PathVariable Long id,
         @PathVariable Long optionId
-    ){
+    ) {
         return null;
     }
 
@@ -97,7 +98,7 @@ public class ProductController {
     public ResponseEntity<Object> addProductImages(
         @PathVariable Long id,
         @Valid @RequestBody ProductImageRequest imageRequest
-    ){
+    ) {
         return null;
     }
 }

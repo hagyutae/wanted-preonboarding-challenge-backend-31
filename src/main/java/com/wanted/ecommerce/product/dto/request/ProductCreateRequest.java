@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductRequest {
+public class ProductCreateRequest {
     @NotBlank
     private String name;
     @NotBlank
