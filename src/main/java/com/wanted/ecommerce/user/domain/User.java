@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "reviews")
+@Table(name = "users")
 @Getter
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,6 +28,7 @@ public class User {
     private String name;
     @Column(unique = true, nullable = false)
     private String email;
+    @Column(name = "avatar_url")
     private String avatarUrl;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
