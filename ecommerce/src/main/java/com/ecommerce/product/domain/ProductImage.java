@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,9 +38,25 @@ public class ProductImage {
     private boolean isPrimary;
 
     @Column(name = "display_order")
-    private Integer displayOrder;
+    private int displayOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_id")
     private ProductOption option;
+
+    @Builder
+    public ProductImage(
+            Product product,
+            String url,
+            String altText,
+            boolean isPrimary,
+            Integer displayOrder,
+            ProductOption option) {
+        this.product = product;
+        this.url = url;
+        this.altText = altText;
+        this.isPrimary = isPrimary;
+        this.displayOrder = displayOrder;
+        this.option = option;
+    }
 }

@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -42,4 +43,20 @@ public class ProductPrice {
 
     @Column(name = "tax_rate")
     private BigDecimal taxRate;
+
+    @Builder
+    public ProductPrice(
+            Product product,
+            BigDecimal basePrice,
+            BigDecimal salePrice,
+            BigDecimal costPrice,
+            String currency,
+            BigDecimal taxRate) {
+        this.product = product;
+        this.basePrice = basePrice;
+        this.salePrice = salePrice;
+        this.costPrice = costPrice;
+        this.currency = currency;
+        this.taxRate = taxRate;
+    }
 }

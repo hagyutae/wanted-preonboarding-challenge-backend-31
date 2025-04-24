@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,4 +41,20 @@ public class ProductOption {
 
     @Column(name = "display_order")
     private Integer displayOrder;
+
+    @Builder
+    public ProductOption(
+            ProductOptionGroup optionGroup,
+            String name,
+            BigDecimal additionalPrice,
+            String sku,
+            Integer stock,
+            Integer displayOrder) {
+        this.optionGroup = optionGroup;
+        this.name = name;
+        this.additionalPrice = additionalPrice;
+        this.sku = sku;
+        this.stock = stock;
+        this.displayOrder = displayOrder;
+    }
 }

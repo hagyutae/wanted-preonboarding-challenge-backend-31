@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,4 +33,11 @@ public class ProductOptionGroup {
 
     @Column(name = "display_order")
     private Integer displayOrder;
+
+    @Builder
+    public ProductOptionGroup(Product product, String name, Integer displayOrder) {
+        this.product = product;
+        this.name = name;
+        this.displayOrder = displayOrder;
+    }
 }
