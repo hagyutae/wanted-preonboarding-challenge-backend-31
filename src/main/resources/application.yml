@@ -1,4 +1,8 @@
 spring:
+  web:
+    resources:
+      add-mappings: false
+
   datasource:
     url: jdbc:postgresql://localhost:5432/cqrs
     username: postgres
