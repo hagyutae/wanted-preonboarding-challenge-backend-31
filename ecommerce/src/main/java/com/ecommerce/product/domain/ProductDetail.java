@@ -1,5 +1,6 @@
 package com.ecommerce.product.domain;
 
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,8 +11,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "product_details")
@@ -29,8 +32,9 @@ public class ProductDetail {
 
     private Double weight;
 
-    @Column(columnDefinition = "JSON")
-    private String dimensions; // JSON 문자열로 저장
+    @Type(JsonType.class)
+    @Column(columnDefinition = "JSONB")
+    private DimensionsVO dimensions;
 
     private String materials;
 
@@ -43,6 +47,27 @@ public class ProductDetail {
     @Column(name = "care_instructions")
     private String careInstructions;
 
-    @Column(name = "additional_info", columnDefinition = "JSONB")
-    private String additionalInfo;
+    @Type(JsonType.class)
+    @Column(columnDefinition = "JSONB")
+    private AdditionalInfoVO additionalInfo;
+
+    @Builder
+    public ProductDetail(
+            Product product,
+            Double weight,
+            DimensionsVO dimensions,
+            String materials,
+            String countryOfOrigin,
+            String warrantyInfo,
+            String careInstructions,
+            AdditionalInfoVO additionalInfo) {
+        this.product = product;
+        this.weight = weight;
+        this.dimensions = dimensions;
+        this.materials = materials;
+        this.countryOfOrigin = countryOfOrigin;
+        this.warrantyInfo = warrantyInfo;
+        this.careInstructions = careInstructions;
+        this.additionalInfo = additionalInfo;
+    }
 }
