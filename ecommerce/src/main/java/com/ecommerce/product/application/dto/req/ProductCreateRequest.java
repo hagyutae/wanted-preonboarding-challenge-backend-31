@@ -2,7 +2,6 @@ package com.ecommerce.product.application.dto.req;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 public record ProductCreateRequest(
         String name,
@@ -17,9 +16,9 @@ public record ProductCreateRequest(
         List<ProductCategoryRequest> categories,
         List<ProductOptionGroupRequest> optionGroups,
         List<ProductImageRequest> images,
-        List<Long> tags
+        List<Long> tagIds
 ) {
-    // 상품 상세 정보
+    // 상품 상세 정보 - JSON 구조와 일치
     public record ProductDetailRequest(
             Double weight,
             DimensionsRequest dimensions,
@@ -27,12 +26,18 @@ public record ProductCreateRequest(
             String countryOfOrigin,
             String warrantyInfo,
             String careInstructions,
-            Map<String, Object> additionalInfo
+            AdditionalInfoRequest additionalInfoRequest
     ) {
         public record DimensionsRequest(
-                Integer width,
-                Integer height,
-                Integer depth
+                int width,
+                int height,
+                int depth
+        ) {
+        }
+
+        public record AdditionalInfoRequest(
+                Boolean assemblyRequired,
+                String assemblyTime
         ) {
         }
     }
@@ -57,15 +62,15 @@ public record ProductCreateRequest(
     // 상품 옵션 그룹 정보
     public record ProductOptionGroupRequest(
             String name,
-            Integer displayOrder,
+            int displayOrder,
             List<ProductOptionRequest> options
     ) {
         public record ProductOptionRequest(
                 String name,
                 BigDecimal additionalPrice,
                 String sku,
-                Integer stock,
-                Integer displayOrder
+                int stock,
+                int displayOrder
         ) {
         }
     }
@@ -75,7 +80,7 @@ public record ProductCreateRequest(
             String url,
             String altText,
             boolean isPrimary,
-            Integer displayOrder,
+            int displayOrder,
             Long optionId
     ) {
     }
