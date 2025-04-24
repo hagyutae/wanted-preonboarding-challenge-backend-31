@@ -4,11 +4,11 @@ import java.util.Map;
 
 public class ForbiddenException extends BaseApiException{
 
-    public ForbiddenException(ErrorType errorType, String message) {
-        this(errorType, message, null);
+    public ForbiddenException(ErrorType errorType) {
+        this(errorType, null);
     }
 
-    public ForbiddenException(ErrorType errorType, String message, Map<String, String> details) {
-        super(errorType, message, details);
+    public ForbiddenException(ErrorType errorType, Map<String, String> details) {
+        super(errorType, details);
     }
 }

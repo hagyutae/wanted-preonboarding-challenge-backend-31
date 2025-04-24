@@ -9,8 +9,8 @@ public class BaseApiException extends HttpStatusCodeException {
 
     private final Map<String, String> details;
 
-    public BaseApiException(ErrorType errorType, String message, Map<String, String> details) {
-        super(errorType.getStatusCode(), message);
+    public BaseApiException(ErrorType errorType, Map<String, String> details) {
+        super(errorType.getStatusCode(), errorType.getMessage());
         this.details = details;
     }
 
