@@ -37,4 +37,12 @@ public class ProductCategory {
 
     @Column(name = "is_primary")
     private boolean primary;
+
+    public static ProductCategory of(Product product, Category category, boolean isPrimary){
+        return ProductCategory.builder()
+            .product(product)
+            .category(category)
+            .primary(isPrimary)
+            .build();
+    }
 }

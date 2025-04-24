@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductCategoryRequest {
-    private Integer categoryId;
+    private Long categoryId;
     private Boolean isPrimary;
 }
