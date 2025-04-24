@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -58,4 +59,25 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
+    @Builder
+    public Product(
+            String name,
+            String slug,
+            String shortDescription,
+            String fullDescription,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt,
+            Seller seller,
+            Brand brand,
+            ProductStatus status) {
+        this.name = name;
+        this.slug = slug;
+        this.shortDescription = shortDescription;
+        this.fullDescription = fullDescription;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.seller = seller;
+        this.brand = brand;
+        this.status = status;
+    }
 }
