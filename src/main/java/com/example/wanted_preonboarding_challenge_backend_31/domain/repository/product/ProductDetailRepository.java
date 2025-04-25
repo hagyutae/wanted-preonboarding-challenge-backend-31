@@ -4,4 +4,6 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.model.produc
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductDetailRepository extends JpaRepository<ProductDetail, Long> {
+
+    void deleteByProductId(Long productId);
 }
