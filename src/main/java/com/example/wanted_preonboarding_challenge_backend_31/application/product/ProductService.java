@@ -20,7 +20,7 @@ public class ProductService {
         Product product = productCommandService.saveProduct(req);
         createProductRelationEntities(req, product);
 
-        return ProductCreateRes.of(product);
+        return ProductCreateRes.from(product);
     }
 
     public ProductUpdateRes update(Long productId, ProductCreateReq req) {
@@ -30,7 +30,7 @@ public class ProductService {
         productCommandService.updateProduct(product, req);
         createProductRelationEntities(req, product);
 
-        return ProductUpdateRes.of(product);
+        return ProductUpdateRes.from(product);
     }
 
     private void createProductRelationEntities(ProductCreateReq req, Product product) {

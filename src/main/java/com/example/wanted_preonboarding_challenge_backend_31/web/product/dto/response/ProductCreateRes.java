@@ -11,7 +11,7 @@ public record ProductCreateRes(
         LocalDateTime updatedAt
 ) {
 
-    public static ProductCreateRes of(Product product) {
+    public static ProductCreateRes from(Product product) {
         return new ProductCreateRes(
                 product.getId(),
                 product.getName(),

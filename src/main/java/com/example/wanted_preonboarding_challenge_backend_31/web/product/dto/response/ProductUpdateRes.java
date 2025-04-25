@@ -10,7 +10,7 @@ public record ProductUpdateRes(
         LocalDateTime updatedAt
 ) {
 
-    public static ProductUpdateRes of(Product product) {
+    public static ProductUpdateRes from(Product product) {
         return new ProductUpdateRes(
                 product.getId(),
                 product.getName(),
