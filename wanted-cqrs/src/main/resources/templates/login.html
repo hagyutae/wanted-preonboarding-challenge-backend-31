@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | CQRS Service</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #1e1e2f;
+      color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: #2c2c3e;
+      padding: 2.5rem 3rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #90caf9;
+      font-size: 1.8rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 8px;
+      border: none;
+      background-color: #42425e;
+      color: #f0f0f0;
+      font-size: 1rem;
+    }
+
+    .form-group input::placeholder {
+      color: #9ca3af;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #90caf9;
+    }
+
+    .login-button {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #90caf9;
+      color: #1e1e2f;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .login-button:hover {
+      background-color: #64b5f6;
+    }
+
+    .error-message {
+      text-align: center;
+      color: #ef5350;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .links {
+      text-align: center;
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    .links a {
+      color: #90caf9;
+      margin: 0 0.6rem;
+      text-decoration: none;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h2>로그인</h2>
+
+  <p th:if="${param.error}" class="error-message" th:text="#{login.failed}">로그인에 실패했습니다.</p>
+
+  <form th:action="@{/login}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+    <div class="form-group">
+      <input type="email" name="username" th:placeholder="#{login.form.email.placeholder}" required/>
+    </div>
+
+    <div class="form-group">
+      <input type="password" name="password" th:placeholder="#{login.form.password.placeholder}" autocomplete="off" required/>
+    </div>
+
+    <button type="submit" class="login-button" th:text="#{login.form.submit}">로그인</button>
+  </form>
+
+  <div class="links">
+    <a th:href="@{/register}" th:text="#{login.register}">회원가입</a>
+    <a th:href="@{/forgot-password}" th:text="#{login.forgot.password}">비밀번호 찾기</a>
+  </div>
+</div>
+
+</body>
+</html>
