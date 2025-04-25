@@ -104,6 +104,12 @@ public class ProductCommandService {
         productOptionRepository.saveAll(productOptions);
     }
 
+    public ProductOption saveProductOption(ProductOptionGroup productOptionGroup, ProductOptionDto req) {
+        ProductOption productOption = ProductOption.create(productOptionGroup, req.name(),
+                req.additionalPrice(), req.sku(), req.stock(), req.displayOrder());
+        return productOptionRepository.save(productOption);
+    }
+
     public void saveProductImages(Product product, List<ProductImageDto> images) {
         List<ProductImage> productImages = images.stream()
                 .map(req ->

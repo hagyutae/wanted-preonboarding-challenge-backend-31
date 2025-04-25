@@ -1,8 +1,13 @@
 package com.example.wanted_preonboarding_challenge_backend_31.application.product;
 
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.Product;
+import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOption;
+import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOptionGroup;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,5 +52,14 @@ public class ProductService {
         productCommandService.clearProductRelations(product);
 
         productCommandService.deleteProduct(product);
+    }
+
+    public ProductOptionCreateRes optionCreate(Long productId, ProductOptionCreateReq req) {
+        ProductOptionGroup group = productQueryService.getProductOptionGroupByIdAndProductId(req.optionGroupId(),
+                productId);
+        ProductOptionDto productOptionDto = ProductOptionDto.from(req);
+
+        ProductOption productOption = productCommandService.saveProductOption(group, productOptionDto);
+        return ProductOptionCreateRes.from(group.getId(), productOption);
     }
 }
