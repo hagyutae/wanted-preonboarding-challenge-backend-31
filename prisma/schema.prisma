@@ -1,0 +1,243 @@
+// Prisma 스키마 파일
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 상품 모델
+model Product {
+  id               Int                @id @default(autoincrement())
+  name             String
+  slug             String             @unique
+  shortDescription String?            @map("short_description")
+  fullDescription  String?            @map("full_description")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  sellerId         Int                @map("seller_id")
+  brandId          Int                @map("brand_id")
+  status           String
+
+  // 관계 정의
+  seller           Seller             @relation(fields: [sellerId], references: [id])
+  brand            Brand              @relation(fields: [brandId], references: [id])
+  detail           ProductDetail?
+  price            ProductPrice?
+  optionGroups     ProductOptionGroup[]
+  images           ProductImage[]
+  categories       ProductCategory[]
+  tags             ProductTag[]
+  reviews          Review[]
+
+  @@map("products")
+}
+
+// 상품 상세 모델
+model ProductDetail {
+  id                Int      @id @default(autoincrement())
+  productId         Int      @unique @map("product_id")
+  weight            Float?
+  dimensions        Json?
+  materials         String?
+  countryOfOrigin   String?  @map("country_of_origin")
+  warrantyInfo      String?  @map("warranty_info")
+  careInstructions  String?  @map("care_instructions")
+  additionalInfo    Json?    @map("additional_info")
+  
+  // 관계 정의
+  product           Product  @relation(fields: [productId], references: [id])
+
+  @@map("product_details")
+}
+
+// 상품 가격 모델
+model ProductPrice {
+  id         Int      @id @default(autoincrement())
+  productId  Int      @unique @map("product_id")
+  basePrice  Float    @map("base_price")
+  salePrice  Float?   @map("sale_price")
+  costPrice  Float?   @map("cost_price")
+  currency   String   @default("KRW")
+  taxRate    Float?   @map("tax_rate")
+  
+  // 관계 정의
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@map("product_prices")
+}
+
+// 카테고리 모델
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?
+  parentId    Int?      @map("parent_id")
+  level       Int
+  imageUrl    String?   @map("image_url")
+  
+  // 관계 정의
+  parent      Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryToCategory")
+  products    ProductCategory[]
+
+  @@map("categories")
+}
+
+// 상품-카테고리 매핑 모델
+model ProductCategory {
+  id         Int      @id @default(autoincrement())
+  productId  Int      @map("product_id")
+  categoryId Int      @map("category_id")
+  isPrimary  Boolean  @default(false) @map("is_primary")
+  
+  // 관계 정의
+  product    Product  @relation(fields: [productId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@map("product_categories")
+  @@unique([productId, categoryId])
+}
+
+// 상품 옵션 그룹 모델
+model ProductOptionGroup {
+  id           Int            @id @default(autoincrement())
+  productId    Int            @map("product_id")
+  name         String
+  displayOrder Int            @default(0) @map("display_order")
+  
+  // 관계 정의
+  product      Product        @relation(fields: [productId], references: [id])
+  options      ProductOption[]
+
+  @@map("product_option_groups")
+}
+
+// 상품 옵션 모델
+model ProductOption {
+  id                Int                @id @default(autoincrement())
+  optionGroupId     Int                @map("option_group_id")
+  name              String
+  additionalPrice   Float?             @default(0) @map("additional_price")
+  sku               String?
+  stock             Int                @default(0)
+  displayOrder      Int                @default(0) @map("display_order")
+  
+  // 관계 정의
+  optionGroup       ProductOptionGroup @relation(fields: [optionGroupId], references: [id])
+  images            ProductImage[]
+
+  @@map("product_options")
+}
+
+// 상품 이미지 모델
+model ProductImage {
+  id           Int             @id @default(autoincrement())
+  productId    Int             @map("product_id")
+  url          String
+  altText      String?         @map("alt_text")
+  isPrimary    Boolean         @default(false) @map("is_primary")
+  displayOrder Int             @default(0) @map("display_order")
+  optionId     Int?            @map("option_id")
+  
+  // 관계 정의
+  product      Product         @relation(fields: [productId], references: [id])
+  option       ProductOption?  @relation(fields: [optionId], references: [id])
+
+  @@map("product_images")
+}
+
+// 태그 모델
+model Tag {
+  id       Int         @id @default(autoincrement())
+  name     String
+  slug     String      @unique
+  
+  // 관계 정의
+  products ProductTag[]
+
+  @@map("tags")
+}
+
+// 상품-태그 매핑 모델
+model ProductTag {
+  id        Int     @id @default(autoincrement())
+  productId Int     @map("product_id")
+  tagId     Int     @map("tag_id")
+  
+  // 관계 정의
+  product   Product @relation(fields: [productId], references: [id])
+  tag       Tag     @relation(fields: [tagId], references: [id])
+
+  @@map("product_tags")
+  @@unique([productId, tagId])
+}
+
+// 브랜드 모델
+model Brand {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?
+  logoUrl     String?   @map("logo_url")
+  website     String?
+  
+  // 관계 정의
+  products    Product[]
+
+  @@map("brands")
+}
+
+// 판매자 모델
+model Seller {
+  id           Int       @id @default(autoincrement())
+  name         String
+  description  String?
+  logoUrl      String?   @map("logo_url")
+  rating       Float?
+  contactEmail String?   @map("contact_email")
+  contactPhone String?   @map("contact_phone")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  
+  // 관계 정의
+  products     Product[]
+
+  @@map("sellers")
+}
+
+// 사용자 모델
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  avatarUrl String?  @map("avatar_url")
+  createdAt DateTime @default(now()) @map("created_at")
+  
+  // 관계 정의
+  reviews   Review[]
+
+  @@map("users")
+}
+
+// 리뷰 모델
+model Review {
+  id               Int      @id @default(autoincrement())
+  productId        Int      @map("product_id")
+  userId           Int      @map("user_id")
+  rating           Int
+  title            String?
+  content          String?
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  verifiedPurchase Boolean  @default(false) @map("verified_purchase")
+  helpfulVotes     Int      @default(0) @map("helpful_votes")
+  
+  // 관계 정의
+  product          Product  @relation(fields: [productId], references: [id])
+  user             User     @relation(fields: [userId], references: [id])
+
+  @@map("reviews")
+}
