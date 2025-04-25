@@ -6,7 +6,9 @@ import com.example.wanted_preonboarding_challenge_backend_31.application.product
 import com.example.wanted_preonboarding_challenge_backend_31.common.dto.SuccessRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -42,5 +44,13 @@ public class ProductController {
     public SuccessRes<?> delete(@PathVariable("id") Long productId) {
         productService.delete(productId);
         return SuccessRes.of(PRODUCT_DELETE);
+    }
+
+    @PostMapping("/{id}/options")
+    public SuccessRes<ProductOptionCreateRes> optionCreate(
+            @PathVariable("id") Long productId,
+            @RequestBody @Validated ProductOptionCreateReq productOptionCreateReq
+    ) {
+        return SuccessRes.of(PRODUCT_OPTION_CREATE, productService.optionCreate(productId, productOptionCreateReq));
     }
 }
