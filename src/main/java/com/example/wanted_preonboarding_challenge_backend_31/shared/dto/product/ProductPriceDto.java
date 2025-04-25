@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 public record ProductPriceDto(
-        @NotNull @DecimalMin("0.00") @DecimalMax("9999999999.99")
+        @NotNull @Min(0) @DecimalMax("9999999999.99")
         BigDecimal basePrice,
         @Min(0) @DecimalMax("9999999999.99")
         BigDecimal salePrice,
