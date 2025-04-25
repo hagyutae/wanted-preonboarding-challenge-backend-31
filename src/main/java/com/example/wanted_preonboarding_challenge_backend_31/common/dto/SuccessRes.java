@@ -9,4 +9,8 @@ public record SuccessRes<T>(
     public static <T> SuccessRes<T> of(SuccessType successType, T data) {
         return new SuccessRes<>(true, data, successType.getMessage());
     }
+
+    public static <T> SuccessRes<T> of(SuccessType successType) {
+        return of(successType, null);
+    }
 }
