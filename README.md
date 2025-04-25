@@ -259,3 +259,67 @@
 - DELETE /api/reviews/{id}: 리뷰 삭제
 
 자세한 내용은 [API 명세 문서](./API_SPEC.md)를 참고하세요.
+
+## 개발 환경 설정
+
+### 기술 스택
+- Node.js
+- TypeScript
+- Express
+- PostgreSQL
+- Prisma (ORM)
+- pnpm (패키지 관리자)
+- Vite (빌드 도구)
+
+### 설치 및 실행
+
+1. 패키지 설치
+```bash
+pnpm install
+```
+
+2. 데이터베이스 설정
+- PostgreSQL을 설치하고 실행합니다.
+- 데이터베이스를 생성합니다: `ecommerce`
+- `.env.sample` 파일을 복사하여 `.env` 파일을 생성하고 필요한 환경 변수를 설정합니다:
+  ```
+  PORT=3000
+  NODE_ENV=development
+  DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ecommerce"
+  ```
+- DDL 및 샘플 데이터를 로드합니다:
+  ```bash
+  psql -U postgres -d ecommerce -f ddl.sql
+  psql -U postgres -d ecommerce -f data/sellers.sql
+  psql -U postgres -d ecommerce -f data/brands.sql
+  psql -U postgres -d ecommerce -f data/categories.sql
+  psql -U postgres -d ecommerce -f data/tags.sql
+  psql -U postgres -d ecommerce -f data/products.sql
+  psql -U postgres -d ecommerce -f data/product_options.sql
+  psql -U postgres -d ecommerce -f data/product_extended.sql
+  psql -U postgres -d ecommerce -f data/users.sql
+  psql -U postgres -d ecommerce -f data/reviews.sql
+  ```
+
+3. Prisma 설정
+```bash
+# Prisma 클라이언트 생성
+pnpm prisma:generate
+```
+
+4. 개발 서버 실행
+```bash
+pnpm dev
+```
+
+5. 프로덕션 빌드
+```bash
+pnpm build
+pnpm start
+```
+
+### Prisma Studio
+Prisma Studio를 사용하여 데이터베이스를 시각적으로 관리할 수 있습니다:
+```bash
+pnpm prisma:studio
+```
