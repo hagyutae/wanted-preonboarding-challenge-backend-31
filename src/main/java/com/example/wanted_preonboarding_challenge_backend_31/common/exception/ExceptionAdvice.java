@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -55,6 +56,15 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public FailRes<?> handleInvalidPathExceptions(NoHandlerFoundException e) {
         return FailRes.of(ErrorInfo.of(CommonErrorType.API_NOT_FOUND));
+    }
+
+    /**
+     * 리소스 충돌 - 409
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public FailRes<?> handleDataIntegrityViolationExceptions(DataIntegrityViolationException e) {
+        return FailRes.of(ErrorInfo.of(CommonErrorType.CONFLICT));
     }
 
     /**
