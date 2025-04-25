@@ -25,5 +25,5 @@ public class ProductCreateRequest {
     private List<ProductCategoryRequest> categories;
     private List<ProductOptionGroupRequest> optionGroups;
     private List<ProductImageRequest> images;
-    private List<Integer> tags;
+    private List<Long> tags;
 }
