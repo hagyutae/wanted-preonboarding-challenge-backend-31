@@ -6,20 +6,30 @@ import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionGroupDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductPriceDto;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record ProductCreateReq(
+        @NotBlank
         String name,
+        @NotBlank
         String slug,
         String shortDescription,
         String fullDescription,
         Long sellerId,
         Long brandId,
+        @NotNull
         ProductStatus status,
+        @Valid @NotNull
         ProductDetailDto detail,
+        @Valid @NotNull
         ProductPriceDto price,
         List<ProductCategoryDto> categories,
+        @Valid
         List<ProductOptionGroupDto> optionGroups,
+        @Valid
         List<ProductImageDto> images,
         List<Long> tags
 ) {
