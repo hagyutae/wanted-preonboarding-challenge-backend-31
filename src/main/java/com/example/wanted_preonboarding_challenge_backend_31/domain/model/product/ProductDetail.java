@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +38,8 @@ public class ProductDetail {
     private BigDecimal weight;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    private ProductDimensions dimensions;
+    @Column(columnDefinition = "JSONB")
+    private Map<String, Object> dimensions;
 
     @Column(columnDefinition = "TEXT")
     private String materials;
@@ -53,12 +55,12 @@ public class ProductDetail {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "JSONB")
-    private ProductAdditionalInfo additionalInfo;
+    private Map<String, Object> additionalInfo;
 
 
-    public static ProductDetail create(Product product, BigDecimal weight, ProductDimensions dimensions,
+    public static ProductDetail create(Product product, BigDecimal weight, Map<String, Object> dimensions,
                                        String materials, String countryOfOrigin, String warrantyInfo,
-                                       String careInstructions, ProductAdditionalInfo additionalInfo) {
+                                       String careInstructions, Map<String, Object> additionalInfo) {
         return ProductDetail.builder()
                 .product(product)
                 .weight(weight)
