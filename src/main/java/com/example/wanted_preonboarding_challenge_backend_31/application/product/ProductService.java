@@ -41,4 +41,11 @@ public class ProductService {
         productCommandService.saveProductImages(product, req.images());
         productCommandService.saveProductTags(product, req.tags());
     }
+
+    public void delete(Long productId) {
+        Product product = productQueryService.getProductById(productId);
+        productCommandService.clearProductRelations(product);
+
+        productCommandService.deleteProduct(product);
+    }
 }

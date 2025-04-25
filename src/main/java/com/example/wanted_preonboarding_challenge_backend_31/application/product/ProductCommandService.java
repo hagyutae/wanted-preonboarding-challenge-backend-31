@@ -147,4 +147,8 @@ public class ProductCommandService {
         productImageRepository.deleteAllByProductId(productId);
         productTagRepository.deleteAllByProductId(productId);
     }
+
+    public void deleteProduct(Product product) {
+        productRepository.delete(product);
+    }
 }
