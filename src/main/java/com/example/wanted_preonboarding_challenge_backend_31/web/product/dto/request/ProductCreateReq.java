@@ -26,11 +26,13 @@ public record ProductCreateReq(
         ProductDetailDto detail,
         @Valid @NotNull
         ProductPriceDto price,
+        @NotNull
         List<ProductCategoryDto> categories,
-        @Valid
+        @Valid @NotNull
         List<ProductOptionGroupDto> optionGroups,
-        @Valid
+        @Valid @NotNull
         List<ProductImageDto> images,
+        @NotNull
         List<Long> tags
 ) {
 }
