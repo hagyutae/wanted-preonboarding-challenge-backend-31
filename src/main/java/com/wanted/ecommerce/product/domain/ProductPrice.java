@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductPrice {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,16 +32,28 @@ public class ProductPrice {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Column(precision = 12, scale = 2)
+    @Column(name = "base_price", precision = 12, scale = 2)
     private BigDecimal basePrice;
 
-    @Column(precision = 12, scale = 2)
+    @Column(name = "sale_price", precision = 12, scale = 2)
     private BigDecimal salePrice;
 
-    @Column(precision = 12, scale = 2)
+    @Column(name = "cost_price", precision = 12, scale = 2)
     private BigDecimal costPrice;
     private String currency;
 
     @Column(precision = 5, scale = 2)
     private BigDecimal taxRate;
+
+    public static ProductPrice of(Product product, BigDecimal basePrice, BigDecimal salePrice,
+        BigDecimal costPrice, String currency, BigDecimal taxRate) {
+        return ProductPrice.builder()
+            .product(product)
+            .basePrice(basePrice)
+            .salePrice(salePrice)
+            .costPrice(costPrice)
+            .currency(currency)
+            .taxRate(taxRate)
+            .build();
+    }
 }

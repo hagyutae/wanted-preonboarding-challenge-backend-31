@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOption {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,9 +33,22 @@ public class ProductOption {
     private ProductOptionGroup optionGroup;
     private String name;
 
-    @Column(precision = 12, scale = 2)
+    @Column(name = "additional_price", precision = 12, scale = 2)
     private BigDecimal additionalPrice;
     private String sku;
     private Integer stock;
+    @Column(name = "display_order")
     private Integer displayOrder;
+
+    public static ProductOption of(ProductOptionGroup optionGroup, String name,
+        BigDecimal additionalPrice, String sku, int stock, int displayOrder) {
+        return ProductOption.builder()
+            .optionGroup(optionGroup)
+            .name(name)
+            .additionalPrice(additionalPrice)
+            .sku(sku)
+            .stock(stock)
+            .displayOrder(displayOrder)
+            .build();
+    }
 }

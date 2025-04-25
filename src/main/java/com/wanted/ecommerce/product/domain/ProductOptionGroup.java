@@ -1,5 +1,6 @@
 package com.wanted.ecommerce.product.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOptionGroup {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,8 +33,17 @@ public class ProductOptionGroup {
     @JoinColumn(name = "product_id")
     private Product product;
     private String name;
+    @Column(name = "display_order")
     private Integer displayOrder;
 
     @OneToMany(mappedBy = "optionGroup")
     private List<ProductOption> options;
+
+    public static ProductOptionGroup of(Product product, String name, int displayOrder) {
+        return ProductOptionGroup.builder()
+            .product(product)
+            .name(name)
+            .displayOrder(displayOrder)
+            .build();
+    }
 }

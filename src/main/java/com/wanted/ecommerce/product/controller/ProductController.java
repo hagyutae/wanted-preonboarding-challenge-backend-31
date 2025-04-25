@@ -3,8 +3,11 @@ package com.wanted.ecommerce.product.controller;
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
 import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
 import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
+import com.wanted.ecommerce.product.dto.response.ProductResponse;
+import com.wanted.ecommerce.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,11 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductController {
 
+    private final ProductService productService;
+
     @PostMapping
-    public ResponseEntity<Object> createProduct(
+    public ResponseEntity<ProductResponse> createProduct(
         @Valid @RequestBody ProductCreateRequest productCreateRequest
     ) {
-        return null;
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(productService.create(productCreateRequest));
     }
 
     @GetMapping
@@ -42,7 +48,6 @@ public class ProductController {
         @RequestParam(required = false) Boolean inStock,
         @RequestParam(required = false) String search
     ) {
-
         return null;
     }
 

@@ -1,5 +1,7 @@
 package com.wanted.ecommerce.product.domain;
 
+import com.wanted.ecommerce.product.dto.request.AdditionalInfoRequest;
+import com.wanted.ecommerce.product.dto.request.DimensionsRequest;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ import org.hibernate.annotations.Type;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,7 +41,7 @@ public class ProductDetail {
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private Map<String, Integer> dimensions;
+    private DimensionsRequest dimensionsRequest;
     private String materials;
     private String countryOfOrigin;
     private String warrantyInfo;
@@ -47,5 +49,20 @@ public class ProductDetail {
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private Map<String, String> additionalInfo;
+    private AdditionalInfoRequest additionalInfoRequest;
+
+    public static ProductDetail of(Product product, BigDecimal weight,
+        DimensionsRequest dimensionsRequest, String materials, String countryOfOrigin,
+        String warrantyInfo, String careInstructions, AdditionalInfoRequest additionalInfoRequest){
+        return ProductDetail.builder()
+            .product(product)
+            .weight(weight)
+            .dimensionsRequest(dimensionsRequest)
+            .materials(materials)
+            .countryOfOrigin(countryOfOrigin)
+            .warrantyInfo(warrantyInfo)
+            .careInstructions(careInstructions)
+            .additionalInfoRequest(additionalInfoRequest)
+            .build();
+    }
 }
