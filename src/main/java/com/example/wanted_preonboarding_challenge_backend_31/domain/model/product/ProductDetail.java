@@ -52,6 +52,7 @@ public class ProductDetail {
     private String careInstructions;
 
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "JSONB")
     private ProductAdditionalInfo additionalInfo;
 
 
