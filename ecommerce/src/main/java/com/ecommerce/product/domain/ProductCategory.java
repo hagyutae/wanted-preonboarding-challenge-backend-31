@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,4 +34,12 @@ public class ProductCategory {
 
     @Column(name = "is_primary")
     private boolean isPrimary;
+
+    @Builder
+    public ProductCategory(Long id, Product product, Category category, boolean isPrimary) {
+        this.id = id;
+        this.product = product;
+        this.category = category;
+        this.isPrimary = isPrimary;
+    }
 }

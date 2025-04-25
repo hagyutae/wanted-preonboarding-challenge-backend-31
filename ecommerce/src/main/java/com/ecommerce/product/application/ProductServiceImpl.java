@@ -5,10 +5,14 @@ import com.ecommerce.brand.infrastructure.BrandRepository;
 import com.ecommerce.common.exception.ResourceNotFoundException;
 import com.ecommerce.common.response.ErrorCode;
 import com.ecommerce.product.application.dto.req.ProductCreateRequest;
+import com.ecommerce.product.application.dto.req.ProductSearchRequest;
 import com.ecommerce.product.application.dto.res.ProductCreatedResponse;
+import com.ecommerce.product.application.dto.res.ProductResponse;
 import com.ecommerce.product.domain.AdditionalInfoVO;
+import com.ecommerce.product.domain.Category;
 import com.ecommerce.product.domain.DimensionsVO;
 import com.ecommerce.product.domain.Product;
+import com.ecommerce.product.domain.ProductCategory;
 import com.ecommerce.product.domain.ProductDetail;
 import com.ecommerce.product.domain.ProductImage;
 import com.ecommerce.product.domain.ProductOption;
@@ -16,6 +20,8 @@ import com.ecommerce.product.domain.ProductOptionGroup;
 import com.ecommerce.product.domain.ProductPrice;
 import com.ecommerce.product.domain.ProductTag;
 import com.ecommerce.product.domain.enumerates.ProductStatus;
+import com.ecommerce.product.infrastructure.CategoryRepository;
+import com.ecommerce.product.infrastructure.ProductCategoryRepository;
 import com.ecommerce.product.infrastructure.ProductDetailRepository;
 import com.ecommerce.product.infrastructure.ProductImageRepository;
 import com.ecommerce.product.infrastructure.ProductOptionGroupRepository;
@@ -23,6 +29,7 @@ import com.ecommerce.product.infrastructure.ProductOptionRepository;
 import com.ecommerce.product.infrastructure.ProductPriceRepository;
 import com.ecommerce.product.infrastructure.ProductRepository;
 import com.ecommerce.product.infrastructure.ProductTagRepository;
+import com.ecommerce.review.infrastructure.ReviewRepository;
 import com.ecommerce.seller.domain.Seller;
 import com.ecommerce.seller.infrastructure.SellerRepository;
 import com.ecommerce.tag.domain.Tag;
@@ -31,6 +38,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +57,9 @@ public class ProductServiceImpl implements ProductService {
     private final ProductImageRepository productImageRepository;
     private final ProductOptionRepository productOptionRepository;
     private final ProductOptionGroupRepository productOptionGroupRepository;
+    private final ReviewRepository reviewRepository;
+    private final ProductCategoryRepository productCategoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     @Transactional
@@ -83,6 +96,38 @@ public class ProductServiceImpl implements ProductService {
         return new ProductCreatedResponse(savedProduct.getId(), savedProduct.getName(), savedProduct.getSlug(), savedProduct.getCreatedAt(), savedProduct.getUpdatedAt());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> findProducts(ProductSearchRequest request) {
+        int pageNumber = Math.max(0, request.getPage() - 1);
+        Pageable pageable = PageRequest.of(pageNumber, request.getPerPage());
+        Page<Product> products = productRepository.findBySearchRequest(request, pageable);
+
+        return products.map(product -> {
+            // 상품 가격 정보 조회
+            ProductPrice price = productPriceRepository.findByProductId(product.getId())
+                    .orElseThrow(() -> {
+                        throw new ResourceNotFoundException(ErrorCode.RESOURCE_NOT_FOUND.getMessage());
+                    });
+
+            // 상품 기본 이미지 조회
+            ProductImage primaryImage = productImageRepository.findByProductIdAndIsPrimaryTrue(product.getId()).orElse(null);
+
+            // 상품 평점과 리뷰 수 조회
+            Double avgRating = reviewRepository.getAverageRatingByProductId(product.getId());
+            Long reviewCountLong = reviewRepository.getReviewCountByProductId(product.getId());
+
+            Double rating = (avgRating != null) ? avgRating : 0.0;
+            Integer reviewCount = (reviewCountLong != null) ? reviewCountLong.intValue() : 0;
+
+            // 재고 여부 확인
+            Boolean inStock = productOptionRepository.existsByOptionGroupProductIdAndStockGreaterThan(product.getId(), 0);
+
+            // DTO 반환
+            return ProductResponse.from(product, price, primaryImage, rating, reviewCount, inStock);
+        });
+    }
+
     private Brand getBrandById(Long id) {
         Brand brand = brandRepository.findById(id).orElseThrow(() -> {
             throw new ResourceNotFoundException(ErrorCode.RESOURCE_NOT_FOUND.getMessage());
@@ -103,11 +148,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private Long saveProductDetail(Product savedProduct, ProductCreateRequest.ProductDetailRequest detailRequest) {
-        ProductDetail savedProductDetail = productDetailRepository.save(ProductDetail.builder().product(savedProduct).weight(detailRequest.weight()).materials(detailRequest.materials()).dimensions(DimensionsVO.toDimensionsVO(detailRequest.dimensions())).countryOfOrigin(detailRequest.countryOfOrigin()).warrantyInfo(detailRequest.warrantyInfo()).careInstructions(detailRequest.careInstructions()).additionalInfo(AdditionalInfoVO.toAdditionalInfoVO(detailRequest.additionalInfoRequest())).build());
+        ProductDetail savedProductDetail = productDetailRepository.save(ProductDetail.builder()
+                .product(savedProduct)
+                .weight(detailRequest.weight())
+                .materials(detailRequest.materials())
+                .dimensions(DimensionsVO.toDimensionsVO(detailRequest.dimensions()))
+                .countryOfOrigin(detailRequest.countryOfOrigin())
+                .warrantyInfo(detailRequest.warrantyInfo())
+                .careInstructions(detailRequest.careInstructions())
+                .additionalInfo(AdditionalInfoVO.toAdditionalInfoVO(detailRequest.additionalInfoRequest()))
+                .build());
 
         return savedProductDetail.getId();
     }
-
 
     private Long saveProductTag(Product savedProduct, Tag tag) {
         ProductTag savedProductTag = productTagRepository.save(ProductTag.builder().product(savedProduct).tag(tag).build());
@@ -124,7 +177,15 @@ public class ProductServiceImpl implements ProductService {
                 option = productOptionRepository.findById(image.optionId()).orElse(null);
             }
 
-            ProductImage savedImage = productImageRepository.save(ProductImage.builder().product(savedProduct).url(image.url()).altText(image.altText()).isPrimary(image.isPrimary()).displayOrder(image.displayOrder()).option(option).build());
+            ProductImage savedImage = productImageRepository.save(
+                    ProductImage.builder()
+                            .product(savedProduct)
+                            .url(image.url())
+                            .altText(image.altText())
+                            .isPrimary(image.isPrimary())
+                            .displayOrder(image.displayOrder())
+                            .option(option)
+                            .build());
 
             savedImageIds.add(savedImage.getId());
         });
@@ -149,8 +210,21 @@ public class ProductServiceImpl implements ProductService {
         return savedOptionIds;
     }
 
-    private Long saveProductCategories(Product savedProduct, List<ProductCreateRequest.ProductCategoryRequest> categories) {
-        return null;
+    private List<ProductCategory> saveProductCategories(Product savedProduct, List<ProductCreateRequest.ProductCategoryRequest> categories) {
+        ArrayList<ProductCategory> savedCategories = new ArrayList<>();
+        categories.forEach(category -> {
+            Category foundCategory = categoryRepository.findById(category.categoryId()).orElseThrow(() -> {
+                throw new ResourceNotFoundException(ErrorCode.RESOURCE_NOT_FOUND.getMessage());
+            });
+            ProductCategory savedProductCategory = productCategoryRepository.save(ProductCategory.builder()
+                    .product(savedProduct)
+                    .category(foundCategory)
+                    .isPrimary(category.isPrimary())
+                    .build());
+            savedCategories.add(savedProductCategory);
+        });
+
+        return savedCategories;
     }
 
     private Long saveProductPrice(Product savedProduct, ProductCreateRequest.ProductPriceRequest price) {
