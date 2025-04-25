@@ -18,7 +18,7 @@ public class ApiPageData<T> {
     this.pageInfo = ApiPageInfo.of(
             pageData.getTotalElements(),
             pageData.getTotalPages(),
-            pageData.getPageable().getPageNumber() + 1,
+            pageData.getPageable().isPaged() ? pageData.getPageable().getPageNumber() + 1 : 1,
             pageData.getSize()
     );
   }

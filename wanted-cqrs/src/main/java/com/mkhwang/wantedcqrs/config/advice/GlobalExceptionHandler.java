@@ -72,6 +72,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<ApiResponse<?>> handleRuntimeException(RuntimeException ex) {
+    ex.printStackTrace();
     return new ResponseEntity<>(
             ApiResponse.error("INTERNAL_ERROR", "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."),
             HttpStatus.INTERNAL_SERVER_ERROR);
