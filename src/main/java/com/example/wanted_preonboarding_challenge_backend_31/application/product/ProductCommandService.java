@@ -127,4 +127,24 @@ public class ProductCommandService {
                 .toList();
         productTagRepository.saveAll(productTags);
     }
+
+    public Product updateProduct(Product product, ProductCreateReq req) {
+        Seller seller = sellerQueryService.getById(req.sellerId());
+        Brand brand = brandQueryService.getById(req.brandId());
+
+        product.update(req.name(), req.slug(), req.shortDescription(), req.fullDescription(), seller,
+                brand, req.status());
+        return productRepository.save(product);
+    }
+
+    public void clearProductRelations(Product product) {
+        Long productId = product.getId();
+        productDetailRepository.deleteByProductId(productId);
+        productPriceRepository.deleteByProductId(productId);
+        productCategoryRepository.deleteAllByProductId(productId);
+        productOptionGroupRepository.deleteAllByProductId(productId);
+        // ProductOption은 ProductOptionGroup cascade로 제거됨
+        productImageRepository.deleteAllByProductId(productId);
+        productTagRepository.deleteAllByProductId(productId);
+    }
 }
