@@ -61,6 +61,7 @@ public class Product {
 
     @Builder
     public Product(
+            Long id,
             String name,
             String slug,
             String shortDescription,
@@ -70,6 +71,7 @@ public class Product {
             Seller seller,
             Brand brand,
             ProductStatus status) {
+        this.id = id;
         this.name = name;
         this.slug = slug;
         this.shortDescription = shortDescription;

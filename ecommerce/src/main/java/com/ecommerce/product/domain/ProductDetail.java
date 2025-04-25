@@ -53,6 +53,7 @@ public class ProductDetail {
 
     @Builder
     public ProductDetail(
+            Long id,
             Product product,
             Double weight,
             DimensionsVO dimensions,
@@ -61,6 +62,7 @@ public class ProductDetail {
             String warrantyInfo,
             String careInstructions,
             AdditionalInfoVO additionalInfo) {
+        this.id = id;
         this.product = product;
         this.weight = weight;
         this.dimensions = dimensions;

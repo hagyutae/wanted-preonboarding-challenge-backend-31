@@ -35,7 +35,12 @@ public class ProductOptionGroup {
     private Integer displayOrder;
 
     @Builder
-    public ProductOptionGroup(Product product, String name, Integer displayOrder) {
+    public ProductOptionGroup(
+            Long id,
+            Product product,
+            String name,
+            Integer displayOrder) {
+        this.id = id;
         this.product = product;
         this.name = name;
         this.displayOrder = displayOrder;

@@ -44,12 +44,14 @@ public class ProductOption {
 
     @Builder
     public ProductOption(
+            Long id,
             ProductOptionGroup optionGroup,
             String name,
             BigDecimal additionalPrice,
             String sku,
             Integer stock,
             Integer displayOrder) {
+        this.id = id;
         this.optionGroup = optionGroup;
         this.name = name;
         this.additionalPrice = additionalPrice;

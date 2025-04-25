@@ -46,12 +46,14 @@ public class ProductImage {
 
     @Builder
     public ProductImage(
+            Long id,
             Product product,
             String url,
             String altText,
             boolean isPrimary,
-            Integer displayOrder,
+            int displayOrder,
             ProductOption option) {
+        this.id = id;
         this.product = product;
         this.url = url;
         this.altText = altText;

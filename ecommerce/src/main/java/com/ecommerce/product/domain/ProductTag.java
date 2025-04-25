@@ -33,8 +33,11 @@ public class ProductTag {
     private Tag tag;
 
     @Builder
-    public ProductTag(Product product, Tag tag) {
+    public ProductTag(Long id, Product product, Tag tag) {
+        this.id = id;
         this.product = product;
         this.tag = tag;
     }
+
+
 }

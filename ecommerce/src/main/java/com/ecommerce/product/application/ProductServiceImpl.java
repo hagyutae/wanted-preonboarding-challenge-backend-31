@@ -52,23 +52,10 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductCreatedResponse create(ProductCreateRequest request) {
         // 1. 기본 상품 정보 생성
-        Seller seller = sellerRepository.findById(request.sellerId())
-                .orElseThrow(() -> {
-                    throw new ResourceNotFoundException(ErrorCode.RESOURCE_NOT_FOUND.getMessage());
-                });
-        Brand brand = brandRepository.findById(request.brandId()).orElseThrow(() -> {
-            throw new ResourceNotFoundException(ErrorCode.RESOURCE_NOT_FOUND.getMessage());
-        });
+        Seller seller = getSellerById(request.sellerId());
+        Brand brand = getBrandById(request.brandId());
 
-        Product product = Product.builder()
-                .name(request.name())
-                .slug(request.slug())
-                .shortDescription(request.shortDescription())
-                .fullDescription(request.fullDescription())
-                .seller(seller)
-                .brand(brand)
-                .status(ProductStatus.valueOf(request.status()))
-                .createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
+        Product product = Product.builder().name(request.name()).slug(request.slug()).shortDescription(request.shortDescription()).fullDescription(request.fullDescription()).seller(seller).brand(brand).status(ProductStatus.valueOf(request.status())).createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
 
         Product savedProduct = productRepository.save(product);
 
@@ -88,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
         saveProductImages(savedProduct, request.images());
 
         // 7. 태그 매핑 저장
-        List<Tag> foundTags = getTags(request);
+        List<Tag> foundTags = getTags(request.tagIds());
         foundTags.forEach(tag -> {
             saveProductTag(savedProduct, tag);
         });
@@ -96,24 +83,27 @@ public class ProductServiceImpl implements ProductService {
         return new ProductCreatedResponse(savedProduct.getId(), savedProduct.getName(), savedProduct.getSlug(), savedProduct.getCreatedAt(), savedProduct.getUpdatedAt());
     }
 
-    private List<Tag> getTags(ProductCreateRequest request) {
-        List<Tag> foundTags = tagRepository.findByIds(request.tagIds());
+    private Brand getBrandById(Long id) {
+        Brand brand = brandRepository.findById(id).orElseThrow(() -> {
+            throw new ResourceNotFoundException(ErrorCode.RESOURCE_NOT_FOUND.getMessage());
+        });
+        return brand;
+    }
+
+    private Seller getSellerById(Long id) {
+        Seller seller = sellerRepository.findById(id).orElseThrow(() -> {
+            throw new ResourceNotFoundException(ErrorCode.RESOURCE_NOT_FOUND.getMessage());
+        });
+        return seller;
+    }
+
+    private List<Tag> getTags(List<Long> ids) {
+        List<Tag> foundTags = tagRepository.findByIds(ids);
         return foundTags;
     }
 
     private Long saveProductDetail(Product savedProduct, ProductCreateRequest.ProductDetailRequest detailRequest) {
-        ProductDetail savedProductDetail;
-        savedProductDetail = productDetailRepository.save(
-                ProductDetail.builder()
-                        .product(savedProduct)
-                        .weight(detailRequest.weight())
-                        .materials(detailRequest.materials())
-                        .dimensions(DimensionsVO.toDimensionsVO(detailRequest.dimensions()))
-                        .countryOfOrigin(detailRequest.countryOfOrigin())
-                        .warrantyInfo(detailRequest.warrantyInfo())
-                        .careInstructions(detailRequest.careInstructions())
-                        .additionalInfo(AdditionalInfoVO.toAdditionalInfoVO(detailRequest.additionalInfoRequest()))
-                        .build());
+        ProductDetail savedProductDetail = productDetailRepository.save(ProductDetail.builder().product(savedProduct).weight(detailRequest.weight()).materials(detailRequest.materials()).dimensions(DimensionsVO.toDimensionsVO(detailRequest.dimensions())).countryOfOrigin(detailRequest.countryOfOrigin()).warrantyInfo(detailRequest.warrantyInfo()).careInstructions(detailRequest.careInstructions()).additionalInfo(AdditionalInfoVO.toAdditionalInfoVO(detailRequest.additionalInfoRequest())).build());
 
         return savedProductDetail.getId();
     }
@@ -131,18 +121,10 @@ public class ProductServiceImpl implements ProductService {
         images.forEach(image -> {
             ProductOption option = null;
             if (image.optionId() != null) {
-                option = productOptionRepository.findById(image.optionId())
-                        .orElse(null);
+                option = productOptionRepository.findById(image.optionId()).orElse(null);
             }
 
-            ProductImage savedImage = productImageRepository.save(ProductImage.builder()
-                    .product(savedProduct)
-                    .url(image.url())
-                    .altText(image.altText())
-                    .isPrimary(image.isPrimary())
-                    .displayOrder(image.displayOrder())
-                    .option(option)
-                    .build());
+            ProductImage savedImage = productImageRepository.save(ProductImage.builder().product(savedProduct).url(image.url()).altText(image.altText()).isPrimary(image.isPrimary()).displayOrder(image.displayOrder()).option(option).build());
 
             savedImageIds.add(savedImage.getId());
         });
@@ -154,37 +136,15 @@ public class ProductServiceImpl implements ProductService {
     private List<Long> saveProductOptions(Product savedProduct, List<ProductCreateRequest.ProductOptionGroupRequest> optionGroupRequests) {
         List<Long> savedOptionIds = new ArrayList<>();
 
-        // 옵션 그룹이 없는 경우 빈 리스트 반환
         if (optionGroupRequests == null || optionGroupRequests.isEmpty()) {
             return savedOptionIds;
         }
 
-        // 각 옵션 그룹 처리
-        for (ProductCreateRequest.ProductOptionGroupRequest groupRequest : optionGroupRequests) {
-            // 옵션 그룹 생성 및 저장
-            ProductOptionGroup optionGroup = ProductOptionGroup.builder()
-                    .product(savedProduct)
-                    .name(groupRequest.name())
-                    .displayOrder(groupRequest.displayOrder())
-                    .build();
-
-            ProductOptionGroup savedOptionGroup = productOptionGroupRepository.save(optionGroup);
-
-            // 각 옵션 처리
-            for (ProductCreateRequest.ProductOptionGroupRequest.ProductOptionRequest optionRequest : groupRequest.options()) {
-                ProductOption option = ProductOption.builder()
-                        .optionGroup(savedOptionGroup)
-                        .name(optionRequest.name())
-                        .additionalPrice(optionRequest.additionalPrice())
-                        .sku(optionRequest.sku())
-                        .stock(optionRequest.stock())
-                        .displayOrder(optionRequest.displayOrder())
-                        .build();
-
-                ProductOption savedOption = productOptionRepository.save(option);
-                savedOptionIds.add(savedOption.getId());
-            }
-        }
+        // 각 옵션 처리
+        optionGroupRequests.forEach(groupRequest -> {
+            ProductOptionGroup savedOptionGroup = productOptionGroupRepository.save(ProductOptionGroup.builder().product(savedProduct).name(groupRequest.name()).displayOrder(groupRequest.displayOrder()).build());
+            groupRequest.options().stream().map(optionRequest -> ProductOption.builder().optionGroup(savedOptionGroup).name(optionRequest.name()).additionalPrice(optionRequest.additionalPrice()).sku(optionRequest.sku()).stock(optionRequest.stock()).displayOrder(optionRequest.displayOrder()).build()).map(productOptionRepository::save).map(ProductOption::getId).forEach(savedOptionIds::add);
+        });
 
         return savedOptionIds;
     }
@@ -194,14 +154,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private Long saveProductPrice(Product savedProduct, ProductCreateRequest.ProductPriceRequest price) {
-        ProductPrice productPrice = productPriceRepository.save(ProductPrice.builder()
-                .product(savedProduct)
-                .basePrice(price.basePrice())
-                .salePrice(price.salePrice())
-                .costPrice(price.costPrice())
-                .currency(price.currency())
-                .taxRate(price.taxRate())
-                .build());
+        ProductPrice productPrice = productPriceRepository.save(ProductPrice.builder().product(savedProduct).basePrice(price.basePrice()).salePrice(price.salePrice()).costPrice(price.costPrice()).currency(price.currency()).taxRate(price.taxRate()).build());
 
         return productPrice.getId();
     }

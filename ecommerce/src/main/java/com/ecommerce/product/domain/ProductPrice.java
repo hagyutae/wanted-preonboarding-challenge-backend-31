@@ -46,12 +46,14 @@ public class ProductPrice {
 
     @Builder
     public ProductPrice(
+            Long id,
             Product product,
             BigDecimal basePrice,
             BigDecimal salePrice,
             BigDecimal costPrice,
             String currency,
             BigDecimal taxRate) {
+        this.id = id;
         this.product = product;
         this.basePrice = basePrice;
         this.salePrice = salePrice;

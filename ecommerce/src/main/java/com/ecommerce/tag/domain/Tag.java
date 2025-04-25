@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,11 @@ public class Tag {
 
     @Column(unique = true)
     private String slug;
+
+    @Builder
+    public Tag(Long id, String name, String slug) {
+        this.id = id;
+        this.name = name;
+        this.slug = slug;
+    }
 }

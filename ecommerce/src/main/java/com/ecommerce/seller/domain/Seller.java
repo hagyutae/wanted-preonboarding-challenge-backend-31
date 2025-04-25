@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,4 +41,24 @@ public class Seller {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Builder
+    public Seller(
+            Long id,
+            String name,
+            String description,
+            String logoUrl,
+            BigDecimal rating,
+            String contactEmail,
+            String contactPhone,
+            LocalDateTime createdAt) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.logoUrl = logoUrl;
+        this.rating = rating;
+        this.contactEmail = contactEmail;
+        this.contactPhone = contactPhone;
+        this.createdAt = createdAt;
+    }
 }

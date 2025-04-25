@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,4 +33,20 @@ public class Brand {
     private String logoUrl;
 
     private String website;
+
+    @Builder
+    public Brand(
+            Long id,
+            String name,
+            String slug,
+            String description,
+            String logoUrl,
+            String website) {
+        this.id = id;
+        this.name = name;
+        this.slug = slug;
+        this.description = description;
+        this.logoUrl = logoUrl;
+        this.website = website;
+    }
 }
