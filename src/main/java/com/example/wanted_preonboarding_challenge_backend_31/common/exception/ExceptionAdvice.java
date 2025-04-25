@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -27,7 +28,7 @@ public class ExceptionAdvice {
      * 커스텀 예외
      */
     @ExceptionHandler(CustomException.class)
-    public FailRes<?> handleCustomExceptions(CustomException e) {
+    public ResponseEntity<FailRes<?>> handleCustomExceptions(CustomException e) {
         ErrorInfo<?> errorInfo = e.getErrorInfo();
 
         if (e.getOriginalException() != null) {
@@ -42,7 +43,9 @@ public class ExceptionAdvice {
                 errorInfo.message(),
                 errorInfo.details());
 
-        return FailRes.of(errorInfo);
+        FailRes<?> body = FailRes.of(errorInfo);
+        HttpStatus httpStatus = errorInfo.httpCode();
+        return new ResponseEntity<>(body, httpStatus);
     }
 
     /**
