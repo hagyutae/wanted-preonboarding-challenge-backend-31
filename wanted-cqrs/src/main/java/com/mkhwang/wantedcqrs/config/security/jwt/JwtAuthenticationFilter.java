@@ -1,5 +1,7 @@
 package com.mkhwang.wantedcqrs.config.security.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mkhwang.wantedcqrs.config.advice.dto.ApiResponse;
 import com.mkhwang.wantedcqrs.user.application.UserDetailsServiceImpl;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -21,6 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtProvider jwtProvider;
   private final UserDetailsServiceImpl userDetailsService;
+  private final ObjectMapper objectMapper;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -37,8 +40,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext().setAuthentication(auth);
       } catch (JwtException e) {
-        // 유효하지 않은 토큰 처리
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        ApiResponse<?> error = ApiResponse.error("UNAUTHORIZED", "인증되지 않은 요청입니다");
+        response.getWriter().write(objectMapper.writeValueAsString(error));
         return;
       }
     }

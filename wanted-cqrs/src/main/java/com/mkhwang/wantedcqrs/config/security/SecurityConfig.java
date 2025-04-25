@@ -31,12 +31,15 @@ public class SecurityConfig {
                     .ignoringRequestMatchers("/api/**")
             )
             .authorizeHttpRequests(
-                    (authorize) -> authorize.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                            .permitAll().requestMatchers(this.isPublicEndpointRequestMatcher).permitAll()
+                    (authorize) ->
+                            authorize.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                                    .requestMatchers("/swagger-ui/**").permitAll()
+                                    .requestMatchers(this.isPublicEndpointRequestMatcher).permitAll()
                             .requestMatchers("/error").permitAll().anyRequest().authenticated());
     http.formLogin(form -> form.loginPage("/login").permitAll()
+            .defaultSuccessUrl("/swagger-ui/index.html", true).permitAll()
             .failureHandler((request, response, exception) -> {
-              response.sendRedirect("/issue-token");
+              response.sendRedirect("/login?error");
             }));
 
     http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

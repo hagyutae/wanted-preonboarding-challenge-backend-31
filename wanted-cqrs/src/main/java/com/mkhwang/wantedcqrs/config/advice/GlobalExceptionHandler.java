@@ -1,5 +1,6 @@
 package com.mkhwang.wantedcqrs.config.advice;
 
+import com.mkhwang.wantedcqrs.common.exception.ForbiddenException;
 import com.mkhwang.wantedcqrs.config.advice.dto.ApiResponse;
 import com.mkhwang.wantedcqrs.config.exception.ResourceConflictException;
 import com.mkhwang.wantedcqrs.config.exception.ResourceNotFoundException;
@@ -24,6 +25,13 @@ public class GlobalExceptionHandler {
 
   private final I18nService i18nService;
 
+  @ExceptionHandler(ForbiddenException.class)
+  public ResponseEntity<ApiResponse<?>> handleForbiddenException(ForbiddenException ex) {
+    return new ResponseEntity<>(
+            ApiResponse.error("FORBIDDEN", "권한이 없는 요청"),
+            HttpStatus.FORBIDDEN);
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ApiResponse<?>> handleValidationExceptions(
           MethodArgumentNotValidException ex) {
@@ -45,7 +53,6 @@ public class GlobalExceptionHandler {
             ApiResponse.error("INVALID_INPUT", "입력 데이터가 유효하지 않습니다.", errorList),
             HttpStatus.BAD_REQUEST);
   }
-
 
   @ExceptionHandler(ResourceNotFoundException.class)
   public ResponseEntity<ApiResponse<?>> handleResourceNotFoundException(ResourceConflictException ex) {
