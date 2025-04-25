@@ -53,7 +53,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public FailRes<String> handleInvalidPathExceptions(NoHandlerFoundException e) {
+    public FailRes<?> handleInvalidPathExceptions(NoHandlerFoundException e) {
         return FailRes.of(ErrorInfo.of(CommonErrorType.API_NOT_FOUND));
     }
 
@@ -84,11 +84,11 @@ public class ExceptionAdvice {
     }
 
     /**
-     * 파라미터 문법 예외 - 422
+     * 요청 형식 예외 - 422
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public FailRes<String> handleHttpMessageParsingExceptions(HttpMessageNotReadableException e) {
+    public FailRes<?> handleHttpMessageParsingExceptions(HttpMessageNotReadableException e) {
         log.warn("[PARAMETER GRAMMAR EXCEPTION] class: [{}], message: [{}]",
                 e.getClass().getSimpleName(),
                 e.getMessage());
@@ -101,7 +101,7 @@ public class ExceptionAdvice {
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public FailRes<String> handleHttpMessageParsingExceptions(MethodArgumentTypeMismatchException e) {
+    public FailRes<?> handleHttpMessageParsingExceptions(MethodArgumentTypeMismatchException e) {
         log.warn("[METHOD ARGUMENT TYPE EXCEPTION] class: [{}], message: [{}]",
                 e.getClass().getSimpleName(),
                 e.getMessage());
