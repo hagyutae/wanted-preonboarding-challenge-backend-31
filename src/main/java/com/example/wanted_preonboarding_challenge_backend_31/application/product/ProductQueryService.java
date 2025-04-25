@@ -3,8 +3,10 @@ package com.example.wanted_preonboarding_challenge_backend_31.application.produc
 import com.example.wanted_preonboarding_challenge_backend_31.common.dto.ErrorInfo;
 import com.example.wanted_preonboarding_challenge_backend_31.common.exception.CommonErrorType;
 import com.example.wanted_preonboarding_challenge_backend_31.common.exception.CustomException;
+import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.Product;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOption;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductOptionRepository;
+import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ProductQueryService {
 
+    private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
+
+    public Product getProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new CustomException(
+                        ErrorInfo.of(CommonErrorType.RESOURCE_NOT_FOUND, "요청한 상품을 찾을 수 없습니다, ID:" + id)));
+    }
 
     public ProductOption getProductOptionById(Long id) {
         return productOptionRepository.findById(id)
