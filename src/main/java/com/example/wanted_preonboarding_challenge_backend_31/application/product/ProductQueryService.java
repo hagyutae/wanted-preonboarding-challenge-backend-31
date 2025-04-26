@@ -39,4 +39,14 @@ public class ProductQueryService {
                 .orElseThrow(() -> new CustomException(
                         ErrorInfo.of(CommonErrorType.RESOURCE_NOT_FOUND, "요청한 옵션 그룹을 찾을 수 없습니다, ID:" + id)));
     }
+
+    public ProductOption getProductOptionByIdAndProductId(Long id, Long productId) {
+        return productOptionRepository.findByIdAndProductOptionGroup_Product_Id(id, productId)
+                .orElseThrow(() -> new CustomException(
+                        ErrorInfo.of(CommonErrorType.RESOURCE_NOT_FOUND, "요청한 옵션을 찾을 수 없습니다, ID:" + id)));
+    }
+
+    public Long getProductOptionGroupIdByProductOptionId(Long optionId) {
+        return productOptionRepository.findProductOptionGroupIdById(optionId);
+    }
 }

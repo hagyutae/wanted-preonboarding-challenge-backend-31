@@ -6,8 +6,10 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.model.produc
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,5 +63,15 @@ public class ProductService {
 
         ProductOption productOption = productCommandService.saveProductOption(group, productOptionDto);
         return ProductOptionCreateRes.from(group.getId(), productOption);
+    }
+
+    public ProductOptionUpdateRes optionUpdate(Long productId, Long optionId, ProductOptionUpdateReq req) {
+        ProductOption productOption = productQueryService.getProductOptionByIdAndProductId(optionId,
+                productId);
+        Long groupId = productQueryService.getProductOptionGroupIdByProductOptionId(
+                productOption.getId());
+
+        productOption = productCommandService.updateProductOption(productOption, req);
+        return ProductOptionUpdateRes.from(groupId, productOption);
     }
 }

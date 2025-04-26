@@ -31,6 +31,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionGroupDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductPriceDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -156,5 +157,10 @@ public class ProductCommandService {
 
     public void deleteProduct(Product product) {
         productRepository.delete(product);
+    }
+
+    public ProductOption updateProductOption(ProductOption productOption, ProductOptionUpdateReq req) {
+        productOption.update(req.name(), req.additionalPrice(), req.sku(), req.stock(), req.displayOrder());
+        return productOptionRepository.save(productOption);
     }
 }
