@@ -7,6 +7,16 @@ spring:
   sql:
     init:
       mode: never
+      data-locations:
+        - classpath:/data/sellers.sql
+        - classpath:/data/brands.sql
+        - classpath:/data/categories.sql
+        - classpath:/data/tags.sql
+        - classpath:/data/products.sql
+        - classpath:/data/product_options.sql
+        - classpath:/data/product_extended.sql
+        - classpath:/data/users.sql
+        - classpath:/data/reviews.sql
   jpa:
     hibernate:
       ddl-auto: none
