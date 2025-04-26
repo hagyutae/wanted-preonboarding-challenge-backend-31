@@ -1,4 +1,8 @@
-export default interface ParamDTO {
+export interface ParamDTO {
   id: string;
-  optionId?: string;
+}
+
+export interface OptionParamDTO {
+  id: string;
+  optionId: string;
 }

@@ -4,8 +4,11 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import ProductService from "./application/ProductService";
 import typeormConfigProvider from "./infrastructure/provider";
 import ProductRepository from "./infrastructure/ProductRepository";
-import ProductController from "./interfaces/ProductController";
-import ProductEntity from "./infrastructure/entities/Product.entity";
+import { ProductEntity } from "./infrastructure/entities";
+import {
+  ProductController,
+  ProductOptionsController,
+} from "./interfaces/controllers";
 
 @Module({
   imports: [typeormConfigProvider, TypeOrmModule.forFeature([ProductEntity])],
@@ -16,6 +19,6 @@ import ProductEntity from "./infrastructure/entities/Product.entity";
     },
     ProductService,
   ],
-  controllers: [ProductController],
+  controllers: [ProductController, ProductOptionsController],
 })
 export class AppModule {}
