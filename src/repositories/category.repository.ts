@@ -1,6 +1,5 @@
 import { prisma } from '../lib/prisma';
 import { Prisma } from '@prisma/client';
-import { CategoryWithChildren } from '../utils/category';
 
 export const categoryRepository = {
   /**
