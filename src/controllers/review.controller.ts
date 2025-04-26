@@ -49,22 +49,63 @@ export const reviewController = {
   async updateReview(req: Request, res: Response) {
     try {
       const reviewId = parseInt(req.params.id);
-      // TODO: 사용자 인증 구현
-      const userId = req.body.userId || 1; // 임시로 사용자 ID 설정
+      const { rating, title, content } = req.body;
       
-      const review = await reviewService.updateReview(reviewId, userId, req.body);
+      // 임시 변수: 실제 구현에서는 토큰에서 가져와야 함
+      const userId = 1;
       
+      // 데이터 입력 검증
+      if (!rating || rating < 1 || rating > 5) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_INPUT',
+            message: '평점은 1-5 사이의 숫자로 입력해주세요.'
+          }
+        });
+      }
+      
+      // 리뷰 업데이트
+      const updatedReview = await reviewService.updateReview(reviewId, userId, {
+        rating,
+        title,
+        content
+      });
+      
+      // 성공 응답
       res.json({
-        status: 'success',
-        data: review
+        success: true,
+        data: {
+          id: updatedReview.id,
+          rating: updatedReview.rating,
+          title: updatedReview.title,
+          content: updatedReview.content,
+          updated_at: updatedReview.updated_at
+        },
+        message: '리뷰가 성공적으로 수정되었습니다.'
       });
     } catch (error) {
-      const message = error instanceof Error ? error.message : '리뷰 수정 중 오류가 발생했습니다.';
-      const status = message.includes('권한이 없습니다') ? 403 : 
-                    message === '리뷰를 찾을 수 없습니다.' ? 404 : 500;
+      // 에러 처리
+      const errorMessage = error instanceof Error ? error.message : '리뷰 수정 중 오류가 발생했습니다.';
       
-      console.error('리뷰 수정 오류:', error);
-      res.status(status).json({ message });
+      let status = 500;
+      let errorCode = 'INTERNAL_ERROR';
+      
+      if (errorMessage === '리뷰를 찾을 수 없습니다.') {
+        status = 404;
+        errorCode = 'RESOURCE_NOT_FOUND';
+      } else if (errorMessage === '다른 사용자의 리뷰를 수정할 권한이 없습니다.') {
+        status = 403;
+        errorCode = 'FORBIDDEN';
+      }
+      
+      res.status(status).json({
+        success: false,
+        error: {
+          code: errorCode,
+          message: errorMessage
+        }
+      });
     }
   },
 
@@ -74,22 +115,41 @@ export const reviewController = {
   async deleteReview(req: Request, res: Response) {
     try {
       const reviewId = parseInt(req.params.id);
-      // TODO: 사용자 인증 구현
-      const userId = req.body.userId || 1; // 임시로 사용자 ID 설정
       
+      // 임시 변수: 실제 구현에서는 토큰에서 가져와야 함
+      const userId = 1;
+      
+      // 리뷰 삭제
       await reviewService.deleteReview(reviewId, userId);
       
+      // 성공 응답
       res.json({
-        status: 'success',
+        success: true,
+        data: null,
         message: '리뷰가 성공적으로 삭제되었습니다.'
       });
     } catch (error) {
-      const message = error instanceof Error ? error.message : '리뷰 삭제 중 오류가 발생했습니다.';
-      const status = message.includes('권한이 없습니다') ? 403 : 
-                    message === '리뷰를 찾을 수 없습니다.' ? 404 : 500;
+      // 에러 처리
+      const errorMessage = error instanceof Error ? error.message : '리뷰 삭제 중 오류가 발생했습니다.';
       
-      console.error('리뷰 삭제 오류:', error);
-      res.status(status).json({ message });
+      let status = 500;
+      let errorCode = 'INTERNAL_ERROR';
+      
+      if (errorMessage === '리뷰를 찾을 수 없습니다.') {
+        status = 404;
+        errorCode = 'RESOURCE_NOT_FOUND';
+      } else if (errorMessage === '다른 사용자의 리뷰를 삭제할 권한이 없습니다.') {
+        status = 403;
+        errorCode = 'FORBIDDEN';
+      }
+      
+      res.status(status).json({
+        success: false,
+        error: {
+          code: errorCode,
+          message: errorMessage
+        }
+      });
     }
   }
 }; 
