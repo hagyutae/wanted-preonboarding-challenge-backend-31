@@ -6,6 +6,6 @@ export default class Category {
     public slug: string,
     public description: string,
     public level: string,
-    public image_url: string
+    public image_url: string,
   ) {}
 }

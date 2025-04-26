@@ -11,6 +11,6 @@ export default class Review {
     public created_at: Date,
     public updated_at: Date,
     public verified_purchase: boolean,
-    public helpful_votes: number
+    public helpful_votes: number,
   ) {}
 }

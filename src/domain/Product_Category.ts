@@ -6,6 +6,6 @@ export default class Product_Category {
     public id: string,
     public product: Product,
     public category: Category,
-    public is_primary: boolean
+    public is_primary: boolean,
   ) {}
 }

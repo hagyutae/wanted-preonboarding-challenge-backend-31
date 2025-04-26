@@ -6,7 +6,7 @@ export default class Seller extends User {
     public name: string,
     public description: string,
     public logo_url: string,
-    public rating: string
+    public rating: string,
   ) {
     super(id);
   }

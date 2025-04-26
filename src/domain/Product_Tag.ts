@@ -5,6 +5,6 @@ export default class Product_Tag {
   constructor(
     public id: string,
     public product: Product,
-    public tag: Tag
+    public tag: Tag,
   ) {}
 }

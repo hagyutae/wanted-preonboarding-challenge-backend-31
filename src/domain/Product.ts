@@ -12,6 +12,6 @@ export default class Product {
     public updated_at: Date,
     public seller: Seller,
     public brand: Brand,
-    public status: string
+    public status: string,
   ) {}
 }

@@ -5,6 +5,6 @@ export default class Brand {
     public slug: string,
     public description: string,
     public logo_url: string,
-    public website: string
+    public website: string,
   ) {}
 }

@@ -8,6 +8,6 @@ export default class Product_Price {
     public sale_price: number,
     public cost_price: number,
     public currency: string,
-    public tax_rate: number
+    public tax_rate: number,
   ) {}
 }
