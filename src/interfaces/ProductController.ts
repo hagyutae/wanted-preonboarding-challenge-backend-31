@@ -16,21 +16,21 @@ import { ParamDTO, GetQueryDTO, ResponseDTO, PostBodyDTO } from "./dto";
 export default class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @Post()
+  async create(@Body() body: PostBodyDTO): Promise<ResponseDTO> {
+    return this.productService.create(body);
+  }
+
   @Get(":id")
-  async getProductById(
+  async read(
     @Param() { id }: ParamDTO,
     @Query() query: GetQueryDTO,
   ): Promise<ResponseDTO> {
     return this.productService.getById(id);
   }
 
-  @Post()
-  async createProduct(@Body() body: PostBodyDTO): Promise<ResponseDTO> {
-    return this.productService.create(body);
-  }
-
   @Put(":id")
-  async updateProduct(
+  async update(
     @Param() { id }: ParamDTO,
     @Body() body: PostBodyDTO,
   ): Promise<ResponseDTO> {
@@ -38,7 +38,7 @@ export default class ProductController {
   }
 
   @Delete(":id")
-  async deleteProduct(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
+  async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
     return this.productService.delete(id);
   }
 }
