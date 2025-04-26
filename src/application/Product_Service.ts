@@ -4,23 +4,23 @@ export default class Product_Service {
   constructor(private repository: IRepository<any>) {}
 
   async create(data: any) {
-    // Logic to create a product
+    await this.repository.create(data);
   }
 
   async getAll() {
-    // Logic to get all products
+    await this.repository.findAll();
   }
 
   async getById(id: string) {
-    // Logic to get a product by ID
+    await this.repository.findById(id);
   }
 
   async update(id: string, data: any) {
-    // Logic to update a product
+    await this.repository.update(id, data);
   }
 
   async delete(id: string) {
-    // Logic to delete a product
+    await this.repository.delete(id);
   }
 
   addOption(option: any) {
