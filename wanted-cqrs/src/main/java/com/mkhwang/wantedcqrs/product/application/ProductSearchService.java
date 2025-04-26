@@ -1,8 +1,8 @@
 package com.mkhwang.wantedcqrs.product.application;
 
 
-import com.mkhwang.wantedcqrs.product.domain.dto.ProductDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchResultDto;
 import com.mkhwang.wantedcqrs.product.infra.ProductRepository;
 import com.mkhwang.wantedcqrs.product.infra.ProductSearchRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class ProductSearchService {
   private final ProductRepository productRepository;
   private final ProductSearchRepository productSearchRepository;
 
-  public Page<ProductDto> searchProducts(ProductSearchDto searchDto) {
+  public Page<ProductSearchResultDto> searchProducts(ProductSearchDto searchDto) {
     return productSearchRepository.searchProducts(searchDto);
   }
 }

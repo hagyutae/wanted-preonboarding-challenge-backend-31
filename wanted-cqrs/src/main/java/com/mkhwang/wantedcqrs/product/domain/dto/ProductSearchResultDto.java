@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.time.Instant;
 
 @Getter
-public class ProductDto {
+public class ProductSearchResultDto {
   private final Long id;
   private final String name;
   private final String slug;
@@ -17,10 +17,11 @@ public class ProductDto {
   private final BrandDto brand;
   private final ProductStatus status;
   private final Instant createdAt;
+  private final ProductSearchImageDto image;
 
   @QueryProjection
-  public ProductDto(Long id, String name, String slug, String shortDescription, String fullDescription,
-                    SellerDto seller, BrandDto brand, ProductStatus status, Instant createdAt) {
+  public ProductSearchResultDto(Long id, String name, String slug, String shortDescription, String fullDescription,
+                                SellerDto seller, BrandDto brand, ProductStatus status, Instant createdAt, ProductSearchImageDto image) {
     this.id = id;
     this.name = name;
     this.slug = slug;
@@ -30,5 +31,6 @@ public class ProductDto {
     this.brand = brand;
     this.status = status;
     this.createdAt = createdAt;
+    this.image = image;
   }
 }

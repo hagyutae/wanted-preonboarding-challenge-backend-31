@@ -1,8 +1,8 @@
 package com.mkhwang.wantedcqrs.product.controller;
 
 import com.mkhwang.wantedcqrs.product.application.ProductSearchService;
-import com.mkhwang.wantedcqrs.product.domain.dto.ProductDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchResultDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class ProductController {
 
   @Operation(summary = "상품 검색")
   @GetMapping("/api/products")
-  public Page<ProductDto> searchProducts(@ModelAttribute ProductSearchDto searchDto) {
+  public Page<ProductSearchResultDto> searchProducts(@ModelAttribute ProductSearchDto searchDto) {
     return productSearchService.searchProducts(searchDto);
   }
 }

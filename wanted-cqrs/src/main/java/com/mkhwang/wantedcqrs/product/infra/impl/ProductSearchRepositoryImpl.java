@@ -28,6 +28,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
   private final QProduct qProduct = QProduct.product;
   private final QBrand qBrand = QBrand.brand;
   private final QSeller qSeller = QSeller.seller;
+  private final QProductImage qProductImage = QProductImage.productImage;
   private final QProductPrice qProductPrice = QProductPrice.productPrice;
   private final QProductCategory qProductCategory = QProductCategory.productCategory;
   private final QProductOptionGroup qProductOptionGroup = QProductOptionGroup.productOptionGroup;
@@ -35,7 +36,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
 
 
   @Override
-  public Page<ProductDto> searchProducts(ProductSearchDto searchDto) {
+  public Page<ProductSearchResultDto> searchProducts(ProductSearchDto searchDto) {
     Pageable pageable = searchDto.toPageable();
     BooleanBuilder condition = this.generateCondition(searchDto);
 
@@ -50,8 +51,10 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
       return Page.empty();
     }
 
-    List<ProductDto> result = jpaQueryFactory
-            .select(new QProductDto(
+//    List<ProductSearchResultDto> result = null;
+
+    List<ProductSearchResultDto> result = jpaQueryFactory
+            .select(new QProductSearchResultDto(
                     qProduct.id,
                     qProduct.name,
                     qProduct.slug,
@@ -74,11 +77,18 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
                             qBrand.website
                     ),
                     qProduct.status,
-                    qProduct.createdAt
+                    qProduct.createdAt,
+                    new QProductSearchImageDto(
+                            qProductImage.url,
+                            qProductImage.altText
+                    )
             ))
             .from(qProduct)
             .join(qProduct.brand, qBrand)
             .join(qProduct.seller, qSeller)
+            .leftJoin(qProductImage)
+              .on(qProduct.id.eq(qProductImage.product.id)
+                    .and(qProductImage.primary.eq(true)))
             .where(condition)
             .orderBy(getOrderSpecifiers(pageable, qProduct.getType(), qProduct.getMetadata().getName()))
             .offset(pageable.getOffset())
