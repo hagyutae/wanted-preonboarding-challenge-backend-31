@@ -1,14 +1,19 @@
 package com.example.wanted_preonboarding_challenge_backend_31.web.product;
 
-import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.*;
+import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_CREATE;
+import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_DELETE;
+import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_CREATE;
+import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_UPDATE;
+import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_UPDATE;
 
 import com.example.wanted_preonboarding_challenge_backend_31.application.product.ProductService;
 import com.example.wanted_preonboarding_challenge_backend_31.common.dto.SuccessRes;
-import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -52,5 +57,15 @@ public class ProductController {
             @RequestBody @Validated ProductOptionCreateReq productOptionCreateReq
     ) {
         return SuccessRes.of(PRODUCT_OPTION_CREATE, productService.optionCreate(productId, productOptionCreateReq));
+    }
+
+    @PutMapping("/{id}/options/{optionId}")
+    public SuccessRes<ProductOptionUpdateRes> optionUpdate(
+            @PathVariable("id") Long productId,
+            @PathVariable("optionId") Long optionId,
+            @RequestBody @Validated ProductOptionUpdateReq productOptionUpdateReq
+    ) {
+        return SuccessRes.of(PRODUCT_OPTION_UPDATE,
+                productService.optionUpdate(productId, optionId, productOptionUpdateReq));
     }
 }
