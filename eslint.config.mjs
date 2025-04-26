@@ -1,8 +1,11 @@
-// @ts-check
 import eslint from "@eslint/js";
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import globals from "globals";
 import tseslint from "typescript-eslint";
+import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import prettierPlugin from "eslint-plugin-prettier";
+import globals from "globals";
+import prettier from "prettier";
+
+const prettierOptions = await prettier.resolveConfig(".prettierrc");
 
 export default tseslint.config(
   {
@@ -37,6 +40,10 @@ export default tseslint.config(
       "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "linebreak-style": "off",
+      "prettier/prettier": ["error", prettierOptions ?? {}],
+    },
+    plugins: {
+      prettier: prettierPlugin,
     },
   },
 );

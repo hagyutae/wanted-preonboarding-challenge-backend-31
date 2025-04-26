@@ -61,9 +61,7 @@ export default class ProductOptionsController {
     type: ResponseDTO,
   })
   @Delete(":id/options/:optionId")
-  async deleteOptions(
-    @Param() { id, optionId }: OptionParamDTO,
-  ): Promise<ResponseDTO> {
+  async deleteOptions(@Param() { id, optionId }: OptionParamDTO): Promise<ResponseDTO> {
     const data = await this.productService.deleteOptions(id, optionId);
 
     return {

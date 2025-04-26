@@ -5,10 +5,7 @@ import ProductService from "./application/ProductService";
 import typeormConfigProvider from "./infrastructure/provider";
 import ProductRepository from "./infrastructure/ProductRepository";
 import { ProductEntity } from "./infrastructure/entities";
-import {
-  ProductController,
-  ProductOptionsController,
-} from "./interfaces/controllers";
+import { ProductController, ProductOptionsController } from "./interfaces/controllers";
 
 @Module({
   imports: [typeormConfigProvider, TypeOrmModule.forFeature([ProductEntity])],

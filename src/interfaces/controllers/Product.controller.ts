@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import ProductService from "src/application/ProductService";
@@ -42,10 +33,7 @@ export default class ProductController {
     type: ResponseDTO,
   })
   @Get(":id")
-  async read(
-    @Param() { id }: ParamDTO,
-    @Query() query: GetQueryDTO,
-  ): Promise<ResponseDTO> {
+  async read(@Param() { id }: ParamDTO, @Query() query: GetQueryDTO): Promise<ResponseDTO> {
     const data = await this.productService.getById(id);
 
     return {
@@ -62,10 +50,7 @@ export default class ProductController {
     type: ResponseDTO,
   })
   @Put(":id")
-  async update(
-    @Param() { id }: ParamDTO,
-    @Body() body: PostBodyDTO,
-  ): Promise<ResponseDTO> {
+  async update(@Param() { id }: ParamDTO, @Body() body: PostBodyDTO): Promise<ResponseDTO> {
     const data = await this.productService.update(id, body);
 
     return {

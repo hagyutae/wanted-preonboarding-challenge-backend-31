@@ -25,10 +25,7 @@ export default class ProductRepository implements IRepository<ProductEntity> {
     return await this.repository.findOne({ where: { id } });
   }
 
-  async update(
-    id: string,
-    data: Partial<ProductEntity>,
-  ): Promise<ProductEntity> {
+  async update(id: string, data: Partial<ProductEntity>): Promise<ProductEntity> {
     await this.repository.update(id, data);
 
     const updatedProduct = await this.findById(id);
