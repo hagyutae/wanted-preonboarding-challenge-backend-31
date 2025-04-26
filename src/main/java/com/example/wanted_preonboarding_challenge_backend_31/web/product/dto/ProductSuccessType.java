@@ -10,6 +10,7 @@ public enum ProductSuccessType implements SuccessType {
     PRODUCT_DELETE("상품이 성공적으로 삭제되었습니다."),
     PRODUCT_OPTION_CREATE("상품 옵션이 성공적으로 추가되었습니다."),
     PRODUCT_OPTION_UPDATE("상품 옵션이 성공적으로 수정되었습니다."),
+    PRODUCT_OPTION_DELETE("상품 옵션이 성공적으로 삭제되었습니다."),
     ;
 
     private final String message;

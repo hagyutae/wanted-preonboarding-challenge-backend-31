@@ -3,6 +3,7 @@ package com.example.wanted_preonboarding_challenge_backend_31.web.product;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_CREATE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_DELETE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_CREATE;
+import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_DELETE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_UPDATE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_UPDATE;
 
@@ -67,5 +68,14 @@ public class ProductController {
     ) {
         return SuccessRes.of(PRODUCT_OPTION_UPDATE,
                 productService.optionUpdate(productId, optionId, productOptionUpdateReq));
+    }
+
+    @DeleteMapping("/{id}/options/{optionId}")
+    public SuccessRes<?> optionDelete(
+            @PathVariable("id") Long productId,
+            @PathVariable("optionId") Long optionId
+    ) {
+        productService.optionDelete(productId, optionId);
+        return SuccessRes.of(PRODUCT_OPTION_DELETE);
     }
 }

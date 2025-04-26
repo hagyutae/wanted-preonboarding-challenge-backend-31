@@ -74,4 +74,11 @@ public class ProductService {
         productOption = productCommandService.updateProductOption(productOption, req);
         return ProductOptionUpdateRes.from(groupId, productOption);
     }
+
+    public void optionDelete(Long productId, Long optionId) {
+        ProductOption productOption = productQueryService.getProductOptionByIdAndProductId(optionId,
+                productId);
+
+        productCommandService.deleteProductOption(productOption);
+    }
 }

@@ -163,4 +163,9 @@ public class ProductCommandService {
         productOption.update(req.name(), req.additionalPrice(), req.sku(), req.stock(), req.displayOrder());
         return productOptionRepository.save(productOption);
     }
+
+    public void deleteProductOption(ProductOption productOption) {
+        productOptionRepository.delete(productOption);
+
+    }
 }
