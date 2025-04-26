@@ -8,6 +8,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update # 필요 시 create, create-drop, validate 등으로 변경
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
     properties:
       hibernate:
