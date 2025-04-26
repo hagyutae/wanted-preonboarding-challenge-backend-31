@@ -98,7 +98,7 @@ describe("Product_Service", () => {
     repositoryMock.findById.mockResolvedValue(product);
     repositoryMock.update.mockResolvedValue(updatedProduct);
 
-    const response = await service.addOption(id, option);
+    const response = await service.addOptions(id, option);
 
     expect(repositoryMock.findById).toHaveBeenCalledWith(id);
     expect(repositoryMock.update).toHaveBeenCalledWith(id, updatedProduct);
@@ -117,7 +117,7 @@ describe("Product_Service", () => {
     repositoryMock.findById.mockResolvedValue(product);
     repositoryMock.update.mockResolvedValue(updatedProduct);
 
-    const response = await service.updateOption(id, option);
+    const response = await service.updateOptions(id, option.id, option);
 
     expect(repositoryMock.findById).toHaveBeenCalledWith(id);
     expect(repositoryMock.update).toHaveBeenCalledWith(id, updatedProduct);
@@ -136,7 +136,7 @@ describe("Product_Service", () => {
     repositoryMock.findById.mockResolvedValue(product);
     repositoryMock.update.mockResolvedValue(updatedProduct);
 
-    const response = await service.deleteOption(optionId);
+    const response = await service.deleteOptions(id, optionId);
 
     expect(repositoryMock.findById).toHaveBeenCalledWith(optionId);
     expect(repositoryMock.update).toHaveBeenCalledWith(

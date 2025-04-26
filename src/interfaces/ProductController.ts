@@ -41,4 +41,35 @@ export default class ProductController {
   async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
     return this.productService.delete(id);
   }
+
+  @Post(":id/options")
+  async addOptions(
+    @Param() { id }: ParamDTO,
+    @Body() body: PostBodyDTO,
+  ): Promise<ResponseDTO> {
+    return this.productService.addOptions(id, body);
+  }
+
+  @Put(":id/options/:optionId")
+  async updateOptions(
+    @Param() { id, optionId }: ParamDTO,
+    @Body() body: PostBodyDTO,
+  ): Promise<ResponseDTO> {
+    return this.productService.updateOptions(id, optionId!, body);
+  }
+
+  @Delete(":id/options/:optionId")
+  async deleteOptions(
+    @Param() { id, optionId }: ParamDTO,
+  ): Promise<ResponseDTO> {
+    return this.productService.deleteOptions(id, optionId!);
+  }
+
+  @Post(":id/images")
+  async addImages(
+    @Param() { id }: ParamDTO,
+    @Body() body: PostBodyDTO,
+  ): Promise<ResponseDTO> {
+    return this.productService.addImages(id, body);
+  }
 }

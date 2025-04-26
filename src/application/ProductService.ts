@@ -62,7 +62,7 @@ export default class ProductService {
     return response;
   }
 
-  async addOption(id: string, option: any) {
+  async addOptions(id: string, option: any) {
     const product = await this.repository.findById(id);
 
     const updatedProduct = {
@@ -81,7 +81,7 @@ export default class ProductService {
     return response;
   }
 
-  async updateOption(id: string, option: any) {
+  async updateOptions(id: string, optionId: string, option: any) {
     const product = await this.repository.findById(id);
 
     const updatedProduct = {
@@ -102,7 +102,7 @@ export default class ProductService {
     return response;
   }
 
-  async deleteOption(id: string) {
+  async deleteOptions(id: string, optionId: string) {
     const product = await this.repository.findById(id);
 
     const updatedProduct = {
@@ -121,7 +121,22 @@ export default class ProductService {
     return response;
   }
 
-  addImage(image: any) {
-    // Logic to add an image to a product
+  async addImages(id: string, body: any) {
+    const product = await this.repository.findById(id);
+
+    const updatedProduct = {
+      ...product,
+      images: [...(product?.images || []), body],
+    };
+
+    await this.repository.update(id, updatedProduct);
+
+    const response = {
+      success: true,
+      data: updatedProduct,
+      message: "상품 이미지가 성공적으로 추가되었습니다.",
+    } as ResponseDTO;
+
+    return response;
   }
 }
