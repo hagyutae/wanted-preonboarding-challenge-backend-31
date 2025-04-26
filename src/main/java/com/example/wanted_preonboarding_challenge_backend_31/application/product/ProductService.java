@@ -34,7 +34,7 @@ public class ProductService {
         Product product = productQueryService.getProductById(productId);
         productCommandService.clearProductRelations(product);
 
-        productCommandService.updateProduct(product, req);
+        product = productCommandService.updateProduct(product, req);
         createProductRelationEntities(req, product);
 
         return ProductUpdateRes.from(product);
