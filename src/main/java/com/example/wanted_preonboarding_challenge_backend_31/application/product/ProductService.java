@@ -56,7 +56,7 @@ public class ProductService {
         productCommandService.deleteProduct(product);
     }
 
-    public ProductOptionCreateRes optionCreate(Long productId, ProductOptionCreateReq req) {
+    public ProductOptionCreateRes createOption(Long productId, ProductOptionCreateReq req) {
         ProductOptionGroup group = productQueryService.getProductOptionGroupByIdAndProductId(req.optionGroupId(),
                 productId);
         ProductOptionDto productOptionDto = ProductOptionDto.from(req);
@@ -65,7 +65,7 @@ public class ProductService {
         return ProductOptionCreateRes.from(group.getId(), productOption);
     }
 
-    public ProductOptionUpdateRes optionUpdate(Long productId, Long optionId, ProductOptionUpdateReq req) {
+    public ProductOptionUpdateRes updateOption(Long productId, Long optionId, ProductOptionUpdateReq req) {
         ProductOption productOption = productQueryService.getProductOptionByIdAndProductId(optionId,
                 productId);
         Long groupId = productQueryService.getProductOptionGroupIdByProductOptionId(
@@ -75,7 +75,7 @@ public class ProductService {
         return ProductOptionUpdateRes.from(groupId, productOption);
     }
 
-    public void optionDelete(Long productId, Long optionId) {
+    public void deleteOption(Long productId, Long optionId) {
         ProductOption productOption = productQueryService.getProductOptionByIdAndProductId(optionId,
                 productId);
 

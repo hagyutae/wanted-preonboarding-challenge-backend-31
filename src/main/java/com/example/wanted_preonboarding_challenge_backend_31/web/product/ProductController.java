@@ -57,7 +57,7 @@ public class ProductController {
             @PathVariable("id") Long productId,
             @RequestBody @Validated ProductOptionCreateReq productOptionCreateReq
     ) {
-        return SuccessRes.of(PRODUCT_OPTION_CREATE, productService.optionCreate(productId, productOptionCreateReq));
+        return SuccessRes.of(PRODUCT_OPTION_CREATE, productService.createOption(productId, productOptionCreateReq));
     }
 
     @PutMapping("/{id}/options/{optionId}")
@@ -67,7 +67,7 @@ public class ProductController {
             @RequestBody @Validated ProductOptionUpdateReq productOptionUpdateReq
     ) {
         return SuccessRes.of(PRODUCT_OPTION_UPDATE,
-                productService.optionUpdate(productId, optionId, productOptionUpdateReq));
+                productService.updateOption(productId, optionId, productOptionUpdateReq));
     }
 
     @DeleteMapping("/{id}/options/{optionId}")
@@ -75,7 +75,7 @@ public class ProductController {
             @PathVariable("id") Long productId,
             @PathVariable("optionId") Long optionId
     ) {
-        productService.optionDelete(productId, optionId);
+        productService.deleteOption(productId, optionId);
         return SuccessRes.of(PRODUCT_OPTION_DELETE);
     }
 }
