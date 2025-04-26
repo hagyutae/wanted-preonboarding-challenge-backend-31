@@ -1,0 +1,35 @@
+{
+  "name": "wanted-preonboarding-challenge-backend-31",
+  "version": "1.0.0",
+  "description": "CQRS 시스템 설계/구축 챌린지",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NarciSource/wanted-preonboarding-challenge-backend-31.git"
+  },
+  "keywords": [
+    "wanted",
+    "cqrs"
+  ],
+  "author": "NarciSource",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NarciSource/wanted-preonboarding-challenge-backend-31/issues"
+  },
+  "homepage": "https://github.com/NarciSource/wanted-preonboarding-challenge-backend-31#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@types/jest": "^29.5.14",
+    "eslint": "^9.25.1",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "globals": "^16.0.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.5.3",
+    "ts-jest": "^29.3.2",
+    "typescript-eslint": "^8.31.0"
+  }
+}
