@@ -22,6 +22,7 @@ public class Products {
     private String fullDescription;
     private LocalDate createAt;
     private LocalDate updateAt;
+    private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
@@ -39,5 +40,14 @@ public class Products {
 
     @OneToMany(mappedBy = "products")
     private List<ProductPrice> productPrices = new ArrayList<>();
+
+    @OneToMany(mappedBy = "products")
+    private List<ProductImage> productImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "products")
+    private List<ProductOptionGroup> productOptionGroups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "products")
+    private List<Reviews> reviews = new ArrayList<>();
 
 }
