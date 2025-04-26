@@ -17,42 +17,127 @@ describe("Product_Service", () => {
     service = new Product_Service(repositoryMock);
   });
 
-  it("create 호출 시 repository.create를 호출", async () => {
+  it("create 메서드는 데이터를 생성하고 성공 응답을 반환", async () => {
     const data = { name: "Test Product" };
+    const createdProduct = { id: "1", ...data };
+    repositoryMock.create.mockResolvedValue(createdProduct);
 
-    await service.create(data);
+    const response = await service.create(data);
 
     expect(repositoryMock.create).toHaveBeenCalledWith(data);
+    expect(response).toEqual({
+      success: true,
+      data: createdProduct,
+      message: "상품이 성공적으로 등록되었습니다.",
+    });
   });
 
-  it("getAll 호출 시 repository.findAll을 호출", async () => {
+  it("getAll 메서드는 모든 데이터를 조회", async () => {
     await service.getAll();
 
     expect(repositoryMock.findAll).toHaveBeenCalled();
   });
 
-  it("getById 호출 시 repository.findById를 호출", async () => {
-    const id = "123";
+  it("getById 메서드는 ID로 데이터를 조회하고 성공 응답을 반환", async () => {
+    const id = "1";
+    const product = { id, name: "Test Product" };
+    repositoryMock.findById.mockResolvedValue(product);
 
-    await service.getById(id);
+    const response = await service.getById(id);
 
     expect(repositoryMock.findById).toHaveBeenCalledWith(id);
+    expect(response).toEqual({
+      success: true,
+      data: product,
+      message: "상품 상세 정보를 성공적으로 조회했습니다.",
+    });
   });
 
-  it("update 호출 시 repository.update를 호출", async () => {
-    const id = "123";
+  it("update 메서드는 데이터를 수정하고 성공 응답을 반환", async () => {
+    const id = "1";
     const data = { name: "Updated Product" };
+    const updatedProduct = { id, ...data };
+    repositoryMock.update.mockResolvedValue(updatedProduct);
 
-    await service.update(id, data);
+    const response = await service.update(id, data);
 
     expect(repositoryMock.update).toHaveBeenCalledWith(id, data);
+    expect(response).toEqual({
+      success: true,
+      data: updatedProduct,
+      message: "상품이 성공적으로 수정되었습니다.",
+    });
   });
 
-  it("delete 호출 시 repository.delete를 호출", async () => {
-    const id = "123";
-
-    await service.delete(id);
+  it("delete 메서드는 데이터를 삭제하고 성공 응답을 반환", async () => {
+    const id = "1";
+    const response = await service.delete(id);
 
     expect(repositoryMock.delete).toHaveBeenCalledWith(id);
+    expect(response).toEqual({
+      success: true,
+      data: null,
+      message: "상품이 성공적으로 삭제되었습니다.",
+    });
+  });
+
+  it("addOption 메서드는 옵션을 추가하고 성공 응답을 반환", async () => {
+    const id = "1";
+    const option = { id: "opt1", name: "Option 1" };
+    const product = { id, option_groups: [] };
+    const updatedProduct = { ...product, option_groups: [option] };
+    repositoryMock.findById.mockResolvedValue(product);
+    repositoryMock.update.mockResolvedValue(updatedProduct);
+
+    const response = await service.addOption(id, option);
+
+    expect(repositoryMock.findById).toHaveBeenCalledWith(id);
+    expect(repositoryMock.update).toHaveBeenCalledWith(id, updatedProduct);
+    expect(response).toEqual({
+      success: true,
+      data: updatedProduct,
+      message: "상품 옵션이 성공적으로 추가되었습니다.",
+    });
+  });
+
+  it("updateOption 메서드는 옵션을 수정하고 성공 응답을 반환", async () => {
+    const id = "1";
+    const option = { id: "opt1", name: "Updated Option" };
+    const product = { id, option_groups: [{ id: "opt1", name: "Option 1" }] };
+    const updatedProduct = { ...product, option_groups: [option] };
+    repositoryMock.findById.mockResolvedValue(product);
+    repositoryMock.update.mockResolvedValue(updatedProduct);
+
+    const response = await service.updateOption(id, option);
+
+    expect(repositoryMock.findById).toHaveBeenCalledWith(id);
+    expect(repositoryMock.update).toHaveBeenCalledWith(id, updatedProduct);
+    expect(response).toEqual({
+      success: true,
+      data: updatedProduct,
+      message: "상품 옵션이 성공적으로 수정되었습니다.",
+    });
+  });
+
+  it("deleteOption 메서드는 옵션을 삭제하고 성공 응답을 반환", async () => {
+    const id = "1";
+    const optionId = "opt1";
+    const product = { id, option_groups: [{ id: optionId, name: "Option 1" }] };
+    const updatedProduct = { ...product, option_groups: [] };
+    repositoryMock.findById.mockResolvedValue(product);
+    repositoryMock.update.mockResolvedValue(updatedProduct);
+
+    const response = await service.deleteOption(optionId);
+
+    expect(repositoryMock.findById).toHaveBeenCalledWith(optionId);
+    expect(repositoryMock.update).toHaveBeenCalledWith(
+      optionId,
+      updatedProduct,
+    );
+    expect(response).toEqual({
+      success: true,
+      data: null,
+      message: "상품 옵션이 성공적으로 삭제되었습니다.",
+    });
   });
 });
