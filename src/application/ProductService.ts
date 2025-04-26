@@ -4,7 +4,7 @@ import ResponseDTO from "src/interfaces/dto/ResponseDTO";
 import IRepository from "src/infrastructure/IRepository";
 
 @Injectable()
-export default class Product_Service {
+export default class ProductService {
   constructor(
     @Inject("IRepository")
     private repository: IRepository<any>,

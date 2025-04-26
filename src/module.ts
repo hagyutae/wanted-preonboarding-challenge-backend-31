@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import Product_Service from "./application/Product_Service";
+import ProductService from "./application/ProductService";
 import typeormConfigProvider from "./infrastructure/provider";
 import ProductRepository from "./infrastructure/ProductRepository";
 import ProductController from "./interfaces/ProductController";
@@ -14,7 +14,7 @@ import { ProductEntity } from "./infrastructure/entities/Product.entity";
       provide: "IRepository", // 인터페이스 제공
       useClass: ProductRepository, // 구현체 연결
     },
-    Product_Service,
+    ProductService,
   ],
   controllers: [ProductController],
 })

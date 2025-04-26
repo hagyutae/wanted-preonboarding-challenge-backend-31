@@ -9,7 +9,7 @@ import {
   Query,
 } from "@nestjs/common";
 
-import Product_Service from "src/application/Product_Service";
+import ProductService from "src/application/ProductService";
 import ResponseDTO from "./dto/ResponseDTO";
 import GetQueryDTO from "./dto/GetQueryDTO";
 import PostBodyDTO from "./dto/PostBodyDTO";
@@ -17,7 +17,7 @@ import ParamDTO from "./dto/ParamDTO";
 
 @Controller("products")
 export default class ProductController {
-  constructor(private readonly productService: Product_Service) {}
+  constructor(private readonly productService: ProductService) {}
 
   @Get(":id")
   async getProductById(
