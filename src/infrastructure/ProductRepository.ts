@@ -1,9 +1,11 @@
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Injectable } from "@nestjs/common";
 
 import IRepository from "./IRepository";
 import { Product } from "./entities/Product.entity";
 
+@Injectable()
 export default class ProductRepository implements IRepository<Product> {
   constructor(
     @InjectRepository(Product)

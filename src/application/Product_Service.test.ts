@@ -1,3 +1,5 @@
+import { Test, TestingModule } from "@nestjs/testing";
+
 import IRepository from "src/infrastructure/IRepository";
 import Product_Service from "./Product_Service";
 
@@ -5,7 +7,7 @@ describe("Product_Service", () => {
   let service: Product_Service;
   let repositoryMock: jest.Mocked<IRepository<any>>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     repositoryMock = {
       create: jest.fn(),
       findAll: jest.fn(),
@@ -14,7 +16,14 @@ describe("Product_Service", () => {
       delete: jest.fn(),
     };
 
-    service = new Product_Service(repositoryMock);
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        Product_Service,
+        { provide: "IRepository", useValue: repositoryMock },
+      ],
+    }).compile();
+
+    service = module.get<Product_Service>(Product_Service);
   });
 
   it("create 메서드는 데이터를 생성하고 성공 응답을 반환", async () => {

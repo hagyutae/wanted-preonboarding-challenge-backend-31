@@ -1,8 +1,14 @@
-import IRepository from "src/infrastructure/IRepository";
-import ResponseDTO from "src/interfaces/ResponseDTO";
+import { Inject, Injectable } from "@nestjs/common";
 
+import ResponseDTO from "src/interfaces/ResponseDTO";
+import IRepository from "src/infrastructure/IRepository";
+
+@Injectable()
 export default class Product_Service {
-  constructor(private repository: IRepository<any>) {}
+  constructor(
+    @Inject("IRepository")
+    private repository: IRepository<any>,
+  ) {}
 
   async create(data: any) {
     const product = await this.repository.create(data);
