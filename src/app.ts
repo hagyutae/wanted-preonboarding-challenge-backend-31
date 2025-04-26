@@ -7,6 +7,9 @@ import { prisma } from './lib/prisma';
 // 라우트 임포트
 import productRoutes from './routes/product.routes';
 import categoryRoutes from './routes/category.routes';
+import reviewRoutes from './routes/review.routes'
+
+// TODO: 메인 페이지 라우트 구현 (GET /api/main)
 
 const app = express();
 
@@ -19,6 +22,9 @@ app.use(express.urlencoded({ extended: true }));
 // 라우트 설정
 app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/reviews', reviewRoutes);
+
+// TODO: 메인 페이지 라우트 설정 (/api/main)
 
 // 기본 라우트
 app.get('/', (req, res) => {
