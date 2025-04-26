@@ -1,15 +1,15 @@
-export interface Dimensions {
+interface Dimensions {
   width: number;
   height: number;
   depth: number;
 }
 
-export interface AdditionalInfo {
+interface AdditionalInfo {
   assembly_required: boolean;
   assembly_time: string;
 }
 
-export interface Detail {
+interface Detail {
   weight: number;
   dimensions: Dimensions;
   materials: string;
@@ -19,7 +19,7 @@ export interface Detail {
   additional_info: AdditionalInfo;
 }
 
-export interface Price {
+interface Price {
   base_price: number;
   sale_price: number;
   cost_price: number;
@@ -27,12 +27,12 @@ export interface Price {
   tax_rate: number;
 }
 
-export interface Category {
+interface Category {
   category_id: number;
   is_primary: boolean;
 }
 
-export interface Option {
+interface Option {
   name: string;
   additional_price: number;
   sku: string;
@@ -40,13 +40,13 @@ export interface Option {
   display_order: number;
 }
 
-export interface OptionGroup {
+interface OptionGroup {
   name: string;
   display_order: number;
   options: Option[];
 }
 
-export interface Image {
+interface Image {
   url: string;
   alt_text: string;
   is_primary: boolean;

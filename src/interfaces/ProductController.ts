@@ -10,10 +10,7 @@ import {
 } from "@nestjs/common";
 
 import ProductService from "src/application/ProductService";
-import ResponseDTO from "./dto/ResponseDTO";
-import GetQueryDTO from "./dto/GetQueryDTO";
-import PostBodyDTO from "./dto/PostBodyDTO";
-import ParamDTO from "./dto/ParamDTO";
+import { ParamDTO, GetQueryDTO, ResponseDTO, PostBodyDTO } from "./dto";
 
 @Controller("products")
 export default class ProductController {

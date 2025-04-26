@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 
-import { ProductEntity } from "./Product.entity";
+import ProductEntity from "./Product.entity";
 
 @Entity("product_option_groups")
-export class ProductOptionGroupEntity {
+export default class ProductOptionGroupEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 

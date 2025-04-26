@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
 
 @Entity("tags")
 @Unique(["slug"])
-export class TagEntity {
+export default class TagEntity {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: number;
 

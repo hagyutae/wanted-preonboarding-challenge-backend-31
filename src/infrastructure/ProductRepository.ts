@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 
 import IRepository from "./IRepository";
-import { ProductEntity } from "./entities/Product.entity";
+import ProductEntity from "./entities/Product.entity";
 
 @Injectable()
 export default class ProductRepository implements IRepository<ProductEntity> {

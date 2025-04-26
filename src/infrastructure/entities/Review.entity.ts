@@ -7,11 +7,11 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-import { ProductEntity } from "./Product.entity";
-import { UserEntity } from "./User.entity";
+import ProductEntity from "./Product.entity";
+import UserEntity from "./User.entity";
 
 @Entity("reviews")
-export class ReviewEntity {
+export default class ReviewEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 

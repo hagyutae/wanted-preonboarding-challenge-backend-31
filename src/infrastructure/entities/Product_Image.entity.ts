@@ -6,11 +6,11 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import { ProductEntity } from "./Product.entity";
-import { ProductOptionEntity } from "./Product_Option.entity";
+import ProductEntity from "./Product.entity";
+import ProductOptionEntity from "./Product_Option.entity";
 
 @Entity("product_images")
-export class ProductImageEntity {
+export default class ProductImageEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 

@@ -6,7 +6,7 @@ import {
 } from "typeorm";
 
 @Entity("users")
-export class UserEntity {
+export default class UserEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 

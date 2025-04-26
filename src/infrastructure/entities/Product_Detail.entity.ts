@@ -6,10 +6,10 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import { ProductEntity } from "./Product.entity";
+import ProductEntity from "./Product.entity";
 
 @Entity("product_details")
-export class ProductDetailsEntity {
+export default class ProductDetailEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 

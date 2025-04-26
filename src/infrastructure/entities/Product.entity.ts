@@ -7,11 +7,12 @@ import {
   ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { SellerEntity } from "./Seller.entity";
-import { BrandEntity } from "./Brand.entity";
+
+import SellerEntity from "./Seller.entity";
+import BrandEntity from "./Brand.entity";
 
 @Entity("products")
-export class ProductEntity {
+export default class ProductEntity {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: string;
 

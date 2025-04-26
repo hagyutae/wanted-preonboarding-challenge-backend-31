@@ -6,10 +6,10 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import { ProductOptionGroupEntity } from "./Product_Option_Group.entity";
+import ProductOptionGroupEntity from "./Product_Option_Group.entity";
 
 @Entity("product_options")
-export class ProductOptionEntity {
+export default class ProductOptionEntity {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: number;
 

@@ -1,10 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 
-import { ProductEntity } from "./Product.entity";
-import { TagEntity } from "./Tag.entity";
+import ProductEntity from "./Product.entity";
+import TagEntity from "./Tag.entity";
 
 @Entity("product_tags")
-export class ProductTagEntity {
+export default class ProductTagEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 
