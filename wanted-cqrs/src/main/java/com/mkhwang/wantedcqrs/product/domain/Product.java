@@ -24,6 +24,7 @@ public class Product extends BaseCreateUpdateAudit {
   @ManyToOne(fetch = FetchType.LAZY)
   private Brand brand;
 
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private String status;
+  private ProductStatus status;
 }

@@ -14,7 +14,8 @@ public class Brand {
   @Column(unique = true)
   private String slug;
   @Lob
+  @Column(name = "description")
   private String description;
   private String logoUrl;
-  private String websiteUrl;
+  private String website;
 }
