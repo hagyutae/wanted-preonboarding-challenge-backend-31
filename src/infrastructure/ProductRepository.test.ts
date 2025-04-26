@@ -3,18 +3,18 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 
 import ProductRepository from "./ProductRepository";
-import { Product } from "./entities/Product.entity";
+import { ProductEntity } from "./entities/Product.entity";
 
 describe("ProductRepository", () => {
   let repository: ProductRepository;
-  let mockRepository: jest.Mocked<Repository<Product>>;
+  let mockRepository: jest.Mocked<Repository<ProductEntity>>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductRepository,
         {
-          provide: getRepositoryToken(Product),
+          provide: getRepositoryToken(ProductEntity),
           useValue: {
             create: jest.fn(),
             save: jest.fn(),
@@ -28,13 +28,13 @@ describe("ProductRepository", () => {
     }).compile();
 
     repository = module.get<ProductRepository>(ProductRepository);
-    mockRepository = module.get(getRepositoryToken(Product));
+    mockRepository = module.get(getRepositoryToken(ProductEntity));
   });
 
   it("create 메서드는 데이터를 생성하고 저장", async () => {
-    const data = { name: "Test Product" } as Product;
+    const data = { name: "Test Product" } as ProductEntity;
     const { id, ...rest } = data;
-    const createdProduct = { id: "1", ...rest } as Product;
+    const createdProduct = { id: "1", ...rest } as ProductEntity;
     mockRepository.create.mockReturnValue(createdProduct);
     mockRepository.save.mockResolvedValue(createdProduct);
 
@@ -46,7 +46,7 @@ describe("ProductRepository", () => {
   });
 
   it("findAll 메서드는 모든 데이터를 조회", async () => {
-    const products = [{ id: "1", name: "Test Product" }] as Product[];
+    const products = [{ id: "1", name: "Test Product" }] as ProductEntity[];
     mockRepository.find.mockResolvedValue(products);
 
     const result = await repository.findAll();
@@ -57,7 +57,7 @@ describe("ProductRepository", () => {
 
   it("findById 메서드는 ID로 데이터를 조회", async () => {
     const id = "1";
-    const product = { id, name: "Test Product" } as Product;
+    const product = { id, name: "Test Product" } as ProductEntity;
     mockRepository.findOne.mockResolvedValue(product);
 
     const result = await repository.findById(id);
@@ -68,8 +68,8 @@ describe("ProductRepository", () => {
 
   it("update 메서드는 데이터를 수정하고 수정된 데이터를 반환", async () => {
     const id = "1";
-    const data = { name: "Updated Product" } as Partial<Product>;
-    const updatedProduct = { id, ...data } as Product;
+    const data = { name: "Updated Product" } as Partial<ProductEntity>;
+    const updatedProduct = { id, ...data } as ProductEntity;
     mockRepository.update.mockResolvedValue({ affected: 1 } as UpdateResult);
     mockRepository.findOne.mockResolvedValue(updatedProduct);
 

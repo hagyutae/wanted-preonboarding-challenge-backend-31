@@ -6,17 +6,17 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import { Product } from "./Product.entity";
-import { ProductOption } from "./Product_Option.entity";
+import { ProductEntity } from "./Product.entity";
+import { ProductOptionEntity } from "./Product_Option.entity";
 
 @Entity("product_images")
-export class ProductImage {
+export class ProductImageEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 
-  @ManyToOne(() => Product, { onDelete: "CASCADE" })
+  @ManyToOne(() => ProductEntity, { onDelete: "CASCADE" })
   @JoinColumn({ name: "product_id" })
-  product: Product;
+  product: ProductEntity;
 
   @Column({ type: "varchar", length: 255 })
   url: string;
@@ -30,7 +30,10 @@ export class ProductImage {
   @Column({ type: "int", default: 0 })
   display_order: number;
 
-  @ManyToOne(() => ProductOption, { onDelete: "SET NULL", nullable: true })
+  @ManyToOne(() => ProductOptionEntity, {
+    onDelete: "SET NULL",
+    nullable: true,
+  })
   @JoinColumn({ name: "option_id" })
-  option: ProductOption;
+  option: ProductOptionEntity;
 }

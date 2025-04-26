@@ -1,18 +1,20 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 
-import { Product } from "./Product.entity";
-import { Tag } from "./Tag.entity";
+import { ProductEntity } from "./Product.entity";
+import { TagEntity } from "./Tag.entity";
 
 @Entity("product_tags")
-export class ProductTag {
+export class ProductTagEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 
-  @ManyToOne(() => Product, (product) => product.id, { onDelete: "CASCADE" })
+  @ManyToOne(() => ProductEntity, (product) => product.id, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "product_id" })
-  product: Product;
+  product: ProductEntity;
 
-  @ManyToOne(() => Tag, (tag) => tag.id, { onDelete: "CASCADE" })
+  @ManyToOne(() => TagEntity, (tag) => tag.id, { onDelete: "CASCADE" })
   @JoinColumn({ name: "tag_id" })
-  tag: Tag;
+  tag: TagEntity;
 }

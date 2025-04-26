@@ -7,7 +7,7 @@ import {
 } from "typeorm";
 
 @Entity("categories")
-export class Category {
+export class CategoryEntity {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: number;
 
@@ -20,9 +20,11 @@ export class Category {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @ManyToOne(() => Category, (category) => category.id, { nullable: true })
+  @ManyToOne(() => CategoryEntity, (category) => category.id, {
+    nullable: true,
+  })
   @JoinColumn({ name: "parent_id" })
-  parent: Category;
+  parent: CategoryEntity;
 
   @Column({ type: "integer", nullable: false })
   level: number;

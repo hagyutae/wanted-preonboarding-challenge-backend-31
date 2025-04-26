@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
 
 @Entity("brands")
 @Unique(["slug"])
-export class Brand {
+export class BrandEntity {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: number;
 

@@ -7,19 +7,19 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-import { Product } from "./Product.entity";
-import { User } from "./User.entity";
+import { ProductEntity } from "./Product.entity";
+import { UserEntity } from "./User.entity";
 
 @Entity("reviews")
-export class Review {
+export class ReviewEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 
-  @ManyToOne(() => Product, { onDelete: "CASCADE" })
-  product: Product;
+  @ManyToOne(() => ProductEntity, { onDelete: "CASCADE" })
+  product: ProductEntity;
 
-  @ManyToOne(() => User, { onDelete: "SET NULL", nullable: true })
-  user: User;
+  @ManyToOne(() => UserEntity, { onDelete: "SET NULL", nullable: true })
+  user: UserEntity;
 
   @Column({ type: "int", nullable: false })
   rating: number;

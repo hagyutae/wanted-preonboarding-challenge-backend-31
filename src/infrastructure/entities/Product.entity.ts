@@ -7,11 +7,11 @@ import {
   ManyToOne,
   JoinColumn,
 } from "typeorm";
-import { Seller } from "./Seller.entity";
-import { Brand } from "./Brand.entity";
+import { SellerEntity } from "./Seller.entity";
+import { BrandEntity } from "./Brand.entity";
 
 @Entity("products")
-export class Product {
+export class ProductEntity {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: string;
 
@@ -41,13 +41,13 @@ export class Product {
   })
   updatedAt: Date;
 
-  @ManyToOne(() => Seller)
+  @ManyToOne(() => SellerEntity)
   @JoinColumn({ name: "seller_id" })
-  seller: Seller;
+  seller: SellerEntity;
 
-  @ManyToOne(() => Brand)
+  @ManyToOne(() => BrandEntity)
   @JoinColumn({ name: "brand_id" })
-  brand: Brand;
+  brand: BrandEntity;
 
   @Column({ type: "varchar", length: 20 })
   status: string;

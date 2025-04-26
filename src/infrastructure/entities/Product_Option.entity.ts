@@ -6,16 +6,16 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import { ProductOptionGroup } from "./Product_Option_Group.entity";
+import { ProductOptionGroupEntity } from "./Product_Option_Group.entity";
 
 @Entity("product_options")
-export class ProductOption {
+export class ProductOptionEntity {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: number;
 
-  @ManyToOne(() => ProductOptionGroup, { onDelete: "CASCADE" })
+  @ManyToOne(() => ProductOptionGroupEntity, { onDelete: "CASCADE" })
   @JoinColumn({ name: "option_group_id" })
-  optionGroup: ProductOptionGroup;
+  optionGroup: ProductOptionGroupEntity;
 
   @Column({ type: "varchar", length: 100 })
   name: string;

@@ -6,21 +6,21 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import { Product } from "./Product.entity";
-import { Category } from "./Category.entity";
+import { ProductEntity } from "./Product.entity";
+import { CategoryEntity } from "./Category.entity";
 
 @Entity("product_categories")
-export class ProductCategory {
+export class ProductCategoryEntity {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: string;
 
-  @ManyToOne(() => Product, { onDelete: "CASCADE" })
+  @ManyToOne(() => ProductEntity, { onDelete: "CASCADE" })
   @JoinColumn({ name: "product_id" })
-  product: Product;
+  product: ProductEntity;
 
-  @ManyToOne(() => Category, { onDelete: "CASCADE" })
+  @ManyToOne(() => CategoryEntity, { onDelete: "CASCADE" })
   @JoinColumn({ name: "category_id" })
-  category: Category;
+  category: CategoryEntity;
 
   @Column({ type: "boolean", default: false, name: "is_primary" })
   isPrimary: boolean;

@@ -3,29 +3,29 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 
 import IRepository from "./IRepository";
-import { Product } from "./entities/Product.entity";
+import { ProductEntity } from "./entities/Product.entity";
 
 @Injectable()
-export default class ProductRepository implements IRepository<Product> {
+export default class ProductRepository implements IRepository<ProductEntity> {
   constructor(
-    @InjectRepository(Product)
-    private readonly repository: Repository<Product>,
+    @InjectRepository(ProductEntity)
+    private readonly repository: Repository<ProductEntity>,
   ) {}
 
-  async create(data: Product): Promise<Product> {
+  async create(data: ProductEntity): Promise<ProductEntity> {
     const entity = this.repository.create(data);
     return await this.repository.save(entity);
   }
 
-  async findAll(): Promise<Product[]> {
+  async findAll(): Promise<ProductEntity[]> {
     return await this.repository.find();
   }
 
-  async findById(id: string): Promise<Product | null> {
+  async findById(id: string): Promise<ProductEntity | null> {
     return await this.repository.findOne({ where: { id } });
   }
 
-  async update(id: string, data: Partial<Product>): Promise<Product> {
+  async update(id: string, data: Partial<ProductEntity>): Promise<ProductEntity> {
     await this.repository.update(id, data);
 
     const updatedProduct = await this.findById(id);

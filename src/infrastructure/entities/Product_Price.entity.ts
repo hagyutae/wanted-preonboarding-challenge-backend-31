@@ -6,16 +6,18 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import { Product } from "./Product.entity";
+import { ProductEntity } from "./Product.entity";
 
 @Entity("product_prices")
-export class ProductPrice {
+export class ProductPriceEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 
-  @ManyToOne(() => Product, (product) => product.id, { onDelete: "CASCADE" })
+  @ManyToOne(() => ProductEntity, (product) => product.id, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "product_id" })
-  product: Product;
+  product: ProductEntity;
 
   @Column("decimal", { precision: 12, scale: 2, nullable: false })
   basePrice: number;

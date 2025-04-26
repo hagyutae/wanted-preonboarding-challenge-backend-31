@@ -1,14 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 
-import { Product } from "./Product.entity";
+import { ProductEntity } from "./Product.entity";
 
 @Entity("product_option_groups")
-export class ProductOptionGroup {
+export class ProductOptionGroupEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 
-  @ManyToOne(() => Product, { onDelete: "CASCADE" })
-  product: Product;
+  @ManyToOne(() => ProductEntity, { onDelete: "CASCADE" })
+  product: ProductEntity;
 
   @Column({ type: "varchar", length: 100 })
   name: string;
