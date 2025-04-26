@@ -1,15 +1,17 @@
 import { prisma } from '../lib/prisma';
 import { Prisma } from '@prisma/client';
+import { ProductListItemResponse } from '../types';
 
 export const productRepository = {
   /**
    * 상품 목록 조회
    */
-  async findAll(skip: number, take: number) {
-    return prisma.product.findMany({
+  async findAll(skip: number, take: number): Promise<ProductListItemResponse[]> {
+    const products = await prisma.product.findMany({
       include: {
         brand: true,
         seller: true,
+        price: true,
         images: {
           where: { isPrimary: true },
           take: 1,
@@ -17,6 +19,38 @@ export const productRepository = {
       },
       take,
       skip,
+    });
+
+    // DB 모델에서 API 응답 형식으로 변환
+    return products.map(product => {
+      const primaryImage = product.images.length > 0 ? product.images[0] : null;
+      
+      return {
+        id: product.id,
+        name: product.name,
+        slug: product.slug,
+        short_description: product.shortDescription || undefined,
+        base_price: product.price?.basePrice || 0,
+        sale_price: product.price?.salePrice || undefined,
+        currency: product.price?.currency || 'KRW',
+        primary_image: primaryImage ? {
+          url: primaryImage.url,
+          alt_text: primaryImage.altText || undefined
+        } : undefined,
+        brand: {
+          id: product.brand.id,
+          name: product.brand.name
+        },
+        seller: {
+          id: product.seller.id,
+          name: product.seller.name
+        },
+        rating: undefined, // TODO: 리뷰 평점 계산
+        review_count: undefined, // TODO: 리뷰 수 계산
+        in_stock: true, // TODO: 재고 확인
+        status: product.status,
+        created_at: product.createdAt.toISOString()
+      };
     });
   },
 
