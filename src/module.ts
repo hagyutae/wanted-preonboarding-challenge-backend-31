@@ -5,6 +5,7 @@ import Product from "./domain/Product";
 import Product_Service from "./application/Product_Service";
 import typeormConfigProvider from "./infrastructure/provider";
 import ProductRepository from "./infrastructure/ProductRepository";
+import ProductController from "./interfaces/ProductController";
 
 @Module({
   imports: [typeormConfigProvider, TypeOrmModule.forFeature([Product])],
@@ -15,5 +16,6 @@ import ProductRepository from "./infrastructure/ProductRepository";
     },
     Product_Service,
   ],
+  controllers: [ProductController],
 })
 export class AppModule {}
