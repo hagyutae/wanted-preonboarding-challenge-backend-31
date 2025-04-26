@@ -23,16 +23,39 @@ export default class Product_Service {
     await this.repository.delete(id);
   }
 
-  addOption(option: any) {
-    // Logic to add an option to a product
+  async addOption(id: string, option: any) {
+    const product = await this.repository.findById(id);
+
+    const updatedProduct = {
+      ...product,
+      option_groups: [...(product?.options_group || []), option],
+    };
+
+    await this.repository.update(id, updatedProduct);
   }
 
-  updateOption(id: string, option: any) {
-    // Logic to update an option of a product
+  async updateOption(id: string, option: any) {
+    const product = await this.repository.findById(id);
+
+    const updatedProduct = {
+      ...product,
+      option_groups: product?.options_group.map((opt: any) =>
+        opt.id === option.id ? option : opt,
+      ),
+    };
+
+    await this.repository.update(id, updatedProduct);
   }
 
-  deleteOption(id: string) {
-    // Logic to delete an option from a product
+  async deleteOption(id: string) {
+    const product = await this.repository.findById(id);
+
+    const updatedProduct = {
+      ...product,
+      option_groups: product?.options_group.filter((opt: any) => opt.id !== id),
+    };
+
+    await this.repository.update(id, updatedProduct);
   }
 
   addImage(image: any) {
