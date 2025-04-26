@@ -18,7 +18,13 @@ export default class ProductController {
 
   @Post()
   async create(@Body() body: PostBodyDTO): Promise<ResponseDTO> {
-    return this.productService.create(body);
+    const data = await this.productService.create(body);
+
+    return {
+      success: true,
+      data,
+      message: "상품이 성공적으로 등록되었습니다.",
+    };
   }
 
   @Get(":id")
@@ -26,7 +32,13 @@ export default class ProductController {
     @Param() { id }: ParamDTO,
     @Query() query: GetQueryDTO,
   ): Promise<ResponseDTO> {
-    return this.productService.getById(id);
+    const data = await this.productService.getById(id);
+
+    return {
+      success: true,
+      data,
+      message: "상품 상세 정보를 성공적으로 조회했습니다.",
+    };
   }
 
   @Put(":id")
@@ -34,12 +46,24 @@ export default class ProductController {
     @Param() { id }: ParamDTO,
     @Body() body: PostBodyDTO,
   ): Promise<ResponseDTO> {
-    return this.productService.update(id, body);
+    const data = await this.productService.update(id, body);
+
+    return {
+      success: true,
+      data,
+      message: "상품이 성공적으로 수정되었습니다.",
+    };
   }
 
   @Delete(":id")
   async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
-    return this.productService.delete(id);
+    const data = await this.productService.delete(id);
+
+    return {
+      success: true,
+      data,
+      message: "상품이 성공적으로 삭제되었습니다.",
+    };
   }
 
   @Post(":id/options")
@@ -47,7 +71,13 @@ export default class ProductController {
     @Param() { id }: ParamDTO,
     @Body() body: PostBodyDTO,
   ): Promise<ResponseDTO> {
-    return this.productService.addOptions(id, body);
+    const data = await this.productService.addOptions(id, body);
+
+    return {
+      success: true,
+      data,
+      message: "상품 옵션이 성공적으로 추가되었습니다.",
+    };
   }
 
   @Put(":id/options/:optionId")
@@ -55,14 +85,26 @@ export default class ProductController {
     @Param() { id, optionId }: ParamDTO,
     @Body() body: PostBodyDTO,
   ): Promise<ResponseDTO> {
-    return this.productService.updateOptions(id, optionId!, body);
+    const data = await this.productService.updateOptions(id, optionId!, body);
+
+    return {
+      success: true,
+      data,
+      message: "상품 옵션이 성공적으로 수정되었습니다.",
+    };
   }
 
   @Delete(":id/options/:optionId")
   async deleteOptions(
     @Param() { id, optionId }: ParamDTO,
   ): Promise<ResponseDTO> {
-    return this.productService.deleteOptions(id, optionId!);
+    const data = await this.productService.deleteOptions(id, optionId!);
+
+    return {
+      success: true,
+      data,
+      message: "상품 옵션이 성공적으로 삭제되었습니다.",
+    };
   }
 
   @Post(":id/images")
@@ -70,6 +112,12 @@ export default class ProductController {
     @Param() { id }: ParamDTO,
     @Body() body: PostBodyDTO,
   ): Promise<ResponseDTO> {
-    return this.productService.addImages(id, body);
+    const data = await this.productService.addImages(id, body);
+
+    return {
+      success: true,
+      data,
+      message: "상품 이미지가 성공적으로 추가되었습니다.",
+    };
   }
 }
