@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import ResponseDTO from "src/interfaces/ResponseDTO";
+import ResponseDTO from "src/interfaces/dto/ResponseDTO";
 import IRepository from "src/infrastructure/IRepository";
 
 @Injectable()

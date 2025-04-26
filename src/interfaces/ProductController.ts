@@ -1,33 +1,47 @@
-import { Controller, Delete, Get, Post, Put } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from "@nestjs/common";
 
-import Product from "src/domain/Product";
 import Product_Service from "src/application/Product_Service";
-import ResponseDTO from "./ResponseDTO";
+import ResponseDTO from "./dto/ResponseDTO";
+import GetQueryDTO from "./dto/GetQueryDTO";
+import PostBodyDTO from "./dto/PostBodyDTO";
+import ParamDTO from "./dto/ParamDTO";
 
 @Controller("products")
 export default class ProductController {
   constructor(private readonly productService: Product_Service) {}
 
   @Get(":id")
-  async getProductById(id: string): Promise<ResponseDTO> {
+  async getProductById(
+    @Param() { id }: ParamDTO,
+    @Query() query: GetQueryDTO,
+  ): Promise<ResponseDTO> {
     return this.productService.getById(id);
   }
 
   @Post()
-  async createProduct(productData: Partial<Product>): Promise<ResponseDTO> {
-    return this.productService.create(productData);
+  async createProduct(@Body() body: PostBodyDTO): Promise<ResponseDTO> {
+    return this.productService.create(body);
   }
 
   @Put(":id")
   async updateProduct(
-    id: string,
-    productData: Partial<Product>,
+    @Param() { id }: ParamDTO,
+    @Body() body: PostBodyDTO,
   ): Promise<ResponseDTO> {
-    return this.productService.update(id, productData);
+    return this.productService.update(id, body);
   }
 
   @Delete(":id")
-  async deleteProduct(id: string): Promise<ResponseDTO> {
+  async deleteProduct(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
     return this.productService.delete(id);
   }
 }
