@@ -1,143 +1,121 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { EntityManager } from "typeorm";
 
-import IRepository from "src/infrastructure/IRepository";
+import { Product_Category, Product_Image, Product_Option_Group } from "src/domain";
+import { ProductEntity } from "src/infrastructure/entities";
+import { ProductInputDTO } from "./dto/ProductInputDTO";
 import ProductService from "./ProductService";
 
 describe("ProductService", () => {
   let service: ProductService;
-  let mockRepository: jest.Mocked<IRepository<any>>;
+  let entityManager: EntityManager;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductService,
         {
-          provide: "IRepository",
+          provide: EntityManager,
           useValue: {
+            findOne: jest.fn(),
             create: jest.fn(),
-            findAll: jest.fn(),
-            findById: jest.fn(),
+            save: jest.fn(),
             update: jest.fn(),
             delete: jest.fn(),
+            getRepository: jest.fn().mockReturnValue({
+              createQueryBuilder: jest.fn().mockReturnValue({
+                leftJoinAndSelect: jest.fn().mockReturnThis(),
+                where: jest.fn().mockReturnThis(),
+                andWhere: jest.fn().mockReturnThis(),
+                orderBy: jest.fn().mockReturnThis(),
+                skip: jest.fn().mockReturnThis(),
+                take: jest.fn().mockReturnThis(),
+                getMany: jest.fn(),
+              }),
+            }),
           },
         },
       ],
     }).compile();
 
     service = module.get<ProductService>(ProductService);
-    mockRepository = module.get("IRepository");
+    entityManager = module.get<EntityManager>(EntityManager);
   });
 
-  it("create 메서드는 데이터를 생성하고 반환", async () => {
-    const data = { name: "Test Product" };
-    const createdProduct = { id: "1", ...data };
-    mockRepository.create.mockResolvedValue(createdProduct);
+  describe("create", () => {
+    it("상품 생성", async () => {
+      const mockProductInput = {
+        name: "Product Name",
+        categories: [] as Product_Category[],
+        option_groups: [] as Product_Option_Group[],
+        images: [] as Product_Image[],
+        tags: [] as number[],
+      };
+      const mockSavedProduct = { id: 1, ...mockProductInput };
 
-    const result = await service.create(data);
+      entityManager.findOne = jest
+        .fn()
+        .mockResolvedValueOnce({ id: 1, name: "Seller" })
+        .mockResolvedValueOnce({ id: 1, name: "Brand" });
+      entityManager.create = jest.fn().mockReturnValue(mockSavedProduct);
+      entityManager.save = jest.fn().mockResolvedValue(mockSavedProduct);
 
-    expect(mockRepository.create).toHaveBeenCalledWith(data);
-    expect(result).toEqual(createdProduct);
+      await expect(service.create(mockProductInput)).resolves.toEqual(mockSavedProduct);
+    });
   });
 
-  it("findAll 메서드는 필터링된 데이터들을 반환", async () => {
-    const mockResult = [{ id: 1, name: "소파" }];
-    jest.spyOn(mockRepository, "findAll").mockResolvedValue(mockResult);
+  describe("getAll", () => {
+    it("페이지네이션된 상품들을 반환", async () => {
+      const mockProducts = [
+        { id: 1, name: "Product 1" },
+        { id: 2, name: "Product 2" },
+      ];
+      (
+        entityManager.getRepository(ProductEntity).createQueryBuilder().getMany as jest.Mock
+      ).mockResolvedValue(mockProducts);
 
-    const result = await service.getAll({ status: "ACTIVE" });
+      const result = await service.getAll({ page: 1, perPage: 10 });
 
-    expect(mockRepository.findAll).toHaveBeenCalledWith({ status: "ACTIVE" });
-    expect(result).toEqual(mockResult);
+      expect(result.items).toEqual(mockProducts);
+      expect(result.pagination).toEqual({
+        total_items: mockProducts.length,
+        total_pages: 1,
+        current_page: 1,
+        per_page: 10,
+      });
+    });
   });
 
-  it("getById 메서드는 ID로 데이터를 조회", async () => {
-    const id = "1";
-    const product = { id, name: "Test Product" };
-    mockRepository.findById.mockResolvedValue(product);
+  describe("getById", () => {
+    it("id로 상품을 반환", async () => {
+      const mockProduct = { id: 1, name: "Product 1" };
+      entityManager.findOne = jest.fn().mockResolvedValue(mockProduct);
 
-    const result = await service.getById(id);
-
-    expect(mockRepository.findById).toHaveBeenCalledWith(id);
-    expect(result).toEqual(product);
+      const result = await service.getById(1);
+      expect(result).toEqual(mockProduct);
+    });
   });
 
-  it("update 메서드는 데이터를 수정하고 반환", async () => {
-    const id = "1";
-    const data = { name: "Updated Product" };
-    const updatedProduct = { id, ...data };
-    mockRepository.update.mockResolvedValue(updatedProduct);
+  describe("update", () => {
+    it("상품을 업데이트", async () => {
+      const mockProduct = { id: 1, name: "Updated Product" };
+      const mockProductInput = { name: "Product Name" } as ProductInputDTO;
+      entityManager.update = jest.fn().mockResolvedValue({});
+      entityManager.findOne = jest.fn().mockResolvedValue(mockProduct);
 
-    const result = await service.update(id, data);
+      const result = await service.update(1, mockProductInput);
 
-    expect(mockRepository.update).toHaveBeenCalledWith(id, data);
-    expect(result).toEqual(updatedProduct);
+      expect(result).toEqual(mockProduct);
+      expect(entityManager.update).toHaveBeenCalledWith(ProductEntity, 1, mockProductInput);
+    });
   });
 
-  it("delete 메서드는 데이터를 삭제", async () => {
-    const id = "1";
+  describe("delete", () => {
+    it("상품 삭제", async () => {
+      entityManager.delete = jest.fn().mockResolvedValue({ affected: 1 });
 
-    await service.delete(id);
-
-    expect(mockRepository.delete).toHaveBeenCalledWith(id);
-  });
-
-  it("addOptions 메서드는 옵션을 추가하고 반환", async () => {
-    const id = "1";
-    const option = { id: "opt1", name: "Option 1" };
-    const product = { id, option_groups: [] };
-    const updatedProduct = { ...product, option_groups: [option] };
-    mockRepository.findById.mockResolvedValue(product);
-    mockRepository.update.mockResolvedValue(updatedProduct);
-
-    const result = await service.addOptions(id, option);
-
-    expect(mockRepository.findById).toHaveBeenCalledWith(id);
-    expect(mockRepository.update).toHaveBeenCalledWith(id, updatedProduct);
-    expect(result).toEqual(updatedProduct);
-  });
-
-  it("updateOptions 메서드는 옵션을 수정하고 반환", async () => {
-    const id = "1";
-    const optionId = "opt1";
-    const option = { id: optionId, name: "Updated Option" };
-    const product = { id, option_groups: [{ id: optionId, name: "Option 1" }] };
-    const updatedProduct = { ...product, option_groups: [option] };
-    mockRepository.findById.mockResolvedValue(product);
-    mockRepository.update.mockResolvedValue(updatedProduct);
-
-    const result = await service.updateOptions(id, optionId, option);
-
-    expect(mockRepository.findById).toHaveBeenCalledWith(id);
-    expect(mockRepository.update).toHaveBeenCalledWith(id, updatedProduct);
-    expect(result).toEqual(updatedProduct);
-  });
-
-  it("deleteOptions 메서드는 옵션을 삭제하고 반환", async () => {
-    const id = "1";
-    const optionId = "opt1";
-    const product = { id, option_groups: [{ id: optionId, name: "Option 1" }] };
-    const updatedProduct = { ...product };
-    mockRepository.findById.mockResolvedValue(product);
-    mockRepository.update.mockResolvedValue(updatedProduct);
-
-    const result = await service.deleteOptions(id, optionId);
-
-    expect(mockRepository.findById).toHaveBeenCalledWith(id);
-    expect(mockRepository.update).toHaveBeenCalledWith(id, updatedProduct);
-    expect(result).toEqual(updatedProduct);
-  });
-
-  it("addImages 메서드는 이미지를 추가하고 반환", async () => {
-    const id = "1";
-    const image = { url: "image.jpg" };
-    const product = { id, images: [] };
-    const updatedProduct = { ...product, images: [image] };
-    mockRepository.findById.mockResolvedValue(product);
-    mockRepository.update.mockResolvedValue(updatedProduct);
-
-    const result = await service.addImages(id, image);
-
-    expect(mockRepository.findById).toHaveBeenCalledWith(id);
-    expect(mockRepository.update).toHaveBeenCalledWith(id, updatedProduct);
-    expect(result).toEqual(updatedProduct);
+      await expect(service.delete(1)).resolves.not.toThrow();
+      expect(entityManager.delete).toHaveBeenCalledWith(ProductEntity, 1);
+    });
   });
 });
