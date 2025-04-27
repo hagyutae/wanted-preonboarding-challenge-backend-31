@@ -3,6 +3,51 @@ import { Prisma } from '@prisma/client';
 
 export const categoryRepository = {
   /**
+   * 모든 카테고리 조회 (계층 구조 포함)
+   */
+  async findAll(level?: number) {
+    const where: Prisma.CategoryWhereInput = {};
+    if (level) {
+      where.level = level;
+    }
+
+    // 레벨이 지정된 경우 해당 레벨만, 그렇지 않으면 모든 카테고리를 계층 구조로 가져옴
+    if (level) {
+      return prisma.category.findMany({
+        where,
+        include: {
+          parent: true,
+          children: {
+            include: {
+              children: true
+            }
+          }
+        },
+        orderBy: {
+          id: 'asc'
+        }
+      });
+    } else {
+      // 레벨이 지정되지 않은 경우 최상위 카테고리부터 모든 하위 항목을 포함하여 가져옴
+      return prisma.category.findMany({
+        where: {
+          level: 1
+        },
+        include: {
+          children: {
+            include: {
+              children: true
+            }
+          }
+        },
+        orderBy: {
+          id: 'asc'
+        }
+      });
+    }
+  },
+
+  /**
    * 모든 최상위 카테고리와 하위 카테고리를 조회
    */
   async findAllRoot() {
@@ -30,6 +75,7 @@ export const categoryRepository = {
     return prisma.category.findUnique({
       where: { id },
       include: {
+        parent: true,
         children: {
           include: {
             children: true
@@ -77,11 +123,18 @@ export const categoryRepository = {
       },
       include: {
         brand: true,
-        images: {
-          where: { isPrimary: true },
-          take: 1
-        },
-        price: true
+        seller: true,
+        images: true,
+        price: true,
+        optionGroups: {
+          include: {
+            options: {
+              select: {
+                stock: true
+              }
+            }
+          }
+        }
       },
       orderBy,
       skip,
