@@ -10,4 +10,10 @@ export * from './requests/review.request';
 export * from './responses/product.response';
 export * from './responses/category.response';
 export * from './responses/review.response';
-export * from './responses/main.response'; 
+export * from './responses/main.response';
+
+// 모델 타입 내보내기
+export * from './product.types';
+
+// 매퍼 내보내기
+export * from './mappers';
