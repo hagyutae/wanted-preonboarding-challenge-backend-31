@@ -4,6 +4,8 @@ import { Prisma } from '@prisma/client';
 export const categoryRepository = {
   /**
    * 모든 카테고리 조회 (계층 구조 포함)
+   * @param level - 필터링할 카테고리 레벨 (선택 사항)
+   * @returns 계층 구조를 포함한 카테고리 목록
    */
   async findAll(level?: number) {
     const where: Prisma.CategoryWhereInput = {};
@@ -19,57 +21,60 @@ export const categoryRepository = {
           parent: true,
           children: {
             include: {
-              children: true
-            }
-          }
+              children: true,
+            },
+          },
         },
         orderBy: {
-          id: 'asc'
-        }
+          id: 'asc',
+        },
       });
     } else {
       // 레벨이 지정되지 않은 경우 최상위 카테고리부터 모든 하위 항목을 포함하여 가져옴
       return prisma.category.findMany({
         where: {
-          level: 1
+          level: 1,
         },
         include: {
           children: {
             include: {
-              children: true
-            }
-          }
+              children: true,
+            },
+          },
         },
         orderBy: {
-          id: 'asc'
-        }
+          id: 'asc',
+        },
       });
     }
   },
 
   /**
-   * 모든 최상위 카테고리와 하위 카테고리를 조회
+   * 모든 최상위(레벨 1) 카테고리와 하위 카테고리를 조회
+   * @returns 최상위 카테고리 및 연결된 하위 카테고리 목록
    */
   async findAllRoot() {
     return prisma.category.findMany({
       where: {
-        level: 1
+        level: 1,
       },
       include: {
         children: {
           include: {
-            children: true
-          }
-        }
+            children: true,
+          },
+        },
       },
       orderBy: {
-        id: 'asc'
-      }
+        id: 'asc',
+      },
     });
   },
 
   /**
    * ID로 카테고리 조회 (하위 카테고리 포함)
+   * @param id - 조회할 카테고리 ID
+   * @returns 카테고리 정보와 하위 카테고리 구조
    */
   async findById(id: number) {
     return prisma.category.findUnique({
@@ -78,15 +83,17 @@ export const categoryRepository = {
         parent: true,
         children: {
           include: {
-            children: true
-          }
-        }
-      }
+            children: true,
+          },
+        },
+      },
     });
   },
 
   /**
-   * 특정 카테고리에 속한 상품 카운트
+   * 특정 카테고리에 속한 상품 개수 조회
+   * @param categoryIds - 카테고리 ID 배열
+   * @returns 해당 카테고리들에 속한 상품 개수
    */
   async countProducts(categoryIds: number[]) {
     return prisma.product.count({
@@ -94,32 +101,37 @@ export const categoryRepository = {
         categories: {
           some: {
             categoryId: {
-              in: categoryIds
-            }
-          }
-        }
-      }
+              in: categoryIds,
+            },
+          },
+        },
+      },
     });
   },
 
   /**
    * 특정 카테고리에 속한 상품 목록 조회
+   * @param categoryIds - 카테고리 ID 배열
+   * @param skip - 건너뛸 상품 수 (페이지네이션)
+   * @param take - 가져올 상품 수 (페이지네이션)
+   * @param orderBy - 정렬 조건
+   * @returns 카테고리에 속한 상품 목록
    */
   async findProductsByCategoryIds(
     categoryIds: number[],
     skip: number,
     take: number,
-    orderBy: Prisma.ProductOrderByWithRelationInput
+    orderBy: Prisma.ProductOrderByWithRelationInput,
   ) {
     return prisma.product.findMany({
       where: {
         categories: {
           some: {
             categoryId: {
-              in: categoryIds
-            }
-          }
-        }
+              in: categoryIds,
+            },
+          },
+        },
       },
       include: {
         brand: true,
@@ -130,15 +142,15 @@ export const categoryRepository = {
           include: {
             options: {
               select: {
-                stock: true
-              }
-            }
-          }
-        }
+                stock: true,
+              },
+            },
+          },
+        },
       },
       orderBy,
       skip,
-      take
+      take,
     });
-  }
-}; 
+  },
+};
