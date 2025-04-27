@@ -1,10 +1,7 @@
-import Product from "./Product";
 import User from "./User";
 
 export default class Review {
   constructor(
-    public id: string,
-    public product: Product,
     public user: User,
     public rating: number,
     public title: string,
@@ -12,5 +9,6 @@ export default class Review {
     public updated_at: Date,
     public verified_purchase: boolean,
     public helpful_votes: number,
+    public id?: number,
   ) {}
 }

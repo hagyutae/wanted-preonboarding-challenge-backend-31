@@ -56,11 +56,11 @@ export default class ProductRepository implements IRepository<ProductEntity> {
     return query.getMany();
   }
 
-  async findById(id: string): Promise<ProductEntity | null> {
+  async findById(id: number): Promise<ProductEntity | null> {
     return await this.repository.findOne({ where: { id } });
   }
 
-  async update(id: string, data: Partial<ProductEntity>): Promise<ProductEntity> {
+  async update(id: number, data: Partial<ProductEntity>): Promise<ProductEntity> {
     await this.repository.update(id, data);
 
     const updatedProduct = await this.findById(id);
@@ -71,7 +71,7 @@ export default class ProductRepository implements IRepository<ProductEntity> {
     return updatedProduct;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: number): Promise<void> {
     await this.repository.delete(id);
   }
 }

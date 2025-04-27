@@ -2,13 +2,13 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class ParamDTO {
   @ApiProperty({ description: "고유 식별자", example: "123" })
-  id: string;
+  id: number;
 }
 
 export class OptionParamDTO {
   @ApiProperty({ description: "고유 식별자", example: "123" })
-  id: string;
+  id: number;
 
   @ApiProperty({ description: "옵션에 대한 식별자", example: "456" })
-  optionId: string;
+  option_id: number;
 }

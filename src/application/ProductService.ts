@@ -17,19 +17,19 @@ export default class ProductService {
     return this.repository.findAll(query);
   }
 
-  async getById(id: string) {
+  async getById(id: number) {
     return this.repository.findById(id);
   }
 
-  async update(id: string, data: any) {
+  async update(id: number, data: any) {
     return this.repository.update(id, data);
   }
 
-  async delete(id: string) {
+  async delete(id: number) {
     await this.repository.delete(id);
   }
 
-  async addOptions(id: string, option: any) {
+  async addOptions(id: number, option: any) {
     const product = await this.repository.findById(id);
 
     const updatedProduct = {
@@ -42,7 +42,7 @@ export default class ProductService {
     return updatedProduct;
   }
 
-  async updateOptions(id: string, optionId: string, option: any) {
+  async updateOptions(id: number, optionid: number, option: any) {
     const product = await this.repository.findById(id);
 
     const updatedProduct = {
@@ -57,7 +57,7 @@ export default class ProductService {
     return updatedProduct;
   }
 
-  async deleteOptions(id: string, optionId: string) {
+  async deleteOptions(id: number, optionid: number) {
     const product = await this.repository.findById(id);
 
     const updatedProduct = {
@@ -68,7 +68,7 @@ export default class ProductService {
     return await this.repository.update(id, updatedProduct);
   }
 
-  async addImages(id: string, body: any) {
+  async addImages(id: number, body: any) {
     const product = await this.repository.findById(id);
 
     const updatedProduct = {

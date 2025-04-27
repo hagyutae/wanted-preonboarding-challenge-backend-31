@@ -14,7 +14,7 @@ import BrandEntity from "./Brand.entity";
 @Entity("products")
 export default class ProductEntity {
   @PrimaryGeneratedColumn("increment", { type: "bigint" })
-  id: string;
+  id: number;
 
   @Column({ type: "varchar", length: 255 })
   name: string;

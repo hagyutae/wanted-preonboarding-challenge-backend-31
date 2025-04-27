@@ -1,9 +1,8 @@
-import Brand from "./Brand";
 import Seller from "./Seller";
+import Brand from "./Brand";
 
 export default class Product {
   constructor(
-    public id: string,
     public name: string,
     public slug: string,
     public short_description: string,
@@ -13,5 +12,6 @@ export default class Product {
     public seller: Seller,
     public brand: Brand,
     public status: string,
+    public id?: number,
   ) {}
 }
