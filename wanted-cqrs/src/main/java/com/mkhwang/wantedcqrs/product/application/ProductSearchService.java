@@ -32,7 +32,7 @@ public class ProductSearchService {
   }
 
   public ProductSearchDetailDto getProductDetailById(Long id) {
-    ProductSearchDetailDto base = Optional.of(productSearchRepository.getProductDetailBaseById(id))
+    ProductSearchDetailDto base = Optional.ofNullable(productSearchRepository.getProductDetailBaseById(id))
             .orElseThrow(
                     () -> new ResourceNotFoundException("product.detail.not.found", null)
             );
