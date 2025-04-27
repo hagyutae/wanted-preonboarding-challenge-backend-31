@@ -25,10 +25,26 @@ public class ProductSearchDetailDto {
   private ProductDetailDto detail;
   private ProductPriceDto price;
 
-  private List<CategoryDto> categories;
+  private List<ProductCategoryDto> categories;
   private List<ProductOptionGroupDto> optionGroups;
   private List<ProductImageDto> images;
   private List<TagDto> tags;
   private ProductRatingDto rating;
   private List<RelatedProductDto> relatedProducts;
+
+  public ProductSearchDetailDto(Long id, String name, String slug, String shortDescription, String fullDescription,
+                                ProductStatus status, Instant createdAt, Instant updatedAt, SellerDto seller,
+                                BrandDto brand, ProductPriceDto price) {
+    this.id = id;
+    this.name = name;
+    this.slug = slug;
+    this.shortDescription = shortDescription;
+    this.fullDescription = fullDescription;
+    this.status = status;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.seller = seller;
+    this.brand = brand;
+    this.price = price;
+  }
 }

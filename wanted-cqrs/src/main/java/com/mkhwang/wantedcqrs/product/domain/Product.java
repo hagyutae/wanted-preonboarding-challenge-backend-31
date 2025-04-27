@@ -2,10 +2,14 @@ package com.mkhwang.wantedcqrs.product.domain;
 
 import com.mkhwang.wantedcqrs.config.audit.BaseCreateUpdateAudit;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 
 @Getter
 @Entity(name = "products")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseCreateUpdateAudit {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

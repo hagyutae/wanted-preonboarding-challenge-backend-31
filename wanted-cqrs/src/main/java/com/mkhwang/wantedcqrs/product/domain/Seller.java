@@ -14,8 +14,7 @@ public class Seller extends BaseCreateAudit {
   private Long id;
   @Column(nullable = false)
   private String name;
-  @Lob
-  @Column(name = "description")
+  @Column(name = "description", columnDefinition = "text")
   private String description;
   private String logoUrl;
   @Column(precision = 3, scale = 2)

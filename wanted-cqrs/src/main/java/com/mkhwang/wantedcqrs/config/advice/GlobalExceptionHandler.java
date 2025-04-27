@@ -1,7 +1,7 @@
 package com.mkhwang.wantedcqrs.config.advice;
 
-import com.mkhwang.wantedcqrs.common.exception.ForbiddenException;
 import com.mkhwang.wantedcqrs.config.advice.dto.ApiResponse;
+import com.mkhwang.wantedcqrs.config.exception.ForbiddenException;
 import com.mkhwang.wantedcqrs.config.exception.ResourceConflictException;
 import com.mkhwang.wantedcqrs.config.exception.ResourceNotFoundException;
 import com.mkhwang.wantedcqrs.config.i18n.I18nService;

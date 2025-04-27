@@ -13,8 +13,8 @@ public class Brand {
   private String name;
   @Column(unique = true)
   private String slug;
-  @Lob
-  @Column(name = "description")
+
+  @Column(name = "description", columnDefinition = "text")
   private String description;
   private String logoUrl;
   private String website;

@@ -11,3 +11,9 @@ services:
       - "35432:5432"
     volumes:
       - ./db:/var/lib/postgresql/data
+  redis:
+    container_name: wanted_redis
+    image: redis:7.4.2
+    ports:
+      - "16379:6379"
+    restart: always

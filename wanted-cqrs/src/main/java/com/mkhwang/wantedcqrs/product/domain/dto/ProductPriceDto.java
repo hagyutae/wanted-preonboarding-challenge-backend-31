@@ -13,4 +13,12 @@ public class ProductPriceDto {
   private BigDecimal costPrice;
   private String currency;
   private BigDecimal taxRate;
+
+  public ProductPriceDto(BigDecimal basePrice, BigDecimal salePrice, BigDecimal costPrice, String currency, BigDecimal taxRate) {
+    this.basePrice = basePrice;
+    this.salePrice = salePrice;
+    this.costPrice = costPrice;
+    this.currency = currency;
+    this.taxRate = taxRate;
+  }
 }

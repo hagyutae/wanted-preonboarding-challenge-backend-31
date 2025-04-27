@@ -6,6 +6,7 @@ import com.mkhwang.wantedcqrs.product.infra.ProductSearchRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
@@ -33,6 +34,8 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
   private final QProductCategory qProductCategory = QProductCategory.productCategory;
   private final QProductOptionGroup qProductOptionGroup = QProductOptionGroup.productOptionGroup;
   private final QProductOption qProductOption = QProductOption.productOption;
+  private final QProductTag qProductTag = QProductTag.productTag;
+  private final QTag qTag = QTag.tag;
 
 
   @Override
@@ -87,7 +90,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
             .join(qProduct.brand, qBrand)
             .join(qProduct.seller, qSeller)
             .leftJoin(qProductImage)
-              .on(qProduct.id.eq(qProductImage.product.id)
+            .on(qProduct.id.eq(qProductImage.product.id)
                     .and(qProductImage.primary.eq(true)))
             .where(condition)
             .orderBy(getOrderSpecifiers(pageable, qProduct.getType(), qProduct.getMetadata().getName()))
@@ -97,6 +100,72 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
 
 
     return new PageImpl<>(result, pageable, total);
+  }
+
+  @Override
+  public ProductSearchDetailDto getProductDetailBaseById(Long id) {
+    return jpaQueryFactory
+            .select(
+                    Projections.constructor(
+                            ProductSearchDetailDto.class,
+                            qProduct.id,
+                            qProduct.name,
+                            qProduct.slug,
+                            qProduct.shortDescription,
+                            qProduct.fullDescription,
+                            qProduct.status,
+                            qProduct.createdAt,
+                            qProduct.updatedAt,
+                            Projections.constructor(
+                                    SellerDto.class,
+                                    qSeller.id,
+                                    qSeller.name,
+                                    qSeller.logoUrl,
+                                    qSeller.rating,
+                                    qSeller.contactEmail,
+                                    qSeller.contactPhone
+                            ),
+                            Projections.constructor(
+                                    BrandDto.class,
+                                    qBrand.id,
+                                    qBrand.name,
+                                    qBrand.slug,
+                                    qBrand.logoUrl,
+                                    qBrand.website
+                            ),
+                            Projections.constructor(
+                                    ProductPriceDto.class,
+                                    qProductPrice.basePrice,
+                                    qProductPrice.salePrice,
+                                    qProductPrice.costPrice,
+                                    qProductPrice.currency,
+                                    qProductPrice.taxRate
+                                    )
+                    )
+            )
+            .from(qProduct)
+            .join(qProduct.brand, qBrand)
+            .join(qProduct.seller, qSeller)
+            .join(qProductPrice).on(
+                    qProductPrice.product.eq(qProduct)
+            )
+            .where(qProduct.id.eq(id))
+            .fetchOne();
+  }
+
+  @Override
+  public List<TagDto> findTagsByProductId(Long productId) {
+    return jpaQueryFactory
+            .select(Projections.constructor(
+                    TagDto.class,
+                    qTag.id,
+                    qTag.name,
+                    qTag.slug
+            ))
+            .from(qProductTag)
+            .join(qProductTag.tag, qTag)
+            .where(qProductTag.product.id.eq(productId))
+            .fetch();
   }
 
   private OrderSpecifier<?>[] getOrderSpecifiers(Pageable pageable, Class<?> entityClass, String alias) {

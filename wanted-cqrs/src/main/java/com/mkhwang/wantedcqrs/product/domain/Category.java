@@ -13,7 +13,7 @@ public class Category {
   private String name;
   @Column(unique = true)
   private String slug;
-  @Lob
+  @Column(columnDefinition = "text")
   private String description;
   private String imageUrl;
   @Column(nullable = false)
