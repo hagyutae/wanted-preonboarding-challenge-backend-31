@@ -2,6 +2,7 @@ package com.example.wanted_preonboarding_challenge_backend_31.web.product;
 
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_CREATE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_DELETE;
+import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_IMAGE_CREATE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_CREATE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_DELETE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_UPDATE;
@@ -10,9 +11,11 @@ import static com.example.wanted_preonboarding_challenge_backend_31.web.product.
 import com.example.wanted_preonboarding_challenge_backend_31.application.product.ProductService;
 import com.example.wanted_preonboarding_challenge_backend_31.common.dto.SuccessRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductImageCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductImageCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
@@ -77,5 +80,13 @@ public class ProductController {
     ) {
         productService.deleteOption(productId, optionId);
         return SuccessRes.of(PRODUCT_OPTION_DELETE);
+    }
+
+    @PostMapping("/{id}/images")
+    public SuccessRes<ProductImageCreateRes> imageCreate(
+            @PathVariable("id") Long productId,
+            @RequestBody @Validated ProductImageCreateReq productImageCreateReq
+    ) {
+        return SuccessRes.of(PRODUCT_IMAGE_CREATE, productService.createImage(productId, productImageCreateReq));
     }
 }
