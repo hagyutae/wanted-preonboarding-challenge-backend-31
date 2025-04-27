@@ -17,8 +17,43 @@ export default class ProductRepository implements IRepository<ProductEntity> {
     return await this.repository.save(entity);
   }
 
-  async findAll(filters: any): Promise<ProductEntity[]> {
-    return await this.repository.find();
+  async findAll({
+    status,
+    search,
+    sort,
+    page = 1,
+    perPage = 10,
+  }: {
+    page?: number;
+    perPage?: number;
+    sort?: string;
+    status?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    category?: number[];
+    seller?: number;
+    brand?: number;
+    inStock?: boolean;
+    search?: string;
+  }): Promise<ProductEntity[]> {
+    const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
+
+    const query = this.repository
+      .createQueryBuilder("products")
+      .where("1 = 1") // 조건 기본값
+      .andWhere(status ? "products.status = :status" : "1=1", { status })
+      // .andWhere(minPrice ? "products.price >= :minPrice" : "1=1", { minPrice })
+      // .andWhere(maxPrice ? "products.price <= :maxPrice" : "1=1", { maxPrice })
+      // .andWhere(category ? "products.categoryId = :category" : "1=1", { category })
+      // .andWhere(seller ? "products.sellerId = :seller" : "1=1", { seller })
+      // .andWhere(brand ? "products.brandId = :brand" : "1=1", { brand })
+      // .andWhere(typeof inStock === "boolean" ? "products.stock > 0" : "1=1")
+      .andWhere(search ? "products.name LIKE :search" : "1=1", { search: `%${search}%` })
+      .orderBy(`products.${field}`, order.toUpperCase() as "ASC" | "DESC")
+      .skip((page - 1) * perPage)
+      .take(perPage);
+
+    return query.getMany();
   }
 
   async findById(id: string): Promise<ProductEntity | null> {

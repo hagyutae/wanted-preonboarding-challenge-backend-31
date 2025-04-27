@@ -34,8 +34,15 @@ export default class ProductController {
   })
   @Get()
   async readAll(@Query() query: GetQueryDTO): Promise<ResponseDTO> {
-    // 필터링된 상품 목록을 조회하는 로직
-    throw new Error("Not implemented");
+    const items = await this.productService.getAll(query);
+
+    return {
+      success: true,
+      data: {
+        items,
+      },
+      message: "상품 목록을 성공적으로 조회했습니다.",
+    };
   }
 
   @ApiOperation({ summary: "상품 조회" })
