@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
 import ProductService from "src/application/ProductService";
-import { GetQueryDTO, PostBodyDTO } from "../dto";
+import { PostBodyDTO } from "../dto";
 import ProductController from "./Product.controller";
 
 describe("ProductController", () => {
@@ -45,11 +45,10 @@ describe("ProductController", () => {
 
   it("read 메서드는 ID로 상품을 조회하고 성공 메시지를 반환", async () => {
     const id = "1";
-    const query: GetQueryDTO = {};
     const product = { id, name: "Test Product" };
     mockService.getById.mockResolvedValue(product);
 
-    const result = await controller.read({ id }, query);
+    const result = await controller.read({ id });
 
     expect(mockService.getById).toHaveBeenCalledWith(id);
     expect(result).toEqual({

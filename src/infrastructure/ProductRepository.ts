@@ -17,7 +17,7 @@ export default class ProductRepository implements IRepository<ProductEntity> {
     return await this.repository.save(entity);
   }
 
-  async findAll(): Promise<ProductEntity[]> {
+  async findAll(filters: any): Promise<ProductEntity[]> {
     return await this.repository.find();
   }
 

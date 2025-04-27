@@ -13,8 +13,8 @@ export default class ProductService {
     return this.repository.create(data);
   }
 
-  async getAll() {
-    await this.repository.findAll();
+  async getAll(query: any) {
+    return this.repository.findAll(query);
   }
 
   async getById(id: string) {

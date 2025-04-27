@@ -26,6 +26,18 @@ export default class ProductController {
     };
   }
 
+  @ApiOperation({ summary: "상품 목록 조회" })
+  @ApiResponse({
+    status: 200,
+    description: "상품 목록을 성공적으로 조회했습니다.",
+    type: ResponseDTO,
+  })
+  @Get()
+  async readAll(@Query() query: GetQueryDTO): Promise<ResponseDTO> {
+    // 필터링된 상품 목록을 조회하는 로직
+    throw new Error("Not implemented");
+  }
+
   @ApiOperation({ summary: "상품 조회" })
   @ApiResponse({
     status: 200,
@@ -33,7 +45,7 @@ export default class ProductController {
     type: ResponseDTO,
   })
   @Get(":id")
-  async read(@Param() { id }: ParamDTO, @Query() query: GetQueryDTO): Promise<ResponseDTO> {
+  async read(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
     const data = await this.productService.getById(id);
 
     return {
