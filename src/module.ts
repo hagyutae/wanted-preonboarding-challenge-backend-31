@@ -3,19 +3,41 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import ProductService from "./application/ProductService";
 import typeormConfigProvider from "./infrastructure/provider";
-import ProductRepository from "./infrastructure/ProductRepository";
-import { ProductEntity } from "./infrastructure/entities";
-import { ProductController, ProductOptionsController } from "./interfaces/controllers";
+import {
+  BrandEntity,
+  CategoryEntity,
+  ProductCategoryEntity,
+  ProductDetailEntity,
+  ProductEntity,
+  ProductImageEntity,
+  ProductOptionEntity,
+  ProductOptionGroupEntity,
+  ProductPriceEntity,
+  ProductTagEntity,
+  SellerEntity,
+  TagEntity,
+} from "./infrastructure/entities";
+import { ProductController } from "./interfaces/controllers";
 
 @Module({
-  imports: [typeormConfigProvider, TypeOrmModule.forFeature([ProductEntity])],
-  providers: [
-    {
-      provide: "IRepository", // 인터페이스 제공
-      useClass: ProductRepository, // 구현체 연결
-    },
-    ProductService,
+  imports: [
+    typeormConfigProvider,
+    TypeOrmModule.forFeature([
+      ProductEntity,
+      ProductDetailEntity,
+      ProductImageEntity,
+      ProductOptionGroupEntity,
+      ProductOptionEntity,
+      ProductPriceEntity,
+      ProductTagEntity,
+      SellerEntity,
+      BrandEntity,
+      CategoryEntity,
+      TagEntity,
+      ProductCategoryEntity,
+    ]),
   ],
-  controllers: [ProductController, ProductOptionsController],
+  providers: [ProductService],
+  controllers: [ProductController],
 })
 export class AppModule {}
