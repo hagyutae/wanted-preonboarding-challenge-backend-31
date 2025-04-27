@@ -1,52 +1,23 @@
-import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { EntityManager } from "typeorm";
 
 import { Product_Category } from "src/domain";
 import {
   BrandEntity,
-  CategoryEntity,
   ProductCategoryEntity,
   ProductDetailEntity,
   ProductEntity,
   ProductImageEntity,
-  ProductOptionEntity,
   ProductOptionGroupEntity,
   ProductPriceEntity,
   ProductTagEntity,
   SellerEntity,
-  TagEntity,
 } from "src/infrastructure/entities";
 import { ProductInputDTO } from "./dto/ProductInputDTO";
 
 @Injectable()
 export default class ProductService {
-  constructor(
-    @InjectRepository(ProductEntity)
-    private readonly productRepository: Repository<ProductEntity>,
-    @InjectRepository(ProductDetailEntity)
-    private readonly productDetailRepository: Repository<ProductDetailEntity>,
-    @InjectRepository(ProductPriceEntity)
-    private readonly productPriceRepository: Repository<ProductPriceEntity>,
-    @InjectRepository(ProductCategoryEntity)
-    private readonly productCategoryRepository: Repository<ProductCategoryEntity>,
-    @InjectRepository(ProductOptionGroupEntity)
-    private readonly productOptionGroupRepository: Repository<ProductOptionGroupEntity>,
-    @InjectRepository(ProductOptionEntity)
-    private readonly productOptionRepository: Repository<ProductOptionEntity>,
-    @InjectRepository(ProductImageEntity)
-    private readonly productImageRepository: Repository<ProductImageEntity>,
-    @InjectRepository(ProductTagEntity)
-    private readonly productTagRepository: Repository<ProductTagEntity>,
-    @InjectRepository(SellerEntity)
-    private readonly sellerRepository: Repository<SellerEntity>,
-    @InjectRepository(BrandEntity)
-    private readonly brandRepository: Repository<BrandEntity>,
-    @InjectRepository(CategoryEntity)
-    private readonly categoryRepository: Repository<CategoryEntity>,
-    @InjectRepository(ProductTagEntity)
-    private readonly tagRepository: Repository<TagEntity>,
-  ) {}
+  constructor(private readonly entityManager: EntityManager) {}
 
   async create(params: any) {
     const {
@@ -61,28 +32,36 @@ export default class ProductService {
       ...product
     }: ProductInputDTO = params;
 
-    const seller = await this.sellerRepository.findOne({ where: { id: seller_id } });
+    const seller = await this.entityManager.findOne(SellerEntity, { where: { id: seller_id } });
+
     if (!seller) {
       throw new Error(`Seller with id ${seller_id} not found`);
     }
-    const brand = await this.brandRepository.findOne({ where: { id: brand_id } });
+    const brand = await this.entityManager.findOne(BrandEntity, { where: { id: brand_id } });
     if (!brand) {
       throw new Error(`Brand with id ${brand_id} not found`);
     }
 
-    const productEntity = this.productRepository.create({ ...product, seller, brand });
-    await this.productRepository.save(productEntity);
+    const productEntity = this.entityManager.create(ProductEntity, { ...product, seller, brand });
+    await this.entityManager.save(productEntity);
 
-    const detailEntity = this.productDetailRepository.create({ ...detail, product: productEntity });
-    await this.productDetailRepository.save(detailEntity);
+    const detailEntity = this.entityManager.create(ProductDetailEntity, {
+      ...detail,
+      product: productEntity,
+    });
+    await this.entityManager.save(detailEntity);
 
-    const priceEntity = this.productPriceRepository.create({ ...price, product: productEntity });
-    await this.productPriceRepository.save(priceEntity);
+    const priceEntity = this.entityManager.create(ProductPriceEntity, {
+      ...price,
+      product: productEntity,
+    });
+    await this.entityManager.save(priceEntity);
 
-    const categoryEntities = this.productCategoryRepository.create(
+    const categoryEntities = this.entityManager.create(
+      ProductCategoryEntity,
       await Promise.all(
         categories.map(async ({ category_id, is_primary }: Product_Category) => {
-          const foundCategory = await this.categoryRepository.findOne({
+          const foundCategory = await this.entityManager.findOne(ProductCategoryEntity, {
             where: { id: category_id },
           });
           if (!foundCategory) {
@@ -93,33 +72,36 @@ export default class ProductService {
         }),
       ),
     );
-    await this.productCategoryRepository.save(categoryEntities);
+    await this.entityManager.save(categoryEntities);
 
     for (const optionGroup of option_groups) {
       const { options, ...groupEntity } = optionGroup;
 
-      const optionGroupEntity = this.productOptionGroupRepository.create({
+      const optionGroupEntity = this.entityManager.create(ProductOptionGroupEntity, {
         ...groupEntity,
         product: productEntity,
       });
 
-      const optionEntities = this.productOptionRepository.create(
+      const optionEntities = this.entityManager.create(
+        ProductOptionGroupEntity,
         options.map((option) => ({ ...option, optionGroup: optionGroupEntity })),
       );
 
-      await this.productOptionRepository.save(optionEntities);
-      await this.productOptionGroupRepository.save(optionGroupEntity);
+      await this.entityManager.save(optionEntities);
+      await this.entityManager.save(optionGroupEntity);
     }
 
-    const imageEntities = this.productImageRepository.create(
+    const imageEntities = this.entityManager.create(
+      ProductImageEntity,
       images.map((image) => ({ ...image, product: productEntity })),
     );
-    await this.productImageRepository.save(imageEntities);
+    await this.entityManager.save(imageEntities);
 
-    const tagEntities = this.productTagRepository.create(
+    const tagEntities = this.entityManager.create(
+      ProductTagEntity,
       await Promise.all(
         tag_ids.map(async (tag_id) => {
-          const tag = await this.tagRepository.findOne({
+          const tag = await this.entityManager.findOne(ProductTagEntity, {
             where: { id: tag_id },
           });
           if (!tag) {
@@ -130,7 +112,7 @@ export default class ProductService {
         }),
       ),
     );
-    await this.productTagRepository.save(tagEntities);
+    await this.entityManager.save(tagEntities);
 
     return productEntity;
   }
@@ -156,7 +138,8 @@ export default class ProductService {
   }) {
     const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
 
-    const query = this.productRepository
+    const query = this.entityManager
+      .getRepository(ProductEntity)
       .createQueryBuilder("products")
       .where("1 = 1") // 조건 기본값
       .andWhere(status ? "products.status = :status" : "1=1", { status })
@@ -185,11 +168,11 @@ export default class ProductService {
   }
 
   async getById(id: number) {
-    return await this.productRepository.findOne({ where: { id } });
+    return await this.entityManager.findOne(ProductEntity, { where: { id } });
   }
 
   async update(id: number, data: ProductInputDTO) {
-    await this.productRepository.update(id, data);
+    await this.entityManager.update(ProductEntity, id, data);
 
     const updatedProduct = await this.getById(id);
     if (!updatedProduct) {
@@ -200,6 +183,6 @@ export default class ProductService {
   }
 
   async delete(id: number) {
-    await this.productRepository.delete(id);
+    await this.entityManager.delete(ProductEntity, id);
   }
 }
