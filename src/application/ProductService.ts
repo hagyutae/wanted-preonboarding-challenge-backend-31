@@ -65,9 +65,7 @@ export default class ProductService {
       option_groups: product?.option_groups.filter((opt: any) => opt.id !== id),
     };
 
-    await this.repository.update(id, updatedProduct);
-
-    return null;
+    return await this.repository.update(id, updatedProduct);
   }
 
   async addImages(id: string, body: any) {
