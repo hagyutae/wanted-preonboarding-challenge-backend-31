@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 
 import ProductEntity from "./Product.entity";
 
@@ -7,7 +7,7 @@ export default class ProductDetailEntity {
   @PrimaryGeneratedColumn("increment")
   id: number;
 
-  @ManyToOne(() => ProductEntity, (product) => product.id, {
+  @OneToOne(() => ProductEntity, (product) => product.id, {
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "product_id" })
