@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import ProductOptionsService from "src/application/ProductOptionsService";
-import { OptionParamDTO, OptionBodyDTO, ResponseDTO, ImageBodyDTO } from "../dto";
+import { ProductParamDTO, OptionParamDTO, OptionBodyDTO, ResponseDTO, ImageBodyDTO } from "../dto";
 
 @ApiTags("상품 옵션 관리")
 @Controller("products")
@@ -18,7 +18,7 @@ export default class ProductOptionsController {
   })
   @Post(":id/options")
   async addOptions(
-    @Param() { id }: OptionParamDTO,
+    @Param() { id }: ProductParamDTO,
     @Body() body: OptionBodyDTO,
   ): Promise<ResponseDTO> {
     const data = await this.productOptionsService.addOptions(id, body.option_group_id!, body);
