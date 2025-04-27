@@ -9,10 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Product", description = "Product API")
 @RestController
@@ -33,4 +30,13 @@ public class ProductController {
   public ProductSearchDetailDto getProductDetail(@PathVariable Long id) {
     return productSearchService.getProductDetailById(id);
   }
+
+  @ApiMessage("product.delete.success")
+  @Operation(summary = "상품 삭제")
+  @DeleteMapping("/api/products/{id}")
+  public void deleteProduct(@PathVariable Long id) {
+    productSearchService.deleteProduct(id);
+  }
+
+
 }

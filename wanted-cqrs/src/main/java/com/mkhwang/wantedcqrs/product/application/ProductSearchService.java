@@ -10,6 +10,7 @@ import com.mkhwang.wantedcqrs.product.infra.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,4 +80,10 @@ public class ProductSearchService {
     }
     return result;
   }
+
+  @Transactional
+  public void deleteProduct(Long id) {
+    productRepository.deleteById(id);
+  }
+
 }
