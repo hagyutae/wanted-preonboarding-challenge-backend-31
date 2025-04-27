@@ -17,17 +17,7 @@ export default class ProductController {
   })
   @Post()
   async create(@Body() body: PostBodyDTO): Promise<ResponseDTO> {
-    const { detail, price, categories, option_groups, images, tags, ...product } = body;
-
-    const data = await this.productService.create({
-      product,
-      detail,
-      price,
-      categories,
-      option_groups,
-      images,
-      tags,
-    });
+    const data = await this.productService.create(body);
 
     return {
       success: true,
