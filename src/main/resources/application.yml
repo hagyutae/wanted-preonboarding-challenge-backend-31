@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: cqrs-challenge
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cqrs-challenge
+    username: myuser
+    password: mypassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
