@@ -1,19 +1,18 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import ProductService from "src/application/ProductService";
+import { Product_Image, Product_Option } from "src/domain";
 import ProductOptionsController from "./Product_Options.controller";
-import { OptionParamDTO, PostBodyDTO } from "../dto";
 
 describe("ProductOptionsController", () => {
-  let controller: ProductOptionsController;
-  let mockService: jest.Mocked<ProductService>;
+  let mockController: ProductOptionsController;
+  let mockService: jest.Mocked<ProductOptionsService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProductOptionsController],
       providers: [
         {
-          provide: ProductService,
+          provide: ProductOptionsService,
           useValue: {
             addOptions: jest.fn(),
             updateOptions: jest.fn(),
@@ -24,73 +23,85 @@ describe("ProductOptionsController", () => {
       ],
     }).compile();
 
-    controller = module.get<ProductOptionsController>(ProductOptionsController);
-    mockService = module.get(ProductService);
+    mockController = module.get<ProductOptionsController>(ProductOptionsController);
+    mockService = module.get(ProductOptionsService);
   });
 
-  it("addOptions 메서드는 옵션을 추가하고 성공 메시지를 반환", async () => {
-    const id = "1";
-    const body = { name: "Option 1" } as PostBodyDTO;
-    const addedOption = { id: "option1", ...body };
-    mockService.addOptions.mockResolvedValue(addedOption);
+  describe("addOptions", () => {
+    it("상품 옵션 추가 성공", async () => {
+      const param = { id: 1, option_id: 2 };
+      const body = { option_group_id: 2, name: "Option 1" } as OptionBodyDTO;
+      const data = { id: param.id, ...body } as Product_Option;
+      jest.spyOn(mockService, "addOptions").mockResolvedValue(data);
 
-    const result = await controller.addOptions({ id } as OptionParamDTO, body);
+      const result = await mockController.addOptions(param, body);
 
-    expect(mockService.addOptions).toHaveBeenCalledWith(id, body);
-    expect(result).toEqual({
-      success: true,
-      data: addedOption,
-      message: "상품 옵션이 성공적으로 추가되었습니다.",
+      expect(mockService.addOptions).toHaveBeenCalledWith(param, body);
+      expect(result).toEqual({
+        success: true,
+        data: { id: 1, name: "Option 1" },
+        message: "상품 옵션이 성공적으로 추가되었습니다.",
+      });
     });
   });
 
-  it("updateOptions 메서드는 옵션을 수정하고 성공 메시지를 반환", async () => {
-    const id = "1";
-    const optionId = "option1";
-    const body = { name: "Updated Option" } as PostBodyDTO;
-    const updatedOption = { id: optionId, ...body };
-    mockService.updateOptions.mockResolvedValue(updatedOption);
+  describe("updateOptions", () => {
+    it("상품 옵션 수정 성공", async () => {
+      const param = { id: 1, option_id: 2 };
+      const body = { name: "Updated Option" } as OptionBodyDTO;
+      const data = {
+        id: param.id,
+        option_group_id: param.option_id,
+        ...body,
+      } as Product_Option;
+      jest.spyOn(mockService, "updateOptions").mockResolvedValue(data);
 
-    const result = await controller.updateOptions({ id, optionId } as OptionParamDTO, body);
+      const result = await mockController.updateOptions(param, body);
 
-    expect(mockService.updateOptions).toHaveBeenCalledWith(id, optionId, body);
-    expect(result).toEqual({
-      success: true,
-      data: updatedOption,
-      message: "상품 옵션이 성공적으로 수정되었습니다.",
+      expect(mockService.updateOptions).toHaveBeenCalledWith(param.id, param.option_id, body);
+      expect(result).toEqual({
+        success: true,
+        data: {
+          id: param.id,
+          option_group_id: param.option_id,
+          ...body,
+        },
+        message: "상품 옵션이 성공적으로 수정되었습니다.",
+      });
     });
   });
 
-  it("deleteOptions 메서드는 옵션을 삭제하고 성공 메시지를 반환", async () => {
-    const id = "1";
-    const optionId = "option1";
-    mockService.deleteOptions.mockResolvedValue(undefined);
+  describe("deleteOptions", () => {
+    it("상품 옵션 삭제 성공", async () => {
+      const param = { id: 1, option_id: 2 };
+      jest.spyOn(mockService, "deleteOptions").mockResolvedValue(null);
 
-    const result = await controller.deleteOptions({ id, optionId } as OptionParamDTO);
+      const result = await mockController.deleteOptions(param);
 
-    expect(mockService.deleteOptions).toHaveBeenCalledWith(id, optionId);
-    expect(result).toEqual({
-      success: true,
-      data: undefined,
-      message: "상품 옵션이 성공적으로 삭제되었습니다.",
+      expect(mockService.deleteOptions).toHaveBeenCalledWith(param.id, param.option_id);
+      expect(result).toEqual({
+        success: true,
+        data: null,
+        message: "상품 옵션이 성공적으로 삭제되었습니다.",
+      });
     });
   });
 
-  it("addImages 메서드는 이미지를 추가하고 성공 메시지를 반환", async () => {
-    const id = "1";
-    const body = {
-      images: [{ url: "http://example.com/image.jpg" }],
-    } as PostBodyDTO;
-    const addedImage = { id: "image1", ...body };
-    mockService.addImages.mockResolvedValue(addedImage);
+  describe("addImages", () => {
+    it("상품 이미지 추가 성공", async () => {
+      const param = { id: 1 } as OptionParamDTO;
+      const body = { url: "http://example.com/image.jpg" } as ImageBodyDTO;
+      const data = { id: param.id, url: body.url } as Product_Image;
+      jest.spyOn(mockService, "addImages").mockResolvedValue(data);
 
-    const result = await controller.addImages({ id } as OptionParamDTO, body);
+      const result = await mockController.addImages(param, body);
 
-    expect(mockService.addImages).toHaveBeenCalledWith(id, body);
-    expect(result).toEqual({
-      success: true,
-      data: addedImage,
-      message: "상품 이미지가 성공적으로 추가되었습니다.",
+      expect(mockService.addImages).toHaveBeenCalledWith(param.id, body);
+      expect(result).toEqual({
+        success: true,
+        data: { id: 1, url: "http://example.com/image.jpg" },
+        message: "상품 이미지가 성공적으로 추가되었습니다.",
+      });
     });
   });
 });
