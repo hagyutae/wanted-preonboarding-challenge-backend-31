@@ -39,10 +39,14 @@ describe("ProductService", () => {
     expect(result).toEqual(createdProduct);
   });
 
-  it("getAll 메서드는 모든 데이터를 조회", async () => {
-    await service.getAll();
+  it("findAll 메서드는 필터링된 데이터들을 반환", async () => {
+    const mockResult = [{ id: 1, name: "소파" }];
+    jest.spyOn(mockRepository, "findAll").mockResolvedValue(mockResult);
 
-    expect(mockRepository.findAll).toHaveBeenCalled();
+    const result = await service.getAll({ status: "ACTIVE" });
+
+    expect(mockRepository.findAll).toHaveBeenCalledWith({ status: "ACTIVE" });
+    expect(result).toEqual(mockResult);
   });
 
   it("getById 메서드는 ID로 데이터를 조회", async () => {

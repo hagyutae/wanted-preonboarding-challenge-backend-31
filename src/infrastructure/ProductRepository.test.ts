@@ -45,14 +45,33 @@ describe("ProductRepository", () => {
     expect(result).toEqual(createdProduct);
   });
 
-  it("findAll 메서드는 모든 데이터를 조회", async () => {
-    const products = [{ id: "1", name: "Test Product" }] as ProductEntity[];
-    mockRepository.find.mockResolvedValue(products);
+  it("findAll 메서드는 필터링된 데이터를 조회", async () => {
+    const mockResult = [{ id: 1, name: "소파" }];
+    const mockQueryBuilder: any = {
+      where: jest.fn().mockReturnThis(),
+      andWhere: jest.fn().mockReturnThis(),
+      orderBy: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      take: jest.fn().mockReturnThis(),
+      getMany: jest.fn().mockResolvedValue(mockResult),
+    };
+    (mockRepository.createQueryBuilder as jest.Mock) = jest.fn().mockReturnValue(mockQueryBuilder);
 
-    const result = await repository.findAll();
+    const result = await repository.findAll({
+      page: 1,
+      perPage: 10,
+      sort: "created_at:desc",
+      status: "ACTIVE",
+      minPrice: 10000,
+      maxPrice: 100000,
+      category: [5],
+      seller: 1,
+      brand: 2,
+      inStock: true,
+      search: "소파",
+    });
 
-    expect(mockRepository.find).toHaveBeenCalled();
-    expect(result).toEqual(products);
+    expect(result).toEqual(mockResult);
   });
 
   it("findById 메서드는 ID로 데이터를 조회", async () => {
