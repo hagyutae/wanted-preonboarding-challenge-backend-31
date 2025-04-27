@@ -3,7 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import ProductService from "src/application/ProductService";
 import { ProductEntity } from "src/infrastructure/entities";
 import ProductController from "./Product.controller";
-import { PostBodyDTO, GetQueryDTO, ParamDTO, ResponseDTO } from "../dto";
+import { BodyDTO, ProductQueryDTO, ProductParamDTO, ResponseDTO } from "../dto";
 
 describe("ProductController", () => {
   let productController: ProductController;
@@ -31,7 +31,7 @@ describe("ProductController", () => {
   });
 
   it("상품 생성", async () => {
-    const body = { name: "상품1" } as PostBodyDTO;
+    const body = { name: "상품1" } as BodyDTO;
     const response = {
       success: true,
       data: { id: 1, ...body },
@@ -47,7 +47,7 @@ describe("ProductController", () => {
   });
 
   it("모든 상품을 조회", async () => {
-    const query = { page: 1, perPage: 10 } as GetQueryDTO;
+    const query = { page: 1, perPage: 10 } as ProductQueryDTO;
     const items = [
       {
         id: 1,
@@ -74,7 +74,7 @@ describe("ProductController", () => {
   });
 
   it("id로 상품을 조회", async () => {
-    const param: ParamDTO = { id: 1 };
+    const param: ProductParamDTO = { id: 1 };
     const data = {
       id: 1,
       name: "상품1",
@@ -98,8 +98,8 @@ describe("ProductController", () => {
   });
 
   it("상품을 수정", async () => {
-    const param: ParamDTO = { id: 1 };
-    const body = { name: "상품1 수정" } as PostBodyDTO;
+    const param: ProductParamDTO = { id: 1 };
+    const body = { name: "상품1 수정" } as BodyDTO;
     const data = {
       id: 1,
       name: "상품1",
@@ -123,7 +123,7 @@ describe("ProductController", () => {
   });
 
   it("상품을 삭제", async () => {
-    const param = { id: 1 } as ParamDTO;
+    const param = { id: 1 } as ProductParamDTO;
     const response: ResponseDTO = {
       success: true,
       data: undefined,

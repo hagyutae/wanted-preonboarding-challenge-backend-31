@@ -117,7 +117,7 @@ class Image {
 
 type TagId = number;
 
-export default class PostBodyDTO {
+export default class ProductBodyDTO {
   @ApiProperty({ description: "상품 이름", example: "슈퍼 편안한 소파" })
   name: string;
 

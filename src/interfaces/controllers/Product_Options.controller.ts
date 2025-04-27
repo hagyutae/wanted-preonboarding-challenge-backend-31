@@ -1,13 +1,13 @@
 import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-import ProductService from "src/application/ProductService";
-import { OptionParamDTO, PostBodyDTO, ResponseDTO } from "../dto";
+import ProductOptionsService from "src/application/ProductOptionsService";
+import { OptionParamDTO, OptionBodyDTO, ResponseDTO, ImageBodyDTO } from "../dto";
 
 @ApiTags("상품 옵션 관리")
 @Controller("products")
 export default class ProductOptionsController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productOptionsService: ProductOptionsService) {}
 
   @ApiOperation({ summary: "상품 옵션 추가" })
   @ApiParam({ name: "id", description: "상품 ID" })
@@ -19,9 +19,9 @@ export default class ProductOptionsController {
   @Post(":id/options")
   async addOptions(
     @Param() { id }: OptionParamDTO,
-    @Body() body: PostBodyDTO,
+    @Body() body: OptionBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.productService.addOptions(id, body);
+    const data = await this.productOptionsService.addOptions(id, body.option_group_id!, body);
 
     return {
       success: true,
@@ -32,18 +32,18 @@ export default class ProductOptionsController {
 
   @ApiOperation({ summary: "상품 옵션 수정" })
   @ApiParam({ name: "id", description: "상품 ID" })
-  @ApiParam({ name: "optionId", description: "옵션 ID" })
+  @ApiParam({ name: "option_id", description: "옵션 ID" })
   @ApiResponse({
     status: 200,
     description: "상품 옵션이 성공적으로 수정되었습니다.",
     type: ResponseDTO,
   })
-  @Put(":id/options/:optionId")
+  @Put(":id/options/:option_id")
   async updateOptions(
-    @Param() { id, optionId }: OptionParamDTO,
-    @Body() body: PostBodyDTO,
+    @Param() { id, option_id }: OptionParamDTO,
+    @Body() body: OptionBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.productService.updateOptions(id, optionId, body);
+    const data = await this.productOptionsService.updateOptions(id, option_id, body);
 
     return {
       success: true,
@@ -54,19 +54,19 @@ export default class ProductOptionsController {
 
   @ApiOperation({ summary: "상품 옵션 삭제" })
   @ApiParam({ name: "id", description: "상품 ID" })
-  @ApiParam({ name: "optionId", description: "옵션 ID" })
+  @ApiParam({ name: "option_id", description: "옵션 ID" })
   @ApiResponse({
     status: 200,
     description: "상품 옵션이 성공적으로 삭제되었습니다.",
     type: ResponseDTO,
   })
-  @Delete(":id/options/:optionId")
-  async deleteOptions(@Param() { id, optionId }: OptionParamDTO): Promise<ResponseDTO> {
-    const data = await this.productService.deleteOptions(id, optionId);
+  @Delete(":id/options/:option_id")
+  async deleteOptions(@Param() { id, option_id }: OptionParamDTO): Promise<ResponseDTO> {
+    await this.productOptionsService.deleteOptions(id, option_id);
 
     return {
       success: true,
-      data,
+      data: null,
       message: "상품 옵션이 성공적으로 삭제되었습니다.",
     };
   }
@@ -81,9 +81,9 @@ export default class ProductOptionsController {
   @Post(":id/images")
   async addImages(
     @Param() { id }: OptionParamDTO,
-    @Body() body: PostBodyDTO,
+    @Body() body: ImageBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.productService.addImages(id, body);
+    const data = await this.productOptionsService.addImages(id, body.option_id, body);
 
     return {
       success: true,

@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 
-export default class GetQueryDTO {
+export default class ProductQueryDTO {
   @ApiPropertyOptional({ description: "페이지 번호 (기본값: 1)", example: 1 })
   page?: number = 1;
 

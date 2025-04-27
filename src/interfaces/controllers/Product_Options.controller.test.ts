@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
 import { Product_Image, Product_Option } from "src/domain";
+import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO } from "../dto";
 import ProductOptionsController from "./Product_Options.controller";
 
 describe("ProductOptionsController", () => {

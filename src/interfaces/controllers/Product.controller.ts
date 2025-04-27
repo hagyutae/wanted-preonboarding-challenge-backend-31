@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import ProductService from "src/application/ProductService";
-import { ParamDTO, GetQueryDTO, ResponseDTO, PostBodyDTO } from "../dto";
+import { ProductParamDTO, ProductQueryDTO, ResponseDTO, BodyDTO } from "../dto";
 
 @ApiTags("상품 관리")
 @Controller("products")
@@ -16,7 +16,7 @@ export default class ProductController {
     type: ResponseDTO,
   })
   @Post()
-  async create(@Body() body: PostBodyDTO): Promise<ResponseDTO> {
+  async create(@Body() body: BodyDTO): Promise<ResponseDTO> {
     const data = await this.productService.create(body);
 
     return {
@@ -33,7 +33,7 @@ export default class ProductController {
     type: ResponseDTO,
   })
   @Get()
-  async readAll(@Query() query: GetQueryDTO): Promise<ResponseDTO> {
+  async readAll(@Query() query: ProductQueryDTO): Promise<ResponseDTO> {
     const data = await this.productService.getAll(query);
 
     return {
@@ -50,7 +50,7 @@ export default class ProductController {
     type: ResponseDTO,
   })
   @Get(":id")
-  async read(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
+  async read(@Param() { id }: ProductParamDTO): Promise<ResponseDTO> {
     const data = await this.productService.getById(id);
 
     return {
@@ -67,7 +67,7 @@ export default class ProductController {
     type: ResponseDTO,
   })
   @Put(":id")
-  async update(@Param() { id }: ParamDTO, @Body() body: PostBodyDTO): Promise<ResponseDTO> {
+  async update(@Param() { id }: ProductParamDTO, @Body() body: BodyDTO): Promise<ResponseDTO> {
     const data = await this.productService.update(id, body);
 
     return {
@@ -84,7 +84,7 @@ export default class ProductController {
     type: ResponseDTO,
   })
   @Delete(":id")
-  async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
+  async delete(@Param() { id }: ProductParamDTO): Promise<ResponseDTO> {
     const data = await this.productService.delete(id);
 
     return {

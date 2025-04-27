@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class ParamDTO {
+export class ProductParamDTO {
   @ApiProperty({ description: "고유 식별자", example: "123" })
   id: number;
 }
