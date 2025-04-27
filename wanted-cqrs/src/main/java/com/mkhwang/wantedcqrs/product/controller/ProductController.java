@@ -1,6 +1,8 @@
 package com.mkhwang.wantedcqrs.product.controller;
 
+import com.mkhwang.wantedcqrs.config.advice.ApiMessage;
 import com.mkhwang.wantedcqrs.product.application.ProductSearchService;
+import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchDetailDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchResultDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Product", description = "Product API")
@@ -17,9 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
   private final ProductSearchService productSearchService;
 
+  @ApiMessage("product.search.success")
   @Operation(summary = "상품 검색")
   @GetMapping("/api/products")
   public Page<ProductSearchResultDto> searchProducts(@ModelAttribute ProductSearchDto searchDto) {
     return productSearchService.searchProducts(searchDto);
+  }
+
+  @ApiMessage("product.detail.success")
+  @Operation(summary = "상품 상세 조회")
+  @GetMapping("/api/products/{id}")
+  public ProductSearchDetailDto getProductDetail(@PathVariable Long id) {
+    return productSearchService.getProductDetailById(id);
   }
 }

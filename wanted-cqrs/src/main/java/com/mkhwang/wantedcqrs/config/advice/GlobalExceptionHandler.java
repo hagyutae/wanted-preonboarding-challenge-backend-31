@@ -55,9 +55,9 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<ApiResponse<?>> handleResourceNotFoundException(ResourceConflictException ex) {
+  public ResponseEntity<ApiResponse<?>> handleResourceNotFoundException(ResourceNotFoundException ex) {
     return new ResponseEntity<>(
-            ApiResponse.error("RESOURCE_NOT_FOUND", "요청한 리소스를 찾을 수 없습니다.", ex.getDetails()),
+            ApiResponse.error("RESOURCE_NOT_FOUND", i18nService.getMessage(ex.getMessage()), ex.getDetails()),
             HttpStatus.CONFLICT);
   }
 

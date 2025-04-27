@@ -1,6 +1,7 @@
 package com.mkhwang.wantedcqrs.product.application;
 
 
+import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchDetailDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchResultDto;
 import com.mkhwang.wantedcqrs.product.infra.ProductRepository;
@@ -17,5 +18,10 @@ public class ProductSearchService {
 
   public Page<ProductSearchResultDto> searchProducts(ProductSearchDto searchDto) {
     return productSearchRepository.searchProducts(searchDto);
+  }
+
+  public ProductSearchDetailDto getProductDetailById(Long id) {
+//    throw new ResourceNotFoundException("product.detail.not.found", null);
+    return null;
   }
 }
