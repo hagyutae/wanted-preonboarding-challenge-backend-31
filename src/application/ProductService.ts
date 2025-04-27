@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
+import { Injectable } from "@nestjs/common";
 
 import { Product_Category } from "src/domain";
 import {
@@ -118,11 +118,16 @@ export default class ProductService {
   }
 
   async getAll({
-    status,
-    search,
-    sort,
     page = 1,
     perPage = 10,
+    sort,
+    status,
+    minPrice,
+    maxPrice,
+    category,
+    seller,
+    brand,
+    search,
   }: {
     page?: number;
     perPage?: number;
@@ -141,14 +146,23 @@ export default class ProductService {
     const query = this.entityManager
       .getRepository(ProductEntity)
       .createQueryBuilder("products")
+      .leftJoinAndSelect(
+        "product_prices",
+        "product_prices",
+        "product_prices.product_id = products.id",
+      )
+      .leftJoinAndSelect(
+        "product_categories",
+        "product_categories",
+        "product_categories.product_id = products.id",
+      )
       .where("1 = 1") // 조건 기본값
       .andWhere(status ? "products.status = :status" : "1=1", { status })
-      // .andWhere(minPrice ? "products.price >= :minPrice" : "1=1", { minPrice })
-      // .andWhere(maxPrice ? "products.price <= :maxPrice" : "1=1", { maxPrice })
-      // .andWhere(category ? "products.categoryId = :category" : "1=1", { category })
-      // .andWhere(seller ? "products.sellerId = :seller" : "1=1", { seller })
-      // .andWhere(brand ? "products.brandId = :brand" : "1=1", { brand })
-      // .andWhere(typeof inStock === "boolean" ? "products.stock > 0" : "1=1")
+      .andWhere(minPrice ? "product_prices.base_price >= :minPrice" : "1=1", { minPrice })
+      .andWhere(maxPrice ? "product_prices.base_price <= :maxPrice" : "1=1", { maxPrice })
+      .andWhere(category ? "product_categories.id IN (:...category)" : "1=1", { category })
+      .andWhere(seller ? "products.seller_id = :seller" : "1=1", { seller })
+      .andWhere(brand ? "products.brand_id = :brand" : "1=1", { brand })
       .andWhere(search ? "products.name LIKE :search" : "1=1", { search: `%${search}%` })
       .orderBy(`products.${field}`, order.toUpperCase() as "ASC" | "DESC")
       .skip((page - 1) * perPage)
