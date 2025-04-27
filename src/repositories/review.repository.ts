@@ -9,10 +9,10 @@ export const reviewRepository = {
     return prisma.review.findMany({
       include: {
         user: true,
-        product: true
+        product: true,
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: 'desc',
       },
       take,
       skip,
@@ -22,16 +22,21 @@ export const reviewRepository = {
   /**
    * 특정 상품의 리뷰 조회
    */
-  async findByProductId(productId: number, skip: number, take: number) {
+  async findByProductId(productId: number, skip: number, take: number, rating?: number) {
+    const where: Prisma.ReviewWhereInput = { productId };
+
+    // 평점 필터가 있는 경우
+    if (rating) {
+      where.rating = rating;
+    }
+
     return prisma.review.findMany({
-      where: {
-        productId
-      },
+      where,
       include: {
-        user: true
+        user: true,
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: 'desc',
       },
       take,
       skip,
@@ -41,12 +46,15 @@ export const reviewRepository = {
   /**
    * 특정 상품의 리뷰 개수 조회
    */
-  async countByProductId(productId: number) {
-    return prisma.review.count({
-      where: {
-        productId
-      }
-    });
+  async countByProductId(productId: number, rating?: number) {
+    const where: Prisma.ReviewWhereInput = { productId };
+
+    // 평점 필터가 있는 경우
+    if (rating) {
+      where.rating = rating;
+    }
+
+    return prisma.review.count({ where });
   },
 
   /**
@@ -56,8 +64,8 @@ export const reviewRepository = {
     return prisma.review.create({
       data,
       include: {
-        user: true
-      }
+        user: true,
+      },
     });
   },
 
@@ -69,8 +77,8 @@ export const reviewRepository = {
       where: { id },
       data,
       include: {
-        user: true
-      }
+        user: true,
+      },
     });
   },
 
@@ -79,7 +87,7 @@ export const reviewRepository = {
    */
   async delete(id: number) {
     return prisma.review.delete({
-      where: { id }
+      where: { id },
     });
   },
 
@@ -91,8 +99,8 @@ export const reviewRepository = {
       where: { id },
       include: {
         user: true,
-        product: true
-      }
+        product: true,
+      },
     });
-  }
-}; 
+  },
+};
