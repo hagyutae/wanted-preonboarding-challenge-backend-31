@@ -12,17 +12,17 @@ export default class SellerEntity {
   description: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
-  logoUrl: string;
+  logo_url: string;
 
   @Column({ type: "decimal", precision: 3, scale: 2, nullable: true })
   rating: number;
 
   @Column({ type: "varchar", length: 100, nullable: true })
-  contactEmail: string;
+  contact_email: string;
 
   @Column({ type: "varchar", length: 20, nullable: true })
-  contactPhone: string;
+  contact_phone: string;
 
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt: Date;
+  created_at: Date;
 }

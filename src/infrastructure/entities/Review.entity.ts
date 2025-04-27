@@ -31,14 +31,14 @@ export default class ReviewEntity {
   content: string;
 
   @CreateDateColumn({ name: "created_at" })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({ name: "updated_at" })
-  updatedAt: Date;
+  updated_at: Date;
 
   @Column({ type: "boolean", default: false })
-  verifiedPurchase: boolean;
+  verified_purchase: boolean;
 
   @Column({ type: "int", default: 0 })
-  helpfulVotes: number;
+  helpful_votes: number;
 }

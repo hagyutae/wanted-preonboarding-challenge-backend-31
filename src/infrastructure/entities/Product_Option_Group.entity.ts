@@ -14,5 +14,5 @@ export default class ProductOptionGroupEntity {
   name: string;
 
   @Column({ type: "int", default: 0 })
-  displayOrder: number;
+  display_order: number;
 }

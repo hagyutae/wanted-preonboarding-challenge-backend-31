@@ -9,13 +9,13 @@ export default class ProductOptionEntity {
 
   @ManyToOne(() => ProductOptionGroupEntity, { onDelete: "CASCADE" })
   @JoinColumn({ name: "option_group_id" })
-  optionGroup: ProductOptionGroupEntity;
+  option_group: ProductOptionGroupEntity;
 
   @Column({ type: "varchar", length: 100 })
   name: string;
 
   @Column({ type: "decimal", precision: 12, scale: 2, default: 0 })
-  additionalPrice: number;
+  additional_price: number;
 
   @Column({ type: "varchar", length: 100, nullable: true })
   sku: string;
@@ -24,5 +24,5 @@ export default class ProductOptionEntity {
   stock: number;
 
   @Column({ type: "int", default: 0 })
-  displayOrder: number;
+  display_order: number;
 }

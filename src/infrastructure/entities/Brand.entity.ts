@@ -16,7 +16,7 @@ export default class BrandEntity {
   description?: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
-  logoUrl?: string;
+  logo_url?: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   website?: string;

@@ -23,24 +23,24 @@ export default class ProductEntity {
   slug: string;
 
   @Column({ type: "varchar", length: 500, nullable: true })
-  shortDescription?: string;
+  short_description?: string;
 
   @Column({ type: "text", nullable: true })
-  fullDescription?: string;
+  full_description?: string;
 
   @CreateDateColumn({
     type: "timestamp",
     name: "created_at",
     default: () => "CURRENT_TIMESTAMP",
   })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({
     type: "timestamp",
     name: "updated_at",
     default: () => "CURRENT_TIMESTAMP",
   })
-  updatedAt: Date;
+  updated_at: Date;
 
   @ManyToOne(() => SellerEntity)
   @JoinColumn({ name: "seller_id" })

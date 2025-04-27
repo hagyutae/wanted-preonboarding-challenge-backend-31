@@ -24,5 +24,5 @@ export default class CategoryEntity {
   level: number;
 
   @Column({ type: "varchar", length: 255, nullable: true })
-  imageUrl: string;
+  image_url: string;
 }

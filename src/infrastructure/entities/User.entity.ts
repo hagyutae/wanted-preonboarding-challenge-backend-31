@@ -12,8 +12,8 @@ export default class UserEntity {
   email: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
-  avatarUrl: string;
+  avatar_url: string;
 
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt: Date;
+  created_at: Date;
 }
