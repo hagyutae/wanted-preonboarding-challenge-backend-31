@@ -87,7 +87,7 @@ export interface ProductDetailDataResponse {
   country_of_origin?: string;
   warranty_info?: string;
   care_instructions?: string;
-  additional_info?: Record<string, any>;
+  additional_info?: Record<string, string | number | boolean | null>;
 }
 
 /**
@@ -248,4 +248,4 @@ export interface ProductImageAddResponse {
   is_primary: boolean;
   display_order: number;
   option_id?: number | null;
-} 
+}

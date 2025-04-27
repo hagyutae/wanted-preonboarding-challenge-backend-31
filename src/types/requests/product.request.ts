@@ -42,7 +42,7 @@ export interface ProductDetailInput {
   country_of_origin?: string;
   warranty_info?: string;
   care_instructions?: string;
-  additional_info?: Record<string, any>;
+  additional_info?: Record<string, string | number | boolean | null>;
 }
 
 /**
@@ -143,4 +143,4 @@ export interface CreateProductReviewRequest {
   rating: number;
   title?: string;
   content?: string;
-} 
+}

@@ -1,103 +1,144 @@
 import { prisma } from '../lib/prisma';
 import { Prisma } from '@prisma/client';
-import { ProductListItemResponse } from '../types';
+import { ProductListItemResponse } from '../types/responses/product.response';
 import { ProductFilterParams, ProductSortParams } from '../types/product.types';
+import { ProductWithRelations, mapProductToListItem } from '../types/mappers/product.mapper';
+
+/**
+ * ProductWithRelations 타입인지 확인하는 타입 가드 함수
+ * @param product - 확인할 객체
+ * @returns 객체가 ProductWithRelations 타입인지 여부
+ */
+function isProductWithRelations(product: unknown): product is ProductWithRelations {
+  if (!product || typeof product !== 'object') return false;
+
+  const p = product;
+  return (
+    'id' in p &&
+    typeof p.id === 'number' &&
+    'name' in p &&
+    typeof p.name === 'string' &&
+    'slug' in p &&
+    typeof p.slug === 'string' &&
+    'images' in p &&
+    Array.isArray(p.images)
+  );
+}
+
+/**
+ * 상품 배열을 API 응답 형식으로 안전하게 변환
+ * @param products - 변환할 상품 객체 배열
+ * @returns 변환된 상품 응답 객체 배열
+ */
+function safeMapToProductResponse(products: unknown[]): ProductListItemResponse[] {
+  return products.filter(isProductWithRelations).map((product) => mapProductToListItem(product));
+}
 
 export const productRepository = {
   /**
    * 상품 목록 조회
+   * @param skip - 건너뛸 상품 수
+   * @param take - 가져올 상품 수
+   * @param filters - 필터링 조건 (선택 사항)
+   * @param sorts - 정렬 조건 (선택 사항)
+   * @returns 상품 목록
    */
   async findAll(
-    skip: number, 
-    take: number, 
+    skip: number,
+    take: number,
     filters?: ProductFilterParams,
-    sorts?: ProductSortParams[]
+    sorts?: ProductSortParams[],
   ): Promise<ProductListItemResponse[]> {
     // 필터링 조건 구성
     const where: Prisma.ProductWhereInput = {};
-    
+
     if (filters) {
       // 상태 필터
       if (filters.status) {
         where.status = filters.status;
       }
-      
+
       // 판매자 필터
       if (filters.seller) {
         where.sellerId = filters.seller;
       }
-      
+
       // 브랜드 필터
       if (filters.brand) {
         where.brandId = filters.brand;
       }
-      
+
       // 카테고리 필터
-      if (filters.category && filters.category.length > 0) {
+      if (filters.category && Array.isArray(filters.category) && filters.category.length > 0) {
         where.categories = {
           some: {
             categoryId: {
-              in: filters.category
-            }
-          }
+              in: filters.category,
+            },
+          },
+        };
+      } else if (filters.category && !Array.isArray(filters.category)) {
+        where.categories = {
+          some: {
+            categoryId: filters.category,
+          },
         };
       }
-      
+
       // 태그 필터
       if (filters.tags && filters.tags.length > 0) {
         where.tags = {
           some: {
             tagId: {
-              in: filters.tags
-            }
-          }
+              in: filters.tags,
+            },
+          },
         };
       }
-      
+
       // 가격 범위 필터
       if (filters.minPrice || filters.maxPrice) {
         where.price = {};
-        
+
         if (filters.minPrice) {
           where.price.basePrice = { gte: filters.minPrice };
         }
-        
+
         if (filters.maxPrice) {
-          where.price.basePrice = filters.minPrice 
+          where.price.basePrice = filters.minPrice
             ? { gte: filters.minPrice, lte: filters.maxPrice }
             : { lte: filters.maxPrice };
         }
       }
-      
+
       // 등록일 범위 필터
       if (filters.createdAtStart || filters.createdAtEnd) {
         where.createdAt = {};
-        
+
         if (filters.createdAtStart) {
           where.createdAt = { gte: filters.createdAtStart };
         }
-        
+
         if (filters.createdAtEnd) {
           where.createdAt = filters.createdAtStart
             ? { gte: filters.createdAtStart, lte: filters.createdAtEnd }
             : { lte: filters.createdAtEnd };
         }
       }
-      
-      // 재고 유무 필터 - 옵션의 재고 수량을 확인해야 함
+
+      // 재고 유무 필터
       if (filters.inStock !== undefined) {
-        // 옵션이 있고 재고가 1개 이상 있는 상품만 필터링
         where.optionGroups = {
           some: {
             options: {
               some: {
-                stock: filters.inStock ? { gt: 0 } : { lte: 0 }
-              }
-            }
-          }
+                stock: filters.inStock ? { gt: 0 } : { lte: 0 },
+              },
+            },
+          },
         };
       }
-      
+
       // 검색어 필터
       if (filters.search) {
         where.OR = [
@@ -106,34 +147,42 @@ export const productRepository = {
           { fullDescription: { contains: filters.search, mode: 'insensitive' } },
           { brand: { name: { contains: filters.search, mode: 'insensitive' } } },
           { tags: { some: { tag: { name: { contains: filters.search, mode: 'insensitive' } } } } },
-          { categories: { some: { category: { name: { contains: filters.search, mode: 'insensitive' } } } } }
+          {
+            categories: {
+              some: { category: { name: { contains: filters.search, mode: 'insensitive' } } },
+            },
+          },
         ];
       }
     }
-    
+
     // 정렬 조건 구성
-    let orderBy: any[] = [];
-    
+    const orderBy: Prisma.ProductOrderByWithRelationInput[] = [];
+
     if (sorts && sorts.length > 0) {
-      orderBy = sorts.map(sort => {
+      sorts.forEach((sort) => {
         // 특수 케이스 처리
         if (sort.field === 'price.basePrice') {
-          return { price: { basePrice: sort.direction } };
+          orderBy.push({ price: { basePrice: sort.direction } });
         } else if (sort.field === 'price.salePrice') {
-          return { price: { salePrice: sort.direction } };
+          orderBy.push({ price: { salePrice: sort.direction } });
         } else if (sort.field === 'rating') {
-          // TODO: 평점 정렬은 리뷰 평균 값으로 처리 필요
-          return { createdAt: sort.direction }; // 임시로 생성일 기준 정렬
-        } else {
-          // 일반 필드 정렬
-          return { [sort.field]: sort.direction };
+          // 평점 정렬은 리뷰 평균 값으로 처리 필요함
+          // 임시로 생성일 기준 정렬
+          orderBy.push({ createdAt: sort.direction });
+        } else if (sort.field === 'createdAt') {
+          orderBy.push({ createdAt: sort.direction });
+        } else if (sort.field === 'updatedAt') {
+          orderBy.push({ updatedAt: sort.direction });
+        } else if (sort.field === 'name') {
+          orderBy.push({ name: sort.direction });
         }
       });
     } else {
       // 기본 정렬: 최신순
       orderBy.push({ createdAt: 'desc' });
     }
-    
+
     // 쿼리 실행
     const products = await prisma.product.findMany({
       where,
@@ -142,23 +191,41 @@ export const productRepository = {
         seller: true,
         price: true,
         images: {
-          where: { isPrimary: true },
-          take: 1,
+          orderBy: {
+            displayOrder: 'asc',
+          },
         },
         optionGroups: {
           include: {
             options: {
-              select: {
-                stock: true
-              }
-            }
-          }
+              orderBy: {
+                displayOrder: 'asc',
+              },
+            },
+          },
+          orderBy: {
+            displayOrder: 'asc',
+          },
         },
         reviews: {
           select: {
-            rating: true
-          }
-        }
+            rating: true,
+          },
+        },
+        categories: {
+          include: {
+            category: {
+              include: {
+                parent: true,
+              },
+            },
+          },
+        },
+        tags: {
+          include: {
+            tag: true,
+          },
+        },
       },
       orderBy,
       take,
@@ -166,48 +233,7 @@ export const productRepository = {
     });
 
     // DB 모델에서 API 응답 형식으로 변환
-    return products.map(product => {
-      const primaryImage = product.images.length > 0 ? product.images[0] : null;
-      
-      // 리뷰 평점 및 개수 계산
-      const reviews = product.reviews || [];
-      const reviewCount = reviews.length;
-      const averageRating = reviewCount > 0
-        ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviewCount
-        : undefined;
-      
-      // 재고 확인
-      const hasStock = product.optionGroups.some(group => 
-        group.options.some(option => option.stock > 0)
-      );
-      
-      return {
-        id: product.id,
-        name: product.name,
-        slug: product.slug,
-        short_description: product.shortDescription || undefined,
-        base_price: product.price?.basePrice || 0,
-        sale_price: product.price?.salePrice || undefined,
-        currency: product.price?.currency || 'KRW',
-        primary_image: primaryImage ? {
-          url: primaryImage.url,
-          alt_text: primaryImage.altText || undefined
-        } : undefined,
-        brand: {
-          id: product.brand.id,
-          name: product.brand.name
-        },
-        seller: {
-          id: product.seller.id,
-          name: product.seller.name
-        },
-        rating: averageRating,
-        review_count: reviewCount,
-        in_stock: hasStock,
-        status: product.status,
-        created_at: product.createdAt.toISOString()
-      };
-    });
+    return safeMapToProductResponse(products);
   },
 
   /**
@@ -216,88 +242,94 @@ export const productRepository = {
   async count(filters?: ProductFilterParams): Promise<number> {
     // 필터링 조건 구성
     const where: Prisma.ProductWhereInput = {};
-    
+
     if (filters) {
       // 상태 필터
       if (filters.status) {
         where.status = filters.status;
       }
-      
+
       // 판매자 필터
       if (filters.seller) {
         where.sellerId = filters.seller;
       }
-      
+
       // 브랜드 필터
       if (filters.brand) {
         where.brandId = filters.brand;
       }
-      
+
       // 카테고리 필터
-      if (filters.category && filters.category.length > 0) {
+      if (filters.category && Array.isArray(filters.category) && filters.category.length > 0) {
         where.categories = {
           some: {
             categoryId: {
-              in: filters.category
-            }
-          }
+              in: filters.category,
+            },
+          },
+        };
+      } else if (filters.category && !Array.isArray(filters.category)) {
+        where.categories = {
+          some: {
+            categoryId: filters.category,
+          },
         };
       }
-      
+
       // 태그 필터
       if (filters.tags && filters.tags.length > 0) {
         where.tags = {
           some: {
             tagId: {
-              in: filters.tags
-            }
-          }
+              in: filters.tags,
+            },
+          },
         };
       }
-      
+
       // 가격 범위 필터
       if (filters.minPrice || filters.maxPrice) {
         where.price = {};
-        
+
         if (filters.minPrice) {
           where.price.basePrice = { gte: filters.minPrice };
         }
-        
+
         if (filters.maxPrice) {
-          where.price.basePrice = filters.minPrice 
+          where.price.basePrice = filters.minPrice
             ? { gte: filters.minPrice, lte: filters.maxPrice }
             : { lte: filters.maxPrice };
         }
       }
-      
+
       // 등록일 범위 필터
       if (filters.createdAtStart || filters.createdAtEnd) {
         where.createdAt = {};
-        
+
         if (filters.createdAtStart) {
           where.createdAt = { gte: filters.createdAtStart };
         }
-        
+
         if (filters.createdAtEnd) {
           where.createdAt = filters.createdAtStart
             ? { gte: filters.createdAtStart, lte: filters.createdAtEnd }
             : { lte: filters.createdAtEnd };
         }
       }
-      
+
       // 재고 유무 필터
       if (filters.inStock !== undefined) {
         where.optionGroups = {
           some: {
             options: {
               some: {
-                stock: filters.inStock ? { gt: 0 } : { lte: 0 }
-              }
-            }
-          }
+                stock: filters.inStock ? { gt: 0 } : { lte: 0 },
+              },
+            },
+          },
         };
       }
-      
+
       // 검색어 필터
       if (filters.search) {
         where.OR = [
@@ -306,11 +338,15 @@ export const productRepository = {
           { fullDescription: { contains: filters.search, mode: 'insensitive' } },
           { brand: { name: { contains: filters.search, mode: 'insensitive' } } },
           { tags: { some: { tag: { name: { contains: filters.search, mode: 'insensitive' } } } } },
-          { categories: { some: { category: { name: { contains: filters.search, mode: 'insensitive' } } } } }
+          {
+            categories: {
+              some: { category: { name: { contains: filters.search, mode: 'insensitive' } } },
+            },
+          },
         ];
       }
     }
-    
+
     return prisma.product.count({ where });
   },
 
@@ -325,10 +361,35 @@ export const productRepository = {
         seller: true,
         detail: true,
         price: true,
-        images: true,
+        images: {
+          orderBy: {
+            displayOrder: 'asc',
+          },
+        },
         optionGroups: {
           include: {
-            options: true,
+            options: {
+              orderBy: {
+                displayOrder: 'asc',
+              },
+            },
+          },
+          orderBy: {
+            displayOrder: 'asc',
+          },
+        },
+        categories: {
+          include: {
+            category: {
+              include: {
+                parent: true,
+              },
+            },
+          },
+        },
+        tags: {
+          include: {
+            tag: true,
           },
         },
         reviews: {
@@ -375,7 +436,11 @@ export const productRepository = {
   /**
    * 상품 옵션 추가
    */
-  async addOption(productId: number, optionGroupId: number, optionData: Prisma.ProductOptionCreateInput) {
+  async addOption(
+    productId: number,
+    optionGroupId: number,
+    optionData: Prisma.ProductOptionCreateInput,
+  ) {
     return prisma.productOption.create({
       data: optionData,
     });
@@ -426,4 +491,4 @@ export const productRepository = {
       data: options,
     });
   },
-}; 
+};

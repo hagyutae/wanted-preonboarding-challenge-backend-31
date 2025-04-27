@@ -65,30 +65,35 @@ export const parseFilterParams = (query: ProductQueryParams): ProductFilterParam
  */
 export const parseSortParams = (query: ProductQueryParams): ProductSortParams[] => {
   const defaultSort: ProductSortParams = { field: 'createdAt', direction: 'desc' };
-  
+
   if (!query.sort) {
     return [defaultSort];
   }
-  
-  return query.sort.split(',').map(sortItem => {
+
+  return query.sort.split(',').map((sortItem) => {
     const [field, direction] = sortItem.split(':');
-    
+
     // 필드 매핑 (snake_case를 camelCase로 변환)
     const fieldMap: Record<string, string> = {
-      'created_at': 'createdAt',
-      'updated_at': 'updatedAt',
-      'base_price': 'price.basePrice',
-      'sale_price': 'price.salePrice',
-      'rating': 'rating',
-      'name': 'name'
+      created_at: 'createdAt',
+      updated_at: 'updatedAt',
+      base_price: 'price.basePrice',
+      sale_price: 'price.salePrice',
+      rating: 'rating',
+      name: 'name',
     };
-    
+
     const mappedField = fieldMap[field] || field;
-    const validDirection = direction === 'asc' ? 'asc' : 'desc';
-    
+
+    // 타입 안전한 방식으로 direction 처리
+    let validDirection: 'asc' | 'desc' = 'desc';
+    if (direction === 'asc') {
+      validDirection = 'asc';
+    }
+
     return {
       field: mappedField,
-      direction: validDirection as 'asc' | 'desc'
+      direction: validDirection,
     };
   });
-}; 
+};

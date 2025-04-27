@@ -3,37 +3,81 @@ import { productController } from '../controllers/product.controller';
 
 const router = express.Router();
 
-// 상품 목록 조회 (검색, 필터링 포함)
+/**
+ * @route GET /api/products
+ * @desc 상품 목록 조회 (검색, 필터링 포함)
+ * @access Public
+ */
 router.get('/', productController.getProducts);
 
-// 상품 상세 조회
+/**
+ * @route GET /api/products/:id
+ * @desc 상품 상세 정보 조회
+ * @access Public
+ */
 router.get('/:id', productController.getProductById);
 
-// 상품 등록
+/**
+ * @route POST /api/products
+ * @desc 새 상품 등록 (인증 필요)
+ * @access Private
+ */
 router.post('/', productController.createProduct);
 
-// 상품 수정
+/**
+ * @route PUT /api/products/:id
+ * @desc 상품 정보 수정 (인증 필요)
+ * @access Private
+ */
 router.put('/:id', productController.updateProduct);
 
-// 상품 삭제
+/**
+ * @route DELETE /api/products/:id
+ * @desc 상품 삭제 (인증 필요)
+ * @access Private
+ */
 router.delete('/:id', productController.deleteProduct);
 
-// 상품 옵션 추가
+/**
+ * @route POST /api/products/:id/options
+ * @desc 상품 옵션 추가 (인증 필요)
+ * @access Private
+ */
 router.post('/:id/options', productController.addProductOption);
 
-// 상품 옵션 수정
+/**
+ * @route PUT /api/products/:id/options/:optionId
+ * @desc 상품 옵션 수정 (인증 필요)
+ * @access Private
+ */
 router.put('/:id/options/:optionId', productController.updateProductOption);
 
-// 상품 옵션 삭제
+/**
+ * @route DELETE /api/products/:id/options/:optionId
+ * @desc 상품 옵션 삭제 (인증 필요)
+ * @access Private
+ */
 router.delete('/:id/options/:optionId', productController.deleteProductOption);
 
-// 상품 이미지 추가
+/**
+ * @route POST /api/products/:id/images
+ * @desc 상품 이미지 추가 (인증 필요)
+ * @access Private
+ */
 router.post('/:id/images', productController.addProductImage);
 
-// 상품 리뷰 조회
+/**
+ * @route GET /api/products/:id/reviews
+ * @desc 상품 리뷰 목록 조회 (페이지네이션 지원)
+ * @access Public
+ */
 router.get('/:id/reviews', productController.getProductReviews);
 
-// 상품 리뷰 작성
+/**
+ * @route POST /api/products/:id/reviews
+ * @desc 상품 리뷰 작성 (인증 필요)
+ * @access Private
+ */
 router.post('/:id/reviews', productController.createProductReview);
 
-export default router; 
+export default router;
