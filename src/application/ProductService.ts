@@ -63,7 +63,7 @@ export default class ProductService {
     tags: tag_ids,
     seller_id,
     brand_id,
-    ...reminder
+    ...product
   }: {
     detail: Product_Detail;
     price: Product_Price;
@@ -82,10 +82,6 @@ export default class ProductService {
     if (!brand) {
       throw new Error(`Brand with id ${brand_id} not found`);
     }
-
-    const product = reminder as Product;
-    product.seller = seller;
-    product.brand = brand;
 
     const productEntity = this.productRepository.create({ ...product, seller, brand });
     await this.productRepository.save(productEntity);
@@ -148,6 +144,8 @@ export default class ProductService {
       ),
     );
     await this.productTagRepository.save(tagEntities);
+
+    return productEntity;
   }
 
   async getAll({
@@ -168,7 +166,7 @@ export default class ProductService {
     brand?: number;
     inStock?: boolean;
     search?: string;
-  }): Promise<ProductEntity[]> {
+  }) {
     const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
 
     const query = this.productRepository
@@ -186,7 +184,17 @@ export default class ProductService {
       .skip((page - 1) * perPage)
       .take(perPage);
 
-    return query.getMany();
+    const items = await query.getMany();
+
+    return {
+      items,
+      pagination: {
+        total_items: items.length,
+        total_pages: Math.ceil(items.length / perPage),
+        current_page: page,
+        per_page: perPage,
+      },
+    };
   }
 
   async getById(id: number) {
