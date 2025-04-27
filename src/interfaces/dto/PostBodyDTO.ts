@@ -115,6 +115,8 @@ class Image {
   option_id: number | null;
 }
 
+type TagId = number;
+
 export default class PostBodyDTO {
   @ApiProperty({ description: "상품 이름", example: "슈퍼 편안한 소파" })
   name: string;
@@ -156,5 +158,5 @@ export default class PostBodyDTO {
   images: Image[];
 
   @ApiProperty({ description: "태그 목록", example: [1, 4, 7] })
-  tags: number[];
+  tags: TagId[];
 }
