@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 public class ProductDetailRequest {
     @Digits(integer = 8, fraction = 2)
     private BigDecimal weight;
-    private DimensionsRequest dimensionsRequest;
+    private DimensionsRequest dimensions;
     private String materials;
     @Size(max = 100)
     private String countryOfOrigin;
     private String warrantyInfo;
     private String careInstructions;
-    private AdditionalInfoRequest additionalInfoRequest;
+    private AdditionalInfoRequest additionalInfo;
 }
 
 

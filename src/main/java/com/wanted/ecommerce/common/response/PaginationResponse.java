@@ -1,16 +1,21 @@
 package com.wanted.ecommerce.common.response;
 
 import java.util.List;
+import lombok.Getter;
 import org.springframework.data.domain.Page;
 
+@Getter
+public class PaginationResponse<T> {
 
-public class PaginationResponse<T> extends ApiResponse<PaginationData<T>> {
+    private final List<T> items;
+    private final Pagination pagination;
 
-    private PaginationResponse(PaginationData<T> data, String message) {
-        super(data, message);
+    private PaginationResponse(List<T> items, Pagination pagination) {
+        this.items = items;
+        this.pagination = pagination;
     }
 
-    public static <T> PaginationResponse<T> of(List<T> items, Page<T> page, String message) {
+    public static <T> PaginationResponse<T> of(Page<T>page) {
         Pagination pagination = Pagination.builder()
             .totalItems(page.getTotalElements())
             .totalPages(page.getTotalPages())
@@ -18,7 +23,6 @@ public class PaginationResponse<T> extends ApiResponse<PaginationData<T>> {
             .perPage(page.getSize())
             .build();
 
-        PaginationData<T> data = PaginationData.of(items, pagination);
-        return new PaginationResponse<>(data, message);
+        return new PaginationResponse<>(page.getContent(), pagination);
     }
 }

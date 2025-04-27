@@ -1,12 +1,11 @@
 package com.wanted.ecommerce.common.response;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+@AllArgsConstructor
 @Builder
 public class Pagination {
 

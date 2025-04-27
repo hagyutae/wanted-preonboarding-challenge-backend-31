@@ -41,28 +41,34 @@ public class ProductDetail {
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private DimensionsRequest dimensionsRequest;
+    private DimensionsRequest dimensions;
     private String materials;
+
+    @Column(name = "country_of_origin")
     private String countryOfOrigin;
+
+    @Column(name = "warranty_info")
     private String warrantyInfo;
+
+    @Column(name = "care_instructions")
     private String careInstructions;
 
     @Type(JsonType.class)
-    @Column(columnDefinition = "jsonb")
-    private AdditionalInfoRequest additionalInfoRequest;
+    @Column(name = "additional_info", columnDefinition = "jsonb")
+    private AdditionalInfoRequest additionalInfo;
 
     public static ProductDetail of(Product product, BigDecimal weight,
-        DimensionsRequest dimensionsRequest, String materials, String countryOfOrigin,
-        String warrantyInfo, String careInstructions, AdditionalInfoRequest additionalInfoRequest){
+        DimensionsRequest dimensions, String materials, String countryOfOrigin,
+        String warrantyInfo, String careInstructions, AdditionalInfoRequest additionalInfo){
         return ProductDetail.builder()
             .product(product)
             .weight(weight)
-            .dimensionsRequest(dimensionsRequest)
+            .dimensions(dimensions)
             .materials(materials)
             .countryOfOrigin(countryOfOrigin)
             .warrantyInfo(warrantyInfo)
             .careInstructions(careInstructions)
-            .additionalInfoRequest(additionalInfoRequest)
+            .additionalInfo(additionalInfo)
             .build();
     }
 }

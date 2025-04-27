@@ -1,23 +1,24 @@
 package com.wanted.ecommerce.common.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 
 @Builder
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
     private boolean success;
     private T data;
     private String message;
     private ErrorResponse error;
-
-    protected ApiResponse(boolean success, T data, String message, ErrorResponse error) {
-        this.success = success;
-        this.data = data;
-        this.message = message;
-        this.error = error;
-    }
 
     protected ApiResponse(T data, String message) {
         this.data = data;

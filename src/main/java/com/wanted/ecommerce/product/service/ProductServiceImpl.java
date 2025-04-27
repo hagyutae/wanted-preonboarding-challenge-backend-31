@@ -21,7 +21,12 @@ import com.wanted.ecommerce.product.dto.request.ProductDetailRequest;
 import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
 import com.wanted.ecommerce.product.dto.request.ProductOptionGroupRequest;
 import com.wanted.ecommerce.product.dto.request.ProductPriceRequest;
+import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
+import com.wanted.ecommerce.product.dto.response.BrandResponse;
+import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
+import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
+import com.wanted.ecommerce.product.dto.response.SellerResponse;
 import com.wanted.ecommerce.product.repository.ProductCategoryRepository;
 import com.wanted.ecommerce.product.repository.ProductDetailRepository;
 import com.wanted.ecommerce.product.repository.ProductImageRepository;
@@ -30,17 +35,23 @@ import com.wanted.ecommerce.product.repository.ProductOptionRepository;
 import com.wanted.ecommerce.product.repository.ProductPriceRepository;
 import com.wanted.ecommerce.product.repository.ProductRepository;
 import com.wanted.ecommerce.product.repository.ProductTagRepository;
+import com.wanted.ecommerce.review.repository.ReviewRepository;
 import com.wanted.ecommerce.seller.domain.Seller;
 import com.wanted.ecommerce.seller.repository.SellerRepository;
 import com.wanted.ecommerce.tag.domain.Tag;
 import com.wanted.ecommerce.tag.repository.TagRepository;
 import jakarta.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,6 +70,7 @@ public class ProductServiceImpl implements ProductService {
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     @Override
@@ -91,6 +103,47 @@ public class ProductServiceImpl implements ProductService {
             saved.getCreatedAt(), saved.getUpdatedAt());
     }
 
+    @Override
+    public Page<ProductListResponse> readAll(ProductReadAllRequest request) {
+        int pageNumber = Math.max(0, request.getPage() - 1);
+        Pageable pageable = PageRequest.of(pageNumber, request.getPerPage());
+        Page<Product> products = productRepository.findAllByRequest(request, pageable);
+        return products.map(product -> {
+            ProductPrice price = productPriceRepository.findByProductId(product.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
+
+            ProductImageResponse primaryImageResponse = productImageRepository
+                .findByProductIdAndPrimaryTrue(product.getId())
+                .map(image -> ProductImageResponse.of(image.getUrl(), image.getAltText()))
+                .orElse(null);
+
+            double avgRating = Optional.ofNullable(
+                reviewRepository.getAvgRatingByProductId(product.getId()))
+                .orElse(0.0);
+
+            double rating = BigDecimal.valueOf(avgRating)
+                .setScale(1, RoundingMode.HALF_UP)
+                .doubleValue();
+
+            int reviewCount = Optional.ofNullable(
+                reviewRepository.getReviewCountByProductId(product.getId()))
+                .orElse(0L)
+                .intValue();
+
+            Boolean inStock = productOptionRepository.existsByOptionGroupProductIdAndStockGreaterThan(
+                product.getId(), 0);
+
+            BrandResponse brandResponse = BrandResponse.of(product.getBrand().getId(),
+                product.getBrand().getName());
+            SellerResponse sellerResponse = SellerResponse.of(product.getSeller().getId(),
+                product.getSeller().getName());
+            return ProductListResponse.of(product.getId(), product.getName(),
+                product.getShortDescription(), price.getBasePrice(), price.getSalePrice(),
+                price.getCurrency(), primaryImageResponse, brandResponse, sellerResponse, rating,
+                reviewCount, inStock, product.getStatus().getName(), product.getCreatedAt());
+        });
+    }
+
     private List<Long> createProductCategories(Product product,
         List<ProductCategoryRequest> categoryRequestList) {
         List<Long> categoryIds = categoryRequestList.stream()
@@ -114,9 +167,9 @@ public class ProductServiceImpl implements ProductService {
 
     private Long createProductDetail(Product product, ProductDetailRequest detailRequest) {
         ProductDetail detail = ProductDetail.of(product, detailRequest.getWeight(),
-            detailRequest.getDimensionsRequest(), detailRequest.getMaterials(),
+            detailRequest.getDimensions(), detailRequest.getMaterials(),
             detailRequest.getCountryOfOrigin(), detailRequest.getWarrantyInfo(),
-            detailRequest.getCareInstructions(), detailRequest.getAdditionalInfoRequest());
+            detailRequest.getCareInstructions(), detailRequest.getAdditionalInfo());
         ProductDetail saved = productDetailRepository.save(detail);
         return saved.getId();
     }

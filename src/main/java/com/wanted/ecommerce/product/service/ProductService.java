@@ -1,9 +1,14 @@
 package com.wanted.ecommerce.product.service;
 
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
+import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
+import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
+import org.springframework.data.domain.Page;
 
 public interface ProductService {
 
-    public ProductResponse create(ProductCreateRequest request);
+    ProductResponse create(ProductCreateRequest request);
+
+    Page<ProductListResponse> readAll(ProductReadAllRequest request);
 }
