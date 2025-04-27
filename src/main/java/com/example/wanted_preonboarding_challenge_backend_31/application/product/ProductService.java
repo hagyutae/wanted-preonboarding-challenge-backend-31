@@ -1,13 +1,17 @@
 package com.example.wanted_preonboarding_challenge_backend_31.application.product;
 
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.Product;
+import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductImage;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOption;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOptionGroup;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductImageCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductImageCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
@@ -80,5 +84,12 @@ public class ProductService {
                 productId);
 
         productCommandService.deleteProductOption(productOption);
+    }
+
+    public ProductImageCreateRes createImage(Long productId, ProductImageCreateReq req) {
+        Product product = productQueryService.getProductById(productId);
+
+        ProductImage productImage = productCommandService.saveProductImage(product, ProductImageDto.from(req));
+        return ProductImageCreateRes.from(productImage, req.optionId());
     }
 }

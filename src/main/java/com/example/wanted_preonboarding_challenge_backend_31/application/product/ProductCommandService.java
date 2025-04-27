@@ -126,6 +126,18 @@ public class ProductCommandService {
         productImageRepository.saveAll(productImages);
     }
 
+    public ProductImage saveProductImage(Product product, ProductImageDto req) {
+        ProductImage productImage = ProductImage.create(
+                product,
+                req.url(),
+                req.altText(),
+                req.isPrimary(),
+                req.displayOrder(),
+                req.optionId() == null ? null
+                        : productQueryService.getProductOptionById(req.optionId()));
+        return productImageRepository.save(productImage);
+    }
+
     public void saveProductTags(Product product, List<Long> tagIds) {
         List<Tag> tags = tagQueryService.getAllByIds(tagIds);
 
