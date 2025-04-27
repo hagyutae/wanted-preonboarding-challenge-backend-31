@@ -2,14 +2,7 @@ import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
-import {
-  Product,
-  Product_Category,
-  Product_Detail,
-  Product_Image,
-  Product_Option_Group,
-  Product_Price,
-} from "src/domain";
+import { Product_Category } from "src/domain";
 import {
   BrandEntity,
   CategoryEntity,
@@ -24,6 +17,7 @@ import {
   SellerEntity,
   TagEntity,
 } from "src/infrastructure/entities";
+import { ProductInputDTO } from "./dto/ProductInputDTO";
 
 @Injectable()
 export default class ProductService {
@@ -54,26 +48,19 @@ export default class ProductService {
     private readonly tagRepository: Repository<TagEntity>,
   ) {}
 
-  async create({
-    detail,
-    price,
-    categories,
-    option_groups,
-    images,
-    tags: tag_ids,
-    seller_id,
-    brand_id,
-    ...product
-  }: {
-    detail: Product_Detail;
-    price: Product_Price;
-    categories: Product_Category[];
-    option_groups: Product_Option_Group[];
-    images: Product_Image[];
-    tags: number[];
-    seller_id: number;
-    brand_id: number;
-  }) {
+  async create(params: any) {
+    const {
+      detail,
+      price,
+      categories,
+      option_groups,
+      images,
+      tags: tag_ids,
+      seller_id,
+      brand_id,
+      ...product
+    }: ProductInputDTO = params;
+
     const seller = await this.sellerRepository.findOne({ where: { id: seller_id } });
     if (!seller) {
       throw new Error(`Seller with id ${seller_id} not found`);
@@ -201,7 +188,7 @@ export default class ProductService {
     return await this.productRepository.findOne({ where: { id } });
   }
 
-  async update(id: number, data: Partial<ProductEntity>) {
+  async update(id: number, data: ProductInputDTO) {
     await this.productRepository.update(id, data);
 
     const updatedProduct = await this.getById(id);

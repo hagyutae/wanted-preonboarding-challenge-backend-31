@@ -38,7 +38,7 @@ describe("ProductController", () => {
       message: "상품이 성공적으로 등록되었습니다.",
     } as ResponseDTO;
 
-    jest.spyOn(productService, "create").mockResolvedValue(response.data);
+    jest.spyOn(productService, "create").mockResolvedValue(response.data as ProductEntity);
 
     const result = await productController.create(body);
 

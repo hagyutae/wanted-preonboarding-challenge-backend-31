@@ -34,13 +34,11 @@ export default class ProductController {
   })
   @Get()
   async readAll(@Query() query: GetQueryDTO): Promise<ResponseDTO> {
-    const items = await this.productService.getAll(query);
+    const data = await this.productService.getAll(query);
 
     return {
       success: true,
-      data: {
-        items,
-      },
+      data,
       message: "상품 목록을 성공적으로 조회했습니다.",
     };
   }
