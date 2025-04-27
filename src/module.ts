@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
 
-import ProductService from "./application/ProductService";
+import { ProductService, ProductOptionsService } from "./application";
 import typeormConfigProvider from "./infrastructure/provider";
-import { ProductController } from "./interfaces/controllers";
+import { ProductController, ProductOptionsController } from "./interfaces/controllers";
 
 @Module({
   imports: [typeormConfigProvider],
-  providers: [ProductService],
-  controllers: [ProductController],
+  providers: [ProductService, ProductOptionsService],
+  controllers: [ProductController, ProductOptionsController],
 })
 export class AppModule {}

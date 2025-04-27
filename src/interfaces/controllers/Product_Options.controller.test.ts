@@ -1,6 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
 import { Product_Image, Product_Option } from "src/domain";
+import { ProductOptionsService } from "src/application";
 import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO } from "../dto";
 import ProductOptionsController from "./Product_Options.controller";
 
@@ -75,7 +76,7 @@ describe("ProductOptionsController", () => {
   describe("deleteOptions", () => {
     it("상품 옵션 삭제 성공", async () => {
       const param = { id: 1, option_id: 2 };
-      jest.spyOn(mockService, "deleteOptions").mockResolvedValue(null);
+      jest.spyOn(mockService, "deleteOptions").mockResolvedValue(undefined);
 
       const result = await mockController.deleteOptions(param);
 
