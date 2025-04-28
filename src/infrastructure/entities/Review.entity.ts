@@ -5,6 +5,7 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  JoinColumn,
 } from "typeorm";
 
 import ProductEntity from "./Product.entity";
@@ -16,6 +17,7 @@ export default class ReviewEntity {
   id: number;
 
   @ManyToOne(() => ProductEntity, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "product_id" })
   product: ProductEntity;
 
   @ManyToOne(() => UserEntity, { onDelete: "SET NULL", nullable: true })
