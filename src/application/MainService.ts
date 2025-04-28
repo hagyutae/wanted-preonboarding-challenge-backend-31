@@ -4,10 +4,11 @@ import { Injectable } from "@nestjs/common";
 import {
   ProductEntity,
   ProductPriceEntity,
+  ProductCategoryEntity,
+  CategoryEntity,
   ReviewEntity,
   BrandEntity,
   SellerEntity,
-  CategoryEntity,
 } from "src/infrastructure/entities";
 
 @Injectable()
@@ -48,7 +49,7 @@ export default class MainService {
         "product_prices.currency as currency",
         "brands.id as brand_id",
         "brands.name as brand_name",
-        "products.sellers_id",
+        "sellers.id as sellers_id",
         "sellers.name as seller_name",
         "products.status as status",
         "products.created_at as created_at",
@@ -70,6 +71,26 @@ export default class MainService {
   }
 
   async getFeaturedCategories() {
-    throw new Error("Method not implemented.");
+    const query = this.entityManager
+      .getRepository(CategoryEntity)
+      .createQueryBuilder("categories")
+      .innerJoinAndSelect(
+        ProductCategoryEntity,
+        "product_categories",
+        "product_categories.category_id = categories.id",
+      )
+      .innerJoinAndSelect(ProductEntity, "products", "products.id = product_categories.product_id")
+      .select([
+        "categories.id as id",
+        "categories.name as name",
+        "categories.slug as slug",
+        "categories.image_url as image_url",
+      ])
+      .addSelect("COUNT(products.id)", "product_count")
+      .groupBy("categories.id")
+      .orderBy("product_count", "DESC")
+      .limit(5);
+
+    return query.getRawMany();
   }
 }
