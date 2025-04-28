@@ -3,5 +3,6 @@ export { default as OptionBodyDTO } from "./OptionsBodyDTO";
 export { default as ImageBodyDTO } from "./ImageBodyDTO";
 export { ProductParamDTO, OptionParamDTO } from "./ParamDTO";
 export { default as ProductQueryDTO } from "./ProductQueryDTO";
+export { default as ReviewQueryDTO } from "./ReviewQueryDTO";
 export { default as FiltersByCategoryDTO } from "./FiltersByCategoryDTO";
 export { default as ResponseDTO } from "./ResponseDTO";
