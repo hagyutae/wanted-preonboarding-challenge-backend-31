@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import {
   ProductEntity,
   ProductPriceEntity,
+  ProductImageEntity,
   ProductCategoryEntity,
   CategoryEntity,
   ReviewEntity,
@@ -36,6 +37,11 @@ export default class MainService {
         "product_prices",
         "product_prices.product_id = products.id",
       )
+      .leftJoinAndSelect(
+        ProductImageEntity,
+        "product_images",
+        "product_images.product_id = products.id",
+      )
       .leftJoin(ReviewEntity, "reviews", "reviews.product_id = products.id")
       .leftJoin(BrandEntity, "brands", "brands.id = products.brand_id")
       .leftJoin(SellerEntity, "sellers", "sellers.id = products.seller_id")
@@ -47,6 +53,8 @@ export default class MainService {
         "product_prices.base_price as base_price",
         "product_prices.sale_price as sale_price",
         "product_prices.currency as currency",
+        "product_images.url as image_url",
+        "product_images.alt_text as image_alt_text",
         "brands.id as brand_id",
         "brands.name as brand_name",
         "sellers.id as sellers_id",
@@ -60,6 +68,8 @@ export default class MainService {
       .addGroupBy("product_prices.base_price")
       .addGroupBy("product_prices.sale_price")
       .addGroupBy("product_prices.currency")
+      .addGroupBy("product_images.url")
+      .addGroupBy("product_images.alt_text")
       .addGroupBy("brands.id")
       .addGroupBy("brands.name")
       .addGroupBy("sellers.id")
