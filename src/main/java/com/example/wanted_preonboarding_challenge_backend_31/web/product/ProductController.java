@@ -6,27 +6,35 @@ import static com.example.wanted_preonboarding_challenge_backend_31.web.product.
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_CREATE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_DELETE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_UPDATE;
+import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_SEARCH;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_UPDATE;
 
 import com.example.wanted_preonboarding_challenge_backend_31.application.product.ProductService;
 import com.example.wanted_preonboarding_challenge_backend_31.common.dto.SuccessRes;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductImageCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductImageCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,6 +47,16 @@ public class ProductController {
     @PostMapping
     public SuccessRes<ProductCreateRes> create(@RequestBody @Validated ProductCreateReq productCreateReq) {
         return SuccessRes.of(PRODUCT_CREATE, productService.create(productCreateReq));
+    }
+
+    @GetMapping
+    public SuccessRes<ProductSearchRes> search(
+            @RequestParam(name = "page", defaultValue = "1") @Min(1) int page,
+            @RequestParam(name = "perPage", defaultValue = "10") @Min(1) int perPage,
+            @ModelAttribute @Validated ProductSearchReq productSearchReq
+    ) {
+        PaginationReq paginationReq = new PaginationReq(page, perPage);
+        return SuccessRes.of(PRODUCT_SEARCH, productService.search(paginationReq, productSearchReq));
     }
 
     @PutMapping("/{id}")

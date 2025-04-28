@@ -4,16 +4,19 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.model.produc
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductImage;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOption;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOptionGroup;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductImageCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductImageCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ public class ProductService {
 
     private final ProductCommandService productCommandService;
     private final ProductQueryService productQueryService;
+    private final ProductComplexQueryService productComplexQueryService;
 
     public ProductCreateRes create(ProductCreateReq req) {
         Product product = productCommandService.saveProduct(req);
@@ -51,6 +55,10 @@ public class ProductService {
         productCommandService.saveProductOptionGroups(product, req.optionGroups());
         productCommandService.saveProductImages(product, req.images());
         productCommandService.saveProductTags(product, req.tags());
+    }
+
+    public ProductSearchRes search(PaginationReq paginationReq, ProductSearchReq req) {
+        return productComplexQueryService.searchProducts(paginationReq, req);
     }
 
     public void delete(Long productId) {
