@@ -61,5 +61,29 @@ public class ProductEntity {
 
     @OneToMany(mappedBy = "product")
     private List<ReviewEntity> reviews;
+
+    public void updateBasicInfo(
+            String name,
+            String slug,
+            String shortDescription,
+            String fullDescription,
+            String status,
+            LocalDateTime updatedAt
+    ) {
+        this.name = name;
+        this.slug = slug;
+        this.shortDescription = shortDescription;
+        this.fullDescription = fullDescription;
+        this.status = status;
+        this.updatedAt = updatedAt;
+    }
+
+    public void delete(
+            String status,
+            LocalDateTime updatedAt
+    ) {
+        this.status = status;
+        this.updatedAt = updatedAt;
+    }
 }
 

@@ -29,5 +29,19 @@ public class ProductPriceEntity {
     private BigDecimal costPrice;
 
     private String currency;
-    private Double taxRate;
+    private BigDecimal taxRate;
+
+    public void update(
+            BigDecimal basePrice,
+            BigDecimal salePrice,
+            BigDecimal costPrice,
+            String currency,
+            BigDecimal taxRate
+    ) {
+        this.basePrice = basePrice;
+        this.salePrice = salePrice;
+        this.costPrice = costPrice;
+        this.currency = currency;
+        this.taxRate = taxRate;
+    }
 }

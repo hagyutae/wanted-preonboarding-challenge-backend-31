@@ -29,4 +29,18 @@ public class ProductOptionEntity {
     private String sku;
     private Integer stock;
     private Integer displayOrder;
+
+    public void update(
+            String name,
+            BigDecimal additionalPrice,
+            String sku,
+            Integer stock,
+            Integer displayOrder)
+    {
+        this.name = name;
+        this.additionalPrice = additionalPrice;
+        this.sku = sku;
+        this.stock = stock;
+        this.displayOrder = displayOrder;
+    }
 }
