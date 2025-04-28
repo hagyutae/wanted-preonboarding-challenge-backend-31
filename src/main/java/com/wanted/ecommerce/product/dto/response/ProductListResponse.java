@@ -1,6 +1,8 @@
 package com.wanted.ecommerce.product.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wanted.ecommerce.brand.dto.response.BrandResponse;
+import com.wanted.ecommerce.seller.dto.response.SellerResponse;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.Builder;

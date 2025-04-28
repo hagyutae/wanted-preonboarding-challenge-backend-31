@@ -7,6 +7,7 @@ import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
 import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
 import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
+import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
 import com.wanted.ecommerce.product.service.ProductService;
@@ -53,7 +54,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getProductById(
+    public ResponseEntity<ApiResponse<ProductDetailResponse>> getProductById(
         @PathVariable Long id
     ) {
         return null;
@@ -61,7 +62,7 @@ public class ProductController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateProduct(
+    public ResponseEntity<ApiResponse<Object>> updateProduct(
         @PathVariable Long id,
         @Valid @RequestBody ProductCreateRequest productCreateRequest
     ) {

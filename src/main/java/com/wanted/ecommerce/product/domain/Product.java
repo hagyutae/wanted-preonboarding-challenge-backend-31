@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -59,17 +60,20 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product")
     private List<ProductCategory> categories;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductDetail> details;
+    @OneToOne(mappedBy = "product")
+    private ProductDetail detail;
 
     @OneToMany(mappedBy = "product")
     private List<ProductImage> images;
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductPrice> prices;
+    @OneToOne(mappedBy = "product")
+    private ProductPrice price;
 
     @OneToMany(mappedBy = "product")
     private List<ProductOptionGroup> optionGroups;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductTag> tags;
 
     @PrePersist
     @PreUpdate
