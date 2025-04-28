@@ -18,7 +18,7 @@ export default class CategoryEntity {
     nullable: true,
   })
   @JoinColumn({ name: "parent_id" })
-  parent: CategoryEntity;
+  parent?: CategoryEntity;
 
   @Column({ type: "integer", nullable: false })
   level: number;
