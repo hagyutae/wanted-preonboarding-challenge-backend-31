@@ -21,7 +21,7 @@ public class Products {
     private String shortDescription;
     private String fullDescription;
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)

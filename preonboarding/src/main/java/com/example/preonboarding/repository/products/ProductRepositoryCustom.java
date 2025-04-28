@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ProductRepositoryCustom {
     List<ProductsDTO> searchPage(ProductSearchRequest search);
+
+    ProductsDTO findProductsById(Long id);
 }

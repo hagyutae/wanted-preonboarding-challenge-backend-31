@@ -1,7 +1,10 @@
 package com.example.preonboarding.response;
 
+import com.example.preonboarding.domain.ProductPrices;
 import com.example.preonboarding.response.error.ErrorResponse;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.Setter;
 

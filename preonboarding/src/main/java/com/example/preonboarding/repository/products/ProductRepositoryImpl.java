@@ -91,6 +91,47 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom{
         return productList;
     }
 
+    @Override
+    public ProductsDTO findProductsById(Long id) {
+
+        QProducts products = QProducts.products;
+        QProductPrices prices = QProductPrices.productPrices;
+        QProductTags tags = QProductTags.productTags;
+        QProductCategories categories = QProductCategories.productCategories;
+        QBrands brands = QBrands.brands;
+        QSellers sellers = QSellers.sellers;
+        QProductImages images = QProductImages.productImages;
+        QReviews reviews = QReviews.reviews;
+        QProductOption options = QProductOption.productOption;
+        QProductOptionGroup optionGroup = QProductOptionGroup.productOptionGroup;
+
+
+        return queryFactory.select(new QProductsDTO(
+                    products.id,
+                    products.name,
+                    products.slug,
+                    products.shortDescription,
+                    products.fullDescription,
+                    sellers.id,
+                    sellers.name,
+                    sellers.description,
+                    sellers.logoUrl,
+                    sellers.rating,
+                    sellers.contactEmail,
+                    sellers.contactPhone,
+                    brands.id,
+                    brands.name,
+                    products.status,
+                    products.createdAt
+                ))
+                .from(products)
+                .distinct()
+                .join(products.sellers,sellers)
+                .join(products.brands,brands)
+               .where(products.id.eq(id))
+               .fetchOne();
+    }
+
     private void attachImages(List<ProductsDTO> products, List<Long> productsIds, QProductImages images){
         List<ProductImageDTO> imageList = queryFactory
                 .select(new QProductImageDTO(

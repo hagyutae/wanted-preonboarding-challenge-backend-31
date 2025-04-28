@@ -19,8 +19,8 @@ public class Brands {
     private String name;
     private String slug;
     private String description;
-    private String long_url;
-    private String webSite;
+    private String logo_url;
+    private String website;
 
     @OneToMany(mappedBy = "brands")
     private List<Products> products = new ArrayList<>();

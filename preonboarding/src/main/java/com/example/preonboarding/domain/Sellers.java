@@ -19,8 +19,8 @@ public class Sellers {
     private Long id;
     private String name;
     private String description;
-    private String long_url;
-    private String raiting;
+    private String logoUrl;
+    private Double rating;
     private String contactEmail;
     private String contactPhone;
     private LocalDate createdAt;

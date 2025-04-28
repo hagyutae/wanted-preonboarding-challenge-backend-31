@@ -18,6 +18,7 @@ public class ProductsDTO {
     private String name;
     private String slug;
     private String shortDescription;
+    private String fullDescription;
     private Integer basePrice;
     private Integer salesPrice;
     private String currency;
@@ -25,6 +26,11 @@ public class ProductsDTO {
     private String brandName;
     private Long sellerId;
     private String sellerName;
+    private String sellerDescription;
+    private String sellerLogoUrl;
+    private Double sellerRating;
+    private String sellerContactEmail;
+    private String sellerContactPhone;
     private String status;
     private LocalDateTime createdAt;
 
@@ -33,7 +39,7 @@ public class ProductsDTO {
     private ReviewDTO reviews;
 
     @QueryProjection
-    public ProductsDTO(Long id, String name, String slug, String shortDescription, Integer basePrice, Integer salesPrice, String currency, String imageUrl, String imageAltText, Long brandId, String brandName, Long sellerId, String sellerName, Integer rating, Long reviewCount, Integer stock, String status,LocalDateTime createdAt) {
+    public ProductsDTO(Long id, String name, String slug, String shortDescription, Integer basePrice, Integer salesPrice, String currency, Long brandId, String brandName, Long sellerId, String sellerName, String status, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.slug = slug;
@@ -50,18 +56,22 @@ public class ProductsDTO {
     }
 
     @QueryProjection
-    public ProductsDTO(Long id, String name, String slug, String shortDescription, Integer basePrice, Integer salesPrice, String currency, Long brandId, String brandName, Long sellerId, String sellerName, String status, LocalDateTime createdAt) {
+
+    public ProductsDTO(Long id, String name, String slug, String shortDescription, String fullDescription, Long sellerId, String sellerName, String sellerDescription, String sellerLogoUrl, Double sellerRating, String sellerContactEmail, String sellerContactPhone, Long brandId, String brandName, String status, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.slug = slug;
         this.shortDescription = shortDescription;
-        this.basePrice = basePrice;
-        this.salesPrice = salesPrice;
-        this.currency = currency;
-        this.brandId = brandId;
-        this.brandName = brandName;
+        this.fullDescription = fullDescription;
         this.sellerId = sellerId;
         this.sellerName = sellerName;
+        this.sellerDescription = sellerDescription;
+        this.sellerLogoUrl = sellerLogoUrl;
+        this.sellerRating = sellerRating;
+        this.sellerContactEmail = sellerContactEmail;
+        this.sellerContactPhone = sellerContactPhone;
+        this.brandId = brandId;
+        this.brandName = brandName;
         this.status = status;
         this.createdAt = createdAt;
     }

@@ -9,6 +9,6 @@ import java.util.List;
 @Setter
 public class ProductListResponse {
 
-    private List<ProductsDetailResponse> items;
+    private List<ProductsSummaryResponse> items;
     private PaginationResponse pagination;
 }
