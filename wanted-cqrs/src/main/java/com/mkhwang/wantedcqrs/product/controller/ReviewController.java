@@ -7,6 +7,7 @@ import com.mkhwang.wantedcqrs.user.domain.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ public class ReviewController {
 
   @ApiMessage("review.create.success")
   @Operation(summary = "상품 리뷰 등록")
+  @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("/api/products/{id}/reviews")
   public ReviewResponseDto postReview(
           @PathVariable Long id,

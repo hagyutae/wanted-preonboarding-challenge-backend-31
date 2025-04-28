@@ -6,6 +6,8 @@ import com.mkhwang.wantedcqrs.config.exception.ResourceNotFoundException;
 import com.mkhwang.wantedcqrs.product.domain.Category;
 import com.mkhwang.wantedcqrs.product.domain.ProductCategory;
 import com.mkhwang.wantedcqrs.product.domain.dto.*;
+import com.mkhwang.wantedcqrs.product.domain.dto.product.ProductCreateRequestDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.product.ProductCreateResponseDto;
 import com.mkhwang.wantedcqrs.product.infra.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -86,4 +88,8 @@ public class ProductSearchService {
     productRepository.deleteById(id);
   }
 
+  @Transactional
+  public ProductCreateResponseDto createProduct(ProductCreateRequestDto productCreateDto) {
+    return null;
+  }
 }
