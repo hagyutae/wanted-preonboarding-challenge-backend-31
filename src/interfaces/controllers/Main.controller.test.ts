@@ -1,0 +1,58 @@
+import { Test, TestingModule } from "@nestjs/testing";
+
+import MainService from "src/application/MainService";
+import { CategoryEntity, ProductEntity } from "src/infrastructure/entities";
+import { ResponseDTO } from "../dto";
+import MainController from "./Main.controller";
+
+describe("MainController", () => {
+  let controller: MainController;
+  let mockMainService: jest.Mocked<MainService>;
+
+  beforeEach(async () => {
+    mockMainService = {
+      getNewProducts: jest.fn(),
+      getPopularProducts: jest.fn(),
+      getFeaturedCategories: jest.fn(),
+    } as unknown as jest.Mocked<MainService>;
+
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [MainController],
+      providers: [
+        {
+          provide: MainService,
+          useValue: mockMainService,
+        },
+      ],
+    }).compile();
+
+    controller = module.get<MainController>(MainController);
+  });
+
+  describe("getMainProducts", () => {
+    it("메인 페이지용 상품 목록 조회 성공", async () => {
+      const mockNewProducts = [{ id: 1, name: "새 상품" }] as ProductEntity[];
+      const mockPopularProducts = [{ id: 2, name: "인기 상품" }] as any[];
+      const mockFeaturedCategories = [{ id: 3, name: "추천 카테고리" }] as CategoryEntity[];
+
+      mockMainService.getNewProducts.mockResolvedValue(mockNewProducts);
+      mockMainService.getPopularProducts.mockResolvedValue(mockPopularProducts);
+      mockMainService.getFeaturedCategories.mockResolvedValue(mockFeaturedCategories);
+
+      const result: ResponseDTO = await controller.getMainProducts();
+
+      expect(mockMainService.getNewProducts).toHaveBeenCalled();
+      expect(mockMainService.getPopularProducts).toHaveBeenCalled();
+      expect(mockMainService.getFeaturedCategories).toHaveBeenCalled();
+      expect(result).toEqual({
+        success: true,
+        data: {
+          new_products: mockNewProducts,
+          popular_products: mockPopularProducts,
+          featured_categories: mockFeaturedCategories,
+        },
+        message: "메인 페이지 상품 목록을 성공적으로 조회했습니다.",
+      });
+    });
+  });
+});
