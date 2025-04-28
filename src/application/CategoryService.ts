@@ -33,4 +33,48 @@ export default class CategoryService {
 
     return this.buildTree(categories, level);
   }
+
+  async getProductsByCategoryId(
+    category_id: number,
+    {
+      page = 1,
+      perPage = 10,
+      sort = "created_at:desc",
+      includeSubcategories = true,
+    }: {
+      page?: number;
+      perPage?: number;
+      sort?: string;
+      includeSubcategories?: boolean;
+    },
+  ) {
+    const category = await this.entityManager.findOne(CategoryEntity, {
+      where: { id: category_id },
+      relations: includeSubcategories ? ["parent"] : undefined,
+    });
+
+    const [field, order] = sort.split(":");
+
+    const query = this.entityManager
+      .getRepository(CategoryEntity)
+      .createQueryBuilder("categories")
+      .where("1 = 1")
+      .andWhere("categories.id = :category_id", { category_id })
+      .orderBy(`products.${field}`, order.toUpperCase() as "ASC" | "DESC")
+      .skip((page - 1) * perPage)
+      .take(perPage);
+
+    const items = await query.getMany();
+
+    return {
+      category,
+      items,
+      pagination: {
+        total_items: items.length,
+        total_pages: Math.ceil(items.length / perPage),
+        current_page: page,
+        per_page: perPage,
+      },
+    };
+  }
 }
