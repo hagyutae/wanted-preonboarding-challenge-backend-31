@@ -23,9 +23,11 @@ public class ProductOptionService {
 
   @Transactional
   public ProductOptionCreateResponseDto addProductOption(Long productId, ProductOptionCreateRequestDto dto) {
-    ProductOptionGroup optionGroup = productOptionGroupRepository
-            .findProductOptionGroupByProductIdAndId(productId, dto.getOptionGroupId())
+    ProductOptionGroup optionGroup = productOptionGroupRepository.findById(dto.getOptionGroupId())
             .orElseThrow(() -> new ResourceNotFoundException("product.option.group.not.found"));
+    if (!optionGroup.getProductId().equals(productId)) {
+      throw new ResourceNotFoundException("product.option.group.not.found");
+    }
     ProductOption productOption = genericMapper.toEntity(dto, ProductOption.class);
     productOption.setGroup(optionGroup);
     productOptionRepository.save(productOption);
