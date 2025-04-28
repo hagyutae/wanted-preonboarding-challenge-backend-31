@@ -16,10 +16,8 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.Querydsl;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
-@Repository
 public abstract class QuerydslRepositorySupport {
 
     private final Class<?> domainClass;
