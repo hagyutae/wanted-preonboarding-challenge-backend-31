@@ -1,5 +1,6 @@
 package com.example.wanted_preonboarding_challenge_backend_31.domain.repository;
 
+import com.example.wanted_preonboarding_challenge_backend_31.common.util.ParseUtil;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
@@ -79,7 +80,7 @@ public abstract class QuerydslRepositorySupport {
         return queryFactory().selectFrom(from);
     }
 
-    protected <T> OrderSpecifier<?>[] parseSort(String sort) {
+    protected <T> OrderSpecifier<?>[] createOrderSpecifier(String sort) {
         if (sort == null || sort.isBlank()) {
             return getDefaultOrderSpecifier();
         }
@@ -92,7 +93,7 @@ public abstract class QuerydslRepositorySupport {
             if (parts.length != 2) {
                 continue;
             }
-            String fieldName = parts[0];
+            String fieldName = ParseUtil.snakeToCamelCase(parts[0]);
             String direction = parts[1];
 
             Order orderDirection = "desc".equalsIgnoreCase(direction) ? Order.DESC : Order.ASC;
