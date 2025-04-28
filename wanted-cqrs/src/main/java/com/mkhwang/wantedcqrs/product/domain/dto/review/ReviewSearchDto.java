@@ -1,4 +1,4 @@
-package com.mkhwang.wantedcqrs.product.domain.dto;
+package com.mkhwang.wantedcqrs.product.domain.dto.review;
 
 import com.mkhwang.wantedcqrs.common.dto.PageRequestDto;
 import lombok.Getter;

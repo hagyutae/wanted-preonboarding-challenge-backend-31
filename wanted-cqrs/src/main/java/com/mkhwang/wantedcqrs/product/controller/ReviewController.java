@@ -1,9 +1,9 @@
 package com.mkhwang.wantedcqrs.product.controller;
 
 import com.mkhwang.wantedcqrs.product.application.ReviewService;
-import com.mkhwang.wantedcqrs.product.domain.dto.ReviewDto;
-import com.mkhwang.wantedcqrs.product.domain.dto.ReviewSearchDto;
-import com.mkhwang.wantedcqrs.product.domain.dto.ReviewSearchResultDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.review.ReviewDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.review.ReviewSearchDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.review.ReviewSearchResultDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

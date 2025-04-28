@@ -1,4 +1,4 @@
-package com.mkhwang.wantedcqrs.product.domain.dto;
+package com.mkhwang.wantedcqrs.product.domain.dto.category;
 
 import lombok.Getter;
 import lombok.Setter;

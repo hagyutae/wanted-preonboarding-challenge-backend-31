@@ -1,4 +1,4 @@
-package com.mkhwang.wantedcqrs.product.domain.dto;
+package com.mkhwang.wantedcqrs.product.domain.dto.review;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querydsl.core.annotations.QueryProjection;

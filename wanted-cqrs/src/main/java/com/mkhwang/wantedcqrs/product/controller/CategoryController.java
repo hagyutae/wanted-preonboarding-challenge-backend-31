@@ -2,9 +2,9 @@ package com.mkhwang.wantedcqrs.product.controller;
 
 import com.mkhwang.wantedcqrs.config.advice.ApiMessage;
 import com.mkhwang.wantedcqrs.product.application.CategoryService;
-import com.mkhwang.wantedcqrs.product.domain.dto.CategoryDto;
-import com.mkhwang.wantedcqrs.product.domain.dto.CategorySearchDto;
-import com.mkhwang.wantedcqrs.product.domain.dto.CategorySearchResultDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.category.CategoryDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.category.CategorySearchDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.category.CategorySearchResultDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

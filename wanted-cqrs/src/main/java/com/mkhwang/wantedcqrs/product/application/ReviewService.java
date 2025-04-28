@@ -1,8 +1,8 @@
 package com.mkhwang.wantedcqrs.product.application;
 
-import com.mkhwang.wantedcqrs.product.domain.dto.ReviewDto;
-import com.mkhwang.wantedcqrs.product.domain.dto.ReviewSearchDto;
-import com.mkhwang.wantedcqrs.product.domain.dto.ReviewSearchResultDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.review.ReviewDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.review.ReviewSearchDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.review.ReviewSearchResultDto;
 import com.mkhwang.wantedcqrs.product.infra.ReviewRepository;
 import com.mkhwang.wantedcqrs.product.infra.ReviewSearchRepository;
 import lombok.RequiredArgsConstructor;

@@ -2,9 +2,9 @@ package com.mkhwang.wantedcqrs.product.application;
 
 import com.mkhwang.wantedcqrs.config.GenericMapper;
 import com.mkhwang.wantedcqrs.product.domain.Category;
-import com.mkhwang.wantedcqrs.product.domain.dto.CategoryDto;
-import com.mkhwang.wantedcqrs.product.domain.dto.CategorySearchDto;
-import com.mkhwang.wantedcqrs.product.domain.dto.CategorySearchResultDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.category.CategoryDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.category.CategorySearchDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.category.CategorySearchResultDto;
 import com.mkhwang.wantedcqrs.product.infra.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
