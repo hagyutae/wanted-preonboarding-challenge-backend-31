@@ -4,8 +4,6 @@ import com.mkhwang.wantedcqrs.common.querydsl.QuerydslUtil;
 import com.mkhwang.wantedcqrs.config.advice.dto.ApiPageInfo;
 import com.mkhwang.wantedcqrs.product.domain.QReview;
 import com.mkhwang.wantedcqrs.product.domain.dto.ProductRatingDto;
-import com.mkhwang.wantedcqrs.product.domain.dto.QReviewSearchItemDto;
-import com.mkhwang.wantedcqrs.product.domain.dto.QReviewUserDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.review.*;
 import com.mkhwang.wantedcqrs.product.infra.ReviewSearchRepository;
 import com.mkhwang.wantedcqrs.user.domain.QUser;

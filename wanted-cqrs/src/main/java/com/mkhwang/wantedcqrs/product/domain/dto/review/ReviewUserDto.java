@@ -3,10 +3,12 @@ package com.mkhwang.wantedcqrs.product.domain.dto.review;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ReviewUserDto {
   private Long id;
   private String name;
