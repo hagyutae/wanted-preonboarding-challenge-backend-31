@@ -6,8 +6,10 @@ import com.mkhwang.wantedcqrs.product.domain.dto.category.CategoryDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.category.CategorySearchDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.category.CategorySearchResultDto;
 import com.mkhwang.wantedcqrs.product.infra.CategoryRepository;
+import com.mkhwang.wantedcqrs.product.infra.impl.CategorySearchRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.List;
 public class CategoryService {
   private final CategoryRepository categoryRepository;
   private final GenericMapper genericMapper;
+  private final CategorySearchRepositoryImpl categorySearchRepository;
 
   public List<CategoryDto> getAllCategories(Integer level) {
     List<Category> all = categoryRepository.findAll();
@@ -41,7 +44,8 @@ public class CategoryService {
     return root;
   }
 
-  public CategorySearchResultDto searchCategories(Long id, CategorySearchDto searchDto) {
-    return null;
+  @Transactional(readOnly = true)
+  public CategorySearchResultDto searchCategories(CategorySearchDto searchDto) {
+    return categorySearchRepository.searchCategories(searchDto);
   }
 }

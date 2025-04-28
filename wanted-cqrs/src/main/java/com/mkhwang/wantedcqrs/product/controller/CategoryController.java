@@ -24,6 +24,7 @@ public class CategoryController {
   @ApiMessage("category.product.success")
   @GetMapping("/api/categories/{id}/products")
   public CategorySearchResultDto searchCategories(@PathVariable Long id, @ModelAttribute CategorySearchDto searchDto) {
-    return categoryService.searchCategories(id, searchDto);
+    searchDto.setCategoryId(id);
+    return categoryService.searchCategories(searchDto);
   }
 }
