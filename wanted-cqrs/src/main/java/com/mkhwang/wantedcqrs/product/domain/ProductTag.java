@@ -1,7 +1,11 @@
 package com.mkhwang.wantedcqrs.product.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity(name = "product_tags")
 public class ProductTag {
   @Id

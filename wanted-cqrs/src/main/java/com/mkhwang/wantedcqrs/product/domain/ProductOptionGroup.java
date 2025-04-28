@@ -2,8 +2,10 @@ package com.mkhwang.wantedcqrs.product.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity(name = "product_option_groups")
 public class ProductOptionGroup {
   @Id

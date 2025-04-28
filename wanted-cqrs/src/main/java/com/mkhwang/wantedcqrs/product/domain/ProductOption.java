@@ -2,10 +2,12 @@ package com.mkhwang.wantedcqrs.product.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Getter
+@Setter
 @Entity(name = "product_options")
 public class ProductOption {
   @Id

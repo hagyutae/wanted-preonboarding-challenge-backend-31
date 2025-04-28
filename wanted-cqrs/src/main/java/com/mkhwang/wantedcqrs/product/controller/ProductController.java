@@ -7,6 +7,7 @@ import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchResultDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.product.ProductCreateRequestDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.product.ProductCreateResponseDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.product.ProductModifyRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -41,12 +42,19 @@ public class ProductController {
     return productSearchService.getProductDetailById(id);
   }
 
+  @ApiMessage("product.modify.success")
+  @Operation(summary = "상품 수정")
+  @PutMapping("/api/products/{id}")
+  public ProductCreateResponseDto modifyProduct(@PathVariable Long id,
+                                                @RequestBody @Valid ProductModifyRequestDto dto) {
+    dto.setId(id);
+    return productSearchService.modifyProduct(dto);
+  }
+
   @ApiMessage("product.delete.success")
   @Operation(summary = "상품 삭제")
   @DeleteMapping("/api/products/{id}")
   public void deleteProduct(@PathVariable Long id) {
     productSearchService.deleteProduct(id);
   }
-
-
 }

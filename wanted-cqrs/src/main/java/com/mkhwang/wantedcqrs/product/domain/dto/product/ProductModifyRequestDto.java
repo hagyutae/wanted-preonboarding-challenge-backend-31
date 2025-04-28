@@ -1,5 +1,6 @@
 package com.mkhwang.wantedcqrs.product.domain.dto.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mkhwang.wantedcqrs.product.domain.ProductStatus;
 import jakarta.validation.constraints.NotEmpty;
@@ -11,7 +12,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ProductCreateRequestDto {
+@JsonIgnoreProperties(ignoreUnknown = true, value = {"id"})
+public class ProductModifyRequestDto {
+  private Long id;
   @NotEmpty
   private String name;
   @NotEmpty
@@ -32,8 +35,5 @@ public class ProductCreateRequestDto {
   private ProductDetailCreateDto detail;
   private ProductPriceCreateDto price;
   private List<ProductCategoryCreateDto> categories;
-  @JsonProperty("option_groups")
-  private List<ProductOptionGroupCreateDto> optionGroups;
-  private List<ProductImageCreateDto> images;
   private List<Long> tags;
 }
