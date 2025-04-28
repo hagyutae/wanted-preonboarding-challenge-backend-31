@@ -12,6 +12,7 @@ import {
   ProductPriceEntity,
   ProductTagEntity,
   SellerEntity,
+  ReviewEntity,
 } from "src/infrastructure/entities";
 import { ProductInputDTO } from "./dto/ProductInputDTO";
 
@@ -117,6 +118,52 @@ export default class ProductService {
     return productEntity;
   }
 
+  getProductWithAggregatesQuery() {
+    return this.entityManager
+      .getRepository(ProductEntity)
+      .createQueryBuilder("products")
+      .innerJoin(ProductPriceEntity, "product_prices", "product_prices.product_id = products.id")
+      .leftJoin(
+        ProductCategoryEntity,
+        "product_categories",
+        "product_categories.product_id = products.id",
+      )
+      .leftJoin(ProductImageEntity, "product_images", "product_images.product_id = products.id")
+      .leftJoin(ReviewEntity, "reviews", "reviews.product_id = products.id")
+      .leftJoin(BrandEntity, "brands", "brands.id = products.brand_id")
+      .leftJoin(SellerEntity, "sellers", "sellers.id = products.seller_id")
+      .select([
+        "products.id as id",
+        "products.name as name",
+        "products.slug as slug",
+        "products.short_description as short_description",
+        "product_prices.base_price as base_price",
+        "product_prices.sale_price as sale_price",
+        "product_prices.currency as currency",
+        "product_images.url as image_url",
+        "product_images.alt_text as image_alt_text",
+        "brands.id as brand_id",
+        "brands.name as brand_name",
+        "sellers.id as sellers_id",
+        "sellers.name as seller_name",
+        "products.status as status",
+        "products.created_at as created_at",
+      ])
+      .addSelect("ROUND(AVG(reviews.rating), 1)", "rating")
+      .addSelect("COUNT(reviews.id)", "review_count")
+      .groupBy("products.id")
+      .addGroupBy("products.created_at")
+      .addGroupBy("product_prices.base_price")
+      .addGroupBy("product_prices.sale_price")
+      .addGroupBy("product_prices.currency")
+      .addGroupBy("product_images.url")
+      .addGroupBy("product_images.alt_text")
+      .addGroupBy("brands.id")
+      .addGroupBy("brands.name")
+      .addGroupBy("sellers.id")
+      .addGroupBy("sellers.name");
+  }
+
   async getAll({
     page = 1,
     perPage = 10,
@@ -141,34 +188,32 @@ export default class ProductService {
     inStock?: boolean;
     search?: string;
   }) {
-    const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
+    // 상품 집계 처리 쿼리
+    const innerQuery = this.getProductWithAggregatesQuery();
 
-    const query = this.entityManager
-      .getRepository(ProductEntity)
-      .createQueryBuilder("products")
-      .leftJoinAndSelect(
-        "product_prices",
-        "product_prices",
-        "product_prices.product_id = products.id",
-      )
-      .leftJoinAndSelect(
-        "product_categories",
-        "product_categories",
-        "product_categories.product_id = products.id",
-      )
-      .where("1 = 1") // 조건 기본값
+    // 쿼리 필터링
+    innerQuery
       .andWhere(status ? "products.status = :status" : "1=1", { status })
       .andWhere(minPrice ? "product_prices.base_price >= :minPrice" : "1=1", { minPrice })
       .andWhere(maxPrice ? "product_prices.base_price <= :maxPrice" : "1=1", { maxPrice })
       .andWhere(category ? "product_categories.id IN (:...category)" : "1=1", { category })
       .andWhere(seller ? "products.seller_id = :seller" : "1=1", { seller })
       .andWhere(brand ? "products.brand_id = :brand" : "1=1", { brand })
-      .andWhere(search ? "products.name LIKE :search" : "1=1", { search: `%${search}%` })
-      .orderBy(`products.${field}`, order.toUpperCase() as "ASC" | "DESC")
-      .skip((page - 1) * perPage)
-      .take(perPage);
+      .andWhere(search ? "products.name LIKE :search" : "1=1", { search: `%${search}%` });
 
-    const items = await query.getMany();
+    // 쿼리 정렬, 페이지네이션
+    const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
+    const query = this.entityManager
+      .createQueryBuilder()
+      .select("*")
+      .from(`(${innerQuery.getQuery()})`, "result")
+      .orderBy(`result.${field}`, order.toUpperCase() as "ASC" | "DESC")
+      .offset((page - 1) * perPage)
+      .limit(perPage)
+      .setParameters(innerQuery.getParameters());
+
+    // 쿼리 실행
+    const items = await query.getRawMany();
 
     return {
       items,
