@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres15
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_DB: mydb
+      PGDATA: /var/lib/postgresql/data/pgdata
+      TZ: Asia/Seoul
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # - ./postgresql.conf:/etc/postgresql/postgresql.conf
+      # - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    # 필요한 경우 다른 서비스에 종속성 추가
+    # depends_on:
+    #   - other_service
+
+volumes:
+  postgres_data:
+    driver: local
