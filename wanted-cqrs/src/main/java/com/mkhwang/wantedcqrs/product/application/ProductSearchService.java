@@ -35,7 +35,7 @@ public class ProductSearchService {
   public ProductSearchDetailDto getProductDetailById(Long id) {
     ProductSearchDetailDto base = Optional.ofNullable(productSearchRepository.getProductDetailBaseById(id))
             .orElseThrow(
-                    () -> new ResourceNotFoundException("product.detail.not.found", null)
+                    () -> new ResourceNotFoundException("product.detail.not.found")
             );
 
     base.setRating(reviewSearchRepository.findAverageRatingByProductId(id));

@@ -31,9 +31,9 @@ public class ReviewService {
   @Transactional
   public ReviewResponseDto postReview(ReviewCreateDto reviewDto) {
     User existUser = userRepository.findById(reviewDto.getUserId()).orElseThrow(
-            () -> new ResourceNotFoundException("user.not.found", null));
+            () -> new ResourceNotFoundException("user.not.found"));
     Product existProduct = productRepository.findById(reviewDto.getProductId()).orElseThrow(
-            () -> new ResourceNotFoundException("product.not.found", null)
+            () -> new ResourceNotFoundException("product.not.found")
     );
 
     reviewDto.setUser(existUser);
@@ -46,20 +46,17 @@ public class ReviewService {
   @Transactional
   public void deleteReview(Long id, Long userId) {
     Review existReview = reviewRepository.findById(id).orElseThrow(
-            () -> new ResourceNotFoundException("review.not.found", null));
-    if (!existReview.getUser().getId().equals(userId)) {
-      throw new ForbiddenException("review.modify.have.no.authorities", null);
-    }
+            () -> new ResourceNotFoundException("review.not.found"));
+    this.hasReviewAuthority(existReview, userId);
+
     reviewRepository.deleteById(id);
   }
 
   @Transactional
   public ReviewResponseDto updateReview(ReviewModifyDto reviewDto) {
     Review existReview = reviewRepository.findById(reviewDto.getId()).orElseThrow(
-            () -> new ResourceNotFoundException("review.not.found", null));
-    if (!existReview.getUser().getId().equals(reviewDto.getUserId())) {
-      throw new ForbiddenException("review.modify.have.no.authorities", null);
-    }
+            () -> new ResourceNotFoundException("review.not.found"));
+    this.hasReviewAuthority(existReview, reviewDto.getUserId());
 
     existReview.setTitle(reviewDto.getTitle());
     existReview.setContent(reviewDto.getContent());
@@ -67,5 +64,11 @@ public class ReviewService {
     reviewRepository.save(existReview);
 
     return genericMapper.toDto(existReview, ReviewResponseDto.class);
+  }
+
+  private void hasReviewAuthority(Review review, Long userId) {
+    if (!review.getUser().getId().equals(userId)) {
+      throw new ForbiddenException("review.modify.have.no.authorities");
+    }
   }
 }

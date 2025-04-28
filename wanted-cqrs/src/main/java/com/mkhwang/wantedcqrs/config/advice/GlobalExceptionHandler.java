@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,7 +29,8 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(ForbiddenException.class)
   public ResponseEntity<ApiResponse<?>> handleForbiddenException(ForbiddenException ex) {
     return new ResponseEntity<>(
-            ApiResponse.error("FORBIDDEN", "권한이 없는 요청"),
+            ApiResponse.error("FORBIDDEN",
+                    StringUtils.hasText(ex.getMessage()) ? i18nService.getMessage(ex.getMessage()) :"권한이 없는 요청"),
             HttpStatus.FORBIDDEN);
   }
 
