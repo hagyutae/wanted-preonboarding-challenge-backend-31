@@ -163,7 +163,7 @@ export default class ProductService {
         "product_images.alt_text as image_alt_text",
         "brands.id as brand_id",
         "brands.name as brand_name",
-        "sellers.id as sellers_id",
+        "sellers.id as seller_id",
         "sellers.name as seller_name",
         "products.status as status",
         "products.created_at as created_at",
@@ -237,7 +237,23 @@ export default class ProductService {
     const items = await query.getRawMany();
 
     return {
-      items,
+      items: items.map(
+        ({ image_url, image_alt_text, brand_id, brand_name, seller_id, seller_name, ...rest }) => ({
+          ...rest,
+          primary_image: {
+            url: image_url,
+            alt_text: image_alt_text,
+          },
+          brand: {
+            id: brand_id,
+            name: brand_name,
+          },
+          seller: {
+            id: seller_id,
+            name: seller_name,
+          },
+        }),
+      ),
       pagination: {
         total_items: items.length,
         total_pages: Math.ceil(items.length / perPage),
