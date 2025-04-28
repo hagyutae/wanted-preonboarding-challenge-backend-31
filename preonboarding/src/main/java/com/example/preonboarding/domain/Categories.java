@@ -9,19 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Brand {
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Categories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String slug;
     private String description;
-    private String long_url;
-    private String webSite;
+    private int level;
+    private String imageUrl;
 
-    @OneToMany(mappedBy = "brand")
-    private List<Products> products = new ArrayList<>();
+    @OneToMany(mappedBy = "categories")
+    private List<ProductCategories> productCategories = new ArrayList<>();
 }

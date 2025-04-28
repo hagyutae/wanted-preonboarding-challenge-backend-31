@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Tag {
+public class Tags {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,6 +19,6 @@ public class Tag {
     private String name;
     private String slug;
 
-    @OneToMany(mappedBy = "tag")
-    private List<ProductTag> productTags = new ArrayList<>();
+    @OneToMany(mappedBy = "tags")
+    private List<ProductTags> productTags = new ArrayList<>();
 }

@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,29 +20,32 @@ public class Products {
     private String slug;
     private String shortDescription;
     private String fullDescription;
-    private LocalDate createAt;
-    private LocalDate updateAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updateAt;
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
-    private Brand brand;
+    private Brands brands;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
-    private Seller seller;
+    private Sellers sellers;
 
     @OneToMany(mappedBy ="products")
-    private List<ProductTag> productTags = new ArrayList<>();
+    private List<ProductTags> productTags = new ArrayList<>();
 
     @OneToMany(mappedBy ="products")
-    private List<ProductCategory> productCategories = new ArrayList<>();
+    private List<ProductCategories> productCategories = new ArrayList<>();
+
+    @OneToOne(mappedBy = "products")
+    private ProductPrices productPrices;
+
+    @OneToOne(mappedBy = "products")
+    private ProductDetails productDetails;
 
     @OneToMany(mappedBy = "products")
-    private List<ProductPrice> productPrices = new ArrayList<>();
-
-    @OneToMany(mappedBy = "products")
-    private List<ProductImage> productImages = new ArrayList<>();
+    private List<ProductImages> productImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "products")
     private List<ProductOptionGroup> productOptionGroups = new ArrayList<>();

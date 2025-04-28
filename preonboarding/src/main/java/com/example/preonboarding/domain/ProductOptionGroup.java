@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "product_option_group")
+@Table(name = "product_option_groups")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOptionGroup {
@@ -21,8 +21,8 @@ public class ProductOptionGroup {
     @JoinColumn(name = "product_id")
     private Products products;
 
-    @OneToMany(mappedBy = "optionGroup")
-    private List<ProductOptionGroup> optionGroups = new ArrayList<>();
+    @OneToMany(mappedBy = "optionGroups")
+    private List<ProductOption> optionGroups = new ArrayList<>();
 
     private String name;
     private int displayOrder;

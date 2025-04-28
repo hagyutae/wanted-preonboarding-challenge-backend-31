@@ -6,10 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "product_price")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "product_categories")
 @Getter
-public class ProductPrice {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ProductCategories {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,13 +19,9 @@ public class ProductPrice {
     @JoinColumn(name = "product_id")
     private Products products;
 
-    private int basePrice;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Categories categories;
 
-    private int salesPrice;
-
-    private int costPrice;
-
-    private String current;
-
-    private double tax_rate;
+    private boolean isPrimary;
 }

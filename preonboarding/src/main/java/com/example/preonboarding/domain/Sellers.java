@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Seller {
+public class Sellers {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,6 @@ public class Seller {
     private String contactPhone;
     private LocalDate createdAt;
 
-    @OneToMany(mappedBy = "seller")
+    @OneToMany(mappedBy = "sellers")
     private List<Products> products = new ArrayList<>();
 }
