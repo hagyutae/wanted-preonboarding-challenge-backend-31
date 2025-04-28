@@ -20,8 +20,8 @@ public class UserRegisterService {
               throw new DuplicateUsernameException();
             });
 
-    userRepository.save(User.of(registerDto.getEmail(),
-            registerDto.getPassword(),
-            registerDto.getName()));
+    userRepository.save(User.of(registerDto.getName(),
+            registerDto.getEmail(),
+            registerDto.getPassword()));
   }
 }
