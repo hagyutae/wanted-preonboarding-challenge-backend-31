@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
 
 import ProductEntity from "./Product.entity";
 
@@ -8,6 +8,7 @@ export default class ProductOptionGroupEntity {
   id: number;
 
   @ManyToOne(() => ProductEntity, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "product_id" })
   product: ProductEntity;
 
   @Column({ type: "varchar", length: 100 })

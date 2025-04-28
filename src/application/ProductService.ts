@@ -9,6 +9,7 @@ import {
   ProductEntity,
   ProductImageEntity,
   ProductOptionGroupEntity,
+  ProductOptionEntity,
   ProductPriceEntity,
   ProductTagEntity,
   SellerEntity,
@@ -119,6 +120,18 @@ export default class ProductService {
   }
 
   getProductWithAggregatesQuery() {
+    const stockSubQuery = this.entityManager
+      .getRepository(ProductOptionGroupEntity)
+      .createQueryBuilder("product_option_groups")
+      .leftJoin(
+        ProductOptionEntity,
+        "product_options",
+        "product_options.option_group_id = product_option_groups.id",
+      )
+      .select("product_option_groups.product_id", "product_id")
+      .addSelect("CASE WHEN SUM(product_options.stock) > 0 THEN true ELSE false END", "in_stock")
+      .groupBy("product_option_groups.product_id");
+
     return this.entityManager
       .getRepository(ProductEntity)
       .createQueryBuilder("products")
@@ -132,13 +145,19 @@ export default class ProductService {
       .leftJoin(ReviewEntity, "reviews", "reviews.product_id = products.id")
       .leftJoin(BrandEntity, "brands", "brands.id = products.brand_id")
       .leftJoin(SellerEntity, "sellers", "sellers.id = products.seller_id")
+      .leftJoin(
+        `(${stockSubQuery.getQuery()})`,
+        "stock_summary",
+        "stock_summary.product_id = products.id",
+      )
+      .setParameters(stockSubQuery.getParameters())
       .select([
         "products.id as id",
         "products.name as name",
         "products.slug as slug",
         "products.short_description as short_description",
-        "product_prices.base_price as base_price",
-        "product_prices.sale_price as sale_price",
+        "ROUND(product_prices.base_price) as base_price",
+        "ROUND(product_prices.sale_price) as sale_price",
         "product_prices.currency as currency",
         "product_images.url as image_url",
         "product_images.alt_text as image_alt_text",
@@ -149,6 +168,7 @@ export default class ProductService {
         "products.status as status",
         "products.created_at as created_at",
       ])
+      .addSelect("stock_summary.in_stock", "in_stock")
       .addSelect("ROUND(AVG(reviews.rating), 1)", "rating")
       .addSelect("COUNT(reviews.id)", "review_count")
       .groupBy("products.id")
@@ -158,6 +178,7 @@ export default class ProductService {
       .addGroupBy("product_prices.currency")
       .addGroupBy("product_images.url")
       .addGroupBy("product_images.alt_text")
+      .addGroupBy("stock_summary.in_stock")
       .addGroupBy("brands.id")
       .addGroupBy("brands.name")
       .addGroupBy("sellers.id")
