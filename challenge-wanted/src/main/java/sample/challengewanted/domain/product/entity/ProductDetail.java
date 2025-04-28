@@ -1,14 +1,17 @@
 package sample.challengewanted.domain.product.entity;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sample.challengewanted.api.controller.product.request.ProductDetailRequest;
 import sample.challengewanted.domain.review.Review;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,7 +24,9 @@ public class ProductDetail {
 
     private Double weight;
 
+
     @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String dimensions;
 
     private String material;
@@ -30,6 +35,7 @@ public class ProductDetail {
     private String careInstructions;
 
     @Column(columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String additionalInfo;
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -38,6 +44,20 @@ public class ProductDetail {
 
     @OneToMany(mappedBy = "productDetail")
     List<Review> reviews = new ArrayList<>();
+
+    private ProductDetail(ProductDetailRequest request) {
+        this.weight = request.getWeight();
+        this.dimensions = request.getDimensionsAsJson();
+        this.material = request.getMaterials();
+        this.countryOfOrigin = request.getCountryOfOrigin();
+        this.warrantyInfo = request.getWarrantyInfo();
+        this.careInstructions = request.getCareInstructions();
+        this.additionalInfo = request.getAdditionalInfoAsJson();
+    }
+
+    public static ProductDetail create(ProductDetailRequest request) {
+        return new ProductDetail(request);
+    }
 
     public void addReview(Review review) {
         this.reviews.add(review);

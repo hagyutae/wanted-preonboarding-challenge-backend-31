@@ -23,6 +23,19 @@ public class ProductCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "is_primary", nullable = false) // ✅ DB 디폴트 false, nullable=false로 명시
+    private boolean isPrimary;
+
+
+    private ProductCategory(Product product, Category category, boolean isPrimary) {
+        this.product = product;
+        this.category = category;
+        this.isPrimary = isPrimary;
+    }
+
+    public static ProductCategory create(Product product, Category category, boolean isPrimary) {
+        return new ProductCategory(product, category, isPrimary);
+    }
     public void associateProduct(Product product) {
         this.product = product;
     }

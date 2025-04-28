@@ -27,6 +27,20 @@ public class ProductOptionGroup {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_group_id")
+    private ProductOption productOption;
+
+    private ProductOptionGroup(String name, Integer displayOrder, Product product) {
+        this.name = name;
+        this.displayOrder = displayOrder;
+        this.product = product;
+    }
+
+    public static ProductOptionGroup create(String name, Integer displayOrder, Product product) {
+        return new ProductOptionGroup(name, displayOrder, product);
+    }
+
     public void assignProduct(Product product) {
         this.product = product;
     }

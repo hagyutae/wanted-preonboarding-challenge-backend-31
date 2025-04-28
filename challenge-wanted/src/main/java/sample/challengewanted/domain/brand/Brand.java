@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sample.challengewanted.domain.BaseEntity;
 import sample.challengewanted.domain.product.entity.Product;
 
 import java.util.ArrayList;

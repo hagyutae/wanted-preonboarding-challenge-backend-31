@@ -1,19 +1,26 @@
+server:
+  servlet:
+    context-path: /api
+
 spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: junghanso
-    password: # 여기에 비밀번호 입력
+    password: tysiab43@@
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update # 필요 시 create, create-drop, validate 등으로 변경
+      ddl-auto: none # 필요 시 create, create-drop, validate 등으로 변경
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+        default_schema: wanted
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
   # 필요 시 로깅 수준 설정

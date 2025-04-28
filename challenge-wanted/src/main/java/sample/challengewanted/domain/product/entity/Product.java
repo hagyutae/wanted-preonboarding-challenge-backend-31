@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sample.challengewanted.api.controller.product.request.ProductCreateRequest;
 import sample.challengewanted.domain.BaseEntity;
 import sample.challengewanted.domain.brand.Brand;
 import sample.challengewanted.domain.category.ProductCategory;
@@ -19,7 +20,8 @@ import java.util.List;
 @Entity
 public class Product extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -44,6 +46,23 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductOptionGroup> productOptionGroups = new ArrayList<>();
+
+    @OneToOne(mappedBy = "product")
+    private ProductPrice price;
+
+    private Product(ProductCreateRequest request, Seller seller, Brand brand) {
+        this.name = request.getName();
+        this.slug = request.getSlug();
+        this.shortDescription = request.getShortDescription();
+        this.fullDescription = request.getFullDescription();
+        this.status = request.getStatus();
+        this.seller = seller;
+        this.brand = brand;
+    }
+
+    public static Product create(ProductCreateRequest request, Seller seller, Brand brand) {
+        return new Product(request, seller, brand);
+    }
 
     public void assignSeller(Seller seller) {
         this.seller = seller;

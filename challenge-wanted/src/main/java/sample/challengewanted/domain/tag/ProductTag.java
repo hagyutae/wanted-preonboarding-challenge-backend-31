@@ -2,6 +2,7 @@ package sample.challengewanted.domain.tag;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sample.challengewanted.domain.product.entity.Product;
@@ -22,6 +23,19 @@ public class ProductTag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Builder
+    private ProductTag(Tag tag, Product product) {
+        this.tag = tag;
+        this.product = product;
+    }
+
+    public static ProductTag create(Tag tag, Product product) {
+        return ProductTag.builder()
+                .tag(tag)
+                .product(product)
+                .build();
+    }
 
     public void assignTag(Tag tag) {
         this.tag = tag;
