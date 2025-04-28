@@ -7,37 +7,43 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProductsDetailResponse {
+public class ProductsSummaryResponse {
 
     private Long id;
     private String name;
     private String slug;
     private String shortDescription;
-    private String fullDescription;
-    private SellerResponse seller;
+    private Integer basePrice;
+    private Integer salesPrice;
+    private String currency;
+    private ImageResponse primaryImage;
     private BrandResponse brand;
-    private List<ImageResponse> primaryImage;
+    private SellerResponse seller;
     private Double rating;
     private Long reviewCount;
     private boolean inStock;
     private String status;
     private LocalDateTime createdAt;
 
-
     @Builder
-    public ProductsDetailResponse(Long id, String name, String slug, String shortDescription, String fullDescription, SellerResponse seller, BrandResponse brand, String status, LocalDateTime createdAt) {
+    public ProductsSummaryResponse(Long id, String name, String slug, String shortDescription, Integer basePrice, Integer salesPrice, String currency, ImageResponse primaryImage, BrandResponse brand, SellerResponse seller, Double rating, Long reviewCount, boolean stock, String status, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.slug = slug;
         this.shortDescription = shortDescription;
-        this.fullDescription = fullDescription;
-        this.seller = seller;
+        this.basePrice = basePrice;
+        this.salesPrice = salesPrice;
+        this.currency = currency;
+        this.primaryImage = primaryImage;
         this.brand = brand;
+        this.seller = seller;
+        this.rating = rating;
+        this.reviewCount = reviewCount;
+        this.inStock = stock;
         this.status = status;
         this.createdAt = createdAt;
     }
