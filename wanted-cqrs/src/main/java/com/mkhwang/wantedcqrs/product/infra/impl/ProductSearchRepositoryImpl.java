@@ -1,14 +1,11 @@
 package com.mkhwang.wantedcqrs.product.infra.impl;
 
+import com.mkhwang.wantedcqrs.common.querydsl.QuerydslUtil;
 import com.mkhwang.wantedcqrs.product.domain.*;
 import com.mkhwang.wantedcqrs.product.domain.dto.*;
 import com.mkhwang.wantedcqrs.product.infra.ProductSearchRepository;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.ComparableExpression;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductSearchRepositoryImpl implements ProductSearchRepository {
   private final JPAQueryFactory jpaQueryFactory;
+  private final QuerydslUtil querydslUtil;
   private final QProduct qProduct = QProduct.product;
   private final QBrand qBrand = QBrand.brand;
   private final QSeller qSeller = QSeller.seller;
@@ -93,7 +91,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
             .on(qProduct.id.eq(qProductImage.product.id)
                     .and(qProductImage.primary.eq(true)))
             .where(condition)
-            .orderBy(getOrderSpecifiers(pageable, qProduct.getType(), qProduct.getMetadata().getName()))
+            .orderBy(querydslUtil.getOrderSpecifiers(pageable, qProduct.getType(), qProduct.getMetadata().getName()))
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
             .fetch();
@@ -168,17 +166,6 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
             .fetch();
   }
 
-  private OrderSpecifier<?>[] getOrderSpecifiers(Pageable pageable, Class<?> entityClass, String alias) {
-    PathBuilder<?> pathBuilder = new PathBuilder<>(entityClass, alias);
-
-    return pageable.getSort().stream()
-            .map(order -> {
-              Order direction = order.isAscending() ? Order.ASC : Order.DESC;
-              ComparableExpression<?> expression = pathBuilder.getComparable(order.getProperty(), Comparable.class);
-              return new OrderSpecifier<>(direction, expression);
-            })
-            .toArray(OrderSpecifier<?>[]::new);
-  }
 
   private BooleanBuilder generateCondition(ProductSearchDto searchDto) {
     BooleanBuilder condition = new BooleanBuilder();

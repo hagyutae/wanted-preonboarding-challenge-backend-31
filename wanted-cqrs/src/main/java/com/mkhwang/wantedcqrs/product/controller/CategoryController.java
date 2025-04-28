@@ -1,13 +1,12 @@
 package com.mkhwang.wantedcqrs.product.controller;
 
+import com.mkhwang.wantedcqrs.config.advice.ApiMessage;
 import com.mkhwang.wantedcqrs.product.application.CategoryService;
 import com.mkhwang.wantedcqrs.product.domain.dto.CategoryDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.CategorySearchDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.CategorySearchResultDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,13 +15,15 @@ import java.util.List;
 public class CategoryController {
   private final CategoryService categoryService;
 
+  @ApiMessage("category.all.success")
   @GetMapping("/api/categories")
-  public List<CategoryDto> getAllCategories(@RequestParam Integer level) {
+  public List<CategoryDto> getAllCategories(@RequestParam(required = false) Integer level) {
     return categoryService.getAllCategories(level);
   }
 
+  @ApiMessage("category.product.success")
   @GetMapping("/api/categories/{id}/products")
-  public List<CategoryDto> searchCategories(@ModelAttribute CategorySearchDto searchDto) {
-    return categoryService.searchCategories(searchDto);
+  public CategorySearchResultDto searchCategories(@PathVariable Long id, @ModelAttribute CategorySearchDto searchDto) {
+    return categoryService.searchCategories(id, searchDto);
   }
 }

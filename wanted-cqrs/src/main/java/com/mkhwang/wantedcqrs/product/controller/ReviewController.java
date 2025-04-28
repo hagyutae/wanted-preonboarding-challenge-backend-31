@@ -3,12 +3,11 @@ package com.mkhwang.wantedcqrs.product.controller;
 import com.mkhwang.wantedcqrs.product.application.ReviewService;
 import com.mkhwang.wantedcqrs.product.domain.dto.ReviewDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.ReviewSearchDto;
+import com.mkhwang.wantedcqrs.product.domain.dto.ReviewSearchResultDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "Review", description = "Review API")
 @RestController
@@ -18,7 +17,7 @@ public class ReviewController {
 
   @Operation(summary = "상품 리뷰 조회")
   @GetMapping("/api/products/{id}/reviews")
-  public List<ReviewDto> getProductReviews(@PathVariable Long id, @ModelAttribute ReviewSearchDto searchDto) {
+  public ReviewSearchResultDto getProductReviews(@PathVariable Long id, @ModelAttribute ReviewSearchDto searchDto) {
     return reviewService.getProductReviews(id, searchDto);
   }
 
