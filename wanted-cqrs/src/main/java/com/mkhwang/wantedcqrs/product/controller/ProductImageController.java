@@ -1,17 +1,16 @@
 package com.mkhwang.wantedcqrs.product.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Main", description = "Main API")
 @RestController
 @RequiredArgsConstructor
-public class MainController {
+public class ProductImageController {
 
-  @GetMapping("/api/main")
-  public Object getMainProduct() {
+  @PostMapping("/api/products/{id}/images")
+  public Object addProductImage(@PathVariable Long id) {
     // TODO    // Implement add logic here
     return null;
   }
