@@ -1,6 +1,7 @@
 package com.example.wanted_preonboarding_challenge_backend_31.domain.repository;
 
 import com.example.wanted_preonboarding_challenge_backend_31.common.util.ParseUtil;
+import com.example.wanted_preonboarding_challenge_backend_31.config.CustomHibernate5Templates;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
@@ -53,7 +54,7 @@ public abstract class QuerydslRepositorySupport {
 
         this.pathBuilder = new PathBuilder<>(path.getType(), path.getMetadata());
         this.querydsl = new Querydsl(entityManager, pathBuilder);
-        this.queryFactory = new JPAQueryFactory(entityManager);
+        this.queryFactory = new JPAQueryFactory(new CustomHibernate5Templates(), entityManager);
     }
 
     protected JPAQueryFactory queryFactory() {
