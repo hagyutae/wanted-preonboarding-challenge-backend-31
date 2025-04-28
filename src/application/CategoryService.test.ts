@@ -110,4 +110,49 @@ describe("CategoryService", () => {
       ]);
     });
   });
+
+  describe("getProductsByCategoryId", () => {
+    it("카테고리 ID로 제품을 페이징 처리하여 반환", async () => {
+      const mockCategory = { id: 1, name: "대분류1" } as CategoryEntity;
+      const mockProducts = [
+        { id: 1, name: "제품1", created_at: new Date() },
+        { id: 2, name: "제품2", created_at: new Date() },
+      ];
+
+      mockEntityManager.findOne = jest.fn().mockResolvedValue(mockCategory);
+      mockEntityManager.getRepository = jest.fn().mockReturnValue({
+        createQueryBuilder: jest.fn().mockReturnValue({
+          where: jest.fn().mockReturnThis(),
+          andWhere: jest.fn().mockReturnThis(),
+          orderBy: jest.fn().mockReturnThis(),
+          skip: jest.fn().mockReturnThis(),
+          take: jest.fn().mockReturnThis(),
+          getMany: jest.fn().mockResolvedValue(mockProducts),
+        }),
+      });
+
+      const result = await service.getProductsByCategoryId(1, {
+        page: 1,
+        perPage: 2,
+        sort: "created_at:desc",
+        includeSubcategories: true,
+      });
+
+      expect(mockEntityManager.findOne).toHaveBeenCalledWith(CategoryEntity, {
+        where: { id: 1 },
+        relations: ["parent"],
+      });
+      expect(mockEntityManager.getRepository).toHaveBeenCalledWith(CategoryEntity);
+      expect(result).toEqual({
+        category: mockCategory,
+        items: mockProducts,
+        pagination: {
+          total_items: mockProducts.length,
+          total_pages: 1,
+          current_page: 1,
+          per_page: 2,
+        },
+      });
+    });
+  });
 });
