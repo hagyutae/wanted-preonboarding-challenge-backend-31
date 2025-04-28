@@ -26,4 +26,8 @@ public class ProductOption {
   private String sku;
   private int stock = 0;
   private int displayOrder = 0;
+
+  public Long getProductId() {
+    return group.getProductId();
+  }
 }

@@ -17,4 +17,8 @@ public class ProductOptionGroup {
   @Column(nullable = false)
   private String name;
   private int displayOrder = 0;
+
+  public Long getProductId() {
+    return product.getId();
+  }
 }
