@@ -11,7 +11,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("select r.product.id "
             + "from Review r "
             + "group by r.product.id "
-            + "having count(r) >= 10 "
+//            + "having count(r) >= 10 "
             + "order by avg(r.rating) desc "
             + "limit :limit")
     List<Long> findPopularProductIds(@Param("limit") int limit);
