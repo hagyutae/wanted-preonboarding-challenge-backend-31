@@ -200,14 +200,29 @@ export default class ProductService {
       throw new Error(`Product with id ${id} not found`);
     }
 
-    const { seller, brand, price, images, rating, ...remain } = item;
+    const {
+      seller,
+      brand,
+      detail,
+      price,
+      categories,
+      option_groups,
+      images,
+      tags,
+      rating,
+      ...remain
+    } = item;
 
     return {
       ...remain,
       seller,
       brand,
+      detail,
       price,
+      categories,
+      option_groups,
       images,
+      tags,
       rating,
     };
   }

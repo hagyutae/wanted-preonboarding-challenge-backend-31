@@ -2,10 +2,16 @@ import { DataSource, ViewColumn, ViewEntity } from "typeorm";
 
 import {
   ProductEntity,
-  ProductPriceEntity,
-  ProductImageEntity,
-  BrandEntity,
   SellerEntity,
+  BrandEntity,
+  ProductDetailEntity,
+  ProductPriceEntity,
+  ProductCategoryEntity,
+  CategoryEntity,
+  ProductOptionGroupEntity,
+  ProductImageEntity,
+  ProductTagEntity,
+  TagEntity,
   ReviewEntity,
 } from "../entities";
 
@@ -16,10 +22,31 @@ import {
       .createQueryBuilder("products")
       .leftJoin(SellerEntity, "sellers", "sellers.id = products.seller_id")
       .leftJoin(BrandEntity, "brands", "brands.id = products.brand_id")
+      .innerJoin(ProductDetailEntity, "product_details", "product_details.product_id = products.id")
       .innerJoin(ProductPriceEntity, "product_prices", "product_prices.product_id = products.id")
+      .leftJoin(
+        ProductCategoryEntity,
+        "product_categories",
+        "product_categories.product_id = products.id",
+      )
+      .leftJoin(CategoryEntity, "categories", "categories.id = product_categories.category_id")
+      .leftJoin(
+        ProductOptionGroupEntity,
+        "product_option_groups",
+        "product_option_groups.product_id = products.id",
+      )
       .leftJoin(ProductImageEntity, "product_images", "product_images.product_id = products.id")
+      .innerJoin(ProductTagEntity, "product_tag", "product_tag.product_id = products.id")
+      .innerJoin(TagEntity, "tags", "tags.id = product_tag.tag_id")
       .leftJoin(ReviewEntity, "reviews", "reviews.product_id = products.id")
       .groupBy("products.id")
+      .addGroupBy("product_details.weight")
+      .addGroupBy("product_details.dimensions")
+      .addGroupBy("product_details.materials")
+      .addGroupBy("product_details.country_of_origin")
+      .addGroupBy("product_details.warranty_info")
+      .addGroupBy("product_details.care_instructions")
+      .addGroupBy("product_details.additional_info")
       .addGroupBy("product_prices.base_price")
       .addGroupBy("product_prices.sale_price")
       .addGroupBy("product_prices.currency")
@@ -54,12 +81,23 @@ import {
         "products.created_at as created_at",
         "products.updated_at as updated_at",
 
+        "product_details.weight",
+        "product_details.dimensions",
+        "product_details.materials",
+        "product_details.country_of_origin",
+        "product_details.warranty_info",
+        "product_details.care_instructions",
+        "product_details.additional_info",
+
         "product_prices.base_price",
         "product_prices.sale_price",
         "product_prices.currency",
         "product_prices.tax_rate",
 
+        "array_agg(to_jsonb(categories)) AS categories",
+        "array_agg(to_jsonb(product_option_groups)) AS option_groups",
         "array_agg(to_jsonb(product_images)) AS images",
+        "array_agg(to_jsonb(tags)) AS tags",
       ])
       .addSelect(
         "FLOOR(((base_price - sale_price) * 100.0) / base_price)",
@@ -99,13 +137,24 @@ export default class ProductDetailView {
   @ViewColumn() created_at: Date;
   @ViewColumn() updated_at: Date;
 
+  @ViewColumn() product_details_weight: number;
+  @ViewColumn() product_details_dimensions: object;
+  @ViewColumn() product_details_materials: string;
+  @ViewColumn() product_details_country_of_origin: string;
+  @ViewColumn() product_details_warranty_info: string;
+  @ViewColumn() product_details_care_instructions: string;
+  @ViewColumn() product_details_additional_info: object;
+
   @ViewColumn() product_prices_base_price: number;
   @ViewColumn() product_prices_sale_price: number;
   @ViewColumn() product_prices_currency: string;
   @ViewColumn() product_prices_tax_rate: number;
   @ViewColumn() product_prices_discount_percentage: number;
 
+  @ViewColumn() categories: ProductCategoryEntity[];
+  @ViewColumn() option_groups: ProductOptionGroupEntity[];
   @ViewColumn() images: ProductImageEntity[];
+  @ViewColumn() tags: TagEntity[];
 
   @ViewColumn() rating_average: number;
   @ViewColumn() review_count: number;
@@ -133,6 +182,17 @@ export default class ProductDetailView {
       description: this.brands_description,
       logo_url: this.brands_logo_url,
       website: this.brands_website,
+    };
+  }
+  get detail() {
+    return {
+      weight: this.product_details_weight,
+      dimensions: this.product_details_dimensions,
+      materials: this.product_details_materials,
+      country_of_origin: this.product_details_country_of_origin,
+      warranty_info: this.product_details_warranty_info,
+      care_instructions: this.product_details_care_instructions,
+      additional_info: this.product_details_additional_info,
     };
   }
   get price() {
