@@ -7,6 +7,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.model.produc
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOptionGroup;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionGroupDetailDto;
@@ -76,8 +77,10 @@ public class ProductService {
                 productId);
         List<ProductOptionGroupDetailDto> optionGroups = productComplexQueryService.getAllProductOptionGroupsByProductId(
                 productId);
+        List<ProductImageDetailDto> images = productQueryService.getAllProductImageByProductId(
+                productId);
 
-        return ProductDetailRes.assembly(base, newPriceDetailDto, categoryDetails, optionGroups, null, null, null,
+        return ProductDetailRes.assembly(base, newPriceDetailDto, categoryDetails, optionGroups, images, null, null,
                 null);
     }
 

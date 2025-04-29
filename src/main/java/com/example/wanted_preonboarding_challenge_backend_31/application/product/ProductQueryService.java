@@ -7,10 +7,12 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.model.produc
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOption;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOptionGroup;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductCategoryRepository;
+import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductImageRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductOptionGroupRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductOptionRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryDetailDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDetailDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ public class ProductQueryService {
     private final ProductOptionRepository productOptionRepository;
     private final ProductOptionGroupRepository productOptionGroupRepository;
     private final ProductCategoryRepository productCategoryRepository;
+    private final ProductImageRepository productImageRepository;
 
     public Product getProductById(Long id) {
         return productRepository.findById(id)
@@ -57,6 +60,12 @@ public class ProductQueryService {
     public List<CategoryDetailDto> getAllProductCategoryByProductId(Long productId) {
         return productCategoryRepository.findAllByProductId(productId).stream()
                 .map(CategoryDetailDto::from)
+                .toList();
+    }
+
+    public List<ProductImageDetailDto> getAllProductImageByProductId(Long productId) {
+        return productImageRepository.findAllByProductId(productId).stream()
+                .map(ProductImageDetailDto::from)
                 .toList();
     }
 }
