@@ -163,25 +163,7 @@ export default class ProductService {
     const items = await query.getMany();
 
     return {
-      items: items.map(
-        ({
-          primary_image,
-          product_images_url,
-          product_images_alt_text,
-          brand,
-          brands_id,
-          brands_name,
-          seller,
-          sellers_id,
-          sellers_name,
-          ...rest
-        }) => ({
-          ...rest,
-          primary_image,
-          brand,
-          seller,
-        }),
-      ),
+      items,
       pagination: {
         total_items: items.length,
         total_pages: Math.ceil(items.length / perPage),

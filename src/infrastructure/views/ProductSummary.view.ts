@@ -7,8 +7,9 @@ import {
   ReviewEntity,
   BrandEntity,
   SellerEntity,
+  ProductOptionGroupEntity,
+  ProductOptionEntity,
 } from "../entities";
-import ProductStockView from "./ProductStock.view";
 
 @ViewEntity({
   expression: (dataSource: DataSource) => {
@@ -16,11 +17,9 @@ import ProductStockView from "./ProductStock.view";
       .getRepository(ProductEntity)
       .createQueryBuilder("products")
       .innerJoin(ProductPriceEntity, "product_prices", "product_prices.product_id = products.id")
-      .leftJoin(ProductImageEntity, "product_images", "product_images.product_id = products.id")
       .leftJoin(ReviewEntity, "reviews", "reviews.product_id = products.id")
       .leftJoin(BrandEntity, "brands", "brands.id = products.brand_id")
       .leftJoin(SellerEntity, "sellers", "sellers.id = products.seller_id")
-      .leftJoin(ProductStockView, "stock_summary", "stock_summary.product_id = products.id")
       .select([
         "products.id as id",
         "products.name as name",
@@ -29,25 +28,43 @@ import ProductStockView from "./ProductStock.view";
         "ROUND(product_prices.base_price) as base_price",
         "ROUND(product_prices.sale_price) as sale_price",
         "product_prices.currency as currency",
-        "product_images.url",
-        "product_images.alt_text",
-        "brands.id",
-        "brands.name",
-        "sellers.id",
-        "sellers.name",
+        "jsonb_build_object('id', brands.id, 'name', brands.name ) as brand",
+        "jsonb_build_object('id', sellers.id, 'name', sellers.name ) as seller",
         "products.status as status",
         "products.created_at as created_at",
       ])
-      .addSelect("stock_summary.in_stock", "in_stock")
       .addSelect("ROUND(AVG(reviews.rating), 1)", "rating")
       .addSelect("COUNT(reviews.id)", "review_count")
+      .addSelect((subQuery) => {
+        return subQuery
+          .select(
+            `jsonb_build_object(
+              'url', product_images.url,
+              'alt_text', product_images.alt_text
+              )`,
+            "primary_image",
+          )
+          .from(ProductImageEntity, "product_images")
+          .where("product_images.product_id = products.id")
+          .orderBy("product_images.is_primary", "DESC")
+          .limit(1);
+      }, "primary_image")
+      .addSelect((subQuery) => {
+        return subQuery
+          .select("CASE WHEN SUM(product_options.stock) > 0 THEN true ELSE false END", "in_stock")
+          .from(ProductOptionGroupEntity, "product_option_groups")
+          .leftJoin(
+            ProductOptionEntity,
+            "product_options",
+            "product_options.option_group_id = product_option_groups.id",
+          )
+          .where("product_option_groups.product_id = products.id")
+          .groupBy("product_option_groups.product_id");
+      }, "in_stock")
       .groupBy("products.id")
       .addGroupBy("product_prices.base_price")
       .addGroupBy("product_prices.sale_price")
       .addGroupBy("product_prices.currency")
-      .addGroupBy("product_images.url")
-      .addGroupBy("product_images.alt_text")
-      .addGroupBy("stock_summary.in_stock")
       .addGroupBy("brands.id")
       .addGroupBy("sellers.id");
   },
@@ -75,22 +92,22 @@ export default class ProductSummaryView {
   currency: string;
 
   @ViewColumn()
-  product_images_url: string;
+  primary_image: {
+    url: string;
+    alt_text: string;
+  };
 
   @ViewColumn()
-  product_images_alt_text: string;
+  brand: {
+    id: number;
+    name: string;
+  };
 
   @ViewColumn()
-  brands_id: number;
-
-  @ViewColumn()
-  brands_name: string;
-
-  @ViewColumn()
-  sellers_id: number;
-
-  @ViewColumn()
-  sellers_name: string;
+  seller: {
+    id: number;
+    name: string;
+  };
 
   @ViewColumn()
   status: string;
@@ -106,25 +123,4 @@ export default class ProductSummaryView {
 
   @ViewColumn()
   review_count: number;
-
-  get primary_image() {
-    return {
-      url: this.product_images_url,
-      alt_text: this.product_images_alt_text,
-    };
-  }
-
-  get brand() {
-    return {
-      id: this.brands_id,
-      name: this.brands_name,
-    };
-  }
-
-  get seller() {
-    return {
-      id: this.sellers_id,
-      name: this.sellers_name,
-    };
-  }
 }
