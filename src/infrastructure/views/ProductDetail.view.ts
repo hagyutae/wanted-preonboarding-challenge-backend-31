@@ -59,12 +59,7 @@ import {
         "product_prices.currency",
         "product_prices.tax_rate",
 
-        "product_images.id",
-        "product_images.url",
-        "product_images.alt_text",
-        "product_images.is_primary",
-        "product_images.display_order",
-        "product_images.option.id",
+        "array_agg(to_jsonb(product_images)) AS images",
       ])
       .addSelect(
         "FLOOR(((base_price - sale_price) * 100.0) / base_price)",
@@ -110,12 +105,7 @@ export default class ProductDetailView {
   @ViewColumn() product_prices_tax_rate: number;
   @ViewColumn() product_prices_discount_percentage: number;
 
-  @ViewColumn() product_images_id: number;
-  @ViewColumn() product_images_url: string;
-  @ViewColumn() product_images_alt_text: string;
-  @ViewColumn() product_images_is_primary: boolean;
-  @ViewColumn() product_images_display_order: number;
-  @ViewColumn() product_images_option_id: number;
+  @ViewColumn() images: ProductImageEntity[];
 
   @ViewColumn() rating_average: number;
   @ViewColumn() review_count: number;
@@ -152,15 +142,6 @@ export default class ProductDetailView {
       currency: this.product_prices_currency,
       tax_rate: this.product_prices_tax_rate,
       discount_percentage: this.product_prices_discount_percentage,
-    };
-  }
-  get images() {
-    return {
-      url: this.product_images_url,
-      alt_text: this.product_images_alt_text,
-      is_primary: this.product_images_is_primary,
-      display_order: this.product_images_display_order,
-      option_id: this.product_images_option_id,
     };
   }
 
