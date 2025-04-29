@@ -47,7 +47,7 @@ public class ReviewService {
   public void deleteReview(Long id, Long userId) {
     Review existReview = reviewRepository.findById(id).orElseThrow(
             () -> new ResourceNotFoundException("review.not.found"));
-    this.hasReviewAuthority(existReview, userId);
+    this.hasReviewChangeAuthority(existReview, userId);
 
     reviewRepository.deleteById(id);
   }
@@ -56,7 +56,7 @@ public class ReviewService {
   public ReviewResponseDto updateReview(ReviewModifyDto reviewDto) {
     Review existReview = reviewRepository.findById(reviewDto.getId()).orElseThrow(
             () -> new ResourceNotFoundException("review.not.found"));
-    this.hasReviewAuthority(existReview, reviewDto.getUserId());
+    this.hasReviewChangeAuthority(existReview, reviewDto.getUserId());
 
     existReview.setTitle(reviewDto.getTitle());
     existReview.setContent(reviewDto.getContent());
@@ -66,7 +66,7 @@ public class ReviewService {
     return genericMapper.toDto(existReview, ReviewResponseDto.class);
   }
 
-  private void hasReviewAuthority(Review review, Long userId) {
+  private void hasReviewChangeAuthority(Review review, Long userId) {
     if (!review.getUser().getId().equals(userId)) {
       throw new ForbiddenException("review.modify.have.no.authorities");
     }

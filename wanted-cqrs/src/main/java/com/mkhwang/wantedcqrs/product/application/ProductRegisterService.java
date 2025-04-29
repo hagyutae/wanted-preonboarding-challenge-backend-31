@@ -55,18 +55,23 @@ public class ProductRegisterService {
     productPrice.setProduct(product);
     productPriceRepository.save(productPrice);
 
-    createProductCategories(productCreateDto.getCategories(), product);
+    createProductCategories(productCreateDto, product);
 
-    createProductOptionGroups(productCreateDto.getOptionGroups(), product);
+    createProductOptionGroups(productCreateDto, product);
 
-    createProductImages(productCreateDto.getImages(), product);
+    createProductImages(productCreateDto, product);
 
-    createProductTags(productCreateDto.getTags(), product);
+    createProductTags(productCreateDto, product);
 
     return genericMapper.toDto(product, ProductCreateResponseDto.class);
   }
 
-  private void createProductTags(List<Long> tagIds, Product product) {
+  private void createProductTags(ProductCreateRequestDto productCreateDto, Product product) {
+    List<Long> tagIds = productCreateDto.getTags();
+    if (tagIds == null || tagIds.isEmpty()) {
+      return;
+    }
+
     List<Tag> allTags = tagRepository.findAllByIdIn(tagIds);
     allTags.forEach(
             tag -> {
@@ -78,7 +83,8 @@ public class ProductRegisterService {
     );
   }
 
-  private void createProductImages(List<ProductImageCreateDto> images, Product product) {
+  private void createProductImages(ProductCreateRequestDto productCreateDto, Product product) {
+    List<ProductImageCreateDto> images = productCreateDto.getImages();
     if (images == null || images.isEmpty()) {
       return;
     }
@@ -92,7 +98,8 @@ public class ProductRegisterService {
     );
   }
 
-  private void createProductOptionGroups(List<ProductOptionGroupCreateDto> optionGroups, Product product) {
+  private void createProductOptionGroups(ProductCreateRequestDto productCreateDto, Product product) {
+    List<ProductOptionGroupCreateDto> optionGroups = productCreateDto.getOptionGroups();
     if (optionGroups == null || optionGroups.isEmpty()) {
       return;
     }
@@ -117,7 +124,8 @@ public class ProductRegisterService {
     );
   }
 
-  private void createProductCategories(List<ProductCategoryCreateDto> categories, Product product) {
+  private void createProductCategories(ProductCreateRequestDto productCreateDto, Product product) {
+    List<ProductCategoryCreateDto> categories = productCreateDto.getCategories();
     if (categories == null || categories.isEmpty()) {
       return;
     }

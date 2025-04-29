@@ -78,6 +78,4 @@ public class ProductSearchService {
     }
     return result;
   }
-
-
 }
