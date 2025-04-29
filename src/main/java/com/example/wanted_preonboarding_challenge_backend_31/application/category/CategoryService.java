@@ -21,7 +21,7 @@ public class CategoryService {
     private final CategoryQueryService categoryQueryService;
     private final ProductComplexQueryService productComplexQueryService;
 
-    public CategorySearchRes search(int level) {
+    public List<CategorySearchRes> search(int level) {
         return null;
     }
 

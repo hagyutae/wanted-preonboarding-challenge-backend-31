@@ -11,6 +11,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.web.category.dto.re
 import com.example.wanted_preonboarding_challenge_backend_31.web.category.dto.response.CategorySearchRes;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public SuccessRes<CategorySearchRes> search(
+    public SuccessRes<List<CategorySearchRes>> search(
             @RequestParam(name = "level", defaultValue = "1") @Min(1) @Max(3) int level
     ) {
         return SuccessRes.of(CATEGORY_SEARCH, categoryService.search(level));
