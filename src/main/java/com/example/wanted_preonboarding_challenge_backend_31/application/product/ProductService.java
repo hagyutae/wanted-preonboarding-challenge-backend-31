@@ -9,6 +9,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionGroupDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductPriceDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductImageCreateReq;
@@ -73,8 +74,11 @@ public class ProductService {
                 CalculatorUtil.calculateDiscountPercentage(base.price().basePrice(), base.price().salePrice()));
         List<CategoryDetailDto> categoryDetails = productQueryService.getAllProductCategoryByProductId(
                 productId);
+        List<ProductOptionGroupDetailDto> optionGroups = productComplexQueryService.getAllProductOptionGroupsByProductId(
+                productId);
 
-        return ProductDetailRes.assembly(base, newPriceDetailDto, categoryDetails, null, null, null, null, null);
+        return ProductDetailRes.assembly(base, newPriceDetailDto, categoryDetails, optionGroups, null, null, null,
+                null);
     }
 
     public void delete(Long productId) {
