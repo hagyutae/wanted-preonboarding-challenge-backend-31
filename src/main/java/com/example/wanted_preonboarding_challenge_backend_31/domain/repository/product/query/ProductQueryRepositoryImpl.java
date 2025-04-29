@@ -3,6 +3,7 @@ package com.example.wanted_preonboarding_challenge_backend_31.domain.repository.
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.brand.QBrand.brand;
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.QProduct.product;
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.QProductCategory.productCategory;
+import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.QProductDetail.productDetail;
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.QProductImage.productImage;
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.QProductPrice.productPrice;
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.seller.QSeller.seller;
@@ -10,12 +11,18 @@ import static com.example.wanted_preonboarding_challenge_backend_31.domain.model
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.Product;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductStatus;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.QuerydslRepositorySupport;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.brand.BrandDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.brand.BrandSearchDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationRes;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageSearchDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductPriceDetailDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRatingDetailDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.seller.SellerDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.seller.SellerSearchDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductDetailRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchDataRes;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
@@ -98,6 +105,70 @@ public class ProductQueryRepositoryImpl extends QuerydslRepositorySupport implem
 
         assert totalItems != null;
         return PaginationRes.of(totalItems.intValue(), paginationReq.page(), paginationReq.perPage());
+    }
+
+    @Override
+    public ProductDetailRes detailProduct(Long productId) {
+        return select(Projections.constructor(
+                ProductDetailRes.class,
+                product.id,
+                product.name,
+                product.slug,
+                product.shortDescription,
+                product.fullDescription,
+                Projections.constructor(
+                        SellerDetailDto.class,
+                        product.seller.id,
+                        product.seller.name,
+                        product.seller.description,
+                        product.seller.logoUrl,
+                        product.seller.rating,
+                        product.seller.contactEmail,
+                        product.seller.contactPhone
+                ),
+                Projections.constructor(
+                        BrandDetailDto.class,
+                        product.brand.id,
+                        product.brand.name,
+                        product.brand.description,
+                        product.brand.logoUrl,
+                        product.brand.website
+                ),
+                product.status,
+                product.createdAt,
+                product.updatedAt,
+                Projections.constructor(
+                        ProductDetailDto.class,
+                        productDetail.weight,
+                        productDetail.dimensions,
+                        productDetail.materials,
+                        productDetail.countryOfOrigin,
+                        productDetail.warrantyInfo,
+                        productDetail.careInstructions,
+                        productDetail.additionalInfo
+                ),
+                Projections.constructor(
+                        ProductPriceDetailDto.class,
+                        productPrice.basePrice,
+                        productPrice.salePrice,
+                        productPrice.currency,
+                        productPrice.taxRate,
+                        Expressions.nullExpression(Integer.class)
+                ),
+                Expressions.nullExpression(List.class),
+                Expressions.nullExpression(List.class),
+                Expressions.nullExpression(List.class),
+                Expressions.nullExpression(List.class),
+                Expressions.nullExpression(ProductRatingDetailDto.class),
+                Expressions.nullExpression(Object.class)
+        ))
+                .from(product)
+                .join(product.seller)
+                .join(product.brand)
+                .join(productDetail).on(productDetail.product.id.eq(product.id))
+                .join(productPrice).on(productPrice.product.id.eq(product.id))
+                .where(product.id.eq(productId))
+                .fetchOne();
     }
 
     /**

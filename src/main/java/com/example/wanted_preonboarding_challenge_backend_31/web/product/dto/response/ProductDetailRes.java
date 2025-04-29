@@ -26,9 +26,9 @@ public record ProductDetailRes(
         LocalDateTime updatedAt,
         ProductDetailDto detail,
         ProductPriceDetailDto price,
-        CategoryDetailDto categories,
-        ProductOptionGroupDetailDto optionGroups,
-        ProductImageDetailDto images,
+        List<CategoryDetailDto> categories,
+        List<ProductOptionGroupDetailDto> optionGroups,
+        List<ProductImageDetailDto> images,
         List<TagDetailDto> tags,
         ProductRatingDetailDto rating,
         Object relatedProducts

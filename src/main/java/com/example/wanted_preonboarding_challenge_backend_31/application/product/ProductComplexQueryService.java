@@ -6,6 +6,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.r
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductDetailRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchDataRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchRes;
 import java.util.List;
@@ -37,5 +38,9 @@ public class ProductComplexQueryService {
                 .toList();
 
         return new ProductSearchRes(mergedRes, paginationRes);
+    }
+
+    public ProductDetailRes detailProduct(Long productId) {
+        return productQueryRepository.detailProduct(productId);
     }
 }

@@ -7,6 +7,6 @@ public record ProductPriceDetailDto(
         BigDecimal salePrice,
         String currency,
         BigDecimal taxRate,
-        int discountPercentage
+        Integer discountPercentage
 ) {
 }

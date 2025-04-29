@@ -13,6 +13,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.req
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductDetailRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductImageCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
@@ -59,6 +60,10 @@ public class ProductService {
 
     public ProductSearchRes search(PaginationReq paginationReq, ProductSearchReq req) {
         return productComplexQueryService.searchProducts(paginationReq, req);
+    }
+
+    public ProductDetailRes detail(Long productId) {
+        return productComplexQueryService.detailProduct(productId);
     }
 
     public void delete(Long productId) {
