@@ -7,6 +7,6 @@ export default TypeOrmModule.forRoot({
   username: "user",
   password: "pswd",
   database: "db",
-  entities: [__dirname + "/**/*.entity.js"],
+  entities: [__dirname + "/**/*.entity.js", __dirname + "/**/*.view.js"],
   synchronize: true, // 개발
 });

@@ -2,14 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "src/infrastructure/entities";
-import ProductService from "./ProductService";
+import { ProductSummaryView } from "src/infrastructure/views/ProductSummary.view";
 
 @Injectable()
 export default class MainService {
-  constructor(
-    private readonly entityManager: EntityManager,
-    private readonly productService: ProductService,
-  ) {}
+  constructor(private readonly entityManager: EntityManager) {}
 
   async getNewProducts() {
     const page = 1;
@@ -25,11 +22,13 @@ export default class MainService {
   }
 
   async getPopularProducts() {
-    const query = this.productService.getProductWithAggregatesQuery();
+    const query = this.entityManager
+      .getRepository(ProductSummaryView)
+      .createQueryBuilder("summary")
+      .orderBy("rating", "DESC")
+      .limit(5);
 
-    query.orderBy("rating", "DESC").limit(5);
-
-    return await query.getRawMany();
+    return await query.getMany();
   }
 
   async getFeaturedCategories() {

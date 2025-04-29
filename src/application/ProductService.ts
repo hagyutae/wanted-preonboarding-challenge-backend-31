@@ -1,20 +1,19 @@
-import { EntityManager } from "typeorm";
 import { Injectable } from "@nestjs/common";
+import { EntityManager } from "typeorm";
 
 import { Product_Category } from "src/domain";
 import {
   BrandEntity,
+  ProductEntity,
   ProductCategoryEntity,
   ProductDetailEntity,
-  ProductEntity,
   ProductImageEntity,
   ProductOptionGroupEntity,
-  ProductOptionEntity,
   ProductPriceEntity,
   ProductTagEntity,
   SellerEntity,
-  ReviewEntity,
 } from "src/infrastructure/entities";
+import { ProductSummaryView } from "src/infrastructure/views/ProductSummary.view";
 import { ProductInputDTO } from "./dto/ProductInputDTO";
 
 @Injectable()
@@ -119,72 +118,6 @@ export default class ProductService {
     return productEntity;
   }
 
-  getProductWithAggregatesQuery() {
-    const stockSubQuery = this.entityManager
-      .getRepository(ProductOptionGroupEntity)
-      .createQueryBuilder("product_option_groups")
-      .leftJoin(
-        ProductOptionEntity,
-        "product_options",
-        "product_options.option_group_id = product_option_groups.id",
-      )
-      .select("product_option_groups.product_id", "product_id")
-      .addSelect("CASE WHEN SUM(product_options.stock) > 0 THEN true ELSE false END", "in_stock")
-      .groupBy("product_option_groups.product_id");
-
-    return this.entityManager
-      .getRepository(ProductEntity)
-      .createQueryBuilder("products")
-      .innerJoin(ProductPriceEntity, "product_prices", "product_prices.product_id = products.id")
-      .leftJoin(
-        ProductCategoryEntity,
-        "product_categories",
-        "product_categories.product_id = products.id",
-      )
-      .leftJoin(ProductImageEntity, "product_images", "product_images.product_id = products.id")
-      .leftJoin(ReviewEntity, "reviews", "reviews.product_id = products.id")
-      .leftJoin(BrandEntity, "brands", "brands.id = products.brand_id")
-      .leftJoin(SellerEntity, "sellers", "sellers.id = products.seller_id")
-      .leftJoin(
-        `(${stockSubQuery.getQuery()})`,
-        "stock_summary",
-        "stock_summary.product_id = products.id",
-      )
-      .setParameters(stockSubQuery.getParameters())
-      .select([
-        "products.id as id",
-        "products.name as name",
-        "products.slug as slug",
-        "products.short_description as short_description",
-        "ROUND(product_prices.base_price) as base_price",
-        "ROUND(product_prices.sale_price) as sale_price",
-        "product_prices.currency as currency",
-        "product_images.url as image_url",
-        "product_images.alt_text as image_alt_text",
-        "brands.id as brand_id",
-        "brands.name as brand_name",
-        "sellers.id as seller_id",
-        "sellers.name as seller_name",
-        "products.status as status",
-        "products.created_at as created_at",
-      ])
-      .addSelect("stock_summary.in_stock", "in_stock")
-      .addSelect("ROUND(AVG(reviews.rating), 1)", "rating")
-      .addSelect("COUNT(reviews.id)", "review_count")
-      .groupBy("products.id")
-      .addGroupBy("products.created_at")
-      .addGroupBy("product_prices.base_price")
-      .addGroupBy("product_prices.sale_price")
-      .addGroupBy("product_prices.currency")
-      .addGroupBy("product_images.url")
-      .addGroupBy("product_images.alt_text")
-      .addGroupBy("stock_summary.in_stock")
-      .addGroupBy("brands.id")
-      .addGroupBy("brands.name")
-      .addGroupBy("sellers.id")
-      .addGroupBy("sellers.name");
-  }
-
   async getAll({
     page = 1,
     perPage = 10,
@@ -209,32 +142,25 @@ export default class ProductService {
     inStock?: boolean;
     search?: string;
   }) {
-    // 상품 집계 처리 쿼리
-    const innerQuery = this.getProductWithAggregatesQuery();
-
-    // 쿼리 필터링
-    innerQuery
-      .andWhere(status ? "products.status = :status" : "1=1", { status })
-      .andWhere(minPrice ? "product_prices.base_price >= :minPrice" : "1=1", { minPrice })
-      .andWhere(maxPrice ? "product_prices.base_price <= :maxPrice" : "1=1", { maxPrice })
-      .andWhere(category ? "product_categories.id IN (:...category)" : "1=1", { category })
-      .andWhere(seller ? "products.seller_id = :seller" : "1=1", { seller })
-      .andWhere(brand ? "products.brand_id = :brand" : "1=1", { brand })
-      .andWhere(search ? "products.name LIKE :search" : "1=1", { search: `%${search}%` });
-
-    // 쿼리 정렬, 페이지네이션
     const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
+
+    // 상품 집계 처리 쿼리
     const query = this.entityManager
-      .createQueryBuilder()
-      .select("*")
-      .from(`(${innerQuery.getQuery()})`, "result")
-      .orderBy(`result.${field}`, order.toUpperCase() as "ASC" | "DESC")
+      .getRepository(ProductSummaryView)
+      .createQueryBuilder("summary")
+      .andWhere(status ? "summary.status = :status" : "1=1", { status })
+      .andWhere(minPrice ? "summary.base_price >= :minPrice" : "1=1", { minPrice })
+      .andWhere(maxPrice ? "summary.base_price <= :maxPrice" : "1=1", { maxPrice })
+      .andWhere(category ? "summary.id IN (:...category)" : "1=1", { category })
+      .andWhere(seller ? "summary.seller_id = :seller" : "1=1", { seller })
+      .andWhere(brand ? "summary.brand_id = :brand" : "1=1", { brand })
+      .andWhere(search ? "summary.name LIKE :search" : "1=1", { search: `%${search}%` })
+      .orderBy(`summary.${field}`, order.toUpperCase() as "ASC" | "DESC")
       .offset((page - 1) * perPage)
-      .limit(perPage)
-      .setParameters(innerQuery.getParameters());
+      .limit(perPage);
 
     // 쿼리 실행
-    const items = await query.getRawMany();
+    const items = await query.getMany();
 
     return {
       items: items.map(
