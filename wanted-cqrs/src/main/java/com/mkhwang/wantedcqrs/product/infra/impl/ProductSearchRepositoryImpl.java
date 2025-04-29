@@ -33,6 +33,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
   private final QProductOptionGroup qProductOptionGroup = QProductOptionGroup.productOptionGroup;
   private final QProductOption qProductOption = QProductOption.productOption;
   private final QProductTag qProductTag = QProductTag.productTag;
+  private final QCategory qCategory = QCategory.category;
   private final QTag qTag = QTag.tag;
 
 
@@ -136,7 +137,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
                                     qProductPrice.costPrice,
                                     qProductPrice.currency,
                                     qProductPrice.taxRate
-                                    )
+                            )
                     )
             )
             .from(qProduct)
@@ -168,12 +169,30 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
   private BooleanBuilder generateCondition(ProductSearchDto searchDto) {
     BooleanBuilder condition = new BooleanBuilder();
 
+    // 검색 필드: 상품명, 상품 전체 설명, 브랜드명, 태그명, 카테고리명
     if (StringUtils.hasText(searchDto.getSearch())) {
       condition.and(qProduct.name.containsIgnoreCase(searchDto.getSearch())
-              .or(qProduct.shortDescription.containsIgnoreCase(searchDto.getSearch())
-                      .or(qProduct.fullDescription.containsIgnoreCase(searchDto.getSearch()))
-                      .or(qProduct.slug.containsIgnoreCase(searchDto.getSearch()))
-              ));
+              .or(qProduct.fullDescription.containsIgnoreCase(searchDto.getSearch())
+                      .or(qBrand.name.containsIgnoreCase(searchDto.getSearch()))
+                      .or(JPAExpressions.selectOne()
+                              .from(qProductTag)
+                              .join(qTag)
+                              .on(qProductTag.tag.eq(qTag))
+                              .where(qProductTag.product.eq(qProduct)
+                                      .and(qTag.name.containsIgnoreCase(searchDto.getSearch()))
+                              ).exists()
+                      )
+                      .or(JPAExpressions.selectOne()
+                              .from(qProductCategory)
+                              .innerJoin(qCategory)
+                              .on(qProductCategory.category.eq(qCategory))
+                              .where(qProductCategory.product.eq(qProduct)
+                                      .and(qCategory.name.containsIgnoreCase(searchDto.getSearch()))
+                              ).exists()
+                      )
+              )
+      );
+
     }
     if (searchDto.getStatus() != null) {
       condition.and(qProduct.status.eq(searchDto.getStatus()));
