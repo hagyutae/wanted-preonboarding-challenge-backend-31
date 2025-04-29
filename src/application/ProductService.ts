@@ -14,6 +14,7 @@ import {
   SellerEntity,
 } from "src/infrastructure/entities";
 import { ProductSummaryView } from "src/infrastructure/views/ProductSummary.view";
+import { ProductDetailView } from "src/infrastructure/views/ProductDetail.view";
 import { ProductInputDTO } from "./dto/ProductInputDTO";
 
 @Injectable()
@@ -192,7 +193,24 @@ export default class ProductService {
   }
 
   async getById(id: number) {
-    return await this.entityManager.findOne(ProductEntity, { where: { id } });
+    const item = await this.entityManager.findOne(ProductDetailView, {
+      where: { id },
+    });
+
+    if (!item) {
+      throw new Error(`Product with id ${id} not found`);
+    }
+
+    const { seller, brand, price, images, rating, ...remain } = item;
+
+    return {
+      ...remain,
+      seller,
+      brand,
+      price,
+      images,
+      rating,
+    };
   }
 
   async update(id: number, data: ProductInputDTO) {
