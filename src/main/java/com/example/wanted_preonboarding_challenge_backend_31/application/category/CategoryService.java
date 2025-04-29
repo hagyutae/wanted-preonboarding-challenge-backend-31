@@ -5,6 +5,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.category.dto.request.CategoryProductReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.category.dto.response.CategoryProductRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.category.dto.response.CategorySearchRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchRes;
 import java.util.List;
@@ -19,6 +20,10 @@ public class CategoryService {
 
     private final CategoryQueryService categoryQueryService;
     private final ProductComplexQueryService productComplexQueryService;
+
+    public CategorySearchRes search(int level) {
+        return null;
+    }
 
     public CategoryProductRes searchProduct(PaginationReq paginationReq, Long categoryId, CategoryProductReq req) {
         CategoryDetailDto categoryDetail = categoryQueryService.getCategoryDetailById(categoryId);

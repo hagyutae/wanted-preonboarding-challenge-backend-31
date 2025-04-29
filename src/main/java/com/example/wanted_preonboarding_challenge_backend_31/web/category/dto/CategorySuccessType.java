@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum CategorySuccessType implements SuccessType {
+    CATEGORY_SEARCH("카테고리 목록을 성공적으로 조회했습니다."),
     CATEGORY_SEARCH_PRODUCT("카테고리 상품 목록을 성공적으로 조회했습니다.");
 
     private final String message;
