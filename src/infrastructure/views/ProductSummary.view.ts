@@ -3,7 +3,6 @@ import { ViewEntity, ViewColumn, DataSource } from "typeorm";
 import {
   ProductEntity,
   ProductPriceEntity,
-  ProductCategoryEntity,
   ProductImageEntity,
   ReviewEntity,
   BrandEntity,
@@ -17,11 +16,6 @@ import { ProductStockView } from "./ProductStock.view";
       .getRepository(ProductEntity)
       .createQueryBuilder("products")
       .innerJoin(ProductPriceEntity, "product_prices", "product_prices.product_id = products.id")
-      .leftJoin(
-        ProductCategoryEntity,
-        "product_categories",
-        "product_categories.product_id = products.id",
-      )
       .leftJoin(ProductImageEntity, "product_images", "product_images.product_id = products.id")
       .leftJoin(ReviewEntity, "reviews", "reviews.product_id = products.id")
       .leftJoin(BrandEntity, "brands", "brands.id = products.brand_id")
@@ -35,32 +29,27 @@ import { ProductStockView } from "./ProductStock.view";
         "ROUND(product_prices.base_price) as base_price",
         "ROUND(product_prices.sale_price) as sale_price",
         "product_prices.currency as currency",
-        "product_images.url as image_url",
-        "product_images.alt_text as image_alt_text",
-        "brands.id as brand_id",
-        "brands.name as brand_name",
-        "sellers.id as seller_id",
-        "sellers.name as seller_name",
+        "product_images.url",
+        "product_images.alt_text",
+        "brands.id",
+        "brands.name",
+        "sellers.id",
+        "sellers.name",
         "products.status as status",
         "products.created_at as created_at",
-        "product_categories.id as category_id",
       ])
       .addSelect("stock_summary.in_stock", "in_stock")
       .addSelect("ROUND(AVG(reviews.rating), 1)", "rating")
       .addSelect("COUNT(reviews.id)", "review_count")
       .groupBy("products.id")
-      .addGroupBy("products.created_at")
       .addGroupBy("product_prices.base_price")
       .addGroupBy("product_prices.sale_price")
       .addGroupBy("product_prices.currency")
       .addGroupBy("product_images.url")
       .addGroupBy("product_images.alt_text")
-      .addGroupBy("product_categories.id")
       .addGroupBy("stock_summary.in_stock")
       .addGroupBy("brands.id")
-      .addGroupBy("brands.name")
-      .addGroupBy("sellers.id")
-      .addGroupBy("sellers.name");
+      .addGroupBy("sellers.id");
   },
 })
 export class ProductSummaryView {
@@ -86,22 +75,22 @@ export class ProductSummaryView {
   currency: string;
 
   @ViewColumn()
-  image_url: string;
+  product_images_url: string;
 
   @ViewColumn()
-  image_alt_text: string;
+  product_images_alt_text: string;
 
   @ViewColumn()
-  brand_id: number;
+  brands_id: number;
 
   @ViewColumn()
-  brand_name: string;
+  brands_name: string;
 
   @ViewColumn()
-  seller_id: number;
+  sellers_id: number;
 
   @ViewColumn()
-  seller_name: string;
+  sellers_name: string;
 
   @ViewColumn()
   status: string;
@@ -118,6 +107,24 @@ export class ProductSummaryView {
   @ViewColumn()
   review_count: number;
 
-  @ViewColumn()
-  category_id: number;
+  get primary_image() {
+    return {
+      url: this.product_images_url,
+      alt_text: this.product_images_alt_text,
+    };
+  }
+
+  get brand() {
+    return {
+      id: this.brands_id,
+      name: this.brands_name,
+    };
+  }
+
+  get seller() {
+    return {
+      id: this.sellers_id,
+      name: this.sellers_name,
+    };
+  }
 }

@@ -142,9 +142,9 @@ export default class ProductService {
     inStock?: boolean;
     search?: string;
   }) {
+    // 상품 집계 처리 쿼리
     const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
 
-    // 상품 집계 처리 쿼리
     const query = this.entityManager
       .getRepository(ProductSummaryView)
       .createQueryBuilder("summary")
@@ -164,20 +164,22 @@ export default class ProductService {
 
     return {
       items: items.map(
-        ({ image_url, image_alt_text, brand_id, brand_name, seller_id, seller_name, ...rest }) => ({
+        ({
+          primary_image,
+          product_images_url,
+          product_images_alt_text,
+          brand,
+          brands_id,
+          brands_name,
+          seller,
+          sellers_id,
+          sellers_name,
+          ...rest
+        }) => ({
           ...rest,
-          primary_image: {
-            url: image_url,
-            alt_text: image_alt_text,
-          },
-          brand: {
-            id: brand_id,
-            name: brand_name,
-          },
-          seller: {
-            id: seller_id,
-            name: seller_name,
-          },
+          primary_image,
+          brand,
+          seller,
         }),
       ),
       pagination: {
