@@ -15,6 +15,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionGroupDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductPriceDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRatingDetailDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRelatedDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.tag.TagDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductImageCreateReq;
@@ -88,9 +89,13 @@ public class ProductService {
         List<Long> productTagIds = productQueryService.getAllProductTagIdByProductId(productId);
         List<TagDetailDto> tags = tagQueryService.getAllDetailByProductTagIds(productTagIds);
         ProductRatingDetailDto rating = reviewComplexQueryService.getProductRatingDetail(productId);
+        List<Long> tagIds = tags.stream()
+                .map(TagDetailDto::id)
+                .toList();
+        List<ProductRelatedDto> relatedProducts = productComplexQueryService.getRelatedProducts(tagIds);
 
         return ProductDetailRes.assembly(base, newPriceDetailDto, categoryDetails, optionGroups, images, tags, rating,
-                null);
+                relatedProducts);
     }
 
     public void delete(Long productId) {

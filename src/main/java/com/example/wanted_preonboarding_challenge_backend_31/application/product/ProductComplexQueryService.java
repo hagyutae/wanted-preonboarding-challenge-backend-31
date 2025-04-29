@@ -10,6 +10,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.paginati
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationRes;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionGroupDetailDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRelatedDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductDetailRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchDataRes;
@@ -64,5 +65,9 @@ public class ProductComplexQueryService {
                 .map(group ->
                         ProductOptionGroupDetailDto.from(group, productOptionDetails.get(group.getId())))
                 .toList();
+    }
+
+    public List<ProductRelatedDto> getRelatedProducts(List<Long> tagIds) {
+        return productQueryRepository.getRelatedProducts(tagIds);
     }
 }

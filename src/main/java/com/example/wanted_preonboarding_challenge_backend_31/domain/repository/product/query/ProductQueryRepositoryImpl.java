@@ -6,7 +6,9 @@ import static com.example.wanted_preonboarding_challenge_backend_31.domain.model
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.QProductDetail.productDetail;
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.QProductImage.productImage;
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.QProductPrice.productPrice;
+import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.QProductTag.productTag;
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.seller.QSeller.seller;
+import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.tag.QTag.tag;
 
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.Product;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductStatus;
@@ -19,6 +21,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageSearchDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductPriceDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRatingDetailDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRelatedDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.seller.SellerDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.seller.SellerSearchDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
@@ -160,7 +163,7 @@ public class ProductQueryRepositoryImpl extends QuerydslRepositorySupport implem
                 Expressions.nullExpression(List.class),
                 Expressions.nullExpression(List.class),
                 Expressions.nullExpression(ProductRatingDetailDto.class),
-                Expressions.nullExpression(Object.class)
+                Expressions.nullExpression(List.class)
         ))
                 .from(product)
                 .join(product.seller)
@@ -169,6 +172,34 @@ public class ProductQueryRepositoryImpl extends QuerydslRepositorySupport implem
                 .join(productPrice).on(productPrice.product.id.eq(product.id))
                 .where(product.id.eq(productId))
                 .fetchOne();
+    }
+
+    @Override
+    public List<ProductRelatedDto> getRelatedProducts(List<Long> tagIds) {
+        return select(Projections.constructor(
+                ProductRelatedDto.class,
+                product.id,
+                product.name,
+                product.slug,
+                product.shortDescription,
+                Projections.constructor(
+                        ProductImageSearchDto.class,
+                        productImage.url,
+                        productImage.altText
+                ),
+                productPrice.basePrice,
+                productPrice.salePrice,
+                productPrice.currency
+        ))
+                .from(product)
+                .leftJoin(productImage).on(productImage.product.id.eq(product.id)
+                        .and(productImage.isPrimary.eq(true)))
+                .join(productPrice).on(productPrice.product.id.eq(product.id))
+                .join(productTag).on(productTag.product.id.eq(product.id))
+                .join(tag).on(tag.id.eq(productTag.tag.id)
+                        .and(tag.id.in(tagIds)))
+                .limit(5)
+                .fetch();
     }
 
     /**

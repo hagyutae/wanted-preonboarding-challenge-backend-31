@@ -8,6 +8,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionGroupDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductPriceDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRatingDetailDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRelatedDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.seller.SellerDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.tag.TagDetailDto;
 import java.time.LocalDateTime;
@@ -31,14 +32,14 @@ public record ProductDetailRes(
         List<ProductImageDetailDto> images,
         List<TagDetailDto> tags,
         ProductRatingDetailDto rating,
-        Object relatedProducts
+        List<ProductRelatedDto> relatedProducts
 ) {
 
     public static ProductDetailRes assembly(ProductDetailRes base, ProductPriceDetailDto price,
                                             List<CategoryDetailDto> categories,
                                             List<ProductOptionGroupDetailDto> optionGroups,
                                             List<ProductImageDetailDto> images, List<TagDetailDto> tags,
-                                            ProductRatingDetailDto rating, Object relatedProducts) {
+                                            ProductRatingDetailDto rating, List<ProductRelatedDto> relatedProducts) {
         return new ProductDetailRes(base.id, base.name, base.slug, base.shortDescription, base.fullDescription,
                 base.seller, base.brand, base.status, base.createdAt, base.updatedAt, base.detail, price, categories,
                 optionGroups, images, tags, rating, relatedProducts);
