@@ -1,4 +1,4 @@
-package com.sandro;
+package com.sandro.wanted_shop;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
