@@ -23,14 +23,10 @@ public class MainService {
     private final ReviewQueryService reviewQueryService;
 
     public MainSearchRes search() {
-        int itemAmount = 5;
-        PaginationReq paginationReq = new PaginationReq(1, itemAmount);
+        PaginationReq paginationReq = new PaginationReq(1, 5);
 
         List<ProductSearchDataDto> newProductSearchData = getNewProductSearchData(paginationReq);
-
-        List<Long> popularProductIds = reviewQueryService.getPopularProductIds(itemAmount);
-        List<ProductSearchDataDto> popularProductSearchData = getPopularProductSearchData(popularProductIds,
-                paginationReq);
+        List<ProductSearchDataDto> popularProductSearchData = getPopularProductSearchData(paginationReq);
 
         return new MainSearchRes(newProductSearchData, popularProductSearchData, null);
     }
@@ -41,8 +37,8 @@ public class MainService {
         return productComplexQueryService.searchProducts(paginationReq, newProductSearchReq).items();
     }
 
-    private List<ProductSearchDataDto> getPopularProductSearchData(List<Long> popularProductIds,
-                                                                   PaginationReq paginationReq) {
+    private List<ProductSearchDataDto> getPopularProductSearchData(PaginationReq paginationReq) {
+        List<Long> popularProductIds = reviewQueryService.getPopularProductIds(5);
         ProductSearchReq popularProductSearchReq = new ProductSearchReq("createdAt:desc", null, null, null, null, null,
                 null, null, null, popularProductIds);
         ProductSearchRes productSearchRes = productComplexQueryService.searchProducts(paginationReq,
