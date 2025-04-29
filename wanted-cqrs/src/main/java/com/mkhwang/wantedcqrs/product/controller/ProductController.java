@@ -1,6 +1,7 @@
 package com.mkhwang.wantedcqrs.product.controller;
 
 import com.mkhwang.wantedcqrs.config.advice.ApiMessage;
+import com.mkhwang.wantedcqrs.product.application.ProductRegisterService;
 import com.mkhwang.wantedcqrs.product.application.ProductSearchService;
 import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchDetailDto;
 import com.mkhwang.wantedcqrs.product.domain.dto.ProductSearchDto;
@@ -20,12 +21,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProductController {
   private final ProductSearchService productSearchService;
+  private final ProductRegisterService productRegisterService;
 
   @ApiMessage("product.create.success")
   @Operation(summary = "상품 등록")
   @PostMapping("/api/products")
   public ProductCreateResponseDto createProduct(@RequestBody @Valid ProductCreateRequestDto productCreateDto) {
-    return productSearchService.createProduct(productCreateDto);
+    return productRegisterService.createProduct(productCreateDto);
   }
 
   @ApiMessage("product.search.success")
@@ -48,13 +50,13 @@ public class ProductController {
   public ProductCreateResponseDto modifyProduct(@PathVariable Long id,
                                                 @RequestBody @Valid ProductModifyRequestDto dto) {
     dto.setId(id);
-    return productSearchService.modifyProduct(dto);
+    return productRegisterService.modifyProduct(dto);
   }
 
   @ApiMessage("product.delete.success")
   @Operation(summary = "상품 삭제")
   @DeleteMapping("/api/products/{id}")
   public void deleteProduct(@PathVariable Long id) {
-    productSearchService.deleteProduct(id);
+    productRegisterService.deleteProduct(id);
   }
 }

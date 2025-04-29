@@ -52,8 +52,6 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository {
       return Page.empty();
     }
 
-//    List<ProductSearchResultDto> result = null;
-
     List<ProductSearchResultDto> result = jpaQueryFactory
             .select(new QProductSearchResultDto(
                     qProduct.id,
