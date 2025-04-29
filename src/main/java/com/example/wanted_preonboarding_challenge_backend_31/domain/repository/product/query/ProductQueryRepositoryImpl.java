@@ -266,7 +266,7 @@ public class ProductQueryRepositoryImpl extends QuerydslRepositorySupport implem
     }
 
     private BooleanExpression productIdsFilter(List<Long> productIds) {
-        if (productIds == null || productIds.isEmpty()) {
+        if (productIds == null) {
             return null;
         }
         return product.id.in(productIds);
