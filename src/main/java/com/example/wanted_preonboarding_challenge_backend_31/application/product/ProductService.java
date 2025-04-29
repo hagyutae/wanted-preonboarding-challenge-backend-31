@@ -1,6 +1,5 @@
 package com.example.wanted_preonboarding_challenge_backend_31.application.product;
 
-import com.example.wanted_preonboarding_challenge_backend_31.application.category.CategoryComplexQueryService;
 import com.example.wanted_preonboarding_challenge_backend_31.common.util.CalculatorUtil;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.Product;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductImage;
@@ -36,7 +35,6 @@ public class ProductService {
     private final ProductCommandService productCommandService;
     private final ProductQueryService productQueryService;
     private final ProductComplexQueryService productComplexQueryService;
-    private final CategoryComplexQueryService categoryComplexQueryService;
 
     public ProductCreateRes create(ProductCreateReq req) {
         Product product = productCommandService.saveProduct(req);
@@ -73,7 +71,7 @@ public class ProductService {
 
         ProductPriceDetailDto newPriceDetailDto = ProductPriceDetailDto.from(base.price(),
                 CalculatorUtil.calculateDiscountPercentage(base.price().basePrice(), base.price().salePrice()));
-        List<CategoryDetailDto> categoryDetails = categoryComplexQueryService.getCategoryDetailsByProductId(
+        List<CategoryDetailDto> categoryDetails = productQueryService.getAllProductCategoryByProductId(
                 productId);
 
         return ProductDetailRes.assembly(base, newPriceDetailDto, categoryDetails, null, null, null, null, null);

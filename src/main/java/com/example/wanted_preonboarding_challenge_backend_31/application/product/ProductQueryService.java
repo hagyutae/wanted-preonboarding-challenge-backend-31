@@ -6,9 +6,12 @@ import com.example.wanted_preonboarding_challenge_backend_31.common.exception.Cu
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.Product;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOption;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOptionGroup;
+import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductCategoryRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductOptionGroupRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductOptionRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductRepository;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryDetailDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,7 @@ public class ProductQueryService {
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
     private final ProductOptionGroupRepository productOptionGroupRepository;
+    private final ProductCategoryRepository productCategoryRepository;
 
     public Product getProductById(Long id) {
         return productRepository.findById(id)
@@ -48,5 +52,11 @@ public class ProductQueryService {
 
     public Long getProductOptionGroupIdByProductOptionId(Long optionId) {
         return productOptionRepository.findProductOptionGroupIdById(optionId);
+    }
+
+    public List<CategoryDetailDto> getAllProductCategoryByProductId(Long productId) {
+        return productCategoryRepository.findAllByProductId(productId).stream()
+                .map(CategoryDetailDto::from)
+                .toList();
     }
 }
