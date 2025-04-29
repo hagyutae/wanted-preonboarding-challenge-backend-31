@@ -9,4 +9,9 @@ public record ProductPriceDetailDto(
         BigDecimal taxRate,
         Integer discountPercentage
 ) {
+
+    public static ProductPriceDetailDto from(ProductPriceDetailDto origin, Integer discountPercentage) {
+        return new ProductPriceDetailDto(origin.basePrice, origin.salePrice, origin.currency, origin.taxRate,
+                discountPercentage);
+    }
 }

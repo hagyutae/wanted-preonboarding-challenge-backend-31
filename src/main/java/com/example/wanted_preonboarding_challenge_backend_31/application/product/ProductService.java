@@ -1,5 +1,6 @@
 package com.example.wanted_preonboarding_challenge_backend_31.application.product;
 
+import com.example.wanted_preonboarding_challenge_backend_31.common.util.CalculatorUtil;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.Product;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductImage;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOption;
@@ -7,6 +8,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.model.produc
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductPriceDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductImageCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
@@ -63,7 +65,12 @@ public class ProductService {
     }
 
     public ProductDetailRes detail(Long productId) {
-        return productComplexQueryService.detailProduct(productId);
+        ProductDetailRes base = productComplexQueryService.detailProduct(productId);
+
+        ProductPriceDetailDto newPriceDetailDto = ProductPriceDetailDto.from(base.price(),
+                CalculatorUtil.calculateDiscountPercentage(base.price().basePrice(), base.price().salePrice()));
+
+        return ProductDetailRes.assembly(base, newPriceDetailDto, null, null, null, null, null, null);
     }
 
     public void delete(Long productId) {

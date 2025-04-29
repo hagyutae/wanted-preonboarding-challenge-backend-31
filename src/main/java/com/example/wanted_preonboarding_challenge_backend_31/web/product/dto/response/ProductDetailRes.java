@@ -33,4 +33,14 @@ public record ProductDetailRes(
         ProductRatingDetailDto rating,
         Object relatedProducts
 ) {
+
+    public static ProductDetailRes assembly(ProductDetailRes base, ProductPriceDetailDto price,
+                                            List<CategoryDetailDto> categories,
+                                            List<ProductOptionGroupDetailDto> optionGroups,
+                                            List<ProductImageDetailDto> images, List<TagDetailDto> tags,
+                                            ProductRatingDetailDto rating, Object relatedProducts) {
+        return new ProductDetailRes(base.id, base.name, base.slug, base.shortDescription, base.fullDescription,
+                base.seller, base.brand, base.status, base.createdAt, base.updatedAt, base.detail, price, categories,
+                optionGroups, images, tags, rating, relatedProducts);
+    }
 }
