@@ -38,7 +38,7 @@ public class MainService {
     }
 
     private List<ProductSearchDataDto> getPopularProductSearchData(PaginationReq paginationReq) {
-        List<Long> popularProductIds = reviewQueryService.getPopularProductIds(5);
+        List<Long> popularProductIds = reviewQueryService.getPopularProductIds(paginationReq.perPage());
         ProductSearchReq popularProductSearchReq = new ProductSearchReq("createdAt:desc", null, null, null, null, null,
                 null, null, null, popularProductIds);
         ProductSearchRes productSearchRes = productComplexQueryService.searchProducts(paginationReq,
