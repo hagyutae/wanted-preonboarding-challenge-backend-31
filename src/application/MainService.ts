@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "src/infrastructure/entities";
-import { ProductSummaryView } from "src/infrastructure/views/ProductSummary.view";
+import { ProductSummaryView } from "src/infrastructure/views";
 
 @Injectable()
 export default class MainService {

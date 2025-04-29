@@ -13,8 +13,7 @@ import {
   ProductTagEntity,
   SellerEntity,
 } from "src/infrastructure/entities";
-import { ProductSummaryView } from "src/infrastructure/views/ProductSummary.view";
-import { ProductDetailView } from "src/infrastructure/views/ProductDetail.view";
+import { ProductSummaryView, ProductDetailView } from "src/infrastructure/views";
 import { ProductInputDTO } from "./dto/ProductInputDTO";
 
 @Injectable()

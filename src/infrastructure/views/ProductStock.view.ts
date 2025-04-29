@@ -17,7 +17,7 @@ import { ProductOptionGroupEntity, ProductOptionEntity } from "../entities";
       .groupBy("product_option_groups.product_id"),
   materialized: true,
 })
-export class ProductStockView {
+export default class ProductStockView {
   @ViewColumn()
   product_id: number;
 

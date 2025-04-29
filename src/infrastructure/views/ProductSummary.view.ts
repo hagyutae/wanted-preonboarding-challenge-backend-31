@@ -8,7 +8,7 @@ import {
   BrandEntity,
   SellerEntity,
 } from "../entities";
-import { ProductStockView } from "./ProductStock.view";
+import ProductStockView from "./ProductStock.view";
 
 @ViewEntity({
   expression: (dataSource: DataSource) => {
@@ -52,7 +52,7 @@ import { ProductStockView } from "./ProductStock.view";
       .addGroupBy("sellers.id");
   },
 })
-export class ProductSummaryView {
+export default class ProductSummaryView {
   @ViewColumn()
   id: number;
 

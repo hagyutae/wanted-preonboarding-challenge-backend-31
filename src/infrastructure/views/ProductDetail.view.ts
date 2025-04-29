@@ -79,7 +79,7 @@ import {
       .addSelect(`COUNT(CASE WHEN reviews.rating = 5 THEN 1 END)`, "rating_5");
   },
 })
-export class ProductDetailView {
+export default class ProductDetailView {
   @ViewColumn() id: number;
   @ViewColumn() name: string;
   @ViewColumn() slug: string;
