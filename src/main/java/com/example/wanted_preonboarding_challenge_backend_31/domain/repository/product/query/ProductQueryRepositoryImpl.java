@@ -214,6 +214,7 @@ public class ProductQueryRepositoryImpl extends QuerydslRepositorySupport implem
                 brandFilter(req.brand()),
                 inStockFilter(req.inStock()),
                 searchFilter(req.search()),
+                productIdsFilter(req.productIds()),
         };
     }
 
@@ -262,5 +263,12 @@ public class ProductQueryRepositoryImpl extends QuerydslRepositorySupport implem
             return null;
         }
         return product.name.contains(search);
+    }
+
+    private BooleanExpression productIdsFilter(List<Long> productIds) {
+        if (productIds == null || productIds.isEmpty()) {
+            return null;
+        }
+        return product.id.in(productIds);
     }
 }

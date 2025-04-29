@@ -46,7 +46,7 @@ public class CategoryService {
 
         List<Long> categoryIds = categoryQueryService.getSubcategoryIds(categoryId, req.includeSubcategories());
         ProductSearchReq productSearchReq = new ProductSearchReq(req.sort(), null, null, null, categoryIds, null, null,
-                null, null);
+                null, null, null);
         ProductSearchRes productSearchRes = productComplexQueryService.searchProducts(paginationReq, productSearchReq);
 
         return new CategoryProductRes(categoryDetail, productSearchRes.items(), productSearchRes.pagination());

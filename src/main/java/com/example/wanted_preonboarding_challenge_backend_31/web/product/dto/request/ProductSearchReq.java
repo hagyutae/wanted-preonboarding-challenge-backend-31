@@ -19,6 +19,7 @@ public record ProductSearchReq(
         Long seller,
         Long brand,
         Boolean inStock,
-        String search
+        String search,
+        List<Long> productIds
 ) {
 }
