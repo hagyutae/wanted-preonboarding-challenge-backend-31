@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
+    List<Category> findAllByLevel(int level);
+
     @Query(value = """
             WITH RECURSIVE category_tree AS (
                         SELECT id

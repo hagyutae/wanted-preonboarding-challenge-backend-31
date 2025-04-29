@@ -9,6 +9,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.web.category.dto.re
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchRes;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +21,24 @@ public class CategoryService {
 
     private final CategoryQueryService categoryQueryService;
     private final ProductComplexQueryService productComplexQueryService;
+    private final CategoryComplexQueryService categoryComplexQueryService;
 
     public List<CategorySearchRes> search(int level) {
-        return null;
+        List<CategorySearchRes> result = categoryQueryService.findAllByLevel(level);
+        Map<Long, List<CategorySearchRes>> childCategories = categoryComplexQueryService.getChildCategoriesByParentId(
+                level + 1);
+        collectCategory(result, childCategories);
+        return result;
+    }
+
+    private void collectCategory(List<CategorySearchRes> result, Map<Long, List<CategorySearchRes>> childMap) {
+        if (result == null || result.isEmpty()) {
+            return;
+        }
+        for (CategorySearchRes parent : result) {
+            parent.setChildren(childMap.get(parent.getId()));
+            collectCategory(parent.getChildren(), childMap);
+        }
     }
 
     public CategoryProductRes searchProduct(PaginationReq paginationReq, Long categoryId, CategoryProductReq req) {

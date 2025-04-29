@@ -6,6 +6,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.common.exception.Cu
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.category.Category;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.category.CategoryRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryDetailDto;
+import com.example.wanted_preonboarding_challenge_backend_31.web.category.dto.response.CategorySearchRes;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,14 @@ public class CategoryQueryService {
     public CategoryDetailDto getCategoryDetailById(Long id) {
         Category category = getById(id);
         return CategoryDetailDto.from(category);
+    }
+
+    public List<CategorySearchRes> findAllByLevel(int level) {
+        return categoryRepository.findAllByLevel(level)
+                .stream()
+                .map(category -> new CategorySearchRes(category.getId(), category.getName(), category.getSlug(),
+                        category.getDescription(), category.getLevel(), category.getImageUrl()))
+                .toList();
     }
 
     /**
