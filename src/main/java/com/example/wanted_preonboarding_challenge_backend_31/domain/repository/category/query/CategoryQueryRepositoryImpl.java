@@ -1,6 +1,7 @@
 package com.example.wanted_preonboarding_challenge_backend_31.domain.repository.category.query;
 
 import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.category.QCategory.category;
+import static com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.QProductCategory.productCategory;
 
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.category.Category;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.QuerydslRepositorySupport;
@@ -36,5 +37,17 @@ public class CategoryQueryRepositoryImpl extends QuerydslRepositorySupport imple
                                 category.imageUrl
                         ))
                 ));
+    }
+
+    @Override
+    public Map<Long, Long> getFeaturedCategories(int limit) {
+        return queryFactory()
+                .select(category.id, productCategory.count())
+                .from(category)
+                .join(productCategory).on(productCategory.category.id.eq(category.id))
+                .groupBy(category.id)
+                .orderBy(productCategory.count().desc())
+                .limit(limit)
+                .transform(GroupBy.groupBy(category.id).as(productCategory.count()));
     }
 }

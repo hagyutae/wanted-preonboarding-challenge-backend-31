@@ -5,6 +5,6 @@ public record CategoryFeaturedDto(
         String name,
         String slug,
         String imageUrl,
-        int productCount
+        Long productCount
 ) {
 }

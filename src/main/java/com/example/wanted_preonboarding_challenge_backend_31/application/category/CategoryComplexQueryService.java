@@ -18,4 +18,8 @@ public class CategoryComplexQueryService {
     public Map<Long, List<CategorySearchRes>> getChildCategoriesByParentId(int startLevel) {
         return categoryQueryRepository.groupAllCategoriesByParentId(startLevel);
     }
+
+    public Map<Long, Long> getFeaturedCategoryMap(int limit) {
+        return categoryQueryRepository.getFeaturedCategories(limit);
+    }
 }

@@ -8,6 +8,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.c
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.category.dto.response.CategorySearchRes;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,5 +51,9 @@ public class CategoryQueryService {
             return List.of(categoryId);
         }
         return categoryRepository.findAllChildCategoryIds(categoryId);
+    }
+
+    public List<Category> findAllByIds(Set<Long> ids) {
+        return categoryRepository.findAllById(ids);
     }
 }

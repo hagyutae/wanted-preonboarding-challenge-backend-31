@@ -7,4 +7,6 @@ import java.util.Map;
 public interface CategoryQueryRepository {
 
     Map<Long, List<CategorySearchRes>> groupAllCategoriesByParentId(int startLevel);
+
+    Map<Long, Long> getFeaturedCategories(int limit);
 }
