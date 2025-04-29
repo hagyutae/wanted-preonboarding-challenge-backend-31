@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:17.4-alpine3.21
+    platform: linux/arm64/v8
+    container_name: postgres
+    environment:
+      POSTGRES_USER: sandro
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: wanted-shop
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
