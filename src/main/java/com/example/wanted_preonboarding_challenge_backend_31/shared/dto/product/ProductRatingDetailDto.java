@@ -5,6 +5,6 @@ import java.math.BigDecimal;
 public record ProductRatingDetailDto(
         BigDecimal average,
         int count,
-
+        ProductRatingDistributionDto distribution
 ) {
 }
