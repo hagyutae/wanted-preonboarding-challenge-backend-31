@@ -6,6 +6,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.application.main.Ma
 import com.example.wanted_preonboarding_challenge_backend_31.common.dto.SuccessRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.main.dto.response.MainSearchRes;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +17,7 @@ public class MainController {
 
     private final MainService mainService;
 
+    @GetMapping
     public SuccessRes<MainSearchRes> search() {
         return SuccessRes.of(MAIN_SEARCH, mainService.search());
     }
