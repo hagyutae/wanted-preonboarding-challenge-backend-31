@@ -11,9 +11,9 @@ import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.paginati
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionGroupDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRelatedDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductSearchDataDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductDetailRes;
-import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchDataRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchRes;
 import java.util.List;
 import java.util.Map;
@@ -32,17 +32,17 @@ public class ProductComplexQueryService {
     private final ProductOptionQueryRepository productOptionQueryRepository;
 
     public ProductSearchRes searchProducts(PaginationReq paginationReq, ProductSearchReq req) {
-        List<ProductSearchDataRes> products = productQueryRepository.searchProducts(paginationReq, req);
+        List<ProductSearchDataDto> products = productQueryRepository.searchProducts(paginationReq, req);
         PaginationRes paginationRes = productQueryRepository.countSearchProducts(paginationReq, req);
 
         List<Long> productIds = products.stream()
-                .map(ProductSearchDataRes::id)
+                .map(ProductSearchDataDto::id)
                 .toList();
         Map<Long, ProductReviewSummaryDto> reviewSummaries = reviewQueryRepository.getProductReviewSummaries(
                 productIds);
 
-        List<ProductSearchDataRes> mergedRes = products.stream()
-                .map(res -> ProductSearchDataRes.withReviewSummary(res, reviewSummaries.get(res.id())))
+        List<ProductSearchDataDto> mergedRes = products.stream()
+                .map(res -> ProductSearchDataDto.withReviewSummary(res, reviewSummaries.get(res.id())))
                 .toList();
 
         return new ProductSearchRes(mergedRes, paginationRes);

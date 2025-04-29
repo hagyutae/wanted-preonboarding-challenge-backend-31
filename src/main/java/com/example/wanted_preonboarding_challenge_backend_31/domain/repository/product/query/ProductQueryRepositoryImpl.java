@@ -22,11 +22,11 @@ import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductPriceDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRatingDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRelatedDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductSearchDataDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.seller.SellerDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.seller.SellerSearchDto;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductDetailRes;
-import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchDataRes;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -43,14 +43,14 @@ public class ProductQueryRepositoryImpl extends QuerydslRepositorySupport implem
     }
 
     @Override
-    public List<ProductSearchDataRes> searchProducts(PaginationReq paginationReq, ProductSearchReq req) {
+    public List<ProductSearchDataDto> searchProducts(PaginationReq paginationReq, ProductSearchReq req) {
         Expression<Boolean> inStockSelect = new CaseBuilder()
                 .when(product.status.eq(ProductStatus.OUT_OF_STOCK))
                 .then(false)
                 .otherwise(true);
 
-        Expression<ProductSearchDataRes> select = Projections.constructor(
-                ProductSearchDataRes.class,
+        Expression<ProductSearchDataDto> select = Projections.constructor(
+                ProductSearchDataDto.class,
                 product.id,
                 product.name,
                 product.slug,

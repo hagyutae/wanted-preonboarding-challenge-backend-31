@@ -1,14 +1,13 @@
-package com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response;
+package com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product;
 
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductStatus;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.review.query.dto.ProductReviewSummaryDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.brand.BrandSearchDto;
-import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageSearchDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.seller.SellerSearchDto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record ProductSearchDataRes(
+public record ProductSearchDataDto(
         Long id,
         String name,
         String slug,
@@ -26,9 +25,9 @@ public record ProductSearchDataRes(
         LocalDateTime createdAt
 ) {
 
-    public static ProductSearchDataRes withReviewSummary(ProductSearchDataRes res,
+    public static ProductSearchDataDto withReviewSummary(ProductSearchDataDto res,
                                                          ProductReviewSummaryDto reviewSummary) {
-        return new ProductSearchDataRes(
+        return new ProductSearchDataDto(
                 res.id(),
                 res.name(),
                 res.slug(),
