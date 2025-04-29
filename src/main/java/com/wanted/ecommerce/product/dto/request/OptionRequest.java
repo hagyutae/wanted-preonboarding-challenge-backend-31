@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +19,7 @@ public class OptionRequest {
 
     @Digits(integer = 10, fraction = 2)
     @Column(name = "additional_price")
-    private BigDecimal additionalPrice;
+    private Double additionalPrice;
     @Size(max = 100)
     private String sku;
     private Integer stock;

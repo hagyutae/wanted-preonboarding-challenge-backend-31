@@ -57,7 +57,9 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductDetailResponse>> getProductById(
         @PathVariable Long id
     ) {
-        return null;
+        ProductDetailResponse response = productService.readDetail(id);
+        return ResponseEntity.ok(
+            ApiResponse.success(response, MessageConstants.FUNDED_PRODUCT_DETAIL.getMessage()));
     }
 
 

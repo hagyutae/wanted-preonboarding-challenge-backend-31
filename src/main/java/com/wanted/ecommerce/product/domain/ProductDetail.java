@@ -1,7 +1,5 @@
 package com.wanted.ecommerce.product.domain;
 
-import com.wanted.ecommerce.product.dto.request.AdditionalInfoRequest;
-import com.wanted.ecommerce.product.dto.request.DimensionsRequest;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.Map;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,7 +40,7 @@ public class ProductDetail {
 
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private DimensionsRequest dimensions;
+    private Dimensions dimensions;
     private String materials;
 
     @Column(name = "country_of_origin")
@@ -55,11 +54,11 @@ public class ProductDetail {
 
     @Type(JsonType.class)
     @Column(name = "additional_info", columnDefinition = "jsonb")
-    private AdditionalInfoRequest additionalInfo;
+    private Map<String, Object> additionalInfo;
 
     public static ProductDetail of(Product product, BigDecimal weight,
-        DimensionsRequest dimensions, String materials, String countryOfOrigin,
-        String warrantyInfo, String careInstructions, AdditionalInfoRequest additionalInfo){
+        Dimensions dimensions, String materials, String countryOfOrigin,
+        String warrantyInfo, String careInstructions, Map<String, Object> additionalInfo){
         return ProductDetail.builder()
             .product(product)
             .weight(weight)

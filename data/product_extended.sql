@@ -156,7 +156,7 @@ INSERT INTO product_details (id, product_id, weight, dimensions, materials, coun
 (10, 10, 35.0, '{"width": 180, "height": 45, "depth": 40}', '원목', '대한민국', '2년 품질 보증', '목재용 광택제로 정기적으로 관리해주세요', '{"assembly_required": true, "assembly_time": "45분", "storage_compartments": 4}'),
 
 -- 11. 스마트 냉장고 상세
-(11, 11, 120.0, '{"width": 90, "height": 180, "depth": 70}', '스테인리스 스틸, 강화유리', '대한민국', '3년 품질 보증', '부드러운 천으로 표면을 닦아주세요', '{"capacity": "700L", "energy_rating": "1등급", "smart_features": ["온도 자동 조절", "스마트폰 연동", "식품 관리 알림"]}'),
+(11, 11, 120.0, '{"width": 90, "height": 180, "depth": 70}', '스테인리스 스틸, 강화유리', '대한민국', '3년 품질 보증', '부드러운 천으로 표면을 닦아주세요', '{"capacity": "700L",ㅋ  "energy_rating": "1등급", "smart_features": ["온도 자동 조절", "스마트폰 연동", "식품 관리 알림"]}'),
 
 -- 12. 고효율 세탁기 상세
 (12, 12, 85.0, '{"width": 60, "height": 85, "depth": 60}', '스테인리스 스틸, 강화유리', '대한민국', '2년 품질 보증', '사용 후 세탁조를 깨끗하게 유지해주세요', '{"capacity": "15kg", "energy_rating": "1등급", "spin_speed": "1400rpm"}'),

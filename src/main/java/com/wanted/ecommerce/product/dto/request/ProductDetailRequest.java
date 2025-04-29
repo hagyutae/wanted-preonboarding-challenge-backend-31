@@ -3,6 +3,7 @@ package com.wanted.ecommerce.product.dto.request;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class ProductDetailRequest {
     private String countryOfOrigin;
     private String warrantyInfo;
     private String careInstructions;
-    private AdditionalInfoRequest additionalInfo;
+    private HashMap<String, Object> additionalInfo;
 }
 
 

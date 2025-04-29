@@ -1,22 +1,21 @@
 package com.wanted.ecommerce.product.dto.response;
 
-import java.math.BigDecimal;
 import lombok.Builder;
 
 @Builder
 public record ProductPriceResponse(
-    BigDecimal basePrice,
-    BigDecimal salePrice,
+    Integer basePrice,
+    Integer salePrice,
     String currency,
-    BigDecimal taxRate,
+    Double taxRate,
     Double discountPercentage
 ) {
 
-    public static ProductPriceResponse of(BigDecimal basePrice, BigDecimal salePrice,
-        String currency, BigDecimal taxRate, Double discountPercentage){
+    public static ProductPriceResponse of(Double basePrice, Double salePrice,
+        String currency, Double taxRate, Double discountPercentage){
         return ProductPriceResponse.builder()
-            .basePrice(basePrice)
-            .salePrice(salePrice)
+            .basePrice(basePrice.intValue())
+            .salePrice(salePrice.intValue())
             .currency(currency)
             .taxRate(taxRate)
             .discountPercentage(discountPercentage)

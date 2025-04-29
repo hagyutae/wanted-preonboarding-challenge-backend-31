@@ -1,5 +1,6 @@
 package com.wanted.ecommerce.product.dto.response;
 
+import java.util.Map;
 import lombok.Builder;
 
 @Builder
@@ -10,12 +11,12 @@ public record DetailResponse(
     String countryOfOrigin,
     String warrantyInfo,
     String careInstructions,
-    AdditionalInfoResponse additionalInfo
+    Map<String, Object> additionalInfo
 ) {
 
     public static DetailResponse of(Double weight, DimensionsResponse dimensions,
         String materials, String countryOfOrigin, String warrantyInfo, String careInstructions,
-        AdditionalInfoResponse additionalInfo) {
+        Map<String, Object> additionalInfo) {
         return DetailResponse.builder()
             .weight(weight)
             .dimensions(dimensions)

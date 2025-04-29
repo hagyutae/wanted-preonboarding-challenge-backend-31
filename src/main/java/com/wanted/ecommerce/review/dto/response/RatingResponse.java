@@ -7,9 +7,9 @@ import lombok.Builder;
 public record RatingResponse(
     Double average,
     Integer count,
-    Map<String, Integer> distribution
+    Map<Integer, Long> distribution
 ) {
-    public static RatingResponse of(Double average, Integer count, Map<String, Integer> distribution){
+    public static RatingResponse of(Double average, Integer count, Map<Integer, Long> distribution){
         return RatingResponse.builder()
             .average(average)
             .count(count)

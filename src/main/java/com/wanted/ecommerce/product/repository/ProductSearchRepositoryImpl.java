@@ -49,7 +49,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository{
 
         // price (min, max)
         if (request.getMinPrice() != null || request.getMaxPrice() != null) {
-            query.leftJoin(product.prices, price);
+            query.leftJoin(product.price, price);
 
             if (request.getMinPrice() != null) {
                 conditions.add(price.basePrice.goe(BigDecimal.valueOf(request.getMinPrice())));
@@ -107,7 +107,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository{
             switch (field) {
                 case "created_at" -> query.orderBy(isAsc ? product.createdAt.asc() : product.createdAt.desc());
                 case "price" -> {
-                    if(request.getMaxPrice() == null & request.getMaxPrice() == null) query.leftJoin(product.prices, price);
+                    if(request.getMaxPrice() == null & request.getMaxPrice() == null) query.leftJoin(product.price, price);
                     query.orderBy(isAsc ? price.basePrice.asc() : price.basePrice.desc());
                 }
                 case "rating" -> {
@@ -132,6 +132,16 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository{
         // count query
         long total = query.fetch().size();
         return new PageImpl<>(products, pageable, total);
+    }
+
+    @Override
+    public List<Product> findRelatedProductsByCategoryId(Long categoryId){
+        var query = queryFactory
+            .selectFrom(product)
+            .join(product.categories, productCategory).fetchJoin()
+            .join(productCategory.category, category).fetchJoin()
+            .where(category.id.eq(categoryId));
+        return query.fetch();
     }
 
 }
