@@ -192,39 +192,7 @@ export default class ProductService {
   }
 
   async getById(id: number) {
-    const item = await this.entityManager.findOne(ProductDetailView, {
-      where: { id },
-    });
-
-    if (!item) {
-      throw new Error(`Product with id ${id} not found`);
-    }
-
-    const {
-      seller,
-      brand,
-      detail,
-      price,
-      categories,
-      option_groups,
-      images,
-      tags,
-      rating,
-      ...remain
-    } = item;
-
-    return {
-      ...remain,
-      seller,
-      brand,
-      detail,
-      price,
-      categories,
-      option_groups,
-      images,
-      tags,
-      rating,
-    };
+    return this.entityManager.findOne(ProductDetailView, { where: { id } });
   }
 
   async update(id: number, data: ProductInputDTO) {

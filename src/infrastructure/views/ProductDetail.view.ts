@@ -9,6 +9,7 @@ import {
   ProductCategoryEntity,
   CategoryEntity,
   ProductOptionGroupEntity,
+  ProductOptionEntity,
   ProductImageEntity,
   ProductTagEntity,
   TagEntity,
@@ -23,39 +24,9 @@ import {
       .leftJoin(SellerEntity, "sellers", "sellers.id = products.seller_id")
       .leftJoin(BrandEntity, "brands", "brands.id = products.brand_id")
       .innerJoin(ProductDetailEntity, "product_details", "product_details.product_id = products.id")
-      .innerJoin(ProductPriceEntity, "product_prices", "product_prices.product_id = products.id")
-      .leftJoin(
-        ProductCategoryEntity,
-        "product_categories",
-        "product_categories.product_id = products.id",
-      )
-      .leftJoin(CategoryEntity, "categories", "categories.id = product_categories.category_id")
-      .leftJoin(
-        ProductOptionGroupEntity,
-        "product_option_groups",
-        "product_option_groups.product_id = products.id",
-      )
       .leftJoin(ProductImageEntity, "product_images", "product_images.product_id = products.id")
-      .innerJoin(ProductTagEntity, "product_tag", "product_tag.product_id = products.id")
-      .innerJoin(TagEntity, "tags", "tags.id = product_tag.tag_id")
-      .leftJoin(ReviewEntity, "reviews", "reviews.product_id = products.id")
-      .groupBy("products.id")
-      .addGroupBy("product_details.weight")
-      .addGroupBy("product_details.dimensions")
-      .addGroupBy("product_details.materials")
-      .addGroupBy("product_details.country_of_origin")
-      .addGroupBy("product_details.warranty_info")
-      .addGroupBy("product_details.care_instructions")
-      .addGroupBy("product_details.additional_info")
-      .addGroupBy("product_prices.base_price")
-      .addGroupBy("product_prices.sale_price")
-      .addGroupBy("product_prices.currency")
-      .addGroupBy("product_prices.tax_rate")
-      .addGroupBy("product_images.id")
-      .addGroupBy("product_images.url")
-      .addGroupBy("product_images.alt_text")
-      .addGroupBy("brands.id")
-      .addGroupBy("sellers.id")
+      .leftJoin(ProductTagEntity, "product_tag", "product_tag.product_id = products.id")
+      .leftJoin(TagEntity, "tags", "tags.id = product_tag.tag_id")
       .select([
         "products.id as id",
         "products.name as name",
@@ -63,53 +34,103 @@ import {
         "products.short_description as short_description",
         "products.full_description as full_description",
 
-        "sellers.id",
-        "sellers.name",
-        "sellers.description",
-        "sellers.logo_url",
-        "sellers.rating",
-        "sellers.contact_email",
-        "sellers.contact_phone",
-
-        "brands.id",
-        "brands.name",
-        "brands.description",
-        "brands.logo_url",
-        "brands.website",
+        "to_jsonb(sellers) - 'created_at' AS seller",
+        "to_jsonb(brands) - 'slug' AS brand",
 
         "products.status as status",
         "products.created_at as created_at",
         "products.updated_at as updated_at",
 
-        "product_details.weight",
-        "product_details.dimensions",
-        "product_details.materials",
-        "product_details.country_of_origin",
-        "product_details.warranty_info",
-        "product_details.care_instructions",
-        "product_details.additional_info",
-
-        "product_prices.base_price",
-        "product_prices.sale_price",
-        "product_prices.currency",
-        "product_prices.tax_rate",
-
-        "array_agg(to_jsonb(categories)) AS categories",
-        "array_agg(to_jsonb(product_option_groups)) AS option_groups",
-        "array_agg(to_jsonb(product_images)) AS images",
+        "to_jsonb(product_details) - 'product_id' - 'id' AS detail",
+        "array_agg(to_jsonb(product_images) - 'product_id') AS images",
         "array_agg(to_jsonb(tags)) AS tags",
       ])
-      .addSelect(
-        "FLOOR(((base_price - sale_price) * 100.0) / base_price)",
-        "product_prices_discount_percentage",
-      )
-      .addSelect("ROUND(AVG(reviews.rating), 1)", "rating_average")
-      .addSelect("COUNT(reviews.id)", "review_count")
-      .addSelect(`COUNT(CASE WHEN reviews.rating = 1 THEN 1 END)`, "rating_1")
-      .addSelect(`COUNT(CASE WHEN reviews.rating = 2 THEN 1 END)`, "rating_2")
-      .addSelect(`COUNT(CASE WHEN reviews.rating = 3 THEN 1 END)`, "rating_3")
-      .addSelect(`COUNT(CASE WHEN reviews.rating = 4 THEN 1 END)`, "rating_4")
-      .addSelect(`COUNT(CASE WHEN reviews.rating = 5 THEN 1 END)`, "rating_5");
+      .addSelect((subQuery) => {
+        return subQuery
+          .select(
+            `jsonb_build_object(
+              'base_price', price.base_price,
+              'sale_price', price.sale_price,
+              'currency', price.currency,
+              'tax_rate', price.tax_rate,
+              'discount_percentage', FLOOR(((price.base_price - price.sale_price) * 100.0) / price.base_price)
+              )`,
+            "price",
+          )
+          .from(ProductPriceEntity, "price")
+          .where("price.product_id = products.id");
+      }, "price")
+      .addSelect((subQuery) => {
+        return subQuery
+          .select(
+            `array_agg(jsonb_build_object(
+              'id', categories.id,
+              'name', categories.name,
+              'slug', categories.slug,
+              'is_primary', product_categories.is_primary,
+              'parent', jsonb_build_object(
+                'id', parent.id,
+                'name', parent.name,
+                'slug', parent.slug
+              ))
+            )`,
+            "categories",
+          )
+          .from(ProductCategoryEntity, "product_categories")
+          .innerJoin(CategoryEntity, "categories", "categories.id = product_categories.category_id")
+          .leftJoin(CategoryEntity, "parent", "parent.id = categories.parent_id")
+          .where("product_categories.product_id = products.id")
+          .groupBy("product_categories.product_id");
+      }, "categories")
+      .addSelect((subQuery) => {
+        return subQuery
+          .select(
+            `array_agg(jsonb_build_object(
+              'id', product_option_groups.id,
+              'name', product_option_groups.name,
+              'display_order', product_option_groups.display_order,
+              'options', (
+                SELECT jsonb_agg(to_jsonb(product_options) - 'option_group_id')
+                FROM product_options product_options
+                WHERE product_options.option_group_id = product_option_groups.id
+              ))
+            )`,
+            "option_groups",
+          )
+          .from(ProductOptionGroupEntity, "product_option_groups")
+          .leftJoin(
+            ProductOptionEntity,
+            "product_options",
+            "product_options.option_group_id = product_option_groups.id",
+          )
+          .where("product_option_groups.product_id = products.id")
+          .groupBy("product_option_groups.id")
+          .addGroupBy("product_option_groups.name")
+          .addGroupBy("product_option_groups.display_order");
+      }, "option_groups")
+      .addSelect((subQuery) => {
+        return subQuery
+          .select(
+            `jsonb_build_object(
+              'average', ROUND(AVG(reviews.rating), 1),
+              'count', COUNT(reviews.id),
+              'distribution', jsonb_build_object(
+                '5', COUNT(CASE WHEN reviews.rating = 5 THEN 1 END),
+                '4', COUNT(CASE WHEN reviews.rating = 4 THEN 1 END),
+                '3', COUNT(CASE WHEN reviews.rating = 3 THEN 1 END),
+                '2', COUNT(CASE WHEN reviews.rating = 2 THEN 1 END),
+                '1', COUNT(CASE WHEN reviews.rating = 1 THEN 1 END)
+                )
+              )`,
+            "rating",
+          )
+          .from(ReviewEntity, "reviews")
+          .where("reviews.product_id = products.id");
+      }, "rating")
+      .groupBy("products.id")
+      .addGroupBy("sellers")
+      .addGroupBy("brands")
+      .addGroupBy("product_details");
   },
 })
 export default class ProductDetailView {
@@ -118,104 +139,35 @@ export default class ProductDetailView {
   @ViewColumn() slug: string;
   @ViewColumn() short_description: string;
   @ViewColumn() full_description: string;
-
-  @ViewColumn() sellers_id: number;
-  @ViewColumn() sellers_name: string;
-  @ViewColumn() sellers_description: string;
-  @ViewColumn() sellers_logo_url: string;
-  @ViewColumn() sellers_rating: number;
-  @ViewColumn() sellers_contact_email: string;
-  @ViewColumn() sellers_contact_phone: string;
-
-  @ViewColumn() brands_id: number;
-  @ViewColumn() brands_name: string;
-  @ViewColumn() brands_description: string;
-  @ViewColumn() brands_logo_url: string;
-  @ViewColumn() brands_website: string;
-
   @ViewColumn() status: string;
   @ViewColumn() created_at: Date;
   @ViewColumn() updated_at: Date;
 
-  @ViewColumn() product_details_weight: number;
-  @ViewColumn() product_details_dimensions: object;
-  @ViewColumn() product_details_materials: string;
-  @ViewColumn() product_details_country_of_origin: string;
-  @ViewColumn() product_details_warranty_info: string;
-  @ViewColumn() product_details_care_instructions: string;
-  @ViewColumn() product_details_additional_info: object;
+  @ViewColumn() seller: SellerEntity;
 
-  @ViewColumn() product_prices_base_price: number;
-  @ViewColumn() product_prices_sale_price: number;
-  @ViewColumn() product_prices_currency: string;
-  @ViewColumn() product_prices_tax_rate: number;
-  @ViewColumn() product_prices_discount_percentage: number;
+  @ViewColumn() brand: BrandEntity;
+
+  @ViewColumn() detail: ProductDetailEntity;
+
+  @ViewColumn() price: ProductPriceEntity & { discount_percentage: number };
 
   @ViewColumn() categories: ProductCategoryEntity[];
+
   @ViewColumn() option_groups: ProductOptionGroupEntity[];
+
   @ViewColumn() images: ProductImageEntity[];
+
   @ViewColumn() tags: TagEntity[];
 
-  @ViewColumn() rating_average: number;
-  @ViewColumn() review_count: number;
-  @ViewColumn() rating_1: number;
-  @ViewColumn() rating_2: number;
-  @ViewColumn() rating_3: number;
-  @ViewColumn() rating_4: number;
-  @ViewColumn() rating_5: number;
-
-  get seller() {
-    return {
-      id: this.sellers_id,
-      name: this.sellers_name,
-      description: this.sellers_description,
-      logo_url: this.sellers_logo_url,
-      rating: this.sellers_rating,
-      contact_email: this.sellers_contact_email,
-      contact_phone: this.sellers_contact_phone,
+  @ViewColumn() rating: {
+    average: number;
+    count: number;
+    distribution: {
+      "5": number;
+      "4": number;
+      "3": number;
+      "2": number;
+      "1": number;
     };
-  }
-  get brand() {
-    return {
-      id: this.brands_id,
-      name: this.brands_name,
-      description: this.brands_description,
-      logo_url: this.brands_logo_url,
-      website: this.brands_website,
-    };
-  }
-  get detail() {
-    return {
-      weight: this.product_details_weight,
-      dimensions: this.product_details_dimensions,
-      materials: this.product_details_materials,
-      country_of_origin: this.product_details_country_of_origin,
-      warranty_info: this.product_details_warranty_info,
-      care_instructions: this.product_details_care_instructions,
-      additional_info: this.product_details_additional_info,
-    };
-  }
-  get price() {
-    return {
-      base_price: this.product_prices_base_price,
-      sale_price: this.product_prices_sale_price,
-      currency: this.product_prices_currency,
-      tax_rate: this.product_prices_tax_rate,
-      discount_percentage: this.product_prices_discount_percentage,
-    };
-  }
-
-  get rating() {
-    return {
-      average: this.rating_average,
-      count: this.review_count,
-      distribution: {
-        1: this.rating_1,
-        2: this.rating_2,
-        3: this.rating_3,
-        4: this.rating_4,
-        5: this.rating_5,
-      },
-    };
-  }
+  };
 }
