@@ -2,7 +2,6 @@ package com.example.wanted_preonboarding_challenge_backend_31.shared.dto.categor
 
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.category.Category;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductCategory;
-import java.util.Optional;
 
 public record CategoryInfoDto(
         Long id,
@@ -14,19 +13,12 @@ public record CategoryInfoDto(
 
     public static CategoryInfoDto from(ProductCategory productCategory) {
         Category category = productCategory.getCategory();
-        CategoryParentDto parentDto = Optional.ofNullable(category.getParentCategory())
-                .map(parent -> new CategoryParentDto(
-                        parent.getId(),
-                        parent.getName(),
-                        parent.getSlug())
-                )
-                .orElse(null);
         return new CategoryInfoDto(
                 category.getId(),
                 category.getName(),
                 category.getSlug(),
                 productCategory.isPrimary(),
-                parentDto
+                CategoryParentDto.from(category.getParentCategory())
         );
     }
 }
