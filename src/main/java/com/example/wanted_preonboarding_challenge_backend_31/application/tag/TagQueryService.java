@@ -5,6 +5,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.common.exception.Co
 import com.example.wanted_preonboarding_challenge_backend_31.common.exception.CustomException;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.tag.Tag;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.tag.TagRepository;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.tag.TagDetailDto;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,5 +37,11 @@ public class TagQueryService {
                     ErrorInfo.of(CommonErrorType.RESOURCE_NOT_FOUND,
                             "요청한 태그를 찾을 수 없습니다, 찾지 못한 ID:" + missingIds));
         }
+    }
+
+    public List<TagDetailDto> getAllDetailByProductTagIds(List<Long> productTagIds) {
+        return tagRepository.findAllById(productTagIds).stream()
+                .map(TagDetailDto::from)
+                .toList();
     }
 }

@@ -11,6 +11,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.p
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductOptionGroupRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductOptionRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductRepository;
+import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductTagRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDetailDto;
 import java.util.List;
@@ -28,6 +29,7 @@ public class ProductQueryService {
     private final ProductOptionGroupRepository productOptionGroupRepository;
     private final ProductCategoryRepository productCategoryRepository;
     private final ProductImageRepository productImageRepository;
+    private final ProductTagRepository productTagRepository;
 
     public Product getProductById(Long id) {
         return productRepository.findById(id)
@@ -67,5 +69,9 @@ public class ProductQueryService {
         return productImageRepository.findAllByProductId(productId).stream()
                 .map(ProductImageDetailDto::from)
                 .toList();
+    }
+
+    public List<Long> getAllProductTagIdByProductId(Long productId) {
+        return productTagRepository.findAllIdsByProductId(productId);
     }
 }
