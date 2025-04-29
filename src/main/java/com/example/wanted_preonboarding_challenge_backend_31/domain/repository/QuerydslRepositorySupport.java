@@ -81,6 +81,9 @@ public abstract class QuerydslRepositorySupport {
         return queryFactory().selectFrom(from);
     }
 
+    /**
+     * @param sort 기본값: 최신순(createdAt:desc)
+     */
     protected <T> OrderSpecifier<?>[] createOrderSpecifier(String sort) {
         if (sort == null || sort.isBlank()) {
             return getDefaultOrderSpecifier();
@@ -97,7 +100,7 @@ public abstract class QuerydslRepositorySupport {
             String fieldName = ParseUtil.snakeToCamelCase(parts[0]);
             String direction = parts[1];
 
-            Order orderDirection = "desc".equalsIgnoreCase(direction) ? Order.DESC : Order.ASC;
+            Order orderDirection = "asc".equalsIgnoreCase(direction) ? Order.ASC : Order.DESC;
             orderSpecifiers.add(
                     new OrderSpecifier<>(orderDirection, pathBuilder.getComparable(fieldName, Comparable.class)));
         }
