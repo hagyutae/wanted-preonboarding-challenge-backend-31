@@ -12,7 +12,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.p
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductOptionRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.product.ProductTagRepository;
-import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryDetailDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryInfoDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDetailDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -59,9 +59,9 @@ public class ProductQueryService {
         return productOptionRepository.findProductOptionGroupIdById(optionId);
     }
 
-    public List<CategoryDetailDto> getAllProductCategoryByProductId(Long productId) {
+    public List<CategoryInfoDto> getAllProductCategoryByProductId(Long productId) {
         return productCategoryRepository.findAllByProductId(productId).stream()
-                .map(CategoryDetailDto::from)
+                .map(CategoryInfoDto::from)
                 .toList();
     }
 

@@ -4,7 +4,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.model.catego
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductCategory;
 import java.util.Optional;
 
-public record CategoryDetailDto(
+public record CategoryInfoDto(
         Long id,
         String name,
         String slug,
@@ -12,7 +12,7 @@ public record CategoryDetailDto(
         CategoryParentDto parent
 ) {
 
-    public static CategoryDetailDto from(ProductCategory productCategory) {
+    public static CategoryInfoDto from(ProductCategory productCategory) {
         Category category = productCategory.getCategory();
         CategoryParentDto parentDto = Optional.ofNullable(category.getParentCategory())
                 .map(parent -> new CategoryParentDto(
@@ -21,7 +21,7 @@ public record CategoryDetailDto(
                         parent.getSlug())
                 )
                 .orElse(null);
-        return new CategoryDetailDto(
+        return new CategoryInfoDto(
                 category.getId(),
                 category.getName(),
                 category.getSlug(),

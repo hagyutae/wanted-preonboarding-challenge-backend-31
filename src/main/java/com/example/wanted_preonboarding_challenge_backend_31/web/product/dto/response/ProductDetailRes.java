@@ -2,7 +2,7 @@ package com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.re
 
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductStatus;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.brand.BrandDetailDto;
-import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryDetailDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryInfoDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionGroupDetailDto;
@@ -27,7 +27,7 @@ public record ProductDetailRes(
         LocalDateTime updatedAt,
         ProductDetailDto detail,
         ProductPriceDetailDto price,
-        List<CategoryDetailDto> categories,
+        List<CategoryInfoDto> categories,
         List<ProductOptionGroupDetailDto> optionGroups,
         List<ProductImageDetailDto> images,
         List<TagDetailDto> tags,
@@ -36,7 +36,7 @@ public record ProductDetailRes(
 ) {
 
     public static ProductDetailRes assembly(ProductDetailRes base, ProductPriceDetailDto price,
-                                            List<CategoryDetailDto> categories,
+                                            List<CategoryInfoDto> categories,
                                             List<ProductOptionGroupDetailDto> optionGroups,
                                             List<ProductImageDetailDto> images, List<TagDetailDto> tags,
                                             ProductRatingDetailDto rating, List<ProductRelatedDto> relatedProducts) {
