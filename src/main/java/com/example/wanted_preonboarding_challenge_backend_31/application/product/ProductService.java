@@ -1,10 +1,12 @@
 package com.example.wanted_preonboarding_challenge_backend_31.application.product;
 
+import com.example.wanted_preonboarding_challenge_backend_31.application.category.CategoryComplexQueryService;
 import com.example.wanted_preonboarding_challenge_backend_31.common.util.CalculatorUtil;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.Product;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductImage;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOption;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOptionGroup;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductOptionDto;
@@ -21,6 +23,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.res
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +36,7 @@ public class ProductService {
     private final ProductCommandService productCommandService;
     private final ProductQueryService productQueryService;
     private final ProductComplexQueryService productComplexQueryService;
+    private final CategoryComplexQueryService categoryComplexQueryService;
 
     public ProductCreateRes create(ProductCreateReq req) {
         Product product = productCommandService.saveProduct(req);
@@ -69,8 +73,10 @@ public class ProductService {
 
         ProductPriceDetailDto newPriceDetailDto = ProductPriceDetailDto.from(base.price(),
                 CalculatorUtil.calculateDiscountPercentage(base.price().basePrice(), base.price().salePrice()));
+        List<CategoryDetailDto> categoryDetails = categoryComplexQueryService.getCategoryDetailsByProductId(
+                productId);
 
-        return ProductDetailRes.assembly(base, newPriceDetailDto, null, null, null, null, null, null);
+        return ProductDetailRes.assembly(base, newPriceDetailDto, categoryDetails, null, null, null, null, null);
     }
 
     public void delete(Long productId) {
