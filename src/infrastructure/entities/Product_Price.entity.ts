@@ -4,7 +4,7 @@ import ProductEntity from "./Product.entity";
 
 @Entity("product_prices")
 export default class ProductPriceEntity {
-  @PrimaryGeneratedColumn("increment")
+  @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: number;
 
   @OneToOne(() => ProductEntity, (product) => product.id, {

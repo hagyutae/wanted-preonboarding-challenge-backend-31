@@ -5,7 +5,7 @@ import ProductOptionEntity from "./Product_Option.entity";
 
 @Entity("product_images")
 export default class ProductImageEntity {
-  @PrimaryGeneratedColumn("increment")
+  @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: number;
 
   @ManyToOne(() => ProductEntity, { onDelete: "CASCADE" })

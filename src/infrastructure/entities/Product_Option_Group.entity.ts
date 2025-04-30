@@ -4,7 +4,7 @@ import ProductEntity from "./Product.entity";
 
 @Entity("product_option_groups")
 export default class ProductOptionGroupEntity {
-  @PrimaryGeneratedColumn("increment")
+  @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: number;
 
   @ManyToOne(() => ProductEntity, { onDelete: "CASCADE" })

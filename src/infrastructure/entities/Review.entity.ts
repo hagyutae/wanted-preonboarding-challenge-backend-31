@@ -13,7 +13,7 @@ import UserEntity from "./User.entity";
 
 @Entity("reviews")
 export default class ReviewEntity {
-  @PrimaryGeneratedColumn("increment")
+  @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: number;
 
   @ManyToOne(() => ProductEntity, { onDelete: "CASCADE" })

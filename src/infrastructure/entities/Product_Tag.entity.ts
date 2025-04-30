@@ -5,7 +5,7 @@ import TagEntity from "./Tag.entity";
 
 @Entity("product_tags")
 export default class ProductTagEntity {
-  @PrimaryGeneratedColumn("increment")
+  @PrimaryGeneratedColumn("increment", { type: "bigint" })
   id: number;
 
   @ManyToOne(() => ProductEntity, (product) => product.id, {
