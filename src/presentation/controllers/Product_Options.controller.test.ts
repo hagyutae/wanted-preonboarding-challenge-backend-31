@@ -56,11 +56,11 @@ describe("ProductOptionsController", () => {
         option_group_id: param.option_id,
         ...body,
       } as Product_Option;
-      mockService.find = jest.fn().mockResolvedValue(data);
+      mockService.update = jest.fn().mockResolvedValue(data);
 
       const result = await mockController.update_option(param, body);
 
-      expect(mockService.find).toHaveBeenCalledWith(param.id, param.option_id, body);
+      expect(mockService.update).toHaveBeenCalledWith(param.id, param.option_id, body);
       expect(result).toEqual({
         success: true,
         data: {
@@ -76,11 +76,11 @@ describe("ProductOptionsController", () => {
   describe("deleteOptions", () => {
     it("상품 옵션 삭제 성공", async () => {
       const param = { id: 1, option_id: 2 };
-      mockService.edit = jest.fn().mockResolvedValue(undefined);
+      mockService.remove = jest.fn().mockResolvedValue(undefined);
 
       const result = await mockController.delete_option(param);
 
-      expect(mockService.edit).toHaveBeenCalledWith(param.id, param.option_id);
+      expect(mockService.remove).toHaveBeenCalledWith(param.id, param.option_id);
       expect(result).toEqual({
         success: true,
         data: null,

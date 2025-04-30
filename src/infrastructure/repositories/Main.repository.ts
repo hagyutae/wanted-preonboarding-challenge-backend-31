@@ -1,14 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
+import IMainRepository from "src/domain/repositories/IMainRepository";
 import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "src/infrastructure/entities";
 import { ProductSummaryView } from "src/infrastructure/views";
 
 @Injectable()
-export default class MainRepository {
+export default class MainRepository implements IMainRepository {
   constructor(private readonly entity_manager: EntityManager) {}
 
-  async get_new_products(page: number, per_page: number) {
+  async get_new_products(page: number, per_page: number): Promise<ProductSummaryView[]> {
     const products = await this.entity_manager.find(ProductSummaryView, {
       order: { created_at: "DESC" },
       skip: (page - 1) * per_page,
@@ -18,7 +19,7 @@ export default class MainRepository {
     return products;
   }
 
-  async get_popular_products() {
+  async get_popular_products(): Promise<ProductSummaryView[]> {
     const query = this.entity_manager
       .getRepository(ProductSummaryView)
       .createQueryBuilder("summary")
@@ -28,7 +29,7 @@ export default class MainRepository {
     return await query.getMany();
   }
 
-  async get_featured_categories() {
+  async get_featured_categories(): Promise<CategoryEntity[]> {
     const query = this.entity_manager
       .getRepository(CategoryEntity)
       .createQueryBuilder("categories")

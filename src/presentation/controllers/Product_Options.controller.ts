@@ -44,7 +44,7 @@ export default class ProductOptionsController {
     @Param() { id, option_id }: OptionParamDTO,
     @Body() body: OptionBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.service.find(id, option_id, body);
+    const data = await this.service.update(id, option_id, body);
 
     return {
       success: true,
@@ -60,7 +60,7 @@ export default class ProductOptionsController {
   @ApiBadRequestResponse("상품 옵션 삭제에 실패했습니다.")
   @Delete(":id/options/:option_id")
   async delete_option(@Param() { id, option_id }: OptionParamDTO): Promise<ResponseDTO> {
-    await this.service.edit(id, option_id);
+    await this.service.remove(id, option_id);
 
     return {
       success: true,

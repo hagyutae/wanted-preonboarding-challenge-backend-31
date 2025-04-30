@@ -5,6 +5,7 @@ export default class Product_Option {
     public sku: string,
     public stock: number,
     public display_order: number,
+    public option_group_id?: number,
     public id?: number,
   ) {}
 }

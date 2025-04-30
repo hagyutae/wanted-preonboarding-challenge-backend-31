@@ -62,7 +62,7 @@ describe("ProductOptionsService", () => {
       entityManager.merge = jest.fn().mockReturnValue(mergedEntity);
       entityManager.save = jest.fn().mockResolvedValue(mergedEntity);
 
-      const result = await service.find(id, option_id, updateData);
+      const result = await service.update(id, option_id, updateData);
 
       expect(entityManager.findOne).toHaveBeenCalledWith(ProductOptionEntity, {
         where: { id: option_id },
@@ -82,7 +82,7 @@ describe("ProductOptionsService", () => {
       const id = 1;
       const option_id = 200;
 
-      await service.edit(id, option_id);
+      await service.remove(id, option_id);
 
       expect(entityManager.delete).toHaveBeenCalledWith(ProductOptionEntity, option_id);
     });

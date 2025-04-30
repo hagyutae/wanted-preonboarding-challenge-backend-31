@@ -2,22 +2,17 @@ import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import { Product } from "src/domain/entities";
+import IRepository from "src/domain/repositories/IRepository";
 import { ProductEntity } from "../entities";
 import { ProductDetailView, ProductSummaryView } from "../views";
 
 @Injectable()
-export default class ProductRepository {
+export default class ProductRepository
+  implements IRepository<Product, ProductEntity | ProductSummaryView>
+{
   constructor(private readonly entity_manager: EntityManager) {}
 
-  async save({
-    product,
-    seller_id,
-    brand_id,
-  }: {
-    product: Product;
-    seller_id: number;
-    brand_id: number;
-  }) {
+  async save({ seller_id, brand_id, ...product }: Product): Promise<ProductEntity> {
     return this.entity_manager.save(ProductEntity, {
       ...product,
       seller: { id: seller_id },
@@ -49,7 +44,7 @@ export default class ProductRepository {
     seller?: number;
     brand?: number;
     search?: string;
-  }) {
+  }): Promise<ProductSummaryView[]> {
     // 상품 집계 처리 쿼리
     const query = this.entity_manager
       .getRepository(ProductSummaryView)
@@ -69,22 +64,11 @@ export default class ProductRepository {
     return await query.getMany();
   }
 
-  async get_by_id(id: number) {
+  async find_by_id(id: number): Promise<ProductDetailView | null> {
     return this.entity_manager.findOne(ProductDetailView, { where: { id } });
   }
 
-  async update(
-    id: number,
-    {
-      product,
-      seller_id,
-      brand_id,
-    }: {
-      product: Product;
-      seller_id: number;
-      brand_id: number;
-    },
-  ) {
+  async update({ seller_id, brand_id, ...product }: Product, id: number): Promise<ProductEntity> {
     return await this.entity_manager.save(ProductEntity, {
       ...product,
       id,
@@ -95,5 +79,9 @@ export default class ProductRepository {
 
   async delete(id: number) {
     await this.entity_manager.delete(ProductEntity, id);
+  }
+
+  saves(param: Product[]): Promise<(ProductEntity | ProductSummaryView)[]> {
+    throw new Error("Method not implemented.");
   }
 }

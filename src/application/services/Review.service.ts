@@ -46,11 +46,11 @@ export default class ReviewService {
   }
 
   async register(product_id: number, review: Omit<Review, "product_id">) {
-    return this.repository.save(product_id, review);
+    return this.repository.save({ product_id, ...review });
   }
 
   async edit(id: number, review: Omit<Review, "product_id">) {
-    return this.repository.update(id, review);
+    return this.repository.update(review, id);
   }
 
   async remove(id: number) {

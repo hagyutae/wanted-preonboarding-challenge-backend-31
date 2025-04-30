@@ -13,17 +13,21 @@ export default class ProductOptionsService {
   async register(
     id: number,
     option_group_id: number,
-    options: Product_Option,
+    option: Omit<Product_Option, "option_group_id">,
   ): Promise<Product_Option> {
-    return this.repository.save(id, option_group_id, options);
+    return this.repository.save({ option_group_id, ...option });
   }
 
-  async find(id: number, option_id: number, options: Product_Option): Promise<Product_Option> {
-    return this.repository.update(id, option_id, options);
+  async update(
+    product_id: number,
+    option_id: number,
+    options: Omit<Product_Option, "option_group_id">,
+  ): Promise<Product_Option> {
+    return this.repository.update(options, option_id);
   }
 
-  async edit(id: number, option_id: number): Promise<void> {
-    await this.repository.delete(id, option_id);
+  async remove(product_id: number, option_id: number): Promise<void> {
+    await this.repository.delete(option_id);
   }
 
   async register_images(

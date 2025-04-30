@@ -32,7 +32,7 @@ export default class CategoryService {
     }
 
     // 카테고리 정보 조회
-    const categories = await this.repository.get_all_categories();
+    const categories = await this.repository.find_by_filters();
 
     // 카테고리 트리 구조로 변환
     return build_tree(categories, level);
@@ -43,10 +43,7 @@ export default class CategoryService {
     { page = 1, per_page = 10, sort = "created_at:desc", has_sub = true }: FilterDTO,
   ) {
     // 카테고리 정보 조회
-    const category = await this.repository.get({
-      category_id,
-      has_sub,
-    });
+    const category = await this.repository.find_by_id(category_id, has_sub);
 
     const items = await this.repository.get_products_by_category_id({
       category_id,

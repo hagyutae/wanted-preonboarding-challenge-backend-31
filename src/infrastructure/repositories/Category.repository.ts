@@ -1,32 +1,21 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager, SelectQueryBuilder } from "typeorm";
 
-import { Product_Category } from "src/domain/entities";
+import IRepository from "src/domain/repositories/IRepository";
 import { CategoryEntity, ProductCategoryEntity } from "src/infrastructure/entities";
 import { ProductSummaryView } from "src/infrastructure/views";
 
 @Injectable()
-export default class CategoryRepository {
+export default class CategoryRepository implements IRepository<CategoryEntity, CategoryEntity> {
   constructor(private readonly entity_manager: EntityManager) {}
 
-  async save(categories: Product_Category[], product_id: number) {
-    return await this.entity_manager.save(
-      ProductCategoryEntity,
-      categories.map(({ category_id, is_primary }) => ({
-        category: { id: category_id } as ProductCategoryEntity,
-        is_primary,
-        product: { id: product_id } as ProductCategoryEntity,
-      })),
-    );
-  }
-
-  async get_all_categories() {
+  async find_by_filters() {
     return this.entity_manager.find(CategoryEntity, {
       relations: ["parent"],
     });
   }
 
-  async get({ category_id, has_sub }: { category_id: number; has_sub?: boolean }) {
+  async find_by_id(category_id: number, has_sub?: boolean) {
     return this.entity_manager.findOne(CategoryEntity, {
       where: { id: category_id },
       relations: has_sub ? ["parent"] : undefined,
@@ -63,5 +52,18 @@ export default class CategoryRepository {
       .take(per_page);
 
     return await query.getMany();
+  }
+
+  save(param: CategoryEntity): Promise<CategoryEntity> {
+    throw new Error("Method not implemented.");
+  }
+  saves(param: CategoryEntity[]): Promise<CategoryEntity[]> {
+    throw new Error("Method not implemented.");
+  }
+  update(param: CategoryEntity, id: number): Promise<void | CategoryEntity> {
+    throw new Error("Method not implemented.");
+  }
+  delete(id: number): Promise<void> {
+    throw new Error("Method not implemented.");
   }
 }
