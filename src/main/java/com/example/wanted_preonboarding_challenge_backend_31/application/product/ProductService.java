@@ -21,12 +21,14 @@ import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.req
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductImageCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductReviewSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductDetailRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductImageCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductReviewSearchRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
 import java.util.List;
@@ -136,5 +138,10 @@ public class ProductService {
 
         ProductImage productImage = productCommandService.saveProductImage(product, ProductImageDto.from(req));
         return ProductImageCreateRes.from(productImage, req.optionId());
+    }
+
+    public ProductReviewSearchRes searchReview(Long productId, PaginationReq paginationReq,
+                                               ProductReviewSearchReq req) {
+        return null;
     }
 }

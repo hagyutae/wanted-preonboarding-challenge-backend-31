@@ -7,6 +7,7 @@ import static com.example.wanted_preonboarding_challenge_backend_31.web.product.
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_CREATE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_DELETE;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_OPTION_UPDATE;
+import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_REVIEW_SEARCH;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_SEARCH;
 import static com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.ProductSuccessType.PRODUCT_UPDATE;
 
@@ -17,12 +18,14 @@ import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.req
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductImageCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductReviewSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductDetailRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductImageCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductReviewSearchRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
 import jakarta.validation.constraints.Min;
@@ -113,5 +116,17 @@ public class ProductController {
             @RequestBody @Validated ProductImageCreateReq productImageCreateReq
     ) {
         return SuccessRes.of(PRODUCT_IMAGE_CREATE, productService.createImage(productId, productImageCreateReq));
+    }
+
+    @GetMapping("/{id}/reviews")
+    public SuccessRes<ProductReviewSearchRes> reviewSearch(
+            @PathVariable("id") Long productId,
+            @RequestParam(name = "page", defaultValue = "1") @Min(1) int page,
+            @RequestParam(name = "perPage", defaultValue = "10") @Min(1) int perPage,
+            @ModelAttribute @Validated ProductReviewSearchReq productReviewSearchReq
+    ) {
+        PaginationReq paginationReq = new PaginationReq(page, perPage);
+        return SuccessRes.of(PRODUCT_REVIEW_SEARCH,
+                productService.searchReview(productId, paginationReq, productReviewSearchReq));
     }
 }
