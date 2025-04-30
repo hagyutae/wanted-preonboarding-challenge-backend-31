@@ -2,25 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import { ReviewEntity } from "src/infrastructure/entities";
+import { FilterDTO } from "../dto";
 
 @Injectable()
 export default class ReviewService {
   constructor(private readonly entity_manager: EntityManager) {}
 
-  async get(
-    product_id: number,
-    {
-      page = 1,
-      perPage = 10,
-      sort,
-      rating,
-    }: {
-      page?: number;
-      perPage?: number;
-      sort?: string;
-      rating?: number;
-    },
-  ) {
+  async get(product_id: number, { page = 1, per_page = 10, sort, rating }: FilterDTO) {
     const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
 
     const query = this.entity_manager
@@ -30,8 +18,8 @@ export default class ReviewService {
       .andWhere("reviews.product_id = :product_id", { product_id })
       .andWhere(rating ? "reviews.rating = :rating" : "1=1", { rating })
       .orderBy(`reviews.${field}`, order.toUpperCase() as "ASC" | "DESC")
-      .skip((page - 1) * perPage)
-      .take(perPage);
+      .skip((page - 1) * per_page)
+      .take(per_page);
 
     const reviews = await query.getMany();
     const summary = {
@@ -52,9 +40,9 @@ export default class ReviewService {
       summary,
       pagination: {
         total_items: reviews.length,
-        total_pages: Math.ceil(reviews.length / perPage),
+        total_pages: Math.ceil(reviews.length / per_page),
         current_page: page,
-        per_page: perPage,
+        per_page: per_page,
       },
     };
   }

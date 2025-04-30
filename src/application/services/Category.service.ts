@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import { CategoryEntity } from "src/infrastructure/entities";
+import { FilterDTO } from "../dto";
 
 @Injectable()
 export default class CategoryService {
@@ -36,17 +37,7 @@ export default class CategoryService {
 
   async get_products_by_category_id(
     category_id: number,
-    {
-      page = 1,
-      perPage = 10,
-      sort = "created_at:desc",
-      has_sub = true,
-    }: {
-      page?: number;
-      perPage?: number;
-      sort?: string;
-      has_sub?: boolean;
-    },
+    { page = 1, per_page = 10, sort = "created_at:desc", has_sub = true }: FilterDTO,
   ) {
     const category = await this.entityManager.findOne(CategoryEntity, {
       where: { id: category_id },
@@ -61,8 +52,8 @@ export default class CategoryService {
       .where("1 = 1")
       .andWhere("categories.id = :category_id", { category_id })
       .orderBy(`products.${field}`, order.toUpperCase() as "ASC" | "DESC")
-      .skip((page - 1) * perPage)
-      .take(perPage);
+      .skip((page - 1) * per_page)
+      .take(per_page);
 
     const items = await query.getMany();
 
@@ -71,9 +62,9 @@ export default class CategoryService {
       items,
       pagination: {
         total_items: items.length,
-        total_pages: Math.ceil(items.length / perPage),
+        total_pages: Math.ceil(items.length / per_page),
         current_page: page,
-        per_page: perPage,
+        per_page: per_page,
       },
     };
   }

@@ -4,6 +4,7 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CategoryService } from "src/application/services";
 import { FiltersByCategoryDTO, ResponseDTO } from "../dto";
 import { ApiStandardResponse, ApiErrorResponse, ApiBadRequestResponse } from "../decorators";
+import { to_FilterDTO } from "../mappers";
 
 @ApiTags("카테고리")
 @Controller("categories")
@@ -33,7 +34,7 @@ export default class CategoryController {
     @Param() { id }: { id: number },
     @Query() query: FiltersByCategoryDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.service.get_products_by_category_id(id, query);
+    const data = await this.service.get_products_by_category_id(id, to_FilterDTO(query));
 
     return {
       success: true,

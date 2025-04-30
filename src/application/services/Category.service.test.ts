@@ -133,7 +133,7 @@ describe("CategoryService", () => {
 
       const result = await service.get_products_by_category_id(1, {
         page: 1,
-        perPage: 2,
+        per_page: 2,
         sort: "created_at:desc",
         has_sub: true,
       });

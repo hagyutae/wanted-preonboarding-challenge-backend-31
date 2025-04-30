@@ -9,6 +9,7 @@ import {
   ApiErrorResponse,
   ApiStandardResponse,
 } from "../decorators";
+import { to_FilterDTO } from "../mappers";
 
 @ApiTags("상품 관리")
 @Controller("products")
@@ -35,7 +36,7 @@ export default class ProductController {
   @ApiBadRequestResponse("상품 목록 조회에 실패했습니다.")
   @Get()
   async read_all(@Query() query: ProductQueryDTO): Promise<ResponseDTO> {
-    const data = await this.service.get_all(query);
+    const data = await this.service.get_all(to_FilterDTO(query));
 
     return {
       success: true,

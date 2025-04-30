@@ -52,7 +52,7 @@ describe("ProductService", () => {
         option_groups: [] as Product_Option_Group[],
         images: [] as Product_Image[],
         tags: [] as number[],
-      };
+      } as ProductInputDTO;
       const mockSavedProduct = { id: 1, ...mockProductInput };
 
       entityManager.findOne = jest
@@ -76,7 +76,7 @@ describe("ProductService", () => {
         entityManager.getRepository(ProductEntity).createQueryBuilder().getMany as jest.Mock
       ).mockResolvedValue(mockProducts);
 
-      const result = await service.get_all({ page: 1, perPage: 10 });
+      const result = await service.get_all({ page: 1, per_page: 10 });
 
       expect(result.items).toEqual(mockProducts);
       expect(result.pagination).toEqual({

@@ -15,25 +15,23 @@ import {
   SellerEntity,
 } from "src/infrastructure/entities";
 import { ProductDetailView, ProductSummaryView } from "src/infrastructure/views";
-import { ProductInputDTO } from "../dto";
+import { ProductInputDTO, FilterDTO } from "../dto";
 
 @Injectable()
 export default class ProductService {
   constructor(private readonly entity_manager: EntityManager) {}
 
-  async create(params: any) {
-    const {
-      detail,
-      price,
-      categories,
-      option_groups,
-      images,
-      tags: tag_ids,
-      seller_id,
-      brand_id,
-      ...product
-    }: ProductInputDTO = params;
-
+  async create({
+    detail,
+    price,
+    categories,
+    option_groups,
+    images,
+    tags: tag_ids,
+    seller_id,
+    brand_id,
+    ...product
+  }: ProductInputDTO) {
     const seller = await this.entity_manager.findOne(SellerEntity, { where: { id: seller_id } });
 
     if (!seller) {
@@ -121,28 +119,16 @@ export default class ProductService {
 
   async get_all({
     page = 1,
-    perPage = 10,
+    per_page = 10,
     sort,
     status,
-    minPrice,
-    maxPrice,
+    min_price,
+    max_price,
     category,
     seller,
     brand,
     search,
-  }: {
-    page?: number;
-    perPage?: number;
-    sort?: string;
-    status?: string;
-    minPrice?: number;
-    maxPrice?: number;
-    category?: number[];
-    seller?: number;
-    brand?: number;
-    inStock?: boolean;
-    search?: string;
-  }) {
+  }: FilterDTO) {
     // 상품 집계 처리 쿼리
     const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
 
@@ -150,15 +136,15 @@ export default class ProductService {
       .getRepository(ProductSummaryView)
       .createQueryBuilder("summary")
       .andWhere(status ? "summary.status = :status" : "1=1", { status })
-      .andWhere(minPrice ? "summary.base_price >= :minPrice" : "1=1", { minPrice })
-      .andWhere(maxPrice ? "summary.base_price <= :maxPrice" : "1=1", { maxPrice })
+      .andWhere(min_price ? "summary.base_price >= :minPrice" : "1=1", { minPrice: min_price })
+      .andWhere(max_price ? "summary.base_price <= :maxPrice" : "1=1", { maxPrice: max_price })
       .andWhere(category ? "summary.id IN (:...category)" : "1=1", { category })
       .andWhere(seller ? "summary.seller->>'id' = :seller" : "1=1", { seller })
       .andWhere(brand ? "summary.brand->>'id' = :brand" : "1=1", { brand })
       .andWhere(search ? "summary.name LIKE :search" : "1=1", { search: `%${search}%` })
       .orderBy(`summary.${field}`, order.toUpperCase() as "ASC" | "DESC")
-      .offset((page - 1) * perPage)
-      .limit(perPage);
+      .offset((page - 1) * per_page)
+      .limit(per_page);
 
     // 쿼리 실행
     const items = await query.getMany();
@@ -167,9 +153,9 @@ export default class ProductService {
       items,
       pagination: {
         total_items: items.length,
-        total_pages: Math.ceil(items.length / perPage),
+        total_pages: Math.ceil(items.length / per_page),
         current_page: page,
-        per_page: perPage,
+        per_page: per_page,
       },
     };
   }

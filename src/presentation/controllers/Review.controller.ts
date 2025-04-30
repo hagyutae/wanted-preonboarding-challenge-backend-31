@@ -10,6 +10,7 @@ import {
   ApiForbiddenResponse,
   ApiStandardResponse,
 } from "../decorators";
+import { to_FilterDTO } from "../mappers";
 
 @ApiTags("리뷰")
 @Controller("reviews")
@@ -25,7 +26,7 @@ export default class ReviewController {
     @Param() { id }: ProductParamDTO,
     @Query() query: ReviewQueryDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.service.get(id, query);
+    const data = await this.service.get(id, to_FilterDTO(query));
 
     return {
       success: true,

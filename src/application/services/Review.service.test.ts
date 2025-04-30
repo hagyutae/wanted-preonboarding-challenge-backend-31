@@ -53,7 +53,7 @@ describe("ReviewService", () => {
 
       mockEntityManager.getRepository = jest.fn().mockReturnValue(mockRepository);
 
-      const result = await service.get(product_id, { page: 1, perPage: 10 });
+      const result = await service.get(product_id, { page: 1, per_page: 10 });
 
       expect(mockQueryBuilder.where).toHaveBeenCalledWith("1 = 1");
       expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith("reviews.product_id = :product_id", {
