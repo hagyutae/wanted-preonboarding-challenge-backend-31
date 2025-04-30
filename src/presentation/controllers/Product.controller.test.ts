@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { ProductService } from "src/application/services";
 import { ProductEntity } from "src/infrastructure/entities";
+import { ProductDetailView, ProductSummaryView } from "src/infrastructure/views";
 import { BodyDTO, ProductParamDTO, ProductQueryDTO, ResponseDTO } from "../dto";
 import ProductController from "./Product.controller";
 
@@ -54,10 +55,9 @@ describe("ProductController", () => {
         name: "상품1",
         slug: "product-1",
         created_at: new Date(),
-        updated_at: new Date(),
         status: "available",
       },
-    ] as ProductEntity[];
+    ] as ProductSummaryView[];
     const pagination = { total_items: 1, total_pages: 1, current_page: 1, per_page: 10 };
     const response: ResponseDTO = {
       success: true,
@@ -82,7 +82,7 @@ describe("ProductController", () => {
       created_at: new Date(),
       updated_at: new Date(),
       status: "available",
-    } as ProductEntity;
+    } as ProductDetailView;
     const response: ResponseDTO = {
       success: true,
       data,
@@ -107,7 +107,7 @@ describe("ProductController", () => {
       created_at: new Date(),
       updated_at: new Date(),
       status: "available",
-    } as ProductEntity;
+    } as ProductDetailView;
     const response: ResponseDTO = {
       success: true,
       data,

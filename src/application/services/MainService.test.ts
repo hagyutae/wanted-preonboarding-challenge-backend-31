@@ -64,19 +64,30 @@ describe("MainService", () => {
 
   describe("getPopularProducts", () => {
     it("인기 상품 목록 조회 성공", async () => {
-      const data = [{ id: 1, name: "인기 상품" }] as CategoryEntity[];
-      mockQueryBuilder.getRawMany = jest.fn().mockReturnValue(data);
+      const mockPopularProducts = [
+        { id: 1, name: "인기 상품 1", rating: 4.9 },
+        { id: 2, name: "인기 상품 2", rating: 4.8 },
+      ];
+      mockQueryBuilder.getMany = jest.fn().mockResolvedValue(mockPopularProducts);
 
       const result = await service.getPopularProducts();
 
-      expect(result).toEqual(data);
+      expect(result).toEqual(mockPopularProducts);
     });
   });
 
   describe("getFeaturedCategories", () => {
     it("추천 카테고리 목록 조회 성공", async () => {
-      const mockCategories = [{ id: 1, name: "추천 카테고리" }] as CategoryEntity[];
-      mockEntityManager.find = jest.fn().mockResolvedValue(mockCategories);
+      const mockCategories = [
+        {
+          id: 1,
+          name: "추천 카테고리",
+          slug: "featured-category",
+          image_url: "http://example.com/image.jpg",
+          product_count: "10",
+        },
+      ];
+      mockQueryBuilder.getRawMany = jest.fn().mockResolvedValue(mockCategories);
 
       const result = await service.getFeaturedCategories();
 

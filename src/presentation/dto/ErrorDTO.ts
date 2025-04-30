@@ -4,17 +4,6 @@ export interface ErrorDetails {
   [key: string]: any;
 }
 
-export default class ErrorDTO {
-  @ApiProperty({ description: "요청 성공 여부", example: false })
-  success: boolean;
-
-  @ApiProperty({
-    description: "공통 에러 코드",
-    type: () => ErrorObject,
-  })
-  error: ErrorObject;
-}
-
 export enum ErrorCode {
   INVALID_INPUT = "INVALID_INPUT", // 잘못된 입력 데이터 (400)
   RESOURCE_NOT_FOUND = "RESOURCE_NOT_FOUND", // 요청한 리소스를 찾을 수 없음 (404)
@@ -40,4 +29,15 @@ class ErrorObject {
     type: Object,
   })
   details?: ErrorDetails;
+}
+
+export default class ErrorDTO {
+  @ApiProperty({ description: "요청 성공 여부", example: false })
+  success: boolean;
+
+  @ApiProperty({
+    description: "공통 에러 코드",
+    type: () => ErrorObject,
+  })
+  error: ErrorObject;
 }

@@ -30,6 +30,8 @@ describe("ProductService", () => {
                 orderBy: jest.fn().mockReturnThis(),
                 skip: jest.fn().mockReturnThis(),
                 take: jest.fn().mockReturnThis(),
+                offset: jest.fn().mockReturnThis(),
+                limit: jest.fn().mockReturnThis(),
                 getMany: jest.fn(),
               }),
             }),
