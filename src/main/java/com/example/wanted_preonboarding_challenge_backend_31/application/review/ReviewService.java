@@ -23,6 +23,8 @@ public class ReviewService {
     }
 
     public void delete(Long reviewId) {
+        Review review = reviewQueryService.getReviewById(reviewId);
 
+        reviewCommandService.deleteReview(review);
     }
 }

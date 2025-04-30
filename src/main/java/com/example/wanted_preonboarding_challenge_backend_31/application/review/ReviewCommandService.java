@@ -33,4 +33,8 @@ public class ReviewCommandService {
         review.update(req.rating(), req.title(), req.content());
         return reviewRepository.save(review);
     }
+
+    public void deleteReview(Review review) {
+        reviewRepository.delete(review);
+    }
 }
