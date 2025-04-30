@@ -1,8 +1,9 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { CategoryService } from "src/application/services";
 import { FiltersByCategoryDTO, ResponseDTO } from "../dto";
+import { ApiStandardResponse } from "../decorators";
 
 @ApiTags("카테고리")
 @Controller("categories")
@@ -10,12 +11,7 @@ export default class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @ApiOperation({ summary: "카테고리 목록 조회" })
-  @ApiResponse({
-    status: 200,
-    description: "카테고리 목록을 성공적으로 조회했습니다.",
-    type: "object",
-    isArray: true,
-  })
+  @ApiStandardResponse("카테고리 목록을 성공적으로 조회했습니다.")
   @Get()
   async readCategories(@Query() { level }: { level: number }): Promise<ResponseDTO> {
     const data = await this.categoryService.getAllCategoriesAsTree(level);
@@ -28,12 +24,7 @@ export default class CategoryController {
   }
 
   @ApiOperation({ summary: "특정 카테고리의 상품 목록 조회" })
-  @ApiResponse({
-    status: 200,
-    description: "특정 카테고리의 상품 목록을 성공적으로 조회했습니다.",
-    type: "object",
-    isArray: true,
-  })
+  @ApiStandardResponse("특정 카테고리의 상품 목록을 성공적으로 조회했습니다.")
   @Get(":id/products")
   async readProducts(
     @Param() { id }: { id: number },

@@ -3,6 +3,7 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { ProductOptionsService } from "src/application/services";
 import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO, ProductParamDTO, ResponseDTO } from "../dto";
+import { ApiCreatedResponse, ApiStandardResponse } from "../decorators";
 
 @ApiTags("상품 옵션 관리")
 @Controller("products")
@@ -11,11 +12,7 @@ export default class ProductOptionsController {
 
   @ApiOperation({ summary: "상품 옵션 추가" })
   @ApiParam({ name: "id", description: "상품 ID" })
-  @ApiResponse({
-    status: 201,
-    description: "상품 옵션이 성공적으로 추가되었습니다.",
-    type: ResponseDTO,
-  })
+  @ApiCreatedResponse("상품 옵션이 성공적으로 추가되었습니다.")
   @Post(":id/options")
   async addOptions(
     @Param() { id }: ProductParamDTO,
@@ -33,11 +30,7 @@ export default class ProductOptionsController {
   @ApiOperation({ summary: "상품 옵션 수정" })
   @ApiParam({ name: "id", description: "상품 ID" })
   @ApiParam({ name: "option_id", description: "옵션 ID" })
-  @ApiResponse({
-    status: 200,
-    description: "상품 옵션이 성공적으로 수정되었습니다.",
-    type: ResponseDTO,
-  })
+  @ApiStandardResponse("상품 옵션이 성공적으로 수정되었습니다.")
   @Put(":id/options/:option_id")
   async updateOptions(
     @Param() { id, option_id }: OptionParamDTO,
@@ -55,11 +48,7 @@ export default class ProductOptionsController {
   @ApiOperation({ summary: "상품 옵션 삭제" })
   @ApiParam({ name: "id", description: "상품 ID" })
   @ApiParam({ name: "option_id", description: "옵션 ID" })
-  @ApiResponse({
-    status: 200,
-    description: "상품 옵션이 성공적으로 삭제되었습니다.",
-    type: ResponseDTO,
-  })
+  @ApiStandardResponse("상품 옵션이 성공적으로 삭제되었습니다.")
   @Delete(":id/options/:option_id")
   async deleteOptions(@Param() { id, option_id }: OptionParamDTO): Promise<ResponseDTO> {
     await this.productOptionsService.deleteOptions(id, option_id);
@@ -73,11 +62,7 @@ export default class ProductOptionsController {
 
   @ApiOperation({ summary: "상품 이미지 추가" })
   @ApiParam({ name: "id", description: "상품 ID" })
-  @ApiResponse({
-    status: 201,
-    description: "상품 이미지가 성공적으로 추가되었습니다.",
-    type: ResponseDTO,
-  })
+  @ApiCreatedResponse("상품 이미지가 성공적으로 추가되었습니다.")
   @Post(":id/images")
   async addImages(
     @Param() { id }: OptionParamDTO,
