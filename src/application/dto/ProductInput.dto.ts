@@ -8,11 +8,11 @@ import {
 } from "src/domain/entities";
 
 type ProductInputDTO = {
-  detail: Product_Detail;
-  price: Product_Price;
-  categories: Product_Category[];
-  option_groups: Product_Option_Group[];
-  images: Product_Image[];
+  detail: Omit<Product_Detail, "product_id">;
+  price: Omit<Product_Price, "product_id">;
+  categories: Omit<Product_Category, "product_id">[];
+  option_groups: Omit<Product_Option_Group, "product_id">[];
+  images: Omit<Product_Image, "product_id">[];
   tags: number[];
   seller_id: number;
   brand_id: number;

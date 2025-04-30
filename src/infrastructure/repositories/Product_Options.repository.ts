@@ -33,8 +33,4 @@ export default class ProductOptionsRepository {
   async delete(id: number, option_id: number): Promise<void> {
     await this.entity_manager.delete(ProductOptionEntity, option_id);
   }
-
-  async save_images(id: number, option_id: number, image: Product_Image) {
-    return this.product_image_repository.save(image, id, option_id);
-  }
 }

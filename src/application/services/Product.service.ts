@@ -39,24 +39,34 @@ export default class ProductService {
           seller_id,
           brand_id,
         });
+        const { id: product_id } = product_entity;
 
         // 상품 상세 등록
-        await new ProductDetailRepository(manager).save(detail, product_entity.id);
+        await new ProductDetailRepository(manager).save({ ...detail, product_id });
 
         // 상품 가격 등록
-        await new ProductPriceRepository(manager).save(price, product_entity.id);
+        await new ProductPriceRepository(manager).save({ ...price, product_id });
 
         // 상품 카테고리 등록
-        await new ProductCategoryRepository(manager).save(categories, product_entity.id);
+        await new ProductCategoryRepository(manager).save(
+          categories.map((category) => ({ ...category, product_id })),
+        );
 
         // 상품 옵션 등록
-        await new ProductOptionGroupRepository(manager).save(option_groups, product_entity.id);
+        await new ProductOptionGroupRepository(manager).save(
+          option_groups.map((group) => ({ ...group, product_id })),
+        );
 
         // 상품 이미지 등록
-        await new ProductImageRepository(manager).saves(images, product_entity.id);
+        await new ProductImageRepository(manager).saves(
+          images.map((image) => ({ ...image, product_id })),
+        );
 
         // 상품 태그 등록
-        await new ProductTagRepository(manager).save(tag_ids, product_entity.id);
+        await new ProductTagRepository(manager).save(
+          product_id,
+          tag_ids.map((tag_id) => ({ tag_id })),
+        );
 
         return product_entity;
       });
@@ -100,22 +110,24 @@ export default class ProductService {
   }
 
   async edit(
-    id: number,
+    product_id: number,
     { detail, seller_id, brand_id, price, categories, ...product }: ProductInputDTO,
   ) {
     try {
       const updated_product_entity = await this.entity_manager.transaction(async (manager) => {
         // 상품 디테일 업데이트
-        await new ProductDetailRepository(manager).update(detail, id);
+        await new ProductDetailRepository(manager).update({ ...detail, product_id });
 
         // 상품 가격 업데이트
-        await new ProductPriceRepository(manager).update(price, id);
+        await new ProductPriceRepository(manager).update({ ...price, product_id });
 
         // 상품 카테고리 업데이트
-        await new ProductCategoryRepository(manager).update(categories, id);
+        await new ProductCategoryRepository(manager).update(
+          categories.map((category) => ({ ...category, product_id })),
+        );
 
         // 상품 제품 업데이트
-        const updated_product_entity = await new ProductRepository(manager).update(id, {
+        const updated_product_entity = await new ProductRepository(manager).update(product_id, {
           seller_id,
           brand_id,
           product,

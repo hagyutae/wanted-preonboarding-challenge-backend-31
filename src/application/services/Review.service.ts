@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
-import { ReviewEntity } from "src/infrastructure/entities";
+import { Review } from "src/domain/entities";
 import { ReviewRepository } from "src/infrastructure/repositories";
 import { FilterDTO } from "../dto";
 
@@ -11,7 +11,7 @@ export default class ReviewService {
   async find(product_id: number, { page = 1, per_page = 10, sort, rating }: FilterDTO) {
     const [sort_field, sort_order] = sort?.split(":") ?? ["created_at", "DESC"];
 
-    const reviews = await this.repository.find({
+    const reviews = await this.repository.find_by_filters({
       product_id,
       page,
       per_page,
@@ -45,11 +45,11 @@ export default class ReviewService {
     };
   }
 
-  async register(product_id: number, review: Partial<ReviewEntity>) {
+  async register(product_id: number, review: Omit<Review, "product_id">) {
     return this.repository.save(product_id, review);
   }
 
-  async edit(id: number, review: Partial<ReviewEntity>) {
+  async edit(id: number, review: Omit<Review, "product_id">) {
     return this.repository.update(id, review);
   }
 

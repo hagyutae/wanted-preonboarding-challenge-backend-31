@@ -82,7 +82,7 @@ describe("CategoryService", () => {
 
       mockEntityManager.find.mockResolvedValue(mockCategories);
 
-      const result = await service.find_all_as_tre();
+      const result = await service.find_all_as_tree();
 
       expect(mockEntityManager.find).toHaveBeenCalledWith(CategoryEntity, {
         relations: ["parent"],

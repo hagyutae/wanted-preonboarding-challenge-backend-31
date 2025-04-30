@@ -8,8 +8,8 @@ import { ProductOptionEntity, ProductOptionGroupEntity } from "../entities";
 export default class ProductOptionGroupRepository {
   constructor(private readonly entity_manager: EntityManager) {}
 
-  async save(option_groups: Product_Option_Group[], product_id: number) {
-    for (const { options, ...group_entity } of option_groups) {
+  async save(option_groups: Product_Option_Group[]) {
+    for (const { options, product_id, ...group_entity } of option_groups) {
       // 상품 옵션 그룹 등록
       const option_group_entity = await this.entity_manager.save(ProductOptionGroupEntity, {
         ...group_entity,

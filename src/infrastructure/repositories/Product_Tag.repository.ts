@@ -1,16 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
+import { Product_Tag } from "src/domain/entities";
 import { ProductTagEntity } from "../entities";
 
 @Injectable()
 export default class ProductTagRepository {
   constructor(private readonly entity_manager: EntityManager) {}
 
-  async save(tag_ids: number[], product_id: number) {
+  async save(product_id: number, product_tags: Omit<Product_Tag, "product_id">[]) {
     return await this.entity_manager.save(
       ProductTagEntity,
-      tag_ids.map((tag_id) => ({
+      product_tags.map(({ tag_id }) => ({
         product: { id: product_id },
         tag: { id: tag_id },
       })),

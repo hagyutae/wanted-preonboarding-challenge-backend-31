@@ -30,11 +30,11 @@ describe("CategoryController", () => {
     it("카테고리 목록 조회 성공", async () => {
       const level = 2;
       const data = [{ id: 1, name: "Category 1" }];
-      mockService.find_all_as_tre = jest.fn().mockResolvedValue(data);
+      mockService.find_all_as_tree = jest.fn().mockResolvedValue(data);
 
       const result = await mockController.read_categories({ level });
 
-      expect(mockService.find_all_as_tre).toHaveBeenCalledWith(level);
+      expect(mockService.find_all_as_tree).toHaveBeenCalledWith(level);
       expect(result).toEqual({
         success: true,
         data,

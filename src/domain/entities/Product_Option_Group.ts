@@ -5,6 +5,7 @@ export default class Product_Option_Group {
     public name: string,
     public display_order: number,
     public options: Product_Option[],
+    public product_id: number,
     public id?: number,
   ) {}
 }

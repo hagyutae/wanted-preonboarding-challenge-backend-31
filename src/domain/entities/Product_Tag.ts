@@ -1,8 +1,7 @@
-import Tag from "./Tag";
-
 export default class Product_Tag {
   constructor(
-    public tag: Tag,
+    public tag_id: number,
+    public product_id: number,
     public id?: number,
   ) {}
 }

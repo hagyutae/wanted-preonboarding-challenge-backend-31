@@ -8,14 +8,14 @@ import { ProductPriceEntity } from "../entities";
 export default class ProductPriceRepository {
   constructor(private readonly entity_manager: EntityManager) {}
 
-  async save(price: Product_Price, product_id: number) {
+  async save({ product_id, ...price }: Product_Price) {
     return await this.entity_manager.save(ProductPriceEntity, {
       ...price,
       product: { id: product_id },
     });
   }
 
-  async update(price: Product_Price, product_id: number) {
+  async update({ product_id, ...price }: Product_Price) {
     return await this.entity_manager.update(
       ProductPriceEntity,
       { product: { id: product_id } },

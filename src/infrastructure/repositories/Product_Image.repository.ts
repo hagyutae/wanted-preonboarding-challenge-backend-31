@@ -8,18 +8,15 @@ import { ProductImageEntity } from "../entities";
 export default class ProductImageRepository {
   constructor(private readonly entity_manager: EntityManager) {}
 
-  async save(image: Product_Image, product_id: number, option_id: number) {
+  async save({ product_id, option_id, ...image }: Product_Image) {
     return await this.entity_manager.save(ProductImageEntity, {
       ...image,
       product: { id: product_id },
-      option: { id: option_id },
+      option: { id: option_id ?? undefined },
     });
   }
 
-  async saves(images: Product_Image[], product_id: number) {
-    return await this.entity_manager.save(
-      ProductImageEntity,
-      images.map((image) => ({ image, product: { id: product_id } })),
-    );
+  async saves(images: Product_Image[]) {
+    return await this.entity_manager.save(ProductImageEntity, images);
   }
 }

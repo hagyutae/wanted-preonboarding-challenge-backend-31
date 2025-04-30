@@ -7,6 +7,7 @@ export default class Product_Detail {
     public warranty_info: string,
     public care_instructions: string,
     public additional_info: object,
+    public product_id: number,
     public id?: number,
   ) {}
 }

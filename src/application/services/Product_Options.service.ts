@@ -1,11 +1,14 @@
 import { Injectable } from "@nestjs/common";
 
 import { Product_Image, Product_Option } from "src/domain/entities";
-import ProductOptionsRepository from "src/infrastructure/repositories/Product_Options.repository";
+import { ProductImageRepository, ProductOptionsRepository } from "src/infrastructure/repositories";
 
 @Injectable()
 export default class ProductOptionsService {
-  constructor(private readonly repository: ProductOptionsRepository) {}
+  constructor(
+    private readonly repository: ProductOptionsRepository,
+    private readonly product_image_repository: ProductImageRepository,
+  ) {}
 
   async register(
     id: number,
@@ -26,11 +29,15 @@ export default class ProductOptionsService {
   async register_images(
     id: number,
     option_id: number,
-    image: Product_Image,
-  ): Promise<Product_Image> {
-    const image_entity = await this.repository.save_images(id, option_id, image);
+    image: Omit<Product_Image, "product_id" | "option_id">,
+  ) {
+    const image_entity = await this.product_image_repository.save({
+      product_id: id,
+      option_id,
+      ...image,
+    });
 
     // 이미지 저장 결과 반환
-    return (({ product, option, ...rest }) => ({ ...rest }))(image_entity);
+    return (({ product, option, ...rest }) => ({ ...rest, option_id: option.id }))(image_entity);
   }
 }

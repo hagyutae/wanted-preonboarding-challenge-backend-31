@@ -8,7 +8,7 @@ import { FilterDTO } from "../dto";
 export default class CategoryService {
   constructor(private readonly repository: CategoryRepository) {}
 
-  async find_all_as_tre(level: number = 1) {
+  async find_all_as_tree(level: number = 1) {
     function build_tree(
       categories: CategoryEntity[],
       level: number, // 1: 대분류, 2: 중분류, 3: 소분류

@@ -46,13 +46,7 @@ describe("ProductService", () => {
 
   describe("create", () => {
     it("상품 생성", async () => {
-      const mockProductInput = {
-        name: "Product Name",
-        categories: [] as Product_Category[],
-        option_groups: [] as Product_Option_Group[],
-        images: [] as Product_Image[],
-        tags: [] as number[],
-      } as ProductInputDTO;
+      const mockProductInput = { name: "Product Name" } as ProductInputDTO;
       const mockSavedProduct = { id: 1, ...mockProductInput };
 
       entityManager.findOne = jest

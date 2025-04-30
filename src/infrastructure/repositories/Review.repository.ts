@@ -1,13 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
+import { Review } from "src/domain/entities";
 import { ReviewEntity } from "src/infrastructure/entities";
 
 @Injectable()
 export default class ReviewRepository {
   constructor(private readonly entity_manager: EntityManager) {}
 
-  async find({
+  async find_by_filters({
     product_id,
     page = 1,
     per_page = 10,
@@ -36,7 +37,7 @@ export default class ReviewRepository {
     return await query.getMany();
   }
 
-  async save(product_id: number, review: Partial<ReviewEntity>) {
+  async save(product_id: number, review: Omit<Review, "product_id">) {
     const review_entity = this.entity_manager.create(ReviewEntity, {
       ...review,
       product: { id: product_id },
@@ -44,7 +45,7 @@ export default class ReviewRepository {
     return this.entity_manager.save(review_entity);
   }
 
-  async update(id: number, review: Partial<ReviewEntity>) {
+  async update(id: number, review: Omit<Review, "product_id">) {
     await this.entity_manager.update(ReviewEntity, id, review);
 
     const updated_review = await this.entity_manager.findOne(ReviewEntity, { where: { id } });
