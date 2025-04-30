@@ -21,6 +21,7 @@ export default class ReviewEntity {
   product: ProductEntity;
 
   @ManyToOne(() => UserEntity, { onDelete: "SET NULL", nullable: true })
+  @JoinColumn({ name: "user_id" })
   user: UserEntity;
 
   @Column({ type: "int", nullable: false })

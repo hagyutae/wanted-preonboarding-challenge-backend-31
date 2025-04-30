@@ -14,6 +14,7 @@ export default class ReviewService {
     const query = this.entity_manager
       .getRepository(ReviewEntity)
       .createQueryBuilder("reviews")
+      .leftJoinAndSelect("reviews.user", "user")
       .where("1 = 1")
       .andWhere("reviews.product_id = :product_id", { product_id })
       .andWhere(rating ? "reviews.rating = :rating" : "1=1", { rating })
