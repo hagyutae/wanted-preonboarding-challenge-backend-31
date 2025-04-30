@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  database:
+    image: postgres:14
+    container_name: database
+    networks:
+      - network
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pswd
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d
+
+  server:
+    depends_on:
+      - database
+    image: wanted-preonboarding-challenge-backend-31
+    container_name: server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - network
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=database
+
+networks:
+  network:
+    driver: bridge
