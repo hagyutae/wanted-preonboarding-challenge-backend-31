@@ -45,5 +45,6 @@ public class Seller {
 
     // 등록일
     @CreationTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 }

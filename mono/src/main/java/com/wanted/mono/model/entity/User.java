@@ -27,5 +27,6 @@ public class User {
     private String avatarUrl;
 
     @CreationTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 }

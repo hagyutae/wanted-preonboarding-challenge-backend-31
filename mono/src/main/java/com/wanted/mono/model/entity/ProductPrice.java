@@ -15,7 +15,6 @@ public class ProductPrice {
     // 가격 ID (PK)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_price_id")
     private Long id;
 
     // 상품 ID (FK)
@@ -36,7 +35,8 @@ public class ProductPrice {
     private BigDecimal costPrice;
 
     // 통화 (기본값 KRW)
-    private String currency = "KRW";
+    @Column(length = 3, columnDefinition = "VARCHAR(3) DEFAULT 'KRW'")
+    private String currency;
 
     // 세율
     @Column(precision = 5, scale = 2)

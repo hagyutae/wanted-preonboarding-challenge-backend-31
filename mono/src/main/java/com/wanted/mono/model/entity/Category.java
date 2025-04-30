@@ -48,7 +48,7 @@ public class Category {
 
     // 상품 카테고리들
     // 카테고리 삭제 시 같이 삭제됨
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProductCategory> productCategories = new ArrayList<>();
 }
 

@@ -21,7 +21,7 @@ public class ProductDetail {
     private Long id;
 
     // 상품 ID (FK)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
@@ -30,7 +30,7 @@ public class ProductDetail {
     private BigDecimal weight;
 
     // 크기 (JSON)
-    @Lob
+    @Column(columnDefinition = "JSONB")
     private String dimensions;
 
     // 소재 정보
@@ -47,6 +47,6 @@ public class ProductDetail {
     private String careInstructions;
 
     // 추가 정보 (JSONB)
-    @Lob
+    @Column(columnDefinition = "JSONB")
     private String additionalInfo;
 }
