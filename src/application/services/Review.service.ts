@@ -1,28 +1,25 @@
 import { Injectable } from "@nestjs/common";
-import { EntityManager } from "typeorm";
 
 import { ReviewEntity } from "src/infrastructure/entities";
+import { ReviewRepository } from "src/infrastructure/repositories";
 import { FilterDTO } from "../dto";
 
 @Injectable()
 export default class ReviewService {
-  constructor(private readonly entity_manager: EntityManager) {}
+  constructor(private readonly repository: ReviewRepository) {}
 
-  async get(product_id: number, { page = 1, per_page = 10, sort, rating }: FilterDTO) {
-    const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
+  async find(product_id: number, { page = 1, per_page = 10, sort, rating }: FilterDTO) {
+    const [sort_field, sort_order] = sort?.split(":") ?? ["created_at", "DESC"];
 
-    const query = this.entity_manager
-      .getRepository(ReviewEntity)
-      .createQueryBuilder("reviews")
-      .leftJoinAndSelect("reviews.user", "user")
-      .where("1 = 1")
-      .andWhere("reviews.product_id = :product_id", { product_id })
-      .andWhere(rating ? "reviews.rating = :rating" : "1=1", { rating })
-      .orderBy(`reviews.${field}`, order.toUpperCase() as "ASC" | "DESC")
-      .skip((page - 1) * per_page)
-      .take(per_page);
+    const reviews = await this.repository.find({
+      product_id,
+      page,
+      per_page,
+      sort_field,
+      sort_order,
+      rating,
+    });
 
-    const reviews = await query.getMany();
     const summary = {
       average_rating:
         reviews.map((review) => review.rating).reduce((a, b) => a + b, 0) / reviews.length || 0,
@@ -48,22 +45,15 @@ export default class ReviewService {
     };
   }
 
-  async create(product_id: number, review: Partial<ReviewEntity>) {
-    const review_entity = this.entity_manager.create(ReviewEntity, {
-      ...review,
-      product: { id: product_id },
-    });
-    return this.entity_manager.save(review_entity);
+  async register(product_id: number, review: Partial<ReviewEntity>) {
+    return this.repository.save(product_id, review);
   }
 
-  async update(id: number, review: Partial<ReviewEntity>) {
-    await this.entity_manager.update(ReviewEntity, id, review);
-
-    const updated_review = await this.entity_manager.findOne(ReviewEntity, { where: { id } });
-    return updated_review;
+  async edit(id: number, review: Partial<ReviewEntity>) {
+    return this.repository.update(id, review);
   }
 
-  async delete(id: number) {
-    await this.entity_manager.delete(ReviewEntity, id);
+  async remove(id: number) {
+    return this.repository.delete(id);
   }
 }

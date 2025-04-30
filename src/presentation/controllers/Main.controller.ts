@@ -15,19 +15,11 @@ export default class MainController {
   @ApiStandardResponse("메인 페이지 상품 목록을 성공적으로 조회했습니다.")
   @Get()
   async read_main_products(): Promise<ResponseDTO> {
-    const new_products = await this.service.get_new_products();
-
-    const popular_products = await this.service.get_popular_products();
-
-    const featured_categories = await this.service.get_featured_categories();
+    const data = await this.service.find();
 
     return {
       success: true,
-      data: {
-        new_products,
-        popular_products,
-        featured_categories,
-      },
+      data,
       message: "메인 페이지 상품 목록을 성공적으로 조회했습니다.",
     };
   }

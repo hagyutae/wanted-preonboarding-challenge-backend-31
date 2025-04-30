@@ -25,7 +25,7 @@ export default class ProductOptionsController {
     @Param() { id }: ParamDTO,
     @Body() { option_group_id, ...body }: OptionBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.service.add_options(id, option_group_id!, body);
+    const data = await this.service.register(id, option_group_id!, body);
 
     return {
       success: true,
@@ -44,7 +44,7 @@ export default class ProductOptionsController {
     @Param() { id, option_id }: OptionParamDTO,
     @Body() body: OptionBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.service.update_options(id, option_id, body);
+    const data = await this.service.find(id, option_id, body);
 
     return {
       success: true,
@@ -60,7 +60,7 @@ export default class ProductOptionsController {
   @ApiBadRequestResponse("상품 옵션 삭제에 실패했습니다.")
   @Delete(":id/options/:option_id")
   async delete_option(@Param() { id, option_id }: OptionParamDTO): Promise<ResponseDTO> {
-    await this.service.delete_options(id, option_id);
+    await this.service.edit(id, option_id);
 
     return {
       success: true,
@@ -78,7 +78,7 @@ export default class ProductOptionsController {
     @Param() { id }: OptionParamDTO,
     @Body() body: ImageBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.service.add_images(id, body.option_id, body);
+    const data = await this.service.register_images(id, body.option_id, body);
 
     return {
       success: true,

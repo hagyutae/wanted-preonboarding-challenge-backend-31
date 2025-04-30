@@ -36,15 +36,15 @@ describe("MainController", () => {
       const mockPopularProducts = [{ id: 2, name: "인기 상품" }] as ProductSummaryView[];
       const mockFeaturedCategories = [{ id: 3, name: "추천 카테고리" }] as CategoryEntity[];
 
-      mockMainService.get_new_products.mockResolvedValue(mockNewProducts);
-      mockMainService.get_popular_products.mockResolvedValue(mockPopularProducts);
-      mockMainService.get_featured_categories.mockResolvedValue(mockFeaturedCategories);
+      mockMainService.find.mockResolvedValue({
+        new_products: mockNewProducts,
+        popular_products: mockPopularProducts,
+        featured_categories: mockFeaturedCategories,
+      });
 
       const result: ResponseDTO = await controller.read_main_products();
 
-      expect(mockMainService.get_new_products).toHaveBeenCalled();
-      expect(mockMainService.get_popular_products).toHaveBeenCalled();
-      expect(mockMainService.get_featured_categories).toHaveBeenCalled();
+      expect(mockMainService.find).toHaveBeenCalled();
       expect(result).toEqual({
         success: true,
         data: {

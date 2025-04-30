@@ -39,12 +39,12 @@ describe("ProductController", () => {
       message: "상품이 성공적으로 등록되었습니다.",
     } as ResponseDTO;
 
-    jest.spyOn(productService, "create").mockResolvedValue(response.data as ProductEntity);
+    jest.spyOn(productService, "register").mockResolvedValue(response.data as ProductEntity);
 
     const result = await productController.create(body);
 
     expect(result).toEqual(response);
-    expect(productService.create).toHaveBeenCalledWith(body);
+    expect(productService.register).toHaveBeenCalledWith(body);
   });
 
   it("모든 상품을 조회", async () => {
@@ -65,12 +65,12 @@ describe("ProductController", () => {
       message: "상품 목록을 성공적으로 조회했습니다.",
     };
 
-    jest.spyOn(productService, "get_all").mockResolvedValue({ items, pagination });
+    jest.spyOn(productService, "find_all").mockResolvedValue({ items, pagination });
 
     const result = await productController.read_all(query);
 
     expect(result).toEqual(response);
-    expect(productService.get_all).toHaveBeenCalledWith(query);
+    expect(productService.find_all).toHaveBeenCalledWith(query);
   });
 
   it("id로 상품을 조회", async () => {
@@ -89,12 +89,12 @@ describe("ProductController", () => {
       message: "상품 상세 정보를 성공적으로 조회했습니다.",
     };
 
-    jest.spyOn(productService, "get_by_id").mockResolvedValue(data);
+    jest.spyOn(productService, "find").mockResolvedValue(data);
 
     const result = await productController.read(param);
 
     expect(result).toEqual(response);
-    expect(productService.get_by_id).toHaveBeenCalledWith(param.id);
+    expect(productService.find).toHaveBeenCalledWith(param.id);
   });
 
   it("상품을 수정", async () => {
@@ -112,12 +112,12 @@ describe("ProductController", () => {
       message: "상품이 성공적으로 수정되었습니다.",
     };
 
-    jest.spyOn(productService, "update").mockResolvedValue(data);
+    jest.spyOn(productService, "edit").mockResolvedValue(data);
 
     const result = await productController.update(param, body);
 
     expect(result).toEqual(response);
-    expect(productService.update).toHaveBeenCalledWith(param.id, body);
+    expect(productService.edit).toHaveBeenCalledWith(param.id, body);
   });
 
   it("상품을 삭제", async () => {
@@ -128,11 +128,11 @@ describe("ProductController", () => {
       message: "상품이 성공적으로 삭제되었습니다.",
     };
 
-    jest.spyOn(productService, "delete").mockResolvedValue(undefined);
+    jest.spyOn(productService, "remove").mockResolvedValue(undefined);
 
     const result = await productController.delete(param);
 
     expect(result).toEqual(response);
-    expect(productService.delete).toHaveBeenCalledWith(param.id);
+    expect(productService.remove).toHaveBeenCalledWith(param.id);
   });
 });

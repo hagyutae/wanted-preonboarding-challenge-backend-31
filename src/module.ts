@@ -11,6 +11,13 @@ import {
 } from "./application/services";
 import typeormConfigProvider from "./infrastructure/provider";
 import {
+  CategoryRepository,
+  MainRepository,
+  ProductOptionsRepository,
+  ProductRepository,
+  ReviewRepository,
+} from "./infrastructure/repositories";
+import {
   CategoryController,
   MainController,
   ProductController,
@@ -26,7 +33,19 @@ import {
       envFilePath: [".env"],
     }),
   ],
-  providers: [ProductService, ProductOptionsService, CategoryService, ReviewService, MainService],
+  providers: [
+    ProductService,
+    ProductOptionsService,
+    CategoryService,
+    ReviewService,
+    MainService,
+
+    ProductRepository,
+    ProductOptionsRepository,
+    CategoryRepository,
+    ReviewRepository,
+    MainRepository,
+  ],
   controllers: [
     ProductController,
     ProductOptionsController,

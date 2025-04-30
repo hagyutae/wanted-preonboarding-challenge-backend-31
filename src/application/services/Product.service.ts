@@ -1,26 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { EntityManager } from "typeorm";
 
-import {
-  BrandEntity,
-  ProductCategoryEntity,
-  ProductDetailEntity,
-  ProductEntity,
-  ProductImageEntity,
-  ProductOptionEntity,
-  ProductOptionGroupEntity,
-  ProductPriceEntity,
-  ProductTagEntity,
-  SellerEntity,
-} from "src/infrastructure/entities";
-import { ProductDetailView, ProductSummaryView } from "src/infrastructure/views";
-import { ProductInputDTO, FilterDTO } from "../dto";
+import { ProductRepository } from "src/infrastructure/repositories";
+import { FilterDTO, ProductInputDTO } from "../dto";
 
 @Injectable()
 export default class ProductService {
-  constructor(private readonly entity_manager: EntityManager) {}
+  constructor(private readonly repository: ProductRepository) {}
 
-  async create({
+  async register({
     detail,
     price,
     categories,
@@ -31,188 +18,67 @@ export default class ProductService {
     brand_id,
     ...product
   }: ProductInputDTO) {
-    try {
-      const product_entity = await this.entity_manager.transaction(async (manager) => {
-        // 상품 등록
-        const product_entity = await manager.save(ProductEntity, {
-          ...product,
-          seller: { id: seller_id } as SellerEntity,
-          brand: { id: brand_id } as BrandEntity,
-        });
-
-        // 상품 상세 등록
-        await manager.save(ProductDetailEntity, {
-          ...detail,
-          product: product_entity,
-        });
-
-        // 상품 가격 등록
-        await manager.save(ProductPriceEntity, {
-          ...price,
-          product: product_entity,
-        });
-
-        // 상품 카테고리 등록
-        await manager.save(
-          ProductCategoryEntity,
-          categories.map(({ category_id, is_primary }) => ({
-            category: { id: category_id } as ProductCategoryEntity,
-            is_primary,
-            product: product_entity,
-          })),
-        );
-
-        // 상품 옵션 등록
-        for (const { options, ...group_entity } of option_groups) {
-          // 상품 옵션 그룹 등록
-          const option_group_entity = await manager.save(ProductOptionGroupEntity, {
-            ...group_entity,
-            product: product_entity,
-          });
-          await manager.save(option_group_entity);
-
-          // 상품 옵션 그룹에 속한 옵션 등록
-          await manager.save(
-            ProductOptionEntity,
-            options.map((option) => ({ ...option, option_group: option_group_entity })),
-          );
-        }
-
-        // 상품 이미지 등록
-        await manager.save(
-          ProductImageEntity,
-          images.map((image) => ({ ...image, product: product_entity })),
-        );
-
-        // 상품 태그 등록
-        await manager.save(
-          ProductTagEntity,
-          tag_ids.map((tag_id) => ({
-            tag: { id: tag_id } as ProductTagEntity,
-            product: product_entity,
-          })),
-        );
-
-        return product_entity;
-      });
-
-      // 상품 등록 결과 반환
-      return (({ id, name, slug, created_at, updated_at }) => ({
-        id,
-        name,
-        slug,
-        created_at,
-        updated_at,
-      }))(product_entity);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
+    return this.repository.save({
+      product,
+      detail,
+      price,
+      categories,
+      option_groups,
+      images,
+      tag_ids,
+      seller_id,
+      brand_id,
+    });
   }
 
-  async get_all({
-    page = 1,
-    per_page = 10,
-    sort,
-    status,
-    min_price,
-    max_price,
-    category,
-    seller,
-    brand,
-    search,
-  }: FilterDTO) {
-    // 상품 집계 처리 쿼리
-    const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
+  async find_all({ page = 1, per_page = 10, sort, ...rest }: FilterDTO) {
+    const [sort_field, sort_order] = sort?.split(":") ?? ["created_at", "DESC"];
 
-    const query = this.entity_manager
-      .getRepository(ProductSummaryView)
-      .createQueryBuilder("summary")
-      .andWhere(status ? "summary.status = :status" : "1=1", { status })
-      .andWhere(min_price ? "summary.base_price >= :minPrice" : "1=1", { minPrice: min_price })
-      .andWhere(max_price ? "summary.base_price <= :maxPrice" : "1=1", { maxPrice: max_price })
-      .andWhere(category ? "summary.id IN (:...category)" : "1=1", { category })
-      .andWhere(seller ? "summary.seller->>'id' = :seller" : "1=1", { seller })
-      .andWhere(brand ? "summary.brand->>'id' = :brand" : "1=1", { brand })
-      .andWhere(search ? "summary.name LIKE :search" : "1=1", { search: `%${search}%` })
-      .orderBy(`summary.${field}`, order.toUpperCase() as "ASC" | "DESC")
-      .offset((page - 1) * per_page)
-      .limit(per_page);
-
-    // 쿼리 실행
-    const items = await query.getMany();
+    const items = await this.repository.find_by_filters({
+      page,
+      per_page,
+      sort_field,
+      sort_order,
+      ...rest,
+    });
 
     // 페이지네이션 요약 정보
     const pagination = {
       total_items: items.length,
-      total_pages: Math.ceil(items.length / per_page),
-      current_page: page,
-      per_page: per_page,
+      total_pages: Math.ceil(items.length / (per_page ?? 10)),
+      current_page: page ?? 1,
+      per_page: per_page ?? 10,
     };
 
-    // 상품 목록 반환
     return { items, pagination };
   }
 
-  async get_by_id(id: number) {
-    return this.entity_manager.findOne(ProductDetailView, { where: { id } });
+  async find(id: number) {
+    return this.repository.get_by_id(id);
   }
 
-  async update(
+  async edit(
     id: number,
-    { seller_id, brand_id, detail, price, categories, ...product }: ProductInputDTO,
+    { detail, seller_id, brand_id, price, categories, ...product }: ProductInputDTO,
   ) {
-    try {
-      const updated_product_entity = await this.entity_manager.transaction(async (manager) => {
-        // 상품 디테일 업데이트
-        await manager
-          .createQueryBuilder()
-          .update(ProductDetailEntity)
-          .set({ ...detail })
-          .where("product_id = :product_id", { product_id: id })
-          .execute();
+    const updated_product_entity = await this.repository.update(id, {
+      product,
+      seller_id,
+      brand_id,
+      detail,
+      price,
+      categories,
+    });
 
-        // 상품 가격 업데이트
-        await manager
-          .createQueryBuilder()
-          .update(ProductPriceEntity)
-          .set({ ...price })
-          .where("product_id = :product_id", { product_id: id })
-          .execute();
-
-        // 상품 카테고리 업데이트
-        for (const { category_id, is_primary } of categories) {
-          await manager
-            .createQueryBuilder()
-            .update(ProductCategoryEntity)
-            .set({ is_primary, category: { id: category_id } })
-            .where("product_id = :product_id", { product_id: id })
-            .execute();
-        }
-
-        // 상품 제품 업데이트
-        const updated_product_entity = await manager.save(ProductEntity, {
-          id,
-          seller: { id: seller_id } as SellerEntity,
-          brand: { id: brand_id } as BrandEntity,
-          ...product,
-        });
-
-        return updated_product_entity;
-      });
-
-      // 상품 업데이트 결과 반환
-      return (({ id, name, slug, updated_at }) => ({
-        id,
-        name,
-        slug,
-        updated_at,
-      }))(updated_product_entity);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
+    return (({ id, name, slug, updated_at }) => ({
+      id,
+      name,
+      slug,
+      updated_at,
+    }))(updated_product_entity);
   }
 
-  async delete(id: number) {
-    await this.entity_manager.delete(ProductEntity, id);
+  async remove(id: number) {
+    return this.repository.delete(id);
   }
 }

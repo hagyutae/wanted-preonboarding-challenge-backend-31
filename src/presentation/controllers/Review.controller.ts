@@ -23,7 +23,7 @@ export default class ReviewController {
   @ApiBadRequestResponse("상품 리뷰 조회에 실패했습니다.")
   @Get(":id")
   async read(@Param() { id }: ParamDTO, @Query() query: ReviewQueryDTO): Promise<ResponseDTO> {
-    const data = await this.service.get(id, to_FilterDTO(query));
+    const data = await this.service.find(id, to_FilterDTO(query));
 
     return {
       success: true,
@@ -37,7 +37,7 @@ export default class ReviewController {
   @ApiBadRequestResponse("리뷰 작성에 실패했습니다.")
   @Post(":id")
   async create(@Param() { id }: ParamDTO, @Body() body: ReviewBodyDTO): Promise<ResponseDTO> {
-    const data = await this.service.create(id, body);
+    const data = await this.service.register(id, body);
 
     return {
       success: true,
@@ -51,7 +51,7 @@ export default class ReviewController {
   @ApiForbiddenResponse("다른 사용자의 리뷰를 수정할 권한이 없습니다.")
   @Put(":id")
   async update(@Param() { id }: ParamDTO, @Body() body: ReviewBodyDTO): Promise<ResponseDTO> {
-    const data = await this.service.update(id, body);
+    const data = await this.service.edit(id, body);
 
     return {
       success: true,
@@ -65,7 +65,7 @@ export default class ReviewController {
   @ApiForbiddenResponse("다른 사용자의 리뷰를 삭제할 권한이 없습니다.")
   @Delete(":id")
   async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
-    await this.service.delete(id);
+    await this.service.remove(id);
 
     return {
       success: true,

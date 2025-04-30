@@ -17,7 +17,7 @@ export default class CategoryController {
   @ApiBadRequestResponse("카테고리 목록 조회에 실패했습니다.")
   @Get()
   async read_categories(@Query() { level }: { level: number }): Promise<ResponseDTO> {
-    const data = await this.service.get_all_categories_as_tree(level);
+    const data = await this.service.find_all_as_tre(level);
 
     return {
       success: true,
@@ -34,7 +34,7 @@ export default class CategoryController {
     @Param() { id }: ParamDTO,
     @Query() query: FiltersByCategoryDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.service.get_products_by_category_id(id, to_FilterDTO(query));
+    const data = await this.service.find_products_by_category_id(id, to_FilterDTO(query));
 
     return {
       success: true,

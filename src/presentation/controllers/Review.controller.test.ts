@@ -34,11 +34,11 @@ describe("ReviewController", () => {
       const id = 1;
       const query: ReviewQueryDTO = { page: 1, perPage: 10 };
       const mockData = { items: [], summary: {}, pagination: {} };
-      mockReviewService.get = jest.fn().mockResolvedValue(mockData);
+      mockReviewService.find = jest.fn().mockResolvedValue(mockData);
 
       const result: ResponseDTO = await controller.read({ id } as ParamDTO, query);
 
-      expect(mockReviewService.get).toHaveBeenCalledWith(id, query);
+      expect(mockReviewService.find).toHaveBeenCalledWith(id, query);
       expect(result).toEqual({
         success: true,
         data: mockData,
@@ -52,11 +52,11 @@ describe("ReviewController", () => {
       const id = 1;
       const body: ReviewBodyDTO = { title: "좋은 상품", content: "만족합니다", rating: 5 };
       const mockData = { id: 1, ...body };
-      mockReviewService.create = jest.fn().mockResolvedValue(mockData);
+      mockReviewService.register = jest.fn().mockResolvedValue(mockData);
 
       const result: ResponseDTO = await controller.create({ id } as ParamDTO, body);
 
-      expect(mockReviewService.create).toHaveBeenCalledWith(id, body);
+      expect(mockReviewService.register).toHaveBeenCalledWith(id, body);
       expect(result).toEqual({
         success: true,
         data: mockData,
@@ -70,11 +70,11 @@ describe("ReviewController", () => {
       const id = 1;
       const body: ReviewBodyDTO = { title: "수정된 제목", content: "수정된 내용", rating: 4 };
       const mockData = { id, ...body };
-      mockReviewService.update = jest.fn().mockResolvedValue(mockData);
+      mockReviewService.edit = jest.fn().mockResolvedValue(mockData);
 
       const result: ResponseDTO = await controller.update({ id } as ParamDTO, body);
 
-      expect(mockReviewService.update).toHaveBeenCalledWith(id, body);
+      expect(mockReviewService.edit).toHaveBeenCalledWith(id, body);
       expect(result).toEqual({
         success: true,
         data: mockData,
@@ -86,11 +86,11 @@ describe("ReviewController", () => {
   describe("delete", () => {
     it("리뷰 삭제 성공", async () => {
       const id = 1;
-      mockReviewService.delete.mockResolvedValue(undefined);
+      mockReviewService.remove.mockResolvedValue(undefined);
 
       const result: ResponseDTO = await controller.delete({ id } as ParamDTO);
 
-      expect(mockReviewService.delete).toHaveBeenCalledWith(id);
+      expect(mockReviewService.remove).toHaveBeenCalledWith(id);
       expect(result).toEqual({
         success: true,
         data: null,

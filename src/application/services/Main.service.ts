@@ -1,57 +1,25 @@
 import { Injectable } from "@nestjs/common";
-import { EntityManager } from "typeorm";
 
-import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "src/infrastructure/entities";
-import { ProductSummaryView } from "src/infrastructure/views";
+import { MainRepository } from "src/infrastructure/repositories";
 
 @Injectable()
 export default class MainService {
-  constructor(private readonly entity_manager: EntityManager) {}
+  constructor(private readonly repository: MainRepository) {}
 
-  async get_new_products() {
+  async find() {
     const page = 1;
     const per_page = 5;
 
-    const products = await this.entity_manager.find(ProductSummaryView, {
-      order: { created_at: "DESC" },
-      skip: (page - 1) * per_page,
-      take: per_page,
-    });
+    const new_products = await this.repository.get_new_products(page, per_page);
 
-    return products;
-  }
+    const popular_products = await this.repository.get_popular_products();
 
-  async get_popular_products() {
-    const query = this.entity_manager
-      .getRepository(ProductSummaryView)
-      .createQueryBuilder("summary")
-      .orderBy("rating", "DESC")
-      .limit(5);
+    const featured_categories = await this.repository.get_featured_categories();
 
-    return await query.getMany();
-  }
-
-  async get_featured_categories() {
-    const query = this.entity_manager
-      .getRepository(CategoryEntity)
-      .createQueryBuilder("categories")
-      .innerJoinAndSelect(
-        ProductCategoryEntity,
-        "product_categories",
-        "product_categories.category_id = categories.id",
-      )
-      .innerJoinAndSelect(ProductEntity, "products", "products.id = product_categories.product_id")
-      .select([
-        "categories.id as id",
-        "categories.name as name",
-        "categories.slug as slug",
-        "categories.image_url as image_url",
-      ])
-      .addSelect("COUNT(products.id)", "product_count")
-      .groupBy("categories.id")
-      .orderBy("product_count", "DESC")
-      .limit(5);
-
-    return query.getRawMany();
+    return {
+      new_products,
+      popular_products,
+      featured_categories,
+    };
   }
 }

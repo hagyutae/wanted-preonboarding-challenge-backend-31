@@ -62,7 +62,7 @@ describe("ProductService", () => {
       entityManager.create = jest.fn().mockReturnValue(mockSavedProduct);
       entityManager.save = jest.fn().mockResolvedValue(mockSavedProduct);
 
-      await expect(service.create(mockProductInput)).resolves.toEqual(mockSavedProduct);
+      await expect(service.register(mockProductInput)).resolves.toEqual(mockSavedProduct);
     });
   });
 
@@ -76,7 +76,7 @@ describe("ProductService", () => {
         entityManager.getRepository(ProductEntity).createQueryBuilder().getMany as jest.Mock
       ).mockResolvedValue(mockProducts);
 
-      const result = await service.get_all({ page: 1, per_page: 10 });
+      const result = await service.find_all({ page: 1, per_page: 10 });
 
       expect(result.items).toEqual(mockProducts);
       expect(result.pagination).toEqual({
@@ -93,7 +93,7 @@ describe("ProductService", () => {
       const mockProduct = { id: 1, name: "Product 1" };
       entityManager.findOne = jest.fn().mockResolvedValue(mockProduct);
 
-      const result = await service.get_by_id(1);
+      const result = await service.find(1);
       expect(result).toEqual(mockProduct);
     });
   });
@@ -105,7 +105,7 @@ describe("ProductService", () => {
       entityManager.update = jest.fn().mockResolvedValue({});
       entityManager.findOne = jest.fn().mockResolvedValue(mockProduct);
 
-      const result = await service.update(1, mockProductInput);
+      const result = await service.edit(1, mockProductInput);
 
       expect(result).toEqual(mockProduct);
       expect(entityManager.update).toHaveBeenCalledWith(ProductEntity, 1, mockProductInput);
@@ -116,7 +116,7 @@ describe("ProductService", () => {
     it("상품 삭제", async () => {
       entityManager.delete = jest.fn().mockResolvedValue({ affected: 1 });
 
-      await expect(service.delete(1)).resolves.not.toThrow();
+      await expect(service.remove(1)).resolves.not.toThrow();
       expect(entityManager.delete).toHaveBeenCalledWith(ProductEntity, 1);
     });
   });

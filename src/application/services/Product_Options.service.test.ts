@@ -40,7 +40,7 @@ describe("ProductOptionsService", () => {
       entityManager.create = jest.fn().mockResolvedValue(createdEntity);
       entityManager.save = jest.fn().mockResolvedValue(createdEntity);
 
-      const result = await service.add_options(id, option_group_id, optionData);
+      const result = await service.register(id, option_group_id, optionData);
 
       expect(entityManager.create).toHaveBeenCalledWith(ProductOptionEntity, {
         option_group: { id: option_group_id },
@@ -62,7 +62,7 @@ describe("ProductOptionsService", () => {
       entityManager.merge = jest.fn().mockReturnValue(mergedEntity);
       entityManager.save = jest.fn().mockResolvedValue(mergedEntity);
 
-      const result = await service.update_options(id, option_id, updateData);
+      const result = await service.find(id, option_id, updateData);
 
       expect(entityManager.findOne).toHaveBeenCalledWith(ProductOptionEntity, {
         where: { id: option_id },
@@ -82,7 +82,7 @@ describe("ProductOptionsService", () => {
       const id = 1;
       const option_id = 200;
 
-      await service.delete_options(id, option_id);
+      await service.edit(id, option_id);
 
       expect(entityManager.delete).toHaveBeenCalledWith(ProductOptionEntity, option_id);
     });
@@ -98,7 +98,7 @@ describe("ProductOptionsService", () => {
       entityManager.create = jest.fn().mockResolvedValue(createdImageEntity);
       entityManager.save = jest.fn().mockResolvedValue(createdImageEntity);
 
-      const result = await service.add_images(id, option_id, imageData);
+      const result = await service.register_images(id, option_id, imageData);
 
       expect(entityManager.create).toHaveBeenCalledWith(ProductImageEntity, {
         ...imageData,

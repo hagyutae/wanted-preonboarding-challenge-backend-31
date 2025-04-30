@@ -22,7 +22,7 @@ export default class ProductController {
   @ApiBadRequestResponse("상품 등록에 실패했습니다.")
   @Post()
   async create(@Body() body: BodyDTO): Promise<ResponseDTO> {
-    const data = await this.service.create(body);
+    const data = await this.service.register(body);
 
     return {
       success: true,
@@ -36,7 +36,7 @@ export default class ProductController {
   @ApiBadRequestResponse("상품 목록 조회에 실패했습니다.")
   @Get()
   async read_all(@Query() query: ProductQueryDTO): Promise<ResponseDTO> {
-    const data = await this.service.get_all(to_FilterDTO(query));
+    const data = await this.service.find_all(to_FilterDTO(query));
 
     return {
       success: true,
@@ -50,7 +50,7 @@ export default class ProductController {
   @ApiBadRequestResponse("요청한 상품을 찾을 수 없습니다.")
   @Get(":id")
   async read(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
-    const data = await this.service.get_by_id(id);
+    const data = await this.service.find(id);
 
     return {
       success: true,
@@ -64,7 +64,7 @@ export default class ProductController {
   @ApiBadRequestResponse("상품 수정에 실패했습니다.")
   @Put(":id")
   async update(@Param() { id }: ParamDTO, @Body() body: BodyDTO): Promise<ResponseDTO> {
-    const data = await this.service.update(id, body);
+    const data = await this.service.edit(id, body);
 
     return {
       success: true,
@@ -78,7 +78,7 @@ export default class ProductController {
   @ApiBadRequestResponse("상품 삭제에 실패했습니다.")
   @Delete(":id")
   async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
-    const data = await this.service.delete(id);
+    const data = await this.service.remove(id);
 
     return {
       success: true,

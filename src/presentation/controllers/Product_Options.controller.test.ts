@@ -34,11 +34,11 @@ describe("ProductOptionsController", () => {
       const param = { id: 1 };
       const body = { option_group_id: 2, name: "Option 1" } as OptionBodyDTO;
       const data = { id: param.id, ...body } as Product_Option;
-      mockService.add_options = jest.fn().mockResolvedValue(data);
+      mockService.register = jest.fn().mockResolvedValue(data);
 
       const result = await mockController.create_option(param, body);
 
-      expect(mockService.add_options).toHaveBeenCalledWith(param.id, body.option_group_id, body);
+      expect(mockService.register).toHaveBeenCalledWith(param.id, body.option_group_id, body);
       expect(result).toEqual({
         success: true,
         data: { id: 1, option_group_id: body.option_group_id, name: "Option 1" },
@@ -56,11 +56,11 @@ describe("ProductOptionsController", () => {
         option_group_id: param.option_id,
         ...body,
       } as Product_Option;
-      mockService.update_options = jest.fn().mockResolvedValue(data);
+      mockService.find = jest.fn().mockResolvedValue(data);
 
       const result = await mockController.update_option(param, body);
 
-      expect(mockService.update_options).toHaveBeenCalledWith(param.id, param.option_id, body);
+      expect(mockService.find).toHaveBeenCalledWith(param.id, param.option_id, body);
       expect(result).toEqual({
         success: true,
         data: {
@@ -76,11 +76,11 @@ describe("ProductOptionsController", () => {
   describe("deleteOptions", () => {
     it("상품 옵션 삭제 성공", async () => {
       const param = { id: 1, option_id: 2 };
-      mockService.delete_options = jest.fn().mockResolvedValue(undefined);
+      mockService.edit = jest.fn().mockResolvedValue(undefined);
 
       const result = await mockController.delete_option(param);
 
-      expect(mockService.delete_options).toHaveBeenCalledWith(param.id, param.option_id);
+      expect(mockService.edit).toHaveBeenCalledWith(param.id, param.option_id);
       expect(result).toEqual({
         success: true,
         data: null,
@@ -94,11 +94,11 @@ describe("ProductOptionsController", () => {
       const param = { id: 1 } as OptionParamDTO;
       const body = { option_id: 2, url: "http://example.com/image.jpg" } as ImageBodyDTO;
       const data = { id: param.id, url: body.url } as Product_Image;
-      mockService.add_images = jest.fn().mockResolvedValue(data);
+      mockService.register_images = jest.fn().mockResolvedValue(data);
 
       const result = await mockController.create_image(param, body);
 
-      expect(mockService.add_images).toHaveBeenCalledWith(param.id, body.option_id, body);
+      expect(mockService.register_images).toHaveBeenCalledWith(param.id, body.option_id, body);
       expect(result).toEqual({
         success: true,
         data: { id: 1, url: "http://example.com/image.jpg" },

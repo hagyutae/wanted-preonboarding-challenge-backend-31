@@ -53,7 +53,7 @@ describe("ReviewService", () => {
 
       mockEntityManager.getRepository = jest.fn().mockReturnValue(mockRepository);
 
-      const result = await service.get(product_id, { page: 1, per_page: 10 });
+      const result = await service.find(product_id, { page: 1, per_page: 10 });
 
       expect(mockQueryBuilder.where).toHaveBeenCalledWith("1 = 1");
       expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith("reviews.product_id = :product_id", {
@@ -83,7 +83,7 @@ describe("ReviewService", () => {
       mockEntityManager.create = jest.fn().mockReturnValue(mockReviewEntity);
       mockEntityManager.save = jest.fn().mockResolvedValue(mockReviewEntity);
 
-      await expect(service.create(productId, reviewInput)).resolves.toEqual(mockReviewEntity);
+      await expect(service.register(productId, reviewInput)).resolves.toEqual(mockReviewEntity);
 
       expect(mockEntityManager.create).toHaveBeenCalledWith(ReviewEntity, {
         ...reviewInput,
@@ -101,7 +101,7 @@ describe("ReviewService", () => {
       mockEntityManager.update = jest.fn().mockResolvedValue(undefined);
       mockEntityManager.findOne = jest.fn().mockResolvedValue(updatedReview);
 
-      const result = await service.update(id, review);
+      const result = await service.edit(id, review);
 
       expect(mockEntityManager.update).toHaveBeenCalledWith(ReviewEntity, id, review);
       expect(mockEntityManager.findOne).toHaveBeenCalledWith(ReviewEntity, { where: { id } });
@@ -114,7 +114,7 @@ describe("ReviewService", () => {
       const id = 1;
       mockEntityManager.delete = jest.fn().mockResolvedValue({ affected: 1 });
 
-      await service.delete(id);
+      await service.remove(id);
 
       expect(mockEntityManager.delete).toHaveBeenCalledWith(ReviewEntity, id);
     });
