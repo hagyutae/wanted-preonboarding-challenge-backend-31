@@ -1,5 +1,6 @@
 package com.example.wanted_preonboarding_challenge_backend_31.application.product;
 
+import com.example.wanted_preonboarding_challenge_backend_31.application.review.ReviewCommandService;
 import com.example.wanted_preonboarding_challenge_backend_31.application.review.ReviewComplexQueryService;
 import com.example.wanted_preonboarding_challenge_backend_31.application.tag.TagQueryService;
 import com.example.wanted_preonboarding_challenge_backend_31.common.util.CalculatorUtil;
@@ -7,6 +8,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.model.produc
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductImage;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOption;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.product.ProductOptionGroup;
+import com.example.wanted_preonboarding_challenge_backend_31.domain.model.review.Review;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.category.CategoryInfoDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductImageDetailDto;
@@ -48,6 +50,7 @@ public class ProductService {
     private final ProductComplexQueryService productComplexQueryService;
     private final TagQueryService tagQueryService;
     private final ReviewComplexQueryService reviewComplexQueryService;
+    private final ReviewCommandService reviewCommandService;
 
     public ProductCreateRes create(ProductCreateReq req) {
         Product product = productCommandService.saveProduct(req);
@@ -152,6 +155,7 @@ public class ProductService {
     }
 
     public ProductReviewCreateRes createReview(Long productId, ProductReviewCreateReq req) {
-        return null;
+        Review review = reviewCommandService.saveReview(productId, req);
+        return ProductReviewCreateRes.from(review);
     }
 }

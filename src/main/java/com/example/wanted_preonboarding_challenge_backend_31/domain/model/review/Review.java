@@ -54,16 +54,15 @@ public class Review extends DateEntity {
     private int helpfulVotes;
 
 
-    public static Review create(Product product, User user, int rating, String title, String content,
-                                boolean verifiedPurchase, int helpfulVotes) {
+    public static Review create(Product product, User user, int rating, String title, String content) {
         return Review.builder()
                 .product(product)
                 .user(user)
                 .rating(rating)
                 .title(title)
                 .content(content)
-                .verifiedPurchase(verifiedPurchase)
-                .helpfulVotes(helpfulVotes)
+                .verifiedPurchase(true)
+                .helpfulVotes(0)
                 .build();
     }
 }
