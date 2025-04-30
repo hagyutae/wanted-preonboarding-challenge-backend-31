@@ -76,7 +76,7 @@ describe("ProductService", () => {
         entityManager.getRepository(ProductEntity).createQueryBuilder().getMany as jest.Mock
       ).mockResolvedValue(mockProducts);
 
-      const result = await service.getAll({ page: 1, perPage: 10 });
+      const result = await service.get_all({ page: 1, perPage: 10 });
 
       expect(result.items).toEqual(mockProducts);
       expect(result.pagination).toEqual({
@@ -93,7 +93,7 @@ describe("ProductService", () => {
       const mockProduct = { id: 1, name: "Product 1" };
       entityManager.findOne = jest.fn().mockResolvedValue(mockProduct);
 
-      const result = await service.getById(1);
+      const result = await service.get_by_id(1);
       expect(result).toEqual(mockProduct);
     });
   });

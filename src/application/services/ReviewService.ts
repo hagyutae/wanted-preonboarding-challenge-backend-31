@@ -5,7 +5,7 @@ import { ReviewEntity } from "src/infrastructure/entities";
 
 @Injectable()
 export default class ReviewService {
-  constructor(private readonly entityManager: EntityManager) {}
+  constructor(private readonly entity_manager: EntityManager) {}
 
   async get(
     product_id: number,
@@ -23,7 +23,7 @@ export default class ReviewService {
   ) {
     const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
 
-    const query = this.entityManager
+    const query = this.entity_manager
       .getRepository(ReviewEntity)
       .createQueryBuilder("reviews")
       .where("1 = 1")
@@ -60,21 +60,21 @@ export default class ReviewService {
   }
 
   async create(product_id: number, review: Partial<ReviewEntity>) {
-    const reviewEntity = this.entityManager.create(ReviewEntity, {
+    const review_entity = this.entity_manager.create(ReviewEntity, {
       ...review,
       product: { id: product_id },
     });
-    return this.entityManager.save(reviewEntity);
+    return this.entity_manager.save(review_entity);
   }
 
   async update(id: number, review: Partial<ReviewEntity>) {
-    await this.entityManager.update(ReviewEntity, id, review);
+    await this.entity_manager.update(ReviewEntity, id, review);
 
-    const updatedReview = await this.entityManager.findOne(ReviewEntity, { where: { id } });
-    return updatedReview;
+    const updated_review = await this.entity_manager.findOne(ReviewEntity, { where: { id } });
+    return updated_review;
   }
 
   async delete(id: number) {
-    await this.entityManager.delete(ReviewEntity, id);
+    await this.entity_manager.delete(ReviewEntity, id);
   }
 }

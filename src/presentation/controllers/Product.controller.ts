@@ -14,14 +14,14 @@ import {
 @Controller("products")
 @ApiErrorResponse()
 export default class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly service: ProductService) {}
 
   @ApiOperation({ summary: "상품 등록" })
   @ApiCreatedResponse("상품이 성공적으로 등록되었습니다.")
   @ApiBadRequestResponse("상품 등록에 실패했습니다.")
   @Post()
   async create(@Body() body: BodyDTO): Promise<ResponseDTO> {
-    const data = await this.productService.create(body);
+    const data = await this.service.create(body);
 
     return {
       success: true,
@@ -34,8 +34,8 @@ export default class ProductController {
   @ApiStandardResponse("상품 목록을 성공적으로 조회했습니다.")
   @ApiBadRequestResponse("상품 목록 조회에 실패했습니다.")
   @Get()
-  async readAll(@Query() query: ProductQueryDTO): Promise<ResponseDTO> {
-    const data = await this.productService.getAll(query);
+  async read_all(@Query() query: ProductQueryDTO): Promise<ResponseDTO> {
+    const data = await this.service.get_all(query);
 
     return {
       success: true,
@@ -49,7 +49,7 @@ export default class ProductController {
   @ApiBadRequestResponse("요청한 상품을 찾을 수 없습니다.")
   @Get(":id")
   async read(@Param() { id }: ProductParamDTO): Promise<ResponseDTO> {
-    const data = await this.productService.getById(id);
+    const data = await this.service.get_by_id(id);
 
     return {
       success: true,
@@ -63,7 +63,7 @@ export default class ProductController {
   @ApiBadRequestResponse("상품 수정에 실패했습니다.")
   @Put(":id")
   async update(@Param() { id }: ProductParamDTO, @Body() body: BodyDTO): Promise<ResponseDTO> {
-    const data = await this.productService.update(id, body);
+    const data = await this.service.update(id, body);
 
     return {
       success: true,
@@ -77,7 +77,7 @@ export default class ProductController {
   @ApiBadRequestResponse("상품 삭제에 실패했습니다.")
   @Delete(":id")
   async delete(@Param() { id }: ProductParamDTO): Promise<ResponseDTO> {
-    const data = await this.productService.delete(id);
+    const data = await this.service.delete(id);
 
     return {
       success: true,

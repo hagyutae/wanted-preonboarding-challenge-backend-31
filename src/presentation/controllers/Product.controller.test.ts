@@ -65,12 +65,12 @@ describe("ProductController", () => {
       message: "상품 목록을 성공적으로 조회했습니다.",
     };
 
-    jest.spyOn(productService, "getAll").mockResolvedValue({ items, pagination });
+    jest.spyOn(productService, "get_all").mockResolvedValue({ items, pagination });
 
-    const result = await productController.readAll(query);
+    const result = await productController.read_all(query);
 
     expect(result).toEqual(response);
-    expect(productService.getAll).toHaveBeenCalledWith(query);
+    expect(productService.get_all).toHaveBeenCalledWith(query);
   });
 
   it("id로 상품을 조회", async () => {
@@ -89,12 +89,12 @@ describe("ProductController", () => {
       message: "상품 상세 정보를 성공적으로 조회했습니다.",
     };
 
-    jest.spyOn(productService, "getById").mockResolvedValue(data);
+    jest.spyOn(productService, "get_by_id").mockResolvedValue(data);
 
     const result = await productController.read(param);
 
     expect(result).toEqual(response);
-    expect(productService.getById).toHaveBeenCalledWith(param.id);
+    expect(productService.get_by_id).toHaveBeenCalledWith(param.id);
   });
 
   it("상품을 수정", async () => {

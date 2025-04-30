@@ -6,54 +6,54 @@ import { ProductImageEntity, ProductOptionEntity } from "src/infrastructure/enti
 
 @Injectable()
 export default class ProductOptionsService {
-  constructor(private readonly entityManager: EntityManager) {}
+  constructor(private readonly entity_manager: EntityManager) {}
 
-  async addOptions(
+  async add_options(
     id: number,
     option_group_id: number,
     options: Product_Option,
   ): Promise<Product_Option> {
-    const optionEntity = this.entityManager.create(ProductOptionEntity, {
+    const option_entity = this.entity_manager.create(ProductOptionEntity, {
       option_group: { id: option_group_id },
       ...options,
     });
 
-    return await this.entityManager.save(ProductOptionEntity, optionEntity);
+    return await this.entity_manager.save(ProductOptionEntity, option_entity);
   }
 
-  async updateOptions(
+  async update_options(
     id: number,
     option_id: number,
     options: Product_Option,
   ): Promise<Product_Option> {
-    const optionEntity = await this.entityManager.findOne(ProductOptionEntity, {
+    const option_entity = await this.entity_manager.findOne(ProductOptionEntity, {
       where: { id: option_id },
     });
 
-    if (!optionEntity) {
+    if (!option_entity) {
       throw new Error(`Option with id ${option_id} not found`);
     }
 
-    const updatedOptionsEntity = this.entityManager.merge(
+    const updated_option_entity = this.entity_manager.merge(
       ProductOptionEntity,
-      optionEntity,
+      option_entity,
       options,
     );
 
-    return await this.entityManager.save(updatedOptionsEntity);
+    return await this.entity_manager.save(updated_option_entity);
   }
 
-  async deleteOptions(id: number, option_id: number): Promise<void> {
-    await this.entityManager.delete(ProductOptionEntity, option_id);
+  async delete_options(id: number, option_id: number): Promise<void> {
+    await this.entity_manager.delete(ProductOptionEntity, option_id);
   }
 
-  async addImages(id: number, option_id: number, image: Product_Image): Promise<Product_Image> {
-    const productImage = this.entityManager.create(ProductImageEntity, {
+  async add_images(id: number, option_id: number, image: Product_Image): Promise<Product_Image> {
+    const productImage = this.entity_manager.create(ProductImageEntity, {
       ...image,
       option: { id: option_id },
       product: { id },
     });
 
-    return await this.entityManager.save(ProductImageEntity, productImage);
+    return await this.entity_manager.save(ProductImageEntity, productImage);
   }
 }

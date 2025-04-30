@@ -7,7 +7,7 @@ import { CategoryEntity } from "src/infrastructure/entities";
 export default class CategoryService {
   constructor(private readonly entityManager: EntityManager) {}
 
-  public buildTree(
+  public build_tree(
     categories: CategoryEntity[],
     level: number, // 1: 대분류, 2: 중분류, 3: 소분류
     parent_id?: number,
@@ -20,37 +20,37 @@ export default class CategoryService {
       .filter((category) => category.parent?.id === parent_id)
       .map((category) => ({
         ...category,
-        children: this.buildTree(categories, level + 1, category.id),
+        children: this.build_tree(categories, level + 1, category.id),
       }));
 
     return result;
   }
 
-  async getAllCategoriesAsTree(level: number = 1) {
+  async get_all_categories_as_tree(level: number = 1) {
     const categories = await this.entityManager.find(CategoryEntity, {
       relations: ["parent"],
     });
 
-    return this.buildTree(categories, level);
+    return this.build_tree(categories, level);
   }
 
-  async getProductsByCategoryId(
+  async get_products_by_category_id(
     category_id: number,
     {
       page = 1,
       perPage = 10,
       sort = "created_at:desc",
-      includeSubcategories = true,
+      has_sub = true,
     }: {
       page?: number;
       perPage?: number;
       sort?: string;
-      includeSubcategories?: boolean;
+      has_sub?: boolean;
     },
   ) {
     const category = await this.entityManager.findOne(CategoryEntity, {
       where: { id: category_id },
-      relations: includeSubcategories ? ["parent"] : undefined,
+      relations: has_sub ? ["parent"] : undefined,
     });
 
     const [field, order] = sort.split(":");

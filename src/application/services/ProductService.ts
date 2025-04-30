@@ -8,6 +8,7 @@ import {
   ProductDetailEntity,
   ProductEntity,
   ProductImageEntity,
+  ProductOptionEntity,
   ProductOptionGroupEntity,
   ProductPriceEntity,
   ProductTagEntity,
@@ -18,7 +19,7 @@ import { ProductInputDTO } from "../dto";
 
 @Injectable()
 export default class ProductService {
-  constructor(private readonly entityManager: EntityManager) {}
+  constructor(private readonly entity_manager: EntityManager) {}
 
   async create(params: any) {
     const {
@@ -33,92 +34,92 @@ export default class ProductService {
       ...product
     }: ProductInputDTO = params;
 
-    const seller = await this.entityManager.findOne(SellerEntity, { where: { id: seller_id } });
+    const seller = await this.entity_manager.findOne(SellerEntity, { where: { id: seller_id } });
 
     if (!seller) {
       throw new Error(`Seller with id ${seller_id} not found`);
     }
-    const brand = await this.entityManager.findOne(BrandEntity, { where: { id: brand_id } });
+    const brand = await this.entity_manager.findOne(BrandEntity, { where: { id: brand_id } });
     if (!brand) {
       throw new Error(`Brand with id ${brand_id} not found`);
     }
 
-    const productEntity = this.entityManager.create(ProductEntity, { ...product, seller, brand });
-    await this.entityManager.save(productEntity);
+    const product_entity = this.entity_manager.create(ProductEntity, { ...product, seller, brand });
+    await this.entity_manager.save(product_entity);
 
-    const detailEntity = this.entityManager.create(ProductDetailEntity, {
+    const detail_entity = this.entity_manager.create(ProductDetailEntity, {
       ...detail,
-      product: productEntity,
+      product: product_entity,
     });
-    await this.entityManager.save(detailEntity);
+    await this.entity_manager.save(detail_entity);
 
-    const priceEntity = this.entityManager.create(ProductPriceEntity, {
+    const price_entity = this.entity_manager.create(ProductPriceEntity, {
       ...price,
-      product: productEntity,
+      product: product_entity,
     });
-    await this.entityManager.save(priceEntity);
+    await this.entity_manager.save(price_entity);
 
-    const categoryEntities = this.entityManager.create(
+    const category_entities = this.entity_manager.create(
       ProductCategoryEntity,
       await Promise.all(
         categories.map(async ({ category_id, is_primary }: Product_Category) => {
-          const foundCategory = await this.entityManager.findOne(ProductCategoryEntity, {
+          const found_category = await this.entity_manager.findOne(ProductCategoryEntity, {
             where: { id: category_id },
           });
-          if (!foundCategory) {
+          if (!found_category) {
             throw new Error(`Category with id ${category_id} not found`);
           }
 
-          return { category: foundCategory, is_primary, product: productEntity };
+          return { category: found_category, is_primary, product: product_entity };
         }),
       ),
     );
-    await this.entityManager.save(categoryEntities);
+    await this.entity_manager.save(category_entities);
 
-    for (const optionGroup of option_groups) {
-      const { options, ...groupEntity } = optionGroup;
+    for (const option_group of option_groups) {
+      const { options, ...group_entity } = option_group;
 
-      const optionGroupEntity = this.entityManager.create(ProductOptionGroupEntity, {
-        ...groupEntity,
-        product: productEntity,
+      const option_group_entity = this.entity_manager.create(ProductOptionGroupEntity, {
+        ...group_entity,
+        product: product_entity,
       });
 
-      const optionEntities = this.entityManager.create(
-        ProductOptionGroupEntity,
-        options.map((option) => ({ ...option, optionGroup: optionGroupEntity })),
+      const option_entities = this.entity_manager.create(
+        ProductOptionEntity,
+        options.map((option) => ({ ...option, option_group: option_group_entity })),
       );
 
-      await this.entityManager.save(optionEntities);
-      await this.entityManager.save(optionGroupEntity);
+      await this.entity_manager.save(option_entities);
+      await this.entity_manager.save(option_group_entity);
     }
 
-    const imageEntities = this.entityManager.create(
+    const image_entities = this.entity_manager.create(
       ProductImageEntity,
-      images.map((image) => ({ ...image, product: productEntity })),
+      images.map((image) => ({ ...image, product: product_entity })),
     );
-    await this.entityManager.save(imageEntities);
+    await this.entity_manager.save(image_entities);
 
-    const tagEntities = this.entityManager.create(
+    const tag_entities = this.entity_manager.create(
       ProductTagEntity,
       await Promise.all(
         tag_ids.map(async (tag_id) => {
-          const tag = await this.entityManager.findOne(ProductTagEntity, {
+          const tag = await this.entity_manager.findOne(ProductTagEntity, {
             where: { id: tag_id },
           });
           if (!tag) {
             throw new Error(`Tag with id ${tag_id} not found`);
           }
 
-          return { ...tag, product: productEntity };
+          return { ...tag, product: product_entity };
         }),
       ),
     );
-    await this.entityManager.save(tagEntities);
+    await this.entity_manager.save(tag_entities);
 
-    return productEntity;
+    return product_entity;
   }
 
-  async getAll({
+  async get_all({
     page = 1,
     perPage = 10,
     sort,
@@ -145,7 +146,7 @@ export default class ProductService {
     // 상품 집계 처리 쿼리
     const [field, order] = sort?.split(":") ?? ["created_at", "DESC"];
 
-    const query = this.entityManager
+    const query = this.entity_manager
       .getRepository(ProductSummaryView)
       .createQueryBuilder("summary")
       .andWhere(status ? "summary.status = :status" : "1=1", { status })
@@ -173,22 +174,22 @@ export default class ProductService {
     };
   }
 
-  async getById(id: number) {
-    return this.entityManager.findOne(ProductDetailView, { where: { id } });
+  async get_by_id(id: number) {
+    return this.entity_manager.findOne(ProductDetailView, { where: { id } });
   }
 
   async update(id: number, data: ProductInputDTO) {
-    await this.entityManager.update(ProductEntity, id, data);
+    await this.entity_manager.update(ProductEntity, id, data);
 
-    const updatedProduct = await this.getById(id);
-    if (!updatedProduct) {
+    const updated_product = await this.get_by_id(id);
+    if (!updated_product) {
       throw new Error(`Product with id ${id} not found`);
     }
 
-    return updatedProduct;
+    return updated_product;
   }
 
   async delete(id: number) {
-    await this.entityManager.delete(ProductEntity, id);
+    await this.entity_manager.delete(ProductEntity, id);
   }
 }

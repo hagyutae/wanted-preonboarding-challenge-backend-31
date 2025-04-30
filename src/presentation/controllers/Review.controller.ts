@@ -15,7 +15,7 @@ import {
 @Controller("reviews")
 @ApiErrorResponse()
 export default class ReviewController {
-  constructor(private readonly reviewService: ReviewService) {}
+  constructor(private readonly service: ReviewService) {}
 
   @ApiOperation({ summary: "상품 리뷰 조회" })
   @ApiStandardResponse("상품 리뷰를 성공적으로 조회했습니다.")
@@ -25,7 +25,7 @@ export default class ReviewController {
     @Param() { id }: ProductParamDTO,
     @Query() query: ReviewQueryDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.reviewService.get(id, query);
+    const data = await this.service.get(id, query);
 
     return {
       success: true,
@@ -42,7 +42,7 @@ export default class ReviewController {
     @Param() { id }: ProductParamDTO,
     @Body() body: ReviewBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.reviewService.create(id, body);
+    const data = await this.service.create(id, body);
 
     return {
       success: true,
@@ -59,7 +59,7 @@ export default class ReviewController {
     @Param() { id }: ProductParamDTO,
     @Body() body: ReviewBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.reviewService.update(id, body);
+    const data = await this.service.update(id, body);
 
     return {
       success: true,
@@ -73,7 +73,7 @@ export default class ReviewController {
   @ApiForbiddenResponse("다른 사용자의 리뷰를 삭제할 권한이 없습니다.")
   @Delete(":id")
   async delete(@Param() { id }: ProductParamDTO): Promise<ResponseDTO> {
-    await this.reviewService.delete(id);
+    await this.service.delete(id);
 
     return {
       success: true,

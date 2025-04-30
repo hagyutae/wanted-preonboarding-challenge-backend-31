@@ -30,11 +30,11 @@ describe("CategoryController", () => {
     it("카테고리 목록 조회 성공", async () => {
       const level = 2;
       const data = [{ id: 1, name: "Category 1" }];
-      mockService.getAllCategoriesAsTree = jest.fn().mockResolvedValue(data);
+      mockService.get_all_categories_as_tree = jest.fn().mockResolvedValue(data);
 
-      const result = await mockController.readCategories({ level });
+      const result = await mockController.read_categories({ level });
 
-      expect(mockService.getAllCategoriesAsTree).toHaveBeenCalledWith(level);
+      expect(mockService.get_all_categories_as_tree).toHaveBeenCalledWith(level);
       expect(result).toEqual({
         success: true,
         data,
@@ -48,11 +48,11 @@ describe("CategoryController", () => {
       const id = 1;
       const query = { page: 1, perPage: 10 } as FiltersByCategoryDTO;
       const data = { category: "Category 1" };
-      mockService.getProductsByCategoryId = jest.fn().mockResolvedValue(data);
+      mockService.get_products_by_category_id = jest.fn().mockResolvedValue(data);
 
-      const result = await mockController.readProducts({ id }, query);
+      const result = await mockController.read_products({ id }, query);
 
-      expect(mockService.getProductsByCategoryId).toHaveBeenCalledWith(id, query);
+      expect(mockService.get_products_by_category_id).toHaveBeenCalledWith(id, query);
       expect(result).toEqual({
         success: true,
         data,

@@ -14,18 +14,18 @@ import {
 @Controller("products")
 @ApiErrorResponse()
 export default class ProductOptionsController {
-  constructor(private readonly productOptionsService: ProductOptionsService) {}
+  constructor(private readonly service: ProductOptionsService) {}
 
   @ApiOperation({ summary: "상품 옵션 추가" })
   @ApiParam({ name: "id", description: "상품 ID" })
   @ApiCreatedResponse("상품 옵션이 성공적으로 추가되었습니다.")
   @ApiBadRequestResponse("상품 옵션 추가에 실패했습니다.")
   @Post(":id/options")
-  async addOptions(
+  async create_option(
     @Param() { id }: ProductParamDTO,
     @Body() body: OptionBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.productOptionsService.addOptions(id, body.option_group_id!, body);
+    const data = await this.service.add_options(id, body.option_group_id!, body);
 
     return {
       success: true,
@@ -40,11 +40,11 @@ export default class ProductOptionsController {
   @ApiStandardResponse("상품 옵션이 성공적으로 수정되었습니다.")
   @ApiBadRequestResponse("상품 옵션 수정에 실패했습니다.")
   @Put(":id/options/:option_id")
-  async updateOptions(
+  async update_option(
     @Param() { id, option_id }: OptionParamDTO,
     @Body() body: OptionBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.productOptionsService.updateOptions(id, option_id, body);
+    const data = await this.service.update_options(id, option_id, body);
 
     return {
       success: true,
@@ -59,8 +59,8 @@ export default class ProductOptionsController {
   @ApiStandardResponse("상품 옵션이 성공적으로 삭제되었습니다.")
   @ApiBadRequestResponse("상품 옵션 삭제에 실패했습니다.")
   @Delete(":id/options/:option_id")
-  async deleteOptions(@Param() { id, option_id }: OptionParamDTO): Promise<ResponseDTO> {
-    await this.productOptionsService.deleteOptions(id, option_id);
+  async delete_option(@Param() { id, option_id }: OptionParamDTO): Promise<ResponseDTO> {
+    await this.service.delete_options(id, option_id);
 
     return {
       success: true,
@@ -74,11 +74,11 @@ export default class ProductOptionsController {
   @ApiCreatedResponse("상품 이미지가 성공적으로 추가되었습니다.")
   @ApiBadRequestResponse("상품 이미지 추가에 실패했습니다.")
   @Post(":id/images")
-  async addImages(
+  async create_image(
     @Param() { id }: OptionParamDTO,
     @Body() body: ImageBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.productOptionsService.addImages(id, body.option_id, body);
+    const data = await this.service.add_images(id, body.option_id, body);
 
     return {
       success: true,

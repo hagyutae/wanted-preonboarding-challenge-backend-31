@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
-import { CategoryEntity, ProductEntity } from "src/infrastructure/entities";
+import { ProductEntity } from "src/infrastructure/entities";
 import MainService from "./MainService";
 
 describe("MainService", () => {
@@ -56,7 +56,7 @@ describe("MainService", () => {
       const mockProducts = [{ id: 1, name: "새 상품" }] as ProductEntity[];
       mockEntityManager.find = jest.fn().mockResolvedValue(mockProducts);
 
-      const result = await service.getNewProducts();
+      const result = await service.get_new_products();
 
       expect(result).toEqual(mockProducts);
     });
@@ -70,7 +70,7 @@ describe("MainService", () => {
       ];
       mockQueryBuilder.getMany = jest.fn().mockResolvedValue(mockPopularProducts);
 
-      const result = await service.getPopularProducts();
+      const result = await service.get_popular_products();
 
       expect(result).toEqual(mockPopularProducts);
     });
@@ -89,7 +89,7 @@ describe("MainService", () => {
       ];
       mockQueryBuilder.getRawMany = jest.fn().mockResolvedValue(mockCategories);
 
-      const result = await service.getFeaturedCategories();
+      const result = await service.get_featured_categories();
 
       expect(result).toEqual(mockCategories);
     });

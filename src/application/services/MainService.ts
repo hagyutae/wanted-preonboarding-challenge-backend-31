@@ -6,13 +6,13 @@ import { ProductSummaryView } from "src/infrastructure/views";
 
 @Injectable()
 export default class MainService {
-  constructor(private readonly entityManager: EntityManager) {}
+  constructor(private readonly entity_manager: EntityManager) {}
 
-  async getNewProducts() {
+  async get_new_products() {
     const page = 1;
     const per_page = 5;
 
-    const products = await this.entityManager.find(ProductEntity, {
+    const products = await this.entity_manager.find(ProductEntity, {
       order: { created_at: "DESC" },
       skip: (page - 1) * per_page,
       take: per_page,
@@ -21,8 +21,8 @@ export default class MainService {
     return products;
   }
 
-  async getPopularProducts() {
-    const query = this.entityManager
+  async get_popular_products() {
+    const query = this.entity_manager
       .getRepository(ProductSummaryView)
       .createQueryBuilder("summary")
       .orderBy("rating", "DESC")
@@ -31,8 +31,8 @@ export default class MainService {
     return await query.getMany();
   }
 
-  async getFeaturedCategories() {
-    const query = this.entityManager
+  async get_featured_categories() {
+    const query = this.entity_manager
       .getRepository(CategoryEntity)
       .createQueryBuilder("categories")
       .innerJoinAndSelect(
