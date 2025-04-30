@@ -1,21 +1,33 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager, SelectQueryBuilder } from "typeorm";
 
+import { Product_Category } from "src/domain/entities";
 import { CategoryEntity, ProductCategoryEntity } from "src/infrastructure/entities";
 import { ProductSummaryView } from "src/infrastructure/views";
 
 @Injectable()
 export default class CategoryRepository {
-  constructor(private readonly entityManager: EntityManager) {}
+  constructor(private readonly entity_manager: EntityManager) {}
+
+  async save(categories: Product_Category[], product_id: number) {
+    return await this.entity_manager.save(
+      ProductCategoryEntity,
+      categories.map(({ category_id, is_primary }) => ({
+        category: { id: category_id } as ProductCategoryEntity,
+        is_primary,
+        product: { id: product_id } as ProductCategoryEntity,
+      })),
+    );
+  }
 
   async get_all_categories() {
-    return this.entityManager.find(CategoryEntity, {
+    return this.entity_manager.find(CategoryEntity, {
       relations: ["parent"],
     });
   }
 
   async get({ category_id, has_sub }: { category_id: number; has_sub?: boolean }) {
-    return this.entityManager.findOne(CategoryEntity, {
+    return this.entity_manager.findOne(CategoryEntity, {
       where: { id: category_id },
       relations: has_sub ? ["parent"] : undefined,
     });
@@ -41,7 +53,7 @@ export default class CategoryRepository {
     // 필터링
     const [field, order] = sort.split(":");
 
-    const query = this.entityManager
+    const query = this.entity_manager
       .getRepository(ProductSummaryView)
       .createQueryBuilder("summary")
       .where(inner_query)

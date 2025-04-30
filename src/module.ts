@@ -2,28 +2,10 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import {
-  CategoryService,
-  MainService,
-  ProductOptionsService,
-  ProductService,
-  ReviewService,
-} from "./application/services";
+import * as services from "./application/services";
 import typeormConfigProvider from "./infrastructure/provider";
-import {
-  CategoryRepository,
-  MainRepository,
-  ProductOptionsRepository,
-  ProductRepository,
-  ReviewRepository,
-} from "./infrastructure/repositories";
-import {
-  CategoryController,
-  MainController,
-  ProductController,
-  ProductOptionsController,
-  ReviewController,
-} from "./presentation/controllers";
+import * as repositories from "./infrastructure/repositories";
+import * as controllers from "./presentation/controllers";
 
 @Module({
   imports: [
@@ -33,25 +15,7 @@ import {
       envFilePath: [".env"],
     }),
   ],
-  providers: [
-    ProductService,
-    ProductOptionsService,
-    CategoryService,
-    ReviewService,
-    MainService,
-
-    ProductRepository,
-    ProductOptionsRepository,
-    CategoryRepository,
-    ReviewRepository,
-    MainRepository,
-  ],
-  controllers: [
-    ProductController,
-    ProductOptionsController,
-    CategoryController,
-    ReviewController,
-    MainController,
-  ],
+  providers: [...Object.values(services), ...Object.values(repositories)],
+  controllers: [...Object.values(controllers)],
 })
 export class AppModule {}

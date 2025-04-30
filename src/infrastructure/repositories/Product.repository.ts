@@ -11,21 +11,30 @@ import {
 } from "src/domain/entities";
 import {
   BrandEntity,
-  ProductCategoryEntity,
   ProductDetailEntity,
   ProductEntity,
-  ProductImageEntity,
-  ProductOptionEntity,
-  ProductOptionGroupEntity,
   ProductPriceEntity,
-  ProductTagEntity,
   SellerEntity,
 } from "../entities";
 import { ProductDetailView, ProductSummaryView } from "../views";
+import ProductCategoryRepository from "./Product_Category.repository";
+import ProductDetailRepository from "./Product_Detail.repository";
+import ProductImageRepository from "./Product_Image.repository";
+import ProductOptionGroupRepository from "./Product_Option_Group.repository";
+import ProductPriceRepository from "./Product_Price.repository";
+import ProductTagRepository from "./Product_Tag.repository";
 
 @Injectable()
 export default class ProductRepository {
-  constructor(private readonly entity_manager: EntityManager) {}
+  constructor(
+    private readonly entity_manager: EntityManager,
+    private readonly product_detail_repository: ProductDetailRepository,
+    private readonly product_category_repository: ProductCategoryRepository,
+    private readonly product_price_repository: ProductPriceRepository,
+    private readonly product_option_group_repository: ProductOptionGroupRepository,
+    private readonly product_image_repository: ProductImageRepository,
+    private readonly product_tag_repository: ProductTagRepository,
+  ) {}
 
   async save({
     product,
@@ -53,61 +62,27 @@ export default class ProductRepository {
         // 상품 등록
         const product_entity = await manager.save(ProductEntity, {
           ...product,
-          seller: { id: seller_id } as SellerEntity,
-          brand: { id: brand_id } as BrandEntity,
+          seller: { id: seller_id },
+          brand: { id: brand_id },
         });
 
         // 상품 상세 등록
-        await manager.save(ProductDetailEntity, {
-          ...detail,
-          product: product_entity,
-        });
+        await this.product_detail_repository.save(detail, product_entity.id);
 
         // 상품 가격 등록
-        await manager.save(ProductPriceEntity, {
-          ...price,
-          product: product_entity,
-        });
+        await this.product_price_repository.save(price, product_entity.id);
 
         // 상품 카테고리 등록
-        await manager.save(
-          ProductCategoryEntity,
-          categories.map(({ category_id, is_primary }) => ({
-            category: { id: category_id } as ProductCategoryEntity,
-            is_primary,
-            product: product_entity,
-          })),
-        );
+        await this.product_category_repository.save(categories, product_entity.id);
 
         // 상품 옵션 등록
-        for (const { options, ...group_entity } of option_groups) {
-          // 상품 옵션 그룹 등록
-          const option_group_entity = await manager.save(ProductOptionGroupEntity, {
-            ...group_entity,
-            product: product_entity,
-          });
-
-          // 상품 옵션 그룹에 속한 옵션 등록
-          await manager.save(
-            ProductOptionEntity,
-            options.map((option) => ({ ...option, option_group: option_group_entity })),
-          );
-        }
+        await this.product_option_group_repository.save(option_groups, product_entity.id);
 
         // 상품 이미지 등록
-        await manager.save(
-          ProductImageEntity,
-          images.map((image) => ({ ...image, product: product_entity })),
-        );
+        await this.product_image_repository.saves(images, product_entity.id);
 
         // 상품 태그 등록
-        await manager.save(
-          ProductTagEntity,
-          tag_ids.map((tag_id) => ({
-            tag: { id: tag_id } as ProductTagEntity,
-            product: product_entity,
-          })),
-        );
+        await this.product_tag_repository.save(tag_ids, product_entity.id);
 
         return product_entity;
       });
@@ -194,36 +169,18 @@ export default class ProductRepository {
     try {
       return await this.entity_manager.transaction(async (manager) => {
         // 상품 디테일 업데이트
-        await manager
-          .createQueryBuilder()
-          .update(ProductDetailEntity)
-          .set({ ...detail })
-          .where("product_id = :product_id", { product_id: id })
-          .execute();
+        await this.product_detail_repository.update(detail, id);
 
         // 상품 가격 업데이트
-        await manager
-          .createQueryBuilder()
-          .update(ProductPriceEntity)
-          .set({ ...price })
-          .where("product_id = :product_id", { product_id: id })
-          .execute();
+        await this.product_price_repository.update(price, id);
 
         // 상품 카테고리 업데이트
-        for (const { category_id, is_primary } of categories) {
-          await manager
-            .createQueryBuilder()
-            .update(ProductCategoryEntity)
-            .set({ is_primary, category: { id: category_id } })
-            .where("product_id = :product_id", { product_id: id })
-            .execute();
-        }
-
+        await this.product_category_repository.update(categories, id);
         // 상품 제품 업데이트
         const updated_product_entity = await manager.save(ProductEntity, {
           id,
-          seller: { id: seller_id } as SellerEntity,
-          brand: { id: brand_id } as BrandEntity,
+          seller: { id: seller_id },
+          brand: { id: brand_id },
           ...product,
         });
 

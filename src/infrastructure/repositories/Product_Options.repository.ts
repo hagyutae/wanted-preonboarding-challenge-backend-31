@@ -2,11 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import { Product_Image, Product_Option } from "src/domain/entities";
-import { ProductImageEntity, ProductOptionEntity } from "../entities";
+import { ProductOptionEntity } from "../entities";
+import ProductImageRepository from "./Product_Image.repository";
 
 @Injectable()
 export default class ProductOptionsRepository {
-  constructor(private readonly entity_manager: EntityManager) {}
+  constructor(
+    private readonly entity_manager: EntityManager,
+    private readonly product_image_repository: ProductImageRepository,
+  ) {}
 
   async save(
     id: number,
@@ -31,10 +35,6 @@ export default class ProductOptionsRepository {
   }
 
   async save_images(id: number, option_id: number, image: Product_Image) {
-    return this.entity_manager.save(ProductImageEntity, {
-      product: { id },
-      option: { id: option_id },
-      ...image,
-    });
+    return this.product_image_repository.save(image, id, option_id);
   }
 }
