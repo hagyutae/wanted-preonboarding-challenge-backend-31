@@ -17,7 +17,7 @@ public class ReviewService {
 
     public ReviewUpdateRes update(Long reviewId, ReviewUpdateReq req) {
         Review review = reviewQueryService.getReviewById(reviewId);
-        reviewCommandService.updateReview(review, req);
+        review = reviewCommandService.updateReview(review, req);
 
         return ReviewUpdateRes.from(review);
     }
