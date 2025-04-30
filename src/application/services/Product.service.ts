@@ -81,14 +81,13 @@ export default class ProductService {
         ...group_entity,
         product: product_entity,
       });
+      await this.entity_manager.save(option_group_entity);
 
       const option_entities = this.entity_manager.create(
         ProductOptionEntity,
         options.map((option) => ({ ...option, option_group: option_group_entity })),
       );
-
       await this.entity_manager.save(option_entities);
-      await this.entity_manager.save(option_group_entity);
     }
 
     const image_entities = this.entity_manager.create(
