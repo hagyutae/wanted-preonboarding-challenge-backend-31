@@ -1,7 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
 import { MainService } from "src/application/services";
-import { CategoryEntity, ProductEntity } from "src/infrastructure/entities";
+import { CategoryEntity } from "src/infrastructure/entities";
+import { ProductSummaryView } from "src/infrastructure/views";
 import { ResponseDTO } from "../dto";
 import MainController from "./Main.controller";
 
@@ -31,8 +32,8 @@ describe("MainController", () => {
 
   describe("getMainProducts", () => {
     it("메인 페이지용 상품 목록 조회 성공", async () => {
-      const mockNewProducts = [{ id: 1, name: "새 상품" }] as ProductEntity[];
-      const mockPopularProducts = [{ id: 2, name: "인기 상품" }] as any[];
+      const mockNewProducts = [{ id: 1, name: "새 상품" }] as ProductSummaryView[];
+      const mockPopularProducts = [{ id: 2, name: "인기 상품" }] as ProductSummaryView[];
       const mockFeaturedCategories = [{ id: 3, name: "추천 카테고리" }] as CategoryEntity[];
 
       mockMainService.get_new_products.mockResolvedValue(mockNewProducts);

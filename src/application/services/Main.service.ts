@@ -12,7 +12,7 @@ export default class MainService {
     const page = 1;
     const per_page = 5;
 
-    const products = await this.entity_manager.find(ProductEntity, {
+    const products = await this.entity_manager.find(ProductSummaryView, {
       order: { created_at: "DESC" },
       skip: (page - 1) * per_page,
       take: per_page,
