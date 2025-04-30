@@ -5,11 +5,17 @@ import static com.example.wanted_preonboarding_challenge_backend_31.domain.model
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.review.Review;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.QuerydslRepositorySupport;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.review.query.dto.ProductReviewSummaryDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationReq;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationRes;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRatingDetailDto;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRatingDistributionDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.review.ProductReviewSearchDataDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.user.UserInfoDto;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductReviewSearchReq;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import java.util.HashMap;
 import java.util.List;
@@ -79,5 +85,51 @@ public class ReviewQueryRepositoryImpl extends QuerydslRepositorySupport impleme
                 distributionMap.getOrDefault(2, 0),
                 distributionMap.getOrDefault(1, 0)
         );
+    }
+
+    @Override
+    public List<ProductReviewSearchDataDto> getSearchProductReviews(Long productId, PaginationReq paginationReq,
+                                                                    ProductReviewSearchReq req) {
+        return select(Projections.constructor(
+                ProductReviewSearchDataDto.class,
+                review.id,
+                Projections.constructor(
+                        UserInfoDto.class,
+                        review.user.id,
+                        review.user.name,
+                        review.user.avatarUrl
+                ),
+                review.rating,
+                review.title,
+                review.content,
+                review.createdAt,
+                review.updatedAt,
+                review.verifiedPurchase,
+                review.helpfulVotes
+        ))
+                .from(review)
+                .join(review.user)
+                .where(ratingFilter(req.rating()))
+                .orderBy(createOrderSpecifier(req.sort()))
+                .offset(paginationReq.getOffset())
+                .limit(paginationReq.perPage())
+                .fetch();
+    }
+
+    @Override
+    public PaginationRes countSearchProductReviews(Long productId, PaginationReq paginationReq,
+                                                   ProductReviewSearchReq req) {
+        Long totalItems = select(review.count())
+                .from(review)
+                .join(review.user)
+                .where(ratingFilter(req.rating()))
+                .fetchOne();
+
+        assert totalItems != null;
+        return PaginationRes.of(totalItems.intValue(), paginationReq.page(), paginationReq.perPage());
+    }
+
+    private BooleanExpression ratingFilter(Integer rating) {
+        return rating == null ? null : review.rating.eq(rating);
     }
 }

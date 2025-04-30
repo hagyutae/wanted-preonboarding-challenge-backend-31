@@ -142,6 +142,10 @@ public class ProductService {
 
     public ProductReviewSearchRes searchReview(Long productId, PaginationReq paginationReq,
                                                ProductReviewSearchReq req) {
-        return null;
+        ProductReviewSearchRes base = reviewComplexQueryService.getProductReviewSearchWithoutSummary(
+                productId, paginationReq, req);
+        ProductRatingDetailDto summary = reviewComplexQueryService.getProductRatingDetail(productId);
+
+        return ProductReviewSearchRes.mergeSummary(base, summary);
     }
 }

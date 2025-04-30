@@ -10,4 +10,8 @@ public record ProductReviewSearchRes(
         ProductRatingDetailDto summary,
         PaginationRes pagination
 ) {
+
+    public static ProductReviewSearchRes mergeSummary(ProductReviewSearchRes base, ProductRatingDetailDto summary) {
+        return new ProductReviewSearchRes(base.items, summary, base.pagination);
+    }
 }
