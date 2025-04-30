@@ -21,6 +21,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.req
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductImageCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductOptionUpdateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductReviewCreateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductReviewSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductSearchReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductCreateRes;
@@ -28,6 +29,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.res
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductImageCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductOptionUpdateRes;
+import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductReviewCreateRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductReviewSearchRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductSearchRes;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.response.ProductUpdateRes;
@@ -147,5 +149,9 @@ public class ProductService {
         ProductRatingDetailDto summary = reviewComplexQueryService.getProductRatingDetail(productId);
 
         return ProductReviewSearchRes.mergeSummary(base, summary);
+    }
+
+    public ProductReviewCreateRes createReview(Long productId, ProductReviewCreateReq req) {
+        return null;
     }
 }
