@@ -106,7 +106,8 @@ import {
           .where("product_option_groups.product_id = products.id")
           .groupBy("product_option_groups.id")
           .addGroupBy("product_option_groups.name")
-          .addGroupBy("product_option_groups.display_order");
+          .addGroupBy("product_option_groups.display_order")
+          .limit(1);
       }, "option_groups")
       .addSelect((subQuery) => {
         return subQuery
