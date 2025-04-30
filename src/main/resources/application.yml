@@ -1,0 +1,37 @@
+spring:
+  web:
+    resources:
+      add-mappings: false
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cqrs
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:ddl.sql
+      data-locations:
+        - classpath:data/sellers.sql
+        - classpath:data/brands.sql
+        - classpath:data/categories.sql
+        - classpath:data/tags.sql
+        - classpath:data/products.sql
+        - classpath:data/product_options.sql
+        - classpath:data/product_extended.sql
+        - classpath:data/users.sql
+        - classpath:data/reviews.sql
