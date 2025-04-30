@@ -1,8 +1,11 @@
 package com.psh10066.commerce.infrastructure.dao.product;
 
+import com.psh10066.commerce.api.dto.request.GetAllProductsRequest;
+import com.psh10066.commerce.api.dto.response.GetAllProductsResponse;
 import com.psh10066.commerce.domain.exception.ResourceNotFoundException;
 import com.psh10066.commerce.domain.model.product.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -62,5 +65,10 @@ public class ProductRepositoryImpl implements ProductRepository {
     public ProductOption getProductOptionById(Long id) {
         return productOptionJpaRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("ProductOption", id));
+    }
+
+    @Override
+    public Page<GetAllProductsResponse> getAllProducts(GetAllProductsRequest request) {
+        return productJpaRepository.getAllProducts(request);
     }
 }

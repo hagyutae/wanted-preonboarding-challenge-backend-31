@@ -31,8 +31,9 @@ public class Product extends BaseUpdatableEntity {
     @Column(name = "full_description", columnDefinition = "TEXT")
     private String fullDescription;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String status;
+    private ProductStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
@@ -43,7 +44,7 @@ public class Product extends BaseUpdatableEntity {
     private Brand brand;
 
     @Builder
-    public Product(String name, String slug, String shortDescription, String fullDescription, Seller seller, Brand brand, String status) {
+    public Product(String name, String slug, String shortDescription, String fullDescription, Seller seller, Brand brand, ProductStatus status) {
         this.name = name;
         this.slug = slug;
         this.shortDescription = shortDescription;

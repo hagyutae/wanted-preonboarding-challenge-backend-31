@@ -1,7 +1,10 @@
 package com.psh10066.commerce.domain.service;
 
+import com.psh10066.commerce.api.common.PaginationResponse;
 import com.psh10066.commerce.api.dto.request.CreateProductRequest;
+import com.psh10066.commerce.api.dto.request.GetAllProductsRequest;
 import com.psh10066.commerce.api.dto.response.CreateProductResponse;
+import com.psh10066.commerce.api.dto.response.GetAllProductsResponse;
 import com.psh10066.commerce.domain.model.brand.Brand;
 import com.psh10066.commerce.domain.model.brand.BrandRepository;
 import com.psh10066.commerce.domain.model.category.Category;
@@ -12,6 +15,7 @@ import com.psh10066.commerce.domain.model.seller.SellerRepository;
 import com.psh10066.commerce.domain.model.tag.Tag;
 import com.psh10066.commerce.domain.model.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,5 +119,10 @@ public class ProductService {
             product.getCreatedAt(),
             product.getUpdatedAt()
         );
+    }
+
+    public PaginationResponse<GetAllProductsResponse> getAllProducts(GetAllProductsRequest request) {
+        Page<GetAllProductsResponse> products = productRepository.getAllProducts(request);
+        return PaginationResponse.of(products, product -> product);
     }
 }

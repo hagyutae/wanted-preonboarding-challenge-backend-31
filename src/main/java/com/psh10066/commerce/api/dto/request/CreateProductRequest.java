@@ -1,5 +1,6 @@
 package com.psh10066.commerce.api.dto.request;
 
+import com.psh10066.commerce.domain.model.product.ProductStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,8 +28,8 @@ public record CreateProductRequest(
     @NotNull(message = "브랜드 ID는 필수 항목입니다.")
     Long brandId,
 
-    @NotBlank(message = "상태는 필수 항목입니다.")
-    String status,
+    @NotNull(message = "상태는 필수 항목입니다.")
+    ProductStatus status,
 
     @Valid
     ProductDetailRequest detail,

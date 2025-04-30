@@ -1,5 +1,9 @@
 package com.psh10066.commerce.domain.model.product;
 
+import com.psh10066.commerce.api.dto.request.GetAllProductsRequest;
+import com.psh10066.commerce.api.dto.response.GetAllProductsResponse;
+import org.springframework.data.domain.Page;
+
 public interface ProductRepository {
 
     Product save(Product product);
@@ -12,4 +16,6 @@ public interface ProductRepository {
     ProductTag saveProductTag(ProductTag productTag);
 
     ProductOption getProductOptionById(Long id);
+
+    Page<GetAllProductsResponse> getAllProducts(GetAllProductsRequest request);
 }
