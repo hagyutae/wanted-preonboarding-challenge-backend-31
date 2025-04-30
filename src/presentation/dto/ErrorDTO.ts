@@ -13,6 +13,15 @@ export enum ErrorCode {
   INTERNAL_ERROR = "INTERNAL_ERROR", // 서버 내부 오류 (500)
 }
 
+export const HttpStatusToErrorCodeMap: Record<number, ErrorCode> = {
+  400: ErrorCode.INVALID_INPUT,
+  401: ErrorCode.UNAUTHORIZED,
+  403: ErrorCode.FORBIDDEN,
+  404: ErrorCode.RESOURCE_NOT_FOUND,
+  409: ErrorCode.CONFLICT,
+  500: ErrorCode.INTERNAL_ERROR,
+};
+
 class ErrorObject {
   @ApiProperty({
     enum: ErrorCode,

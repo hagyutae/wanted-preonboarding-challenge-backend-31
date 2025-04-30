@@ -1,4 +1,4 @@
-export { default as ErrorDTO } from "./ErrorDTO";
+export { default as ErrorDTO, HttpStatusToErrorCodeMap } from "./ErrorDTO";
 export { default as FiltersByCategoryDTO } from "./FiltersByCategoryDTO";
 export { default as ImageBodyDTO } from "./ImageBodyDTO";
 export { default as OptionBodyDTO } from "./OptionsBodyDTO";

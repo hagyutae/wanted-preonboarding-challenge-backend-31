@@ -3,10 +3,11 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { MainService } from "src/application/services";
 import { ResponseDTO } from "../dto";
-import { ApiStandardResponse } from "../decorators";
+import { ApiErrorResponse, ApiStandardResponse } from "../decorators";
 
 @ApiTags("메인")
 @Controller("main")
+@ApiErrorResponse()
 export default class MainController {
   constructor(private readonly service: MainService) {}
 

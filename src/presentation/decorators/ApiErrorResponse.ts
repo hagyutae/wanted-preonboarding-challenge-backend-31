@@ -1,0 +1,63 @@
+import { applyDecorators } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, getSchemaPath } from "@nestjs/swagger";
+
+import { ErrorDTO, HttpStatusToErrorCodeMap } from "../dto";
+
+export function ApiBadRequestResponse(
+  description = "다른 사용자의 리뷰를 삭제할 권한이 없습니다.",
+) {
+  return getApplyDecorators(400, description);
+}
+
+export function ApiUnauthorizedResponse(description = "인증이 필요합니다.") {
+  return getApplyDecorators(401, description);
+}
+
+export function ApiForbiddenResponse(description = "해당 작업을 수행할 권한이 없습니다.") {
+  return getApplyDecorators(403, description);
+}
+
+export function ApiNotFoundResponse(description = "요청한 리소스를 찾을 수 없습니다.") {
+  return getApplyDecorators(404, description);
+}
+
+export function ApiConflictResponse(description = "리소스 충돌이 발생했습니다.") {
+  return getApplyDecorators(409, description);
+}
+
+export function ApiInternalServerErrorResponse(description = "서버 내부 오류가 발생했습니다.") {
+  return getApplyDecorators(500, description);
+}
+
+export default function ApiErrorResponse() {
+  return applyDecorators(
+    ApiBadRequestResponse(),
+    ApiUnauthorizedResponse(),
+    ApiForbiddenResponse(),
+    ApiNotFoundResponse(),
+    ApiConflictResponse(),
+    ApiInternalServerErrorResponse(),
+  );
+}
+
+function getApplyDecorators(status: number, description: string) {
+  const example: ErrorDTO = {
+    success: false,
+    error: {
+      code: HttpStatusToErrorCodeMap[status],
+      message: description,
+      details: {},
+    },
+  };
+
+  return applyDecorators(
+    ApiExtraModels(ErrorDTO),
+    ApiResponse({
+      status,
+      description,
+      schema: {
+        allOf: [{ $ref: getSchemaPath(ErrorDTO) }, { example }],
+      },
+    }),
+  );
+}
