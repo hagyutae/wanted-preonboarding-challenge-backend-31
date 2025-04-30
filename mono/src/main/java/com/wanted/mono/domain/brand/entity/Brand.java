@@ -1,25 +1,21 @@
-package com.wanted.mono.model.entity;
+package com.wanted.mono.domain.brand.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Table(name = "tags")
-public class Tag {
-
-    // 태그 ID (PK)
+@Table(name = "brands")
+public class Brand {
+    // 브랜드 ID (PK)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 태그명
+    // 브랜드명
     @Column(length = 100, nullable = false)
     private String name;
 
@@ -27,8 +23,14 @@ public class Tag {
     @Column(length = 100, unique = true, nullable = false)
     private String slug;
 
-    // 상품 태그들
-    // 상품 삭제 시 같이 삭제됨
-    @OneToMany(mappedBy = "tag", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<ProductTag> productTags = new ArrayList<>();
+    // 설명
+    private String description;
+
+    // 로고 이미지 URL
+    @Column(length = 255)
+    private String logoUrl;
+
+    // 웹사이트 URL
+    @Column(length = 255)
+    private String website;
 }

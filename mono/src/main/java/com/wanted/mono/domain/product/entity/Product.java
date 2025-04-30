@@ -1,5 +1,10 @@
-package com.wanted.mono.model.entity;
+package com.wanted.mono.domain.product.entity;
 
+import com.wanted.mono.domain.brand.entity.Brand;
+import com.wanted.mono.domain.category.entity.ProductCategory;
+import com.wanted.mono.domain.review.entity.Review;
+import com.wanted.mono.domain.seller.entity.Seller;
+import com.wanted.mono.domain.tag.entity.ProductTag;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

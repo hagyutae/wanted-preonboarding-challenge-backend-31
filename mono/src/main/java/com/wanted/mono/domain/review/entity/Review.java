@@ -1,5 +1,7 @@
-package com.wanted.mono.model.entity;
+package com.wanted.mono.domain.review.entity;
 
+import com.wanted.mono.domain.product.entity.Product;
+import com.wanted.mono.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

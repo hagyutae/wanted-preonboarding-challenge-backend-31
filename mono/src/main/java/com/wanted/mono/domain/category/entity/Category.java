@@ -1,4 +1,4 @@
-package com.wanted.mono.model.entity;
+package com.wanted.mono.domain.category.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

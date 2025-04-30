@@ -1,5 +1,6 @@
-package com.wanted.mono.model.entity;
+package com.wanted.mono.domain.tag.entity;
 
+import com.wanted.mono.domain.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
