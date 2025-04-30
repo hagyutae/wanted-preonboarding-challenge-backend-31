@@ -14,6 +14,7 @@ public class ProductCategories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private boolean isPrimary;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -23,5 +24,4 @@ public class ProductCategories {
     @JoinColumn(name = "category_id")
     private Categories categories;
 
-    private boolean isPrimary;
 }

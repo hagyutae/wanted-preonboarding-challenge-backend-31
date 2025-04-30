@@ -3,6 +3,7 @@ package com.example.preonboarding.controller;
 import com.example.preonboarding.dto.ProductSearchRequest;
 import com.example.preonboarding.response.CommonResponse;
 import com.example.preonboarding.service.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class ProductRestController {
     }
 
     @GetMapping(value = "/products/{id}")
-    public CommonResponse findProductsById(@PathVariable("id")Long id){
+    public CommonResponse findProductsById(@PathVariable("id")Long id) {
         return CommonResponse.success(productService.findProductsById(id));
     }
 }

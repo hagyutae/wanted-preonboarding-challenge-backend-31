@@ -2,10 +2,12 @@ package com.example.preonboarding.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "product_tags")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductTags {
     @Id

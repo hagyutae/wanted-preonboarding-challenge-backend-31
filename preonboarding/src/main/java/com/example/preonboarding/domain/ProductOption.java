@@ -25,7 +25,7 @@ public class ProductOption {
     private List<ProductImages> productImages = new ArrayList<>();
 
     private String name;
-    private double addtionalPrice;
+    private double additionalPrice;
     private String sku;
     private int stock;
     private int displayOrder;

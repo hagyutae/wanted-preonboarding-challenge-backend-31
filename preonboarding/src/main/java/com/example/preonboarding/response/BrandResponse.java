@@ -1,5 +1,6 @@
 package com.example.preonboarding.response;
 
+import com.example.preonboarding.domain.Brands;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -22,6 +23,14 @@ public class BrandResponse {
     public BrandResponse(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public BrandResponse(Brands brands) {
+        this.id = brands.getId();
+        this.name = brands.getName();
+        this.description = brands.getDescription();
+        this.logoUrl = brands.getLogo_url();
+        this.website = brands.getWebsite();
     }
 
     public BrandResponse(Long id, String name, String description, String logoUrl, String website) {

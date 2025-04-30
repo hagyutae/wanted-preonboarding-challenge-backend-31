@@ -92,7 +92,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom{
     }
 
     @Override
-    public ProductsDTO findProductsById(Long id) {
+    public Products findProductsById(Long id) {
 
         QProducts products = QProducts.products;
         QProductPrices prices = QProductPrices.productPrices;
@@ -101,35 +101,21 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom{
         QBrands brands = QBrands.brands;
         QSellers sellers = QSellers.sellers;
         QProductImages images = QProductImages.productImages;
-        QReviews reviews = QReviews.reviews;
-        QProductOption options = QProductOption.productOption;
         QProductOptionGroup optionGroup = QProductOptionGroup.productOptionGroup;
+        QProductDetails details = QProductDetails.productDetails;
 
-
-        return queryFactory.select(new QProductsDTO(
-                    products.id,
-                    products.name,
-                    products.slug,
-                    products.shortDescription,
-                    products.fullDescription,
-                    sellers.id,
-                    sellers.name,
-                    sellers.description,
-                    sellers.logoUrl,
-                    sellers.rating,
-                    sellers.contactEmail,
-                    sellers.contactPhone,
-                    brands.id,
-                    brands.name,
-                    products.status,
-                    products.createdAt
-                ))
-                .from(products)
+        return queryFactory.selectFrom(products)
                 .distinct()
-                .join(products.sellers,sellers)
-                .join(products.brands,brands)
-               .where(products.id.eq(id))
-               .fetchOne();
+                .join(products.sellers, sellers).fetchJoin()
+                .join(products.brands, brands).fetchJoin()
+                .join(products.productDetails,details).fetchJoin()
+                .leftJoin(products.productPrices,prices).fetchJoin()
+                .leftJoin(products.productCategories,categories).fetchJoin()
+                .leftJoin(products.productImages,images)
+                .leftJoin(products.productOptionGroups,optionGroup)
+                .leftJoin(products.productTags,tags)
+                .where(products.id.eq(id))
+                .fetchOne();
     }
 
     private void attachImages(List<ProductsDTO> products, List<Long> productsIds, QProductImages images){
@@ -146,7 +132,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom{
 
 
         Map<Long, ProductImageDTO> imageMap = imageList.stream()
-                .collect(Collectors.toMap(ProductImageDTO::getProductsId, Function.identity()));
+                .collect(Collectors.toMap(ProductImageDTO::getId, Function.identity()));
 
         for (ProductsDTO product : products) {
             product.setImages(imageMap.getOrDefault(product.getId(), null));
@@ -167,7 +153,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom{
 
 
         Map<Long, ProductOptionDTO> optionMap = optionList.stream()
-                .collect(Collectors.toMap(ProductOptionDTO::getProductsId, Function.identity()));
+                .collect(Collectors.toMap(ProductOptionDTO::getId, Function.identity()));
 
         for (ProductsDTO product : products) {
             product.setOptions(optionMap.getOrDefault(product.getId(),null));
@@ -183,7 +169,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom{
                 .where(reviews.products.id.in(productsIds))
                 .groupBy(reviews.products.id).fetch();
 
-        Map<Long, ReviewDTO> reviewMap = reviewList.stream().collect(Collectors.toMap(ReviewDTO::getProductsId, Function.identity()));
+        Map<Long, ReviewDTO> reviewMap = reviewList.stream().collect(Collectors.toMap(ReviewDTO::getId, Function.identity()));
 
         for (ProductsDTO product : products) {
             product.setReviews(reviewMap.getOrDefault(product.getId(), null));

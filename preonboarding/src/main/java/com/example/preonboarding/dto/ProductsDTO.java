@@ -56,7 +56,6 @@ public class ProductsDTO {
     }
 
     @QueryProjection
-
     public ProductsDTO(Long id, String name, String slug, String shortDescription, String fullDescription, Long sellerId, String sellerName, String sellerDescription, String sellerLogoUrl, Double sellerRating, String sellerContactEmail, String sellerContactPhone, Long brandId, String brandName, String status, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;

@@ -15,10 +15,10 @@ public class Categories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String slug;
     private String description;
+    private Long parentId;
     private int level;
     private String imageUrl;
 

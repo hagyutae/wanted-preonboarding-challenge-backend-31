@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ReviewDTO {
-    private Long productsId;
+    private Long id;
     private Double rating;
     private Long reviewCount;
 
     @QueryProjection
     @Builder
     public ReviewDTO(Long productsId, Double rating, Long reviewCount) {
-        this.productsId = productsId;
+        this.id = productsId;
         this.rating = roundToTwoDecimalPlaces(rating) ;
         this.reviewCount = reviewCount;
     }
