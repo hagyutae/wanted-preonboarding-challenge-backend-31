@@ -24,7 +24,7 @@ const config: Config = {
     "\\\\node_modules\\\\",
     "src/domain",
     "src/infrastructure/entities",
-    "src/interfaces/dto",
+    "src/presentation/dto",
   ],
 
   // Indicates which provider should be used to instrument code for coverage

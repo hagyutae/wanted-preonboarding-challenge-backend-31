@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-import ProductService from "src/application/ProductService";
-import { ProductParamDTO, ProductQueryDTO, ResponseDTO, BodyDTO } from "../dto";
+import { ProductService } from "src/application/services";
+import { BodyDTO, ProductParamDTO, ProductQueryDTO, ResponseDTO } from "../dto";
 
 @ApiTags("상품 관리")
 @Controller("products")

@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { ReviewEntity } from "src/infrastructure/entities";
 import { EntityManager } from "typeorm";
+
+import { ReviewEntity } from "src/infrastructure/entities";
 
 @Injectable()
 export default class ReviewService {

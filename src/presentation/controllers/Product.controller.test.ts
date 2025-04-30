@@ -1,9 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import ProductService from "src/application/ProductService";
+import { ProductService } from "src/application/services";
 import { ProductEntity } from "src/infrastructure/entities";
+import { BodyDTO, ProductParamDTO, ProductQueryDTO, ResponseDTO } from "../dto";
 import ProductController from "./Product.controller";
-import { BodyDTO, ProductQueryDTO, ProductParamDTO, ResponseDTO } from "../dto";
 
 describe("ProductController", () => {
   let productController: ProductController;

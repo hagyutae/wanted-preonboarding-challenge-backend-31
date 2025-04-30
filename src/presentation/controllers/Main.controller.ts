@@ -1,8 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
+import { MainService } from "src/application/services";
 import { ResponseDTO } from "../dto";
-import MainService from "src/application/MainService";
 
 @ApiTags("메인")
 @Controller("main")

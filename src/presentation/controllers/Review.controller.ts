@@ -1,9 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
-import ReviewService from "src/application/ReviewService";
-import { ReviewQueryDTO, ResponseDTO, ProductParamDTO } from "../dto";
-import ReviewBodyDTO from "../dto/ReviewBodyDTO";
+import { ReviewService } from "src/application/services";
+import { ProductParamDTO, ResponseDTO, ReviewBodyDTO, ReviewQueryDTO } from "../dto";
 
 @ApiTags("리뷰")
 @Controller("reviews")

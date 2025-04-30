@@ -1,8 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
-import { ProductOptionEntity, ProductImageEntity } from "src/infrastructure/entities";
-import { Product_Option, Product_Image } from "src/domain";
+import { Product_Image, Product_Option } from "src/domain/entities";
+import { ProductImageEntity, ProductOptionEntity } from "src/infrastructure/entities";
 import ProductOptionsService from "./ProductOptionsService";
 
 describe("ProductOptionsService", () => {

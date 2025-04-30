@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { Product_Image, Product_Option } from "src/domain";
-import { ProductOptionsService } from "src/application";
+import { Product_Image, Product_Option } from "src/domain/entities";
+import { ProductOptionsService } from "src/application/services";
 import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO } from "../dto";
 import ProductOptionsController from "./Product_Options.controller";
 

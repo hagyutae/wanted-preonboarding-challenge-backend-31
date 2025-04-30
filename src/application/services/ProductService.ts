@@ -1,20 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { Product_Category } from "src/domain";
+import { Product_Category } from "src/domain/entities";
 import {
   BrandEntity,
-  ProductEntity,
   ProductCategoryEntity,
   ProductDetailEntity,
+  ProductEntity,
   ProductImageEntity,
   ProductOptionGroupEntity,
   ProductPriceEntity,
   ProductTagEntity,
   SellerEntity,
 } from "src/infrastructure/entities";
-import { ProductSummaryView, ProductDetailView } from "src/infrastructure/views";
-import { ProductInputDTO } from "./dto/ProductInputDTO";
+import { ProductDetailView, ProductSummaryView } from "src/infrastructure/views";
+import { ProductInputDTO } from "../dto";
 
 @Injectable()
 export default class ProductService {

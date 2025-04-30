@@ -1,8 +1,8 @@
 import { EntityManager } from "typeorm";
 import { Test, TestingModule } from "@nestjs/testing";
 
-import ReviewService from "./ReviewService";
 import { ReviewEntity } from "src/infrastructure/entities";
+import ReviewService from "./ReviewService";
 
 describe("ReviewService", () => {
   let service: ReviewService;

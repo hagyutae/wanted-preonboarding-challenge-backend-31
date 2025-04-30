@@ -1,8 +1,8 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-import CategoryService from "src/application/CategoryService";
-import { ResponseDTO, FiltersByCategoryDTO } from "../dto";
+import { CategoryService } from "src/application/services";
+import { FiltersByCategoryDTO, ResponseDTO } from "../dto";
 
 @ApiTags("카테고리")
 @Controller("categories")

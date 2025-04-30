@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import MainService from "src/application/MainService";
+import { MainService } from "src/application/services";
 import { CategoryEntity, ProductEntity } from "src/infrastructure/entities";
 import { ResponseDTO } from "../dto";
 import MainController from "./Main.controller";

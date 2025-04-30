@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-import ProductOptionsService from "src/application/ProductOptionsService";
-import { ProductParamDTO, OptionParamDTO, OptionBodyDTO, ResponseDTO, ImageBodyDTO } from "../dto";
+import { ProductOptionsService } from "src/application/services";
+import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO, ProductParamDTO, ResponseDTO } from "../dto";
 
 @ApiTags("상품 옵션 관리")
 @Controller("products")

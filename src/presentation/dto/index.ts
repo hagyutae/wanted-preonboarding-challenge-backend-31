@@ -1,0 +1,10 @@
+export { default as ErrorDTO } from "./ErrorDTO";
+export { default as FiltersByCategoryDTO } from "./FiltersByCategoryDTO";
+export { default as ImageBodyDTO } from "./ImageBodyDTO";
+export { default as OptionBodyDTO } from "./OptionsBodyDTO";
+export { OptionParamDTO, ProductParamDTO } from "./ParamDTO";
+export { default as BodyDTO } from "./ProductBodyDTO";
+export { default as ProductQueryDTO } from "./ProductQueryDTO";
+export { default as ResponseDTO } from "./ResponseDTO";
+export { default as ReviewBodyDTO } from "./ReviewBodyDTO";
+export { default as ReviewQueryDTO } from "./ReviewQueryDTO";

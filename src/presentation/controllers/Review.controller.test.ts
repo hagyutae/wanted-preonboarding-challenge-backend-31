@@ -1,8 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import ReviewService from "src/application/ReviewService";
 
-import { ProductParamDTO, ResponseDTO, ReviewQueryDTO } from "../dto";
-import ReviewBodyDTO from "../dto/ReviewBodyDTO";
+import { ReviewService } from "src/application/services";
+import { ProductParamDTO, ResponseDTO, ReviewBodyDTO, ReviewQueryDTO } from "../dto";
 import ReviewController from "./Review.controller";
 
 describe("ReviewController", () => {

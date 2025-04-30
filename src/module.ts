@@ -1,17 +1,22 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { ProductService, ProductOptionsService, CategoryService, MainService } from "./application";
+import {
+  CategoryService,
+  MainService,
+  ProductOptionsService,
+  ProductService,
+  ReviewService,
+} from "./application/services";
 import typeormConfigProvider from "./infrastructure/provider";
 import {
+  CategoryController,
+  MainController,
   ProductController,
   ProductOptionsController,
   ReviewController,
-  CategoryController,
-  MainController,
-} from "./interfaces/controllers";
-import ReviewService from "./application/ReviewService";
-import { TypeOrmModule } from "@nestjs/typeorm";
+} from "./presentation/controllers";
 
 @Module({
   imports: [
