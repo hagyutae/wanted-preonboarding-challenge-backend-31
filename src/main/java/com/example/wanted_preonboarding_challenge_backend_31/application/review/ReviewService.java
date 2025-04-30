@@ -21,4 +21,8 @@ public class ReviewService {
 
         return ReviewUpdateRes.from(review);
     }
+
+    public void delete(Long reviewId) {
+
+    }
 }

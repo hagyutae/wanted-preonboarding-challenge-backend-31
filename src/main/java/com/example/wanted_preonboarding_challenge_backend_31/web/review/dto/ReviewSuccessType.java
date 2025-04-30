@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum ReviewSuccessType implements SuccessType {
-    REVIEW_UPDATE("리뷰가 성공적으로 수정되었습니다.");
+    REVIEW_UPDATE("리뷰가 성공적으로 수정되었습니다."),
+    REVIEW_DELETE("리뷰가 성공적으로 삭제되었습니다.");
 
     private final String message;
 
