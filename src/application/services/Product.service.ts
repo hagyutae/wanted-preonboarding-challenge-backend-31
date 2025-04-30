@@ -132,30 +132,67 @@ export default class ProductService {
     // 쿼리 실행
     const items = await query.getMany();
 
-    return {
-      items,
-      pagination: {
-        total_items: items.length,
-        total_pages: Math.ceil(items.length / per_page),
-        current_page: page,
-        per_page: per_page,
-      },
+    // 페이지네이션 요약 정보
+    const pagination = {
+      total_items: items.length,
+      total_pages: Math.ceil(items.length / per_page),
+      current_page: page,
+      per_page: per_page,
     };
+
+    // 상품 목록 반환
+    return { items, pagination };
   }
 
   async get_by_id(id: number) {
     return this.entity_manager.findOne(ProductDetailView, { where: { id } });
   }
 
-  async update(id: number, data: ProductInputDTO) {
-    await this.entity_manager.update(ProductEntity, id, data);
+  async update(
+    id: number,
+    { seller_id, brand_id, detail, price, categories, ...product }: ProductInputDTO,
+  ) {
+    // 상품 디테일 업데이트
+    await this.entity_manager
+      .createQueryBuilder()
+      .update(ProductDetailEntity)
+      .set({ ...detail })
+      .where("product_id = :product_id", { product_id: id })
+      .execute();
 
-    const updated_product = await this.get_by_id(id);
-    if (!updated_product) {
-      throw new Error(`Product with id ${id} not found`);
+    // 상품 가격 업데이트
+    await this.entity_manager
+      .createQueryBuilder()
+      .update(ProductPriceEntity)
+      .set({ ...price })
+      .where("product_id = :product_id", { product_id: id })
+      .execute();
+
+    // 상품 카테고리 업데이트
+    for (const { category_id, is_primary } of categories) {
+      await this.entity_manager
+        .createQueryBuilder()
+        .update(ProductCategoryEntity)
+        .set({ is_primary, category: { id: category_id } })
+        .where("product_id = :product_id", { product_id: id })
+        .execute();
     }
 
-    return updated_product;
+    // 상품 제품 업데이트
+    const updated_product_entity = await this.entity_manager.save(ProductEntity, {
+      id,
+      seller: { id: seller_id } as SellerEntity,
+      brand: { id: brand_id } as BrandEntity,
+      ...product,
+    });
+
+    // 상품 업데이트 결과 반환
+    return (({ id, name, slug, updated_at }) => ({
+      id,
+      name,
+      slug,
+      updated_at,
+    }))(updated_product_entity);
   }
 
   async delete(id: number) {
