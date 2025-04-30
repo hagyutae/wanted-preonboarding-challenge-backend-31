@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
 import { ProductEntity } from "src/infrastructure/entities";
-import MainService from "./MainService";
+import MainService from "./Main.service";
 
 describe("MainService", () => {
   let service: MainService;

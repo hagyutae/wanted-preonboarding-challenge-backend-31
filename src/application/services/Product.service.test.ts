@@ -4,7 +4,7 @@ import { EntityManager } from "typeorm";
 import { Product_Category, Product_Image, Product_Option_Group } from "src/domain/entities";
 import { ProductEntity } from "src/infrastructure/entities";
 import { ProductInputDTO } from "../dto";
-import ProductService from "./ProductService";
+import ProductService from "./Product.service";
 
 describe("ProductService", () => {
   let service: ProductService;

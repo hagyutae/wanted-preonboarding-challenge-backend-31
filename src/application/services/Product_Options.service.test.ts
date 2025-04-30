@@ -3,7 +3,7 @@ import { EntityManager } from "typeorm";
 
 import { Product_Image, Product_Option } from "src/domain/entities";
 import { ProductImageEntity, ProductOptionEntity } from "src/infrastructure/entities";
-import ProductOptionsService from "./ProductOptionsService";
+import ProductOptionsService from "./Product_Options.service";
 
 describe("ProductOptionsService", () => {
   let service: ProductOptionsService;

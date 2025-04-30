@@ -1,1 +1,1 @@
-export { default as ProductInputDTO } from "./ProductInputDTO";
+export { default as ProductInputDTO } from "./ProductInput.dto";

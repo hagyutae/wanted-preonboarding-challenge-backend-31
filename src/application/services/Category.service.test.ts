@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
 import { CategoryEntity } from "src/infrastructure/entities";
-import CategoryService from "./CategoryService";
+import CategoryService from "./Category.service";
 
 describe("CategoryService", () => {
   let service: CategoryService;
