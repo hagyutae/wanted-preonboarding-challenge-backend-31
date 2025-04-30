@@ -23,9 +23,9 @@ export default class ProductOptionsController {
   @Post(":id/options")
   async create_option(
     @Param() { id }: ParamDTO,
-    @Body() body: OptionBodyDTO,
+    @Body() { option_group_id, ...body }: OptionBodyDTO,
   ): Promise<ResponseDTO> {
-    const data = await this.service.add_options(id, body.option_group_id!, body);
+    const data = await this.service.add_options(id, option_group_id!, body);
 
     return {
       success: true,
