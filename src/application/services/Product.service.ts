@@ -31,73 +31,82 @@ export default class ProductService {
     brand_id,
     ...product
   }: ProductInputDTO) {
-    // 상품 등록
-    const product_entity = await this.entity_manager.save(ProductEntity, {
-      ...product,
-      seller: { id: seller_id } as SellerEntity,
-      brand: { id: brand_id } as BrandEntity,
-    });
+    try {
+      const product_entity = await this.entity_manager.transaction(async (manager) => {
+        // 상품 등록
+        const product_entity = await manager.save(ProductEntity, {
+          ...product,
+          seller: { id: seller_id } as SellerEntity,
+          brand: { id: brand_id } as BrandEntity,
+        });
 
-    // 상품 상세 등록
-    await this.entity_manager.save(ProductDetailEntity, {
-      ...detail,
-      product: product_entity,
-    });
+        // 상품 상세 등록
+        await manager.save(ProductDetailEntity, {
+          ...detail,
+          product: product_entity,
+        });
 
-    // 상품 가격 등록
-    await this.entity_manager.save(ProductPriceEntity, {
-      ...price,
-      product: product_entity,
-    });
+        // 상품 가격 등록
+        await manager.save(ProductPriceEntity, {
+          ...price,
+          product: product_entity,
+        });
 
-    // 상품 카테고리 등록
-    await this.entity_manager.save(
-      ProductCategoryEntity,
-      categories.map(({ category_id, is_primary }) => ({
-        category: { id: category_id } as ProductCategoryEntity,
-        is_primary,
-        product: product_entity,
-      })),
-    );
+        // 상품 카테고리 등록
+        await manager.save(
+          ProductCategoryEntity,
+          categories.map(({ category_id, is_primary }) => ({
+            category: { id: category_id } as ProductCategoryEntity,
+            is_primary,
+            product: product_entity,
+          })),
+        );
 
-    // 상품 옵션 등록
-    for (const { options, ...group_entity } of option_groups) {
-      // 상품 옵션 그룹 등록
-      const option_group_entity = await this.entity_manager.save(ProductOptionGroupEntity, {
-        ...group_entity,
-        product: product_entity,
+        // 상품 옵션 등록
+        for (const { options, ...group_entity } of option_groups) {
+          // 상품 옵션 그룹 등록
+          const option_group_entity = await manager.save(ProductOptionGroupEntity, {
+            ...group_entity,
+            product: product_entity,
+          });
+          await manager.save(option_group_entity);
+
+          // 상품 옵션 그룹에 속한 옵션 등록
+          await manager.save(
+            ProductOptionEntity,
+            options.map((option) => ({ ...option, option_group: option_group_entity })),
+          );
+        }
+
+        // 상품 이미지 등록
+        await manager.save(
+          ProductImageEntity,
+          images.map((image) => ({ ...image, product: product_entity })),
+        );
+
+        // 상품 태그 등록
+        await manager.save(
+          ProductTagEntity,
+          tag_ids.map((tag_id) => ({
+            tag: { id: tag_id } as ProductTagEntity,
+            product: product_entity,
+          })),
+        );
+
+        return product_entity;
       });
 
-      // 상품 옵션 그룹에 속한 옵션 등록
-      await this.entity_manager.save(
-        ProductOptionEntity,
-        options.map((option) => ({ ...option, option_group: option_group_entity })),
-      );
+      // 상품 등록 결과 반환
+      return (({ id, name, slug, created_at, updated_at }) => ({
+        id,
+        name,
+        slug,
+        created_at,
+        updated_at,
+      }))(product_entity);
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
-
-    // 상품 이미지 등록
-    await this.entity_manager.save(
-      ProductImageEntity,
-      images.map((image) => ({ ...image, product: product_entity })),
-    );
-
-    // 상품 태그 등록
-    await this.entity_manager.save(
-      ProductTagEntity,
-      tag_ids.map((tag_id) => ({
-        tag: { id: tag_id } as ProductTagEntity,
-        product: product_entity,
-      })),
-    );
-
-    // 상품 등록 결과 반환
-    return (({ id, name, slug, created_at, updated_at }) => ({
-      id,
-      name,
-      slug,
-      created_at,
-      updated_at,
-    }))(product_entity);
   }
 
   async get_all({
@@ -152,47 +161,55 @@ export default class ProductService {
     id: number,
     { seller_id, brand_id, detail, price, categories, ...product }: ProductInputDTO,
   ) {
-    // 상품 디테일 업데이트
-    await this.entity_manager
-      .createQueryBuilder()
-      .update(ProductDetailEntity)
-      .set({ ...detail })
-      .where("product_id = :product_id", { product_id: id })
-      .execute();
+    try {
+      const updated_product_entity = await this.entity_manager.transaction(async (manager) => {
+        // 상품 디테일 업데이트
+        await manager
+          .createQueryBuilder()
+          .update(ProductDetailEntity)
+          .set({ ...detail })
+          .where("product_id = :product_id", { product_id: id })
+          .execute();
 
-    // 상품 가격 업데이트
-    await this.entity_manager
-      .createQueryBuilder()
-      .update(ProductPriceEntity)
-      .set({ ...price })
-      .where("product_id = :product_id", { product_id: id })
-      .execute();
+        // 상품 가격 업데이트
+        await manager
+          .createQueryBuilder()
+          .update(ProductPriceEntity)
+          .set({ ...price })
+          .where("product_id = :product_id", { product_id: id })
+          .execute();
 
-    // 상품 카테고리 업데이트
-    for (const { category_id, is_primary } of categories) {
-      await this.entity_manager
-        .createQueryBuilder()
-        .update(ProductCategoryEntity)
-        .set({ is_primary, category: { id: category_id } })
-        .where("product_id = :product_id", { product_id: id })
-        .execute();
+        // 상품 카테고리 업데이트
+        for (const { category_id, is_primary } of categories) {
+          await manager
+            .createQueryBuilder()
+            .update(ProductCategoryEntity)
+            .set({ is_primary, category: { id: category_id } })
+            .where("product_id = :product_id", { product_id: id })
+            .execute();
+        }
+
+        // 상품 제품 업데이트
+        const updated_product_entity = await manager.save(ProductEntity, {
+          id,
+          seller: { id: seller_id } as SellerEntity,
+          brand: { id: brand_id } as BrandEntity,
+          ...product,
+        });
+
+        return updated_product_entity;
+      });
+
+      // 상품 업데이트 결과 반환
+      return (({ id, name, slug, updated_at }) => ({
+        id,
+        name,
+        slug,
+        updated_at,
+      }))(updated_product_entity);
+    } catch (error) {
+      throw new Error((error as Error).message);
     }
-
-    // 상품 제품 업데이트
-    const updated_product_entity = await this.entity_manager.save(ProductEntity, {
-      id,
-      seller: { id: seller_id } as SellerEntity,
-      brand: { id: brand_id } as BrandEntity,
-      ...product,
-    });
-
-    // 상품 업데이트 결과 반환
-    return (({ id, name, slug, updated_at }) => ({
-      id,
-      name,
-      slug,
-      updated_at,
-    }))(updated_product_entity);
   }
 
   async delete(id: number) {

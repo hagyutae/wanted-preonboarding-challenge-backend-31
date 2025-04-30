@@ -104,10 +104,8 @@ describe("ProductController", () => {
       id: 1,
       name: "상품1",
       slug: "product-1",
-      created_at: new Date(),
       updated_at: new Date(),
-      status: "available",
-    } as ProductDetailView;
+    };
     const response: ResponseDTO = {
       success: true,
       data,
