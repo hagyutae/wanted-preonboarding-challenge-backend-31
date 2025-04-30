@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { ProductService } from "src/application/services";
-import { BodyDTO, ProductParamDTO, ProductQueryDTO, ResponseDTO } from "../dto";
+import { BodyDTO, ParamDTO, ProductQueryDTO, ResponseDTO } from "../dto";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -49,7 +49,7 @@ export default class ProductController {
   @ApiStandardResponse("상품 상세 정보를 성공적으로 조회했습니다.")
   @ApiBadRequestResponse("요청한 상품을 찾을 수 없습니다.")
   @Get(":id")
-  async read(@Param() { id }: ProductParamDTO): Promise<ResponseDTO> {
+  async read(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
     const data = await this.service.get_by_id(id);
 
     return {
@@ -63,7 +63,7 @@ export default class ProductController {
   @ApiStandardResponse("상품이 성공적으로 수정되었습니다.")
   @ApiBadRequestResponse("상품 수정에 실패했습니다.")
   @Put(":id")
-  async update(@Param() { id }: ProductParamDTO, @Body() body: BodyDTO): Promise<ResponseDTO> {
+  async update(@Param() { id }: ParamDTO, @Body() body: BodyDTO): Promise<ResponseDTO> {
     const data = await this.service.update(id, body);
 
     return {
@@ -77,7 +77,7 @@ export default class ProductController {
   @ApiStandardResponse("상품이 성공적으로 삭제되었습니다.")
   @ApiBadRequestResponse("상품 삭제에 실패했습니다.")
   @Delete(":id")
-  async delete(@Param() { id }: ProductParamDTO): Promise<ResponseDTO> {
+  async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
     const data = await this.service.delete(id);
 
     return {

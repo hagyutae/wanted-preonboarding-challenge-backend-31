@@ -2,7 +2,7 @@ export { default as ErrorDTO, HttpStatusToErrorCodeMap } from "./Error.dto";
 export { default as FiltersByCategoryDTO } from "./FiltersByCategory.dto";
 export { default as ImageBodyDTO } from "./ImageBody.dto";
 export { default as OptionBodyDTO } from "./OptionsBody.dto";
-export { OptionParamDTO, ProductParamDTO } from "./Param.dto";
+export { OptionParamDTO, ParamDTO } from "./Param.dto";
 export { default as BodyDTO } from "./ProductBody.dto";
 export { default as ProductQueryDTO } from "./ProductQuery.dto";
 export { default as ResponseDTO } from "./Response.dto";

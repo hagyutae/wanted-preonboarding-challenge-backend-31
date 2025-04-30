@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
 import { ReviewService } from "src/application/services";
-import { ProductParamDTO, ResponseDTO, ReviewBodyDTO, ReviewQueryDTO } from "../dto";
+import { ParamDTO, ResponseDTO, ReviewBodyDTO, ReviewQueryDTO } from "../dto";
 import ReviewController from "./Review.controller";
 
 describe("ReviewController", () => {
@@ -36,7 +36,7 @@ describe("ReviewController", () => {
       const mockData = { items: [], summary: {}, pagination: {} };
       mockReviewService.get = jest.fn().mockResolvedValue(mockData);
 
-      const result: ResponseDTO = await controller.read({ id } as ProductParamDTO, query);
+      const result: ResponseDTO = await controller.read({ id } as ParamDTO, query);
 
       expect(mockReviewService.get).toHaveBeenCalledWith(id, query);
       expect(result).toEqual({
@@ -54,7 +54,7 @@ describe("ReviewController", () => {
       const mockData = { id: 1, ...body };
       mockReviewService.create = jest.fn().mockResolvedValue(mockData);
 
-      const result: ResponseDTO = await controller.create({ id } as ProductParamDTO, body);
+      const result: ResponseDTO = await controller.create({ id } as ParamDTO, body);
 
       expect(mockReviewService.create).toHaveBeenCalledWith(id, body);
       expect(result).toEqual({
@@ -72,7 +72,7 @@ describe("ReviewController", () => {
       const mockData = { id, ...body };
       mockReviewService.update = jest.fn().mockResolvedValue(mockData);
 
-      const result: ResponseDTO = await controller.update({ id } as ProductParamDTO, body);
+      const result: ResponseDTO = await controller.update({ id } as ParamDTO, body);
 
       expect(mockReviewService.update).toHaveBeenCalledWith(id, body);
       expect(result).toEqual({
@@ -88,7 +88,7 @@ describe("ReviewController", () => {
       const id = 1;
       mockReviewService.delete.mockResolvedValue(undefined);
 
-      const result: ResponseDTO = await controller.delete({ id } as ProductParamDTO);
+      const result: ResponseDTO = await controller.delete({ id } as ParamDTO);
 
       expect(mockReviewService.delete).toHaveBeenCalledWith(id);
       expect(result).toEqual({

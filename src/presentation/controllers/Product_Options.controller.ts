@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 
 import { ProductOptionsService } from "src/application/services";
-import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO, ProductParamDTO, ResponseDTO } from "../dto";
+import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO, ParamDTO, ResponseDTO } from "../dto";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -22,7 +22,7 @@ export default class ProductOptionsController {
   @ApiBadRequestResponse("상품 옵션 추가에 실패했습니다.")
   @Post(":id/options")
   async create_option(
-    @Param() { id }: ProductParamDTO,
+    @Param() { id }: ParamDTO,
     @Body() body: OptionBodyDTO,
   ): Promise<ResponseDTO> {
     const data = await this.service.add_options(id, body.option_group_id!, body);
