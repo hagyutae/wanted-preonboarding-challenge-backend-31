@@ -14,9 +14,7 @@ export default class CategoryEntity {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @ManyToOne(() => CategoryEntity, (category) => category.id, {
-    nullable: true,
-  })
+  @ManyToOne(() => CategoryEntity, (category) => category.id, { nullable: true })
   @JoinColumn({ name: "parent_id" })
   parent?: CategoryEntity;
 

@@ -9,31 +9,36 @@ import { FilterDTO } from "../dto";
 export default class CategoryService {
   constructor(private readonly entityManager: EntityManager) {}
 
-  public build_tree(
-    categories: CategoryEntity[],
-    level: number, // 1: 대분류, 2: 중분류, 3: 소분류
-    parent_id?: number,
-  ) {
-    if (level > 3) {
-      return [];
+  async get_all_categories_as_tree(level: number = 1) {
+    function build_tree(
+      categories: CategoryEntity[],
+      level: number, // 1: 대분류, 2: 중분류, 3: 소분류
+      parent_id?: number,
+    ) {
+      if (level > 3) {
+        return [];
+      }
+
+      const result = categories
+        .filter((category) => category.parent?.id === parent_id)
+        .map(({ id, parent, ...rest }) => {
+          const children = build_tree(categories, level + 1, id);
+          return {
+            id,
+            ...rest,
+            ...(children.length > 0 && { children }),
+          };
+        });
+      return result;
     }
 
-    const result = categories
-      .filter((category) => category.parent?.id === parent_id)
-      .map((category) => ({
-        ...category,
-        children: this.build_tree(categories, level + 1, category.id),
-      }));
-
-    return result;
-  }
-
-  async get_all_categories_as_tree(level: number = 1) {
+    // 카테고리 정보 조회
     const categories = await this.entityManager.find(CategoryEntity, {
       relations: ["parent"],
     });
 
-    return this.build_tree(categories, level);
+    // 카테고리 트리 구조로 변환
+    return build_tree(categories, level);
   }
 
   async get_products_by_category_id(
