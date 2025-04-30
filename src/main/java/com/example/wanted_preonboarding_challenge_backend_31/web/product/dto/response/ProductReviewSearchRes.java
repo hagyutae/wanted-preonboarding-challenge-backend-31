@@ -2,11 +2,11 @@ package com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.re
 
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.pagination.PaginationRes;
 import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductRatingDetailDto;
-import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.product.ProductSearchDataDto;
+import com.example.wanted_preonboarding_challenge_backend_31.shared.dto.review.ProductReviewSearchDataDto;
 import java.util.List;
 
 public record ProductReviewSearchRes(
-        List<ProductSearchDataDto> items,
+        List<ProductReviewSearchDataDto> items,
         ProductRatingDetailDto summary,
         PaginationRes pagination
 ) {
