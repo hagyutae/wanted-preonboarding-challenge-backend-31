@@ -1,5 +1,6 @@
 package com.example.wanted_preonboarding_challenge_backend_31.application.review;
 
+import com.example.wanted_preonboarding_challenge_backend_31.domain.model.review.Review;
 import com.example.wanted_preonboarding_challenge_backend_31.web.review.dto.request.ReviewUpdateReq;
 import com.example.wanted_preonboarding_challenge_backend_31.web.review.dto.response.ReviewUpdateRes;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReviewService {
 
-    public ReviewUpdateRes update(Long reviewId, ReviewUpdateReq reviewUpdateReq) {
-        return null;
+    private final ReviewQueryService reviewQueryService;
+    private final ReviewCommandService reviewCommandService;
+
+    public ReviewUpdateRes update(Long reviewId, ReviewUpdateReq req) {
+        Review review = reviewQueryService.getReviewById(reviewId);
+        reviewCommandService.updateReview(review, req);
+
+        return ReviewUpdateRes.from(review);
     }
 }

@@ -7,6 +7,7 @@ import com.example.wanted_preonboarding_challenge_backend_31.domain.model.review
 import com.example.wanted_preonboarding_challenge_backend_31.domain.model.user.User;
 import com.example.wanted_preonboarding_challenge_backend_31.domain.repository.review.ReviewRepository;
 import com.example.wanted_preonboarding_challenge_backend_31.web.product.dto.request.ProductReviewCreateReq;
+import com.example.wanted_preonboarding_challenge_backend_31.web.review.dto.request.ReviewUpdateReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,11 @@ public class ReviewCommandService {
         Product product = productQueryService.getProductById(productId);
         User randomUser = userQueryService.getRandomOne();
         Review review = Review.create(product, randomUser, req.rating(), req.title(), req.content());
+        return reviewRepository.save(review);
+    }
+
+    public Review updateReview(Review review, ReviewUpdateReq req) {
+        review.update(req.rating(), req.title(), req.content());
         return reviewRepository.save(review);
     }
 }

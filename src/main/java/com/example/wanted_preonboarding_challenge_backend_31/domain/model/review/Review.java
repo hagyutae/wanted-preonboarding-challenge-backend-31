@@ -65,4 +65,10 @@ public class Review extends DateEntity {
                 .helpfulVotes(0)
                 .build();
     }
+
+    public void update(int rating, String title, String content) {
+        this.rating = rating;
+        this.title = title;
+        this.content = content;
+    }
 }
