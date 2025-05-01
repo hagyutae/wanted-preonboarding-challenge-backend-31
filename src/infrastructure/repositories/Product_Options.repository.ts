@@ -2,14 +2,17 @@ import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import { Product_Option } from "src/domain/entities";
-import IRepository from "src/domain/repositories/IRepository";
 import { ProductOptionEntity } from "../entities";
+import BaseRepository from "./BaseRepository";
 
 @Injectable()
-export default class ProductOptionsRepository
-  implements IRepository<Product_Option, ProductOptionEntity>
-{
-  constructor(private readonly entity_manager: EntityManager) {}
+export default class ProductOptionsRepository extends BaseRepository<
+  Product_Option,
+  ProductOptionEntity
+> {
+  constructor(protected readonly entity_manager: EntityManager) {
+    super(entity_manager);
+  }
 
   async save({ option_group_id, ...options }: Product_Option): Promise<ProductOptionEntity> {
     return this.entity_manager.save(ProductOptionEntity, {
@@ -27,15 +30,5 @@ export default class ProductOptionsRepository
 
   async delete(id: number): Promise<void> {
     await this.entity_manager.delete(ProductOptionEntity, id);
-  }
-
-  saves(param: Product_Option[]): Promise<ProductOptionEntity[]> {
-    throw new Error("Method not implemented.");
-  }
-  find_by_id(id: number): Promise<ProductOptionEntity | null> {
-    throw new Error("Method not implemented.");
-  }
-  find_by_filters(filters: any): Promise<ProductOptionEntity[]> {
-    throw new Error("Method not implemented.");
   }
 }

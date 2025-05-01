@@ -2,15 +2,18 @@ import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import { Product } from "src/domain/entities";
-import IRepository from "src/domain/repositories/IRepository";
 import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "../entities";
 import { ProductDetailView, ProductSummaryView } from "../views";
+import BaseRepository from "./BaseRepository";
 
 @Injectable()
-export default class ProductRepository
-  implements IRepository<Product, ProductEntity | ProductSummaryView>
-{
-  constructor(private readonly entity_manager: EntityManager) {}
+export default class ProductRepository extends BaseRepository<
+  Product,
+  ProductEntity | ProductSummaryView
+> {
+  constructor(protected readonly entity_manager: EntityManager) {
+    super(entity_manager);
+  }
 
   async save({ seller_id, brand_id, ...product }: Product): Promise<ProductEntity> {
     return this.entity_manager.save(ProductEntity, {
@@ -90,9 +93,5 @@ export default class ProductRepository
 
   async delete(id: number) {
     await this.entity_manager.delete(ProductEntity, id);
-  }
-
-  saves(param: Product[]): Promise<(ProductEntity | ProductSummaryView)[]> {
-    throw new Error("Method not implemented.");
   }
 }

@@ -1,3 +1,4 @@
+export { default as BaseRepository } from "./BaseRepository";
 export { default as CategoryRepository } from "./Category.repository";
 export { default as MainRepository } from "./Main.repository";
 export { default as ProductRepository } from "./Product.repository";

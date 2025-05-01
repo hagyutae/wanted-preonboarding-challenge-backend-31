@@ -1,12 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import IRepository from "src/domain/repositories/IRepository";
 import { CategoryEntity } from "src/infrastructure/entities";
+import BaseRepository from "./BaseRepository";
 
 @Injectable()
-export default class CategoryRepository implements IRepository<CategoryEntity, CategoryEntity> {
-  constructor(private readonly entity_manager: EntityManager) {}
+export default class CategoryRepository extends BaseRepository<CategoryEntity, CategoryEntity> {
+  constructor(protected readonly entity_manager: EntityManager) {
+    super(entity_manager);
+  }
 
   async find_by_filters() {
     return this.entity_manager.find(CategoryEntity, {
@@ -19,18 +21,5 @@ export default class CategoryRepository implements IRepository<CategoryEntity, C
       where: { id: category_id },
       relations: ["parent"],
     });
-  }
-
-  save(param: CategoryEntity): Promise<CategoryEntity> {
-    throw new Error("Method not implemented.");
-  }
-  saves(param: CategoryEntity[]): Promise<CategoryEntity[]> {
-    throw new Error("Method not implemented.");
-  }
-  update(param: CategoryEntity, id: number): Promise<void | CategoryEntity> {
-    throw new Error("Method not implemented.");
-  }
-  delete(id: number): Promise<void> {
-    throw new Error("Method not implemented.");
   }
 }

@@ -2,12 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import { Review } from "src/domain/entities";
-import IRepository from "src/domain/repositories/IRepository";
 import { ReviewEntity } from "src/infrastructure/entities";
+import BaseRepository from "./BaseRepository";
 
 @Injectable()
-export default class ReviewRepository implements IRepository<Review, ReviewEntity> {
-  constructor(private readonly entity_manager: EntityManager) {}
+export default class ReviewRepository extends BaseRepository<Review, ReviewEntity> {
+  constructor(protected readonly entity_manager: EntityManager) {
+    super(entity_manager);
+  }
 
   async save({ product_id, ...review }: Review): Promise<ReviewEntity> {
     const review_entity = this.entity_manager.create(ReviewEntity, {
@@ -52,12 +54,5 @@ export default class ReviewRepository implements IRepository<Review, ReviewEntit
 
   async delete(id: number): Promise<void> {
     await this.entity_manager.delete(ReviewEntity, id);
-  }
-
-  saves(param: Review[]): Promise<ReviewEntity[]> {
-    throw new Error("Method not implemented.");
-  }
-  find_by_id(id: number): Promise<ReviewEntity | null> {
-    throw new Error("Method not implemented.");
   }
 }
