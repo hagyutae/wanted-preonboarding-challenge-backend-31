@@ -6,21 +6,20 @@ import com.example.preonboarding.exception.NotFoundResourceException;
 import com.example.preonboarding.exception.ProductRegisterException;
 import com.example.preonboarding.repository.brands.BrandsRepository;
 import com.example.preonboarding.repository.categories.CategoriesRepository;
+import com.example.preonboarding.repository.options.ProductOptionGroupRepository;
+import com.example.preonboarding.repository.options.ProductOptionRepository;
 import com.example.preonboarding.repository.products.ProductRepository;
 import com.example.preonboarding.repository.products.ProductRepositoryCustom;
 import com.example.preonboarding.repository.reviews.RatingRepository;
 import com.example.preonboarding.repository.sellers.SellerRepository;
 import com.example.preonboarding.repository.tags.TagsRepository;
 import com.example.preonboarding.request.CategoryRequest;
+import com.example.preonboarding.request.ProductOptionRequest;
 import com.example.preonboarding.request.ProductSearchRequest;
 import com.example.preonboarding.request.ProductsRequest;
 import com.example.preonboarding.response.*;
 import com.example.preonboarding.response.error.ErrorCode;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -44,6 +43,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final SellerRepository sellerRepository;
     private final BrandsRepository brandsRepository;
+    private final ProductOptionGroupRepository productOptionGroupRepository;
+    private final ProductOptionRepository productOptionRepository;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
@@ -402,5 +403,23 @@ public class ProductService {
 
 
         productRepository.delete(products);
+    }
+    @Transactional
+    public ProductOption addProductOptions(Long id, ProductOptionRequest request) {
+        ProductOptionGroup productOptionGroup = productOptionGroupRepository.findById(request.getOptionGroupId()).orElseThrow(() -> new IllegalArgumentException("not found optionGroup"));
+
+        ProductOption newOption = ProductOption.builder()
+                .name(request.getName())
+                .additionalPrice(request.getAdditionalPrice())
+                .sku(request.getSku())
+                .displayOrder(request.getDisplayOrder())
+                .stock(request.getStock())
+                .build();
+
+        productOptionGroup.getOptionGroups().add(newOption);
+
+        ProductOption savedOption = productOptionRepository.save(newOption);
+
+        return savedOption;
     }
 }

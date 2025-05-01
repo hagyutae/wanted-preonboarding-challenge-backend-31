@@ -1,7 +1,10 @@
 package com.example.preonboarding.controller;
 
+import com.example.preonboarding.domain.ProductOption;
 import com.example.preonboarding.domain.Products;
+import com.example.preonboarding.dto.OptionDTO;
 import com.example.preonboarding.exception.BadRequestException;
+import com.example.preonboarding.request.ProductOptionRequest;
 import com.example.preonboarding.request.ProductSearchRequest;
 import com.example.preonboarding.dto.ProductsDTO;
 import com.example.preonboarding.request.ProductsRequest;
@@ -37,18 +40,18 @@ public class ProductRestController {
         }
         Products products = productService.addProducts(request);
         ProductsDTO dto = new ProductsDTO(products);
-        return CommonResponse.success(dto);
+        return CommonResponse.success(dto,"상품이 성공적으로 등록되었습니다.");
     }
     @GetMapping(value = "/products")
     public CommonResponse findAllProducts(ProductSearchRequest request){
         Map<String,Object> map = new HashMap<>();
         map.put("items", productService.findAllProducts(request));
-        return CommonResponse.success(map);
+        return CommonResponse.success(map,"상품 목록을 성공적으로 조회했습니다.");
     }
 
     @GetMapping(value = "/products/{id}")
     public CommonResponse findProductsById(@PathVariable("id")Long id) {
-        return CommonResponse.success(productService.findProductsById(id));
+        return CommonResponse.success(productService.findProductsById(id),"상품 상세 정보를 성공적으로 조회했습니다.");
     }
 
     @PutMapping(value = "/products/{id}")
@@ -63,13 +66,22 @@ public class ProductRestController {
 
         Products products = productService.updateProducts(request,id);
         ProductsDTO dto = new ProductsDTO(products);
-        return CommonResponse.success(dto);
+        return CommonResponse.success(dto,"상품이 성공적으로 수정되었습니다.");
     }
 
     @DeleteMapping(value = "/products/{id}")
     public CommonResponse deleteProducts(@PathVariable("id")Long id) {
         productService.deleteProducts(id);
-        return CommonResponse.delete();
+        return CommonResponse.success(null,"상품이 성공적으로 삭제되었습니다.");
+    }
+
+    @PostMapping(value = "/products/{id}/options")
+    public CommonResponse addProductOptions(@PathVariable("id") Long id, @RequestBody ProductOptionRequest request) {
+        Long optionGroupId = request.getOptionGroupId();
+        System.out.println(optionGroupId);
+        ProductOption productOption = productService.addProductOptions(id, request);
+        OptionDTO dto = new OptionDTO(productOption);
+        return CommonResponse.success(dto,"상품 옵션이 성공적으로 추가 되었습니다.");
     }
 
     private String toSnakeCase(String fieldPath) {
