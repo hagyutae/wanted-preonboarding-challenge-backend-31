@@ -13,6 +13,8 @@ import com.example.preonboarding.response.error.ErrorCode;
 import com.example.preonboarding.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +32,7 @@ public class ProductRestController {
     private final ProductService productService;
 
     @PostMapping(value = "/products")
-    public CommonResponse addProducts(@Validated @RequestBody ProductsRequest request, BindingResult bindingResult){
+    public ResponseEntity<CommonResponse> addProducts(@Validated @RequestBody ProductsRequest request, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             Map<String, Object> details = new HashMap<>();
             bindingResult.getFieldErrors().forEach(error ->
@@ -40,22 +42,22 @@ public class ProductRestController {
         }
         Products products = productService.addProducts(request);
         ProductsDTO dto = new ProductsDTO(products);
-        return CommonResponse.success(dto,"상품이 성공적으로 등록되었습니다.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(CommonResponse.success(dto, "상품이 성공적으로 등록되었습니다."));
     }
     @GetMapping(value = "/products")
-    public CommonResponse findAllProducts(ProductSearchRequest request){
+    public ResponseEntity<CommonResponse> findAllProducts(ProductSearchRequest request){
         Map<String,Object> map = new HashMap<>();
         map.put("items", productService.findAllProducts(request));
-        return CommonResponse.success(map,"상품 목록을 성공적으로 조회했습니다.");
+        return ResponseEntity.ok().body(CommonResponse.success(map, "상품이 성공적으로 등록되었습니다."));
     }
 
     @GetMapping(value = "/products/{id}")
-    public CommonResponse findProductsById(@PathVariable("id")Long id) {
-        return CommonResponse.success(productService.findProductsById(id),"상품 상세 정보를 성공적으로 조회했습니다.");
+    public ResponseEntity<CommonResponse> findProductsById(@PathVariable("id")Long id) {
+        return ResponseEntity.ok().body(CommonResponse.success(productService.findProductsById(id), "상품 상세 정보를 성공적으로 조회했습니다."));
     }
 
     @PutMapping(value = "/products/{id}")
-    public CommonResponse updateProducts(@PathVariable("id")Long id,@Validated @RequestBody ProductsRequest request, BindingResult bindingResult) {
+    public ResponseEntity<CommonResponse> updateProducts(@PathVariable("id")Long id,@Validated @RequestBody ProductsRequest request, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Map<String, Object> details = new HashMap<>();
             bindingResult.getFieldErrors().forEach(error ->
@@ -66,22 +68,22 @@ public class ProductRestController {
 
         Products products = productService.updateProducts(request,id);
         ProductsDTO dto = new ProductsDTO(products);
-        return CommonResponse.success(dto,"상품이 성공적으로 수정되었습니다.");
+        return ResponseEntity.ok().body(CommonResponse.success(dto, "상품이 성공적으로 수정되었습니다."));
     }
 
     @DeleteMapping(value = "/products/{id}")
-    public CommonResponse deleteProducts(@PathVariable("id")Long id) {
+    public ResponseEntity<CommonResponse> deleteProducts(@PathVariable("id")Long id) {
         productService.deleteProducts(id);
-        return CommonResponse.success(null,"상품이 성공적으로 삭제되었습니다.");
+        return ResponseEntity.ok().body(CommonResponse.success(null, "상품이 성공적으로 삭제되었습니다."));
     }
 
     @PostMapping(value = "/products/{id}/options")
-    public CommonResponse addProductOptions(@PathVariable("id") Long id, @RequestBody ProductOptionRequest request) {
+    public ResponseEntity<CommonResponse> addProductOptions(@PathVariable("id") Long id, @RequestBody ProductOptionRequest request) {
         Long optionGroupId = request.getOptionGroupId();
         System.out.println(optionGroupId);
         ProductOption productOption = productService.addProductOptions(id, request);
         OptionDTO dto = new OptionDTO(productOption);
-        return CommonResponse.success(dto,"상품 옵션이 성공적으로 추가 되었습니다.");
+        return ResponseEntity.ok().body(CommonResponse.success(dto, "상품 옵션이 성공적으로 추가 되었습니다."));
     }
 
     private String toSnakeCase(String fieldPath) {
