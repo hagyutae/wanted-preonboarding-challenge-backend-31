@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { ReviewService } from "src/application/services";
 import { ParamDTO, ResponseDTO, ReviewBodyDTO, ReviewQueryDTO } from "../dto";
@@ -13,6 +13,7 @@ import {
 import { to_FilterDTO } from "../mappers";
 
 @ApiTags("리뷰")
+@ApiBearerAuth()
 @Controller("reviews")
 @ApiErrorResponse()
 export default class ReviewController {

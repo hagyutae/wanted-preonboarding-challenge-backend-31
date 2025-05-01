@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { CategoryService } from "src/application/services";
 import { FiltersByCategoryDTO, ParamDTO, ResponseDTO } from "../dto";
@@ -7,6 +7,7 @@ import { ApiStandardResponse, ApiErrorResponse, ApiBadRequestResponse } from "..
 import { to_FilterDTO } from "../mappers";
 
 @ApiTags("카테고리")
+@ApiBearerAuth()
 @Controller("categories")
 @ApiErrorResponse()
 export default class CategoryController {

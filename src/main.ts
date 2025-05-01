@@ -33,6 +33,7 @@ async function bootstrap() {
     .setTitle("API")
     .setDescription("API 명세서")
     .setVersion("1.0")
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, swagger_config);

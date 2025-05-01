@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { ProductService } from "src/application/services";
 import { BodyDTO, ParamDTO, ProductQueryDTO, ResponseDTO } from "../dto";
@@ -12,6 +12,7 @@ import {
 import { to_FilterDTO } from "../mappers";
 
 @ApiTags("상품 관리")
+@ApiBearerAuth()
 @Controller("products")
 @ApiErrorResponse()
 export default class ProductController {
