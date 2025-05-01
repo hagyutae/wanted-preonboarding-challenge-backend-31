@@ -41,11 +41,11 @@ public class ProductOption {
     private Integer displayOrder;
 
     public static ProductOption of(ProductOptionGroup optionGroup, String name,
-        Double additionalPrice, String sku, int stock, int displayOrder) {
+        BigDecimal additionalPrice, String sku, int stock, int displayOrder) {
         return ProductOption.builder()
             .optionGroup(optionGroup)
             .name(name)
-            .additionalPrice(BigDecimal.valueOf(additionalPrice))
+            .additionalPrice(additionalPrice)
             .sku(sku)
             .stock(stock)
             .displayOrder(displayOrder)

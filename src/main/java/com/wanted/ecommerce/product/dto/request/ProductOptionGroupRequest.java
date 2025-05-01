@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class ProductOptionGroupRequest {
     private String name;
     private int displayOrder;
-    private List<OptionRequest> options;
+    private List<ProductOptionRequest> options;
 }
