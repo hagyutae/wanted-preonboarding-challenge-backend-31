@@ -47,62 +47,58 @@ export default class ProductService {
     brand_id,
     ...product
   }: ProductInputDTO) {
-    try {
-      // 상품 등록 트랜잭션 처리
-      const product_entity = await this.entity_manager.transaction(async (manager) => {
-        // 상품 등록
-        const product_entity = await new ProductRepository(manager).save({
-          ...product,
-          seller_id,
-          brand_id,
-        });
-        const { id: product_id } = product_entity;
-
-        // 상품 상세 등록
-        await this.product_detail_repository.with_transaction(manager).save({
-          ...detail,
-          product_id,
-        });
-
-        // 상품 가격 등록
-        await this.product_price_repository.with_transaction(manager).save({
-          ...price,
-          product_id,
-        });
-
-        // 상품 카테고리 등록
-        await this.product_category_repository
-          .with_transaction(manager)
-          .saves(categories.map((category) => ({ ...category, product_id })));
-
-        // 상품 옵션 등록
-        await this.product_option_group_repository
-          .with_transaction(manager)
-          .saves(option_groups.map((group) => ({ ...group, product_id })));
-
-        // 상품 이미지 등록
-        await this.product_image_repository
-          .with_transaction(manager)
-          .saves(images.map((image) => ({ ...image, product_id })));
-
-        // 상품 태그 등록
-        await this.product_tag_repository
-          .with_transaction(manager)
-          .saves(tag_ids.map((tag_id) => ({ tag_id, product_id })));
-
-        return product_entity;
+    // 상품 등록 트랜잭션 처리
+    const product_entity = await this.entity_manager.transaction(async (manager) => {
+      // 상품 등록
+      const product_entity = await new ProductRepository(manager).save({
+        ...product,
+        seller_id,
+        brand_id,
       });
-      // 상품 등록 결과 반환
-      return (({ id, name, slug, created_at, updated_at }) => ({
-        id,
-        name,
-        slug,
-        created_at,
-        updated_at,
-      }))(product_entity);
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
+      const { id: product_id } = product_entity;
+
+      // 상품 상세 등록
+      await this.product_detail_repository.with_transaction(manager).save({
+        ...detail,
+        product_id,
+      });
+
+      // 상품 가격 등록
+      await this.product_price_repository.with_transaction(manager).save({
+        ...price,
+        product_id,
+      });
+
+      // 상품 카테고리 등록
+      await this.product_category_repository
+        .with_transaction(manager)
+        .saves(categories.map((category) => ({ ...category, product_id })));
+
+      // 상품 옵션 등록
+      await this.product_option_group_repository
+        .with_transaction(manager)
+        .saves(option_groups.map((group) => ({ ...group, product_id })));
+
+      // 상품 이미지 등록
+      await this.product_image_repository
+        .with_transaction(manager)
+        .saves(images.map((image) => ({ ...image, product_id })));
+
+      // 상품 태그 등록
+      await this.product_tag_repository
+        .with_transaction(manager)
+        .saves(tag_ids.map((tag_id) => ({ tag_id, product_id })));
+
+      return product_entity;
+    });
+    // 상품 등록 결과 반환
+    return (({ id, name, slug, created_at, updated_at }) => ({
+      id,
+      name,
+      slug,
+      created_at,
+      updated_at,
+    }))(product_entity);
   }
 
   async find_all({ page = 1, per_page = 10, sort, ...rest }: FilterDTO) {
