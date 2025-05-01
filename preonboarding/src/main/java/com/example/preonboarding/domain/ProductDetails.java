@@ -1,11 +1,17 @@
 package com.example.preonboarding.domain;
 
+import com.example.preonboarding.convert.JpaJsonConverter;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.util.Map;
 
 @Entity
+@Builder
+@AllArgsConstructor
 @Table(name = "product_details")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -21,7 +27,8 @@ public class ProductDetails {
     private double weight;
 
     @Column(columnDefinition = "json")
-    private String dimensions;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private JsonNode dimensions;
 
     private String materials;
     private String countryOfOrigin;
@@ -29,5 +36,11 @@ public class ProductDetails {
     private String careInstructions;
 
     @Column(columnDefinition = "jsonb")
-    private String additionalInfo;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private JsonNode additionalInfo;
+
+
+    public void setProducts(Products products) {
+        this.products = products;
+    }
 }

@@ -1,5 +1,7 @@
 package com.example.preonboarding.dto;
 
+import com.example.preonboarding.domain.Products;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductsDTO {
     private Long id;
     private String name;
@@ -33,6 +36,7 @@ public class ProductsDTO {
     private String sellerContactPhone;
     private String status;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     private ProductImageDTO images;
     private ProductOptionDTO options;
@@ -73,5 +77,13 @@ public class ProductsDTO {
         this.brandName = brandName;
         this.status = status;
         this.createdAt = createdAt;
+    }
+
+    public ProductsDTO(Products products) {
+        this.id = products.getId();
+        this.name = products.getName();
+        this.slug = products.getSlug();
+        this.createdAt = products.getCreatedAt();
+        this.updatedAt = products.getUpdatedAt();
     }
 }

@@ -6,15 +6,25 @@ import com.example.preonboarding.repository.categories.CategoriesRepository;
 import com.example.preonboarding.repository.products.ProductRepository;
 import com.example.preonboarding.repository.products.ProductRepositoryCustom;
 import com.example.preonboarding.repository.reviews.RatingRepository;
+import com.example.preonboarding.repository.tags.TagsRepository;
+import com.example.preonboarding.request.ProductSearchRequest;
+import com.example.preonboarding.request.ProductsRequest;
 import com.example.preonboarding.response.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,7 +36,121 @@ public class ProductService {
     private final ProductRepositoryCustom productRepositoryCustom;
     private final RatingRepository ratingRepository;
     private final CategoriesRepository categoriesRepository;
+    private final TagsRepository tagsRepository;
+    private final ProductRepository productRepository;
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Transactional
+    public Products addProducts(ProductsRequest request) {
+
+        //products
+        Products products = Products.from(request);
+
+
+        //brands
+        Brands brand = productRepositoryCustom.findProductBrandById(request.getBrandId());
+        products.setBrands(brand);
+
+        //sellers
+        Sellers seller = productRepositoryCustom.findProductSellerById(request.getSellerId());
+        products.setSellers(seller);
+
+        // detail
+        try {
+            ProductDetails details = ProductDetails.builder()
+                    .weight(request.getDetail().getWeight())
+                    .dimensions(objectMapper.valueToTree(request.getDetail().getDimensions()))
+                    .materials(request.getDetail().getMaterials())
+                    .warrantyInfo(request.getDetail().getWarrantyInfo())
+                    .careInstructions(request.getDetail().getCareInstructions())
+                    .additionalInfo(objectMapper.valueToTree(request.getDetail().getAdditionalInfo()))
+                            .build();
+
+            products.setProductDetails(details);
+        } catch (Exception e) {
+            throw new RuntimeException("제품 상세정보 JSON 직렬화 실패", e);
+        }
+
+        // price
+        ProductPrices price = ProductPrices.builder()
+                .basePrice(request.getPrice().getBasePrice())
+                .salePrice(request.getPrice().getSalePrice())
+                .costPrice(request.getPrice().getCostPrice())
+                .currency(request.getPrice().getCurrency())
+                .tax_rate(request.getPrice().getTax_rate()).build();
+
+        products.setProductPrices(price);
+
+        //images
+        List<ProductImages> images = request.getImages().stream()
+                .map(i-> ProductImages.builder()
+                    .url(i.getUrl())
+                    .altText(i.getAltText())
+                    .displayOrder(i.getDisplayOrder())
+                    .isPrimary(i.isPrimary())
+                    .options(null)
+                    .build())
+                .collect(Collectors.toList());
+
+       products.setProductImages(images);
+
+       // categories
+        List<ProductCategories> categories = request.getCategories().stream().map(i -> {
+            Categories category = categoriesRepository.findById(i.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("not found category"));
+            return ProductCategories.builder()
+                    .categories(category)
+                    .products(products)
+                    .isPrimary(i.isPrimary())
+                    .build();
+        }).collect(Collectors.toList());
+
+        products.setProductCategories(categories);
+
+        //option groups
+        List<ProductOptionGroup> optionGroups = request.getOptionGroups().stream().map(i -> {
+            List<ProductOption> options = i.getOptions().stream()
+                    .map(option -> {
+                       return ProductOption.builder()
+                                .name(option.getName())
+                                .additionalPrice(option.getAdditionalPrice())
+                                .sku(option.getSku())
+                                .stock(option.getStock())
+                                .displayOrder(option.getDisplayOrder())
+                                .build();
+                    }).collect(Collectors.toList());
+
+            ProductOptionGroup optionGroup = ProductOptionGroup.builder()
+                    .name(i.getName())
+                    .displayOrder(i.getDisplayOrder())
+                    .optionGroups(options)
+                    .products(products)
+                    .build();
+
+            options.forEach(opt -> opt.setOptionGroups(optionGroup));
+
+            return optionGroup;
+        }).collect(Collectors.toList());
+
+        products.setProductOptionGroups(optionGroups);
+
+        //tags
+        List<ProductTags> productTags = request.getTags().stream()
+                .map(tagId -> {
+                    Tags tag = tagsRepository.findById(tagId.longValue()).orElseThrow(() -> new IllegalArgumentException("not found tag :" + tagId));
+                    return ProductTags.builder()
+                            .tags(tag)
+                            .products(products)
+                            .build();
+                }).collect(Collectors.toList());
+
+        products.setProductTags(productTags);
+
+        Products savedProducts = productRepository.save(products);
+
+        return savedProducts;
+    }
+
+
     public List<ProductsSummaryResponse> findAllProducts(ProductSearchRequest search){
         List<ProductsDTO> products = productRepositoryCustom.searchPage(search);
 
@@ -69,20 +193,15 @@ public class ProductService {
 
         try {
             if (productDetails.getDimensions() != null) {
-                dimesions = objectMapper.readValue(productDetails.getDimensions(), Dimensions.class);
+                dimesions = objectMapper.treeToValue(productDetails.getDimensions(), Dimensions.class);
 
             }
         }catch (IOException e){
             throw new RuntimeException("dimensions 파싱 에러", e);
         }
 
-        try {
-            if (productDetails.getAdditionalInfo() != null) {
-                additionalInfo = objectMapper.readValue(productDetails.getAdditionalInfo(), AdditionalInfo.class);
-            }
-
-        }catch (IOException e){
-            throw new RuntimeException("additionalInfo 파싱 에러", e);
+        if (productDetails.getAdditionalInfo() != null) {
+            additionalInfo = objectMapper.convertValue(productDetails.getAdditionalInfo(), AdditionalInfo.class);
         }
 
         DetailDTO detail = DetailDTO.builder()

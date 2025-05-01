@@ -2,6 +2,7 @@ package com.example.preonboarding.repository.products;
 
 import com.example.preonboarding.domain.*;
 import com.example.preonboarding.dto.*;
+import com.example.preonboarding.request.ProductSearchRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -115,6 +116,23 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom{
                 .leftJoin(products.productOptionGroups,optionGroup)
                 .leftJoin(products.productTags,tags)
                 .where(products.id.eq(id))
+                .fetchOne();
+    }
+
+    @Override
+    public Brands findProductBrandById(Long id) {
+        QBrands brands = QBrands.brands;
+        return queryFactory.selectFrom(brands)
+                .where(brands.id.eq(id))
+                .fetchOne();
+    }
+
+    @Override
+    public Sellers findProductSellerById(Long id) {
+        QSellers sellers = QSellers.sellers;
+
+        return queryFactory.selectFrom(sellers)
+                .where(sellers.id.eq(id))
                 .fetchOne();
     }
 

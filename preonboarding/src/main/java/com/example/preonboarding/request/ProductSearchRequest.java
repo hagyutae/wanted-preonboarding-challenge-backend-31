@@ -1,4 +1,4 @@
-package com.example.preonboarding.dto;
+package com.example.preonboarding.request;
 
 import lombok.Getter;
 import lombok.Setter;

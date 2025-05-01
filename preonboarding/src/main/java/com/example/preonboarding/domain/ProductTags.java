@@ -1,13 +1,13 @@
 package com.example.preonboarding.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "product_tags")
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductTags {
     @Id
@@ -22,5 +22,7 @@ public class ProductTags {
     @JoinColumn(name = "tag_id")
     private Tags tags;
 
-
+    public void setProducts(Products products) {
+        this.products = products;
+    }
 }

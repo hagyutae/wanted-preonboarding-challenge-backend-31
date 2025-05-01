@@ -1,16 +1,14 @@
 package com.example.preonboarding.controller;
 
-import com.example.preonboarding.dto.ProductSearchRequest;
+import com.example.preonboarding.domain.Products;
+import com.example.preonboarding.request.ProductSearchRequest;
+import com.example.preonboarding.dto.ProductsDTO;
+import com.example.preonboarding.request.ProductsRequest;
 import com.example.preonboarding.response.CommonResponse;
 import com.example.preonboarding.service.ProductService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +20,13 @@ import java.util.Map;
 public class ProductRestController {
 
     private final ProductService productService;
+
+    @PostMapping(value = "/products")
+    public CommonResponse addProducts(@RequestBody ProductsRequest request){
+        Products products = productService.addProducts(request);
+        ProductsDTO dto = new ProductsDTO(products);
+        return CommonResponse.success(dto);
+    }
     @GetMapping(value = "/products")
     public CommonResponse findAllProducts(ProductSearchRequest request){
         Map<String,Object> map = new HashMap<>();

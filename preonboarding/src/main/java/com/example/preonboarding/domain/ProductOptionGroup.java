@@ -1,9 +1,7 @@
 package com.example.preonboarding.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +9,8 @@ import java.util.List;
 @Entity
 @Table(name = "product_option_groups")
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOptionGroup {
     @Id
@@ -26,4 +26,8 @@ public class ProductOptionGroup {
 
     private String name;
     private int displayOrder;
+
+    public void setProducts(Products products) {
+        this.products = products;
+    }
 }
