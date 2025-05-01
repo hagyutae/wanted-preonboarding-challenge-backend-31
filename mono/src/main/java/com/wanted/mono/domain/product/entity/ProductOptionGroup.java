@@ -1,5 +1,6 @@
 package com.wanted.mono.domain.product.entity;
 
+import com.wanted.mono.domain.product.dto.ProductOptionGroupRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,4 +36,16 @@ public class ProductOptionGroup {
     // 옵션 삭제 시 같이 삭제됨
     @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProductOption> productOptions = new ArrayList<>();
+
+    // --------------------
+    public static ProductOptionGroup of(ProductOptionGroupRequest request) {
+        ProductOptionGroup productOptionGroup = new ProductOptionGroup();
+        productOptionGroup.name = request.getName();
+        productOptionGroup.displayOrder = request.getDisplayOrder();
+        return productOptionGroup;
+    }
+
+    public void addProduct(Product product) {
+        this.product = product;
+    }
 }

@@ -1,5 +1,6 @@
 package com.wanted.mono.domain.product.entity;
 
+import com.wanted.mono.domain.product.dto.ProductImageRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,4 +40,19 @@ public class ProductImage {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_id", nullable = true)
     private ProductOption option;
+
+    // -----------------------
+
+    public static ProductImage of(ProductImageRequest request) {
+        ProductImage productImage = new ProductImage();
+        productImage.url = request.getUrl();
+        productImage.altText = request.getAltText();
+        productImage.isPrimary = request.getIsPrimary();
+        productImage.displayOrder = request.getDisplayOrder();
+        return productImage;
+    }
+
+    public void addProduct(Product product) {
+        this.product = product;
+    }
 }

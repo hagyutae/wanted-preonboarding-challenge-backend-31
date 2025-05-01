@@ -2,6 +2,7 @@ package com.wanted.mono.domain.product.entity;
 
 import com.wanted.mono.domain.brand.entity.Brand;
 import com.wanted.mono.domain.category.entity.ProductCategory;
+import com.wanted.mono.domain.product.dto.ProductRequest;
 import com.wanted.mono.domain.review.entity.Review;
 import com.wanted.mono.domain.seller.entity.Seller;
 import com.wanted.mono.domain.tag.entity.ProductTag;
@@ -99,4 +100,17 @@ public class Product {
     // 상품 삭제 시 같이 삭제됨
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
+
+    // ----------------------------------------------
+
+    public static Product of(ProductRequest request) {
+        Product product = new Product();
+        product.name = request.getName();
+        product.slug = request.getSlug();
+        product.shortDescription = request.getShortDescription();
+        product.fullDescription = request.getFullDescription();
+        product.createdAt = LocalDateTime.now();
+        product.updatedAt = LocalDateTime.now();
+        return product;
+    }
 }

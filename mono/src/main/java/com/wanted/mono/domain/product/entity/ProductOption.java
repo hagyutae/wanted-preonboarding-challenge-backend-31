@@ -1,5 +1,6 @@
 package com.wanted.mono.domain.product.entity;
 
+import com.wanted.mono.domain.product.dto.ProductOptionRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,4 +41,19 @@ public class ProductOption {
 
     // 표시 순서
     private Integer displayOrder = 0;
+
+    // --------------------------
+    public static ProductOption of(ProductOptionRequest productOptionRequest) {
+        ProductOption productOption = new ProductOption();
+        productOption.name = productOptionRequest.getName();
+        productOption.additionalPrice = productOptionRequest.getAdditionalPrice();
+        productOption.sku = productOptionRequest.getSku();
+        productOption.stock = productOptionRequest.getStock();
+        productOption.displayOrder = productOptionRequest.getDisplayOrder();
+        return productOption;
+    }
+
+    public void addOptionGroup(ProductOptionGroup productOptionGroup) {
+        this.optionGroup = productOptionGroup;
+    }
 }
