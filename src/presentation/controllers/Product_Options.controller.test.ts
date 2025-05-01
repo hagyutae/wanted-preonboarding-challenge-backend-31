@@ -32,8 +32,11 @@ describe("ProductOptionsController", () => {
   describe("addOptions", () => {
     it("상품 옵션 추가 성공", async () => {
       const param = { id: 1 };
-      const body = { option_group_id: 2, name: "Option 1" } as OptionBodyDTO;
-      const data = { id: param.id, ...body } as Product_Option;
+      const body = { name: "Option 1" } as OptionBodyDTO;
+      const data = {
+        id: param.id,
+        ...body,
+      } as Product_Option;
       mockService.register = jest.fn().mockResolvedValue(data);
 
       const result = await mockController.create_option(param, body);
@@ -41,7 +44,7 @@ describe("ProductOptionsController", () => {
       expect(mockService.register).toHaveBeenCalledWith(param.id, body.option_group_id, body);
       expect(result).toEqual({
         success: true,
-        data: { id: 1, option_group_id: body.option_group_id, name: "Option 1" },
+        data: { id: 1, name: "Option 1" },
         message: "상품 옵션이 성공적으로 추가되었습니다.",
       });
     });

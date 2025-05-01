@@ -12,9 +12,7 @@ describe("MainController", () => {
 
   beforeEach(async () => {
     mockMainService = {
-      getNewProducts: jest.fn(),
-      getPopularProducts: jest.fn(),
-      getFeaturedCategories: jest.fn(),
+      find: jest.fn(),
     } as unknown as jest.Mocked<MainService>;
 
     const module: TestingModule = await Test.createTestingModule({

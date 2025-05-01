@@ -139,54 +139,50 @@ export default class ProductService {
     product_id: number,
     { detail, seller_id, brand_id, price, categories, ...product }: ProductInputDTO,
   ) {
-    try {
-      const is_updated = await this.entity_manager.transaction(async (manager) => {
-        // 상품 디테일 업데이트
-        await this.product_detail_repository
+    const is_updated = await this.entity_manager.transaction(async (manager) => {
+      // 상품 디테일 업데이트
+      await this.product_detail_repository
+        .with_transaction(manager)
+        .update({ ...detail, product_id });
+
+      // 상품 가격 업데이트
+      await this.product_price_repository
+        .with_transaction(manager)
+        .update({ ...price, product_id });
+
+      // 상품 카테고리 업데이트
+      for (const category of categories) {
+        await this.product_category_repository
           .with_transaction(manager)
-          .update({ ...detail, product_id });
-
-        // 상품 가격 업데이트
-        await this.product_price_repository
-          .with_transaction(manager)
-          .update({ ...price, product_id });
-
-        // 상품 카테고리 업데이트
-        for (const category of categories) {
-          await this.product_category_repository
-            .with_transaction(manager)
-            .update({ ...category, product_id });
-        }
-
-        // 상품 제품 업데이트
-        return this.repository.with_transaction(manager).update(
-          {
-            seller_id,
-            brand_id,
-            ...product,
-          },
-          product_id,
-        );
-      });
-
-      if (!is_updated) {
-        throw new NotFoundException({
-          message: "요청한 리소스를 찾을 수 없습니다.",
-          details: { resourceType: "Product", resourceId: product_id },
-        });
+          .update({ ...category, product_id });
       }
 
-      const updated_product = await this.repository.find_by_id(product_id);
+      // 상품 제품 업데이트
+      return this.repository.with_transaction(manager).update(
+        {
+          seller_id,
+          brand_id,
+          ...product,
+        },
+        product_id,
+      );
+    });
 
-      return (({ id, name, slug, updated_at }) => ({
-        id,
-        name,
-        slug,
-        updated_at,
-      }))(updated_product!);
-    } catch (error) {
-      throw new Error((error as Error).message);
+    if (!is_updated) {
+      throw new NotFoundException({
+        message: "요청한 리소스를 찾을 수 없습니다.",
+        details: { resourceType: "Product", resourceId: product_id },
+      });
     }
+
+    const updated_product = await this.repository.find_by_id(product_id);
+
+    return (({ id, name, slug, updated_at }) => ({
+      id,
+      name,
+      slug,
+      updated_at,
+    }))(updated_product!);
   }
 
   async remove(id: number) {

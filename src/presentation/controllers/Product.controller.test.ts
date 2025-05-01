@@ -123,7 +123,7 @@ describe("ProductController", () => {
       data: undefined,
       message: "상품이 성공적으로 삭제되었습니다.",
     };
-    productService.remove = jest.fn().mockResolvedValue(true);
+    productService.remove = jest.fn().mockResolvedValue(undefined);
 
     const result = await productController.delete(param);
 

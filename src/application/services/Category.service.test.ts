@@ -1,40 +1,51 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { EntityManager } from "typeorm";
 
-import { CategoryEntity } from "src/infrastructure/entities";
+import { Category, Product, Product_Catalog, Product_Summary } from "src/domain/entities";
+import { IRepository } from "src/domain/repositories";
+import { FilterDTO } from "../dto";
 import CategoryService from "./Category.service";
 
 describe("CategoryService", () => {
-  let service: CategoryService;
-  let mockEntityManager: jest.Mocked<EntityManager>;
+  let categoryService: CategoryService;
+  let categoryRepository: IRepository<Category>;
+  let productRepository: IRepository<Product | Product_Summary | Product_Catalog>;
 
   beforeEach(async () => {
-    mockEntityManager = {
-      find: jest.fn(),
-    } as unknown as jest.Mocked<EntityManager>;
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CategoryService,
         {
-          provide: EntityManager,
-          useValue: mockEntityManager,
+          provide: "ICategoryRepository",
+          useValue: {
+            find_by_filters: jest.fn(),
+            find_by_id: jest.fn(),
+          },
+        },
+        {
+          provide: "IProductRepository",
+          useValue: {
+            find_by_filters: jest.fn(),
+          },
         },
       ],
     }).compile();
 
-    service = module.get<CategoryService>(CategoryService);
+    categoryService = module.get<CategoryService>(CategoryService);
+    categoryRepository = module.get<IRepository<Category>>("ICategoryRepository");
+    productRepository =
+      module.get<IRepository<Product | Product_Summary | Product_Catalog>>("IProductRepository");
   });
 
-  describe("buildTree", () => {
-    it("트리 구조 생성", () => {
-      const mockCategories = [
-        { id: 1, name: "대분류1" },
-        { id: 2, name: "중분류1", parent: { id: 1 } },
-        { id: 3, name: "소분류1", parent: { id: 2 } },
-      ] as CategoryEntity[];
+  describe("find_all_as_tree", () => {
+    it("카테고리를 트리 구조로 반환", async () => {
+      const categories = [
+        { id: 1, name: "대분류1", parent: null },
+        { id: 2, name: "중분류1", parent: { id: 1 } as Category },
+        { id: 3, name: "소분류1", parent: { id: 2 } as Category },
+      ] as Category[];
+      categoryRepository.find_by_filters = jest.fn().mockResolvedValue(categories);
 
-      const result = (service as any).buildTree(mockCategories, 1);
+      const result = await categoryService.find_all_as_tree();
 
       expect(result).toEqual([
         {
@@ -44,115 +55,70 @@ describe("CategoryService", () => {
             {
               id: 2,
               name: "중분류1",
-              parent: { id: 1 },
               children: [
                 {
                   id: 3,
                   name: "소분류1",
-                  parent: { id: 2 },
-                  children: [],
                 },
               ],
             },
           ],
         },
       ]);
+      expect(categoryRepository.find_by_filters).toHaveBeenCalledWith({});
     });
 
-    it("레벨이 3을 초과하면 빈 배열 반환", () => {
-      const mockCategories = [
-        { id: 1, name: "대분류1" },
-        { id: 2, name: "중분류1", parent: { id: 1 } },
-        { id: 3, name: "소분류1", parent: { id: 2 } },
-      ] as CategoryEntity[];
+    it("레벨 제한을 초과한 경우 빈 배열 반환", async () => {
+      const categories: Category[] = [];
+      categoryRepository.find_by_filters = jest.fn().mockResolvedValue(categories);
 
-      const result = (service as any).buildTree(mockCategories, 4);
+      const result = await categoryService.find_all_as_tree(4);
 
       expect(result).toEqual([]);
+      expect(categoryRepository.find_by_filters).toHaveBeenCalledWith({});
     });
   });
 
-  describe("getAllCategoriesAsTree", () => {
-    it("카테고리를 트리 구조로 반환", async () => {
-      const mockCategories = [
-        { id: 1, name: "대분류1" },
-        { id: 2, name: "중분류1", parent: { id: 1 } },
-        { id: 3, name: "소분류1", parent: { id: 2 } },
-      ] as CategoryEntity[];
+  describe("find_products_by_category_id", () => {
+    const category = { id: 1, name: "대분류1", parent: { id: 0 } } as Category;
+    const items = [
+      { id: 1, name: "상품1", created_at: new Date() },
+      { id: 2, name: "상품2", created_at: new Date() },
+    ] as Product_Summary[];
 
-      mockEntityManager.find.mockResolvedValue(mockCategories);
-
-      const result = await service.find_all_as_tree();
-
-      expect(mockEntityManager.find).toHaveBeenCalledWith(CategoryEntity, {
-        relations: ["parent"],
-      });
-      expect(result).toEqual([
-        {
-          id: 1,
-          name: "대분류1",
-          children: [
-            {
-              id: 2,
-              name: "중분류1",
-              parent: { id: 1 },
-              children: [
-                {
-                  id: 3,
-                  name: "소분류1",
-                  parent: { id: 2 },
-                  children: [],
-                },
-              ],
-            },
-          ],
-        },
-      ]);
+    beforeEach(() => {
+      categoryRepository.find_by_id = jest.fn().mockResolvedValue(category);
+      productRepository.find_by_filters = jest.fn().mockResolvedValue(items);
     });
-  });
 
-  describe("getProductsByCategoryId", () => {
-    it("카테고리 ID로 제품을 페이징 처리하여 반환", async () => {
-      const mockCategory = { id: 1, name: "대분류1" } as CategoryEntity;
-      const mockProducts = [
-        { id: 1, name: "제품1", created_at: new Date() },
-        { id: 2, name: "제품2", created_at: new Date() },
-      ];
+    it("카테고리 ID로 상품 조회", async () => {
+      const filter = { page: 1, per_page: 10, sort: "created_at:desc", has_sub: true } as FilterDTO;
 
-      mockEntityManager.findOne = jest.fn().mockResolvedValue(mockCategory);
-      mockEntityManager.getRepository = jest.fn().mockReturnValue({
-        createQueryBuilder: jest.fn().mockReturnValue({
-          where: jest.fn().mockReturnThis(),
-          andWhere: jest.fn().mockReturnThis(),
-          orderBy: jest.fn().mockReturnThis(),
-          skip: jest.fn().mockReturnThis(),
-          take: jest.fn().mockReturnThis(),
-          getMany: jest.fn().mockResolvedValue(mockProducts),
-        }),
-      });
+      const result = await categoryService.find_products_by_category_id(1, filter);
 
-      const result = await service.find_products_by_category_id(1, {
-        page: 1,
-        per_page: 2,
-        sort: "created_at:desc",
-        has_sub: true,
-      });
-
-      expect(mockEntityManager.findOne).toHaveBeenCalledWith(CategoryEntity, {
-        where: { id: 1 },
-        relations: ["parent"],
-      });
-      expect(mockEntityManager.getRepository).toHaveBeenCalledWith(CategoryEntity);
       expect(result).toEqual({
-        category: mockCategory,
-        items: mockProducts,
+        category,
+        items,
         pagination: {
-          total_items: mockProducts.length,
-          total_pages: 1,
-          current_page: 1,
-          per_page: 2,
+          total_items: items.length,
+          total_pages: Math.ceil(items.length / (filter.per_page ?? 10)),
+          current_page: filter.page ?? 1,
+          per_page: filter.per_page ?? 10,
         },
       });
+    });
+
+    it("하위 카테고리 제외 시 부모 정보 제거", async () => {
+      const filter = {
+        page: 1,
+        per_page: 10,
+        sort: "created_at:desc",
+        has_sub: false,
+      } as FilterDTO;
+
+      const result = await categoryService.find_products_by_category_id(1, filter);
+
+      expect(result.category).toEqual({ id: 1, name: "대분류1" });
     });
   });
 });

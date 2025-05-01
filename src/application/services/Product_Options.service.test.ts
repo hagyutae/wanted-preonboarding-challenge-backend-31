@@ -1,111 +1,124 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { EntityManager } from "typeorm";
+import { NotFoundException } from "@nestjs/common";
 
 import { Product_Image, Product_Option } from "src/domain/entities";
-import { ProductImageEntity, ProductOptionEntity } from "src/infrastructure/entities";
 import ProductOptionsService from "./Product_Options.service";
+import { IRepository } from "src/domain/repositories";
 
 describe("ProductOptionsService", () => {
   let service: ProductOptionsService;
-  let entityManager: jest.Mocked<EntityManager>;
+  let repository: IRepository<Product_Option>;
+  let productImageRepository: IRepository<Product_Image>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductOptionsService,
         {
-          provide: EntityManager,
+          provide: "IProductOptionsRepository",
           useValue: {
-            create: jest.fn(),
             save: jest.fn(),
-            findOne: jest.fn(),
-            merge: jest.fn(),
+            update: jest.fn(),
             delete: jest.fn(),
+            find_by_id: jest.fn(),
+          },
+        },
+        {
+          provide: "IProductImageRepository",
+          useValue: {
+            save: jest.fn(),
           },
         },
       ],
     }).compile();
 
     service = module.get<ProductOptionsService>(ProductOptionsService);
-    entityManager = module.get(EntityManager);
+    repository = module.get<IRepository<Product_Option>>("IProductOptionsRepository");
+    productImageRepository = module.get<IRepository<Product_Image>>("IProductImageRepository");
   });
 
-  describe("addOptions", () => {
-    it("새로운 옵션을 생성하고 저장", async () => {
-      const id = 1;
-      const option_group_id = 10;
-      const optionData = { name: "옵션명" } as Product_Option;
-      const createdEntity = { id: 123, ...optionData };
+  it("옵션 등록", async () => {
+    const id = 1;
+    const option_group_id = 2;
+    const option = { name: "옵션1" } as Omit<Product_Option, "option_group_id">;
+    const savedOption = { id: 1, option_group_id, ...option } as Product_Option;
 
-      entityManager.create = jest.fn().mockResolvedValue(createdEntity);
-      entityManager.save = jest.fn().mockResolvedValue(createdEntity);
+    repository.save = jest.fn().mockResolvedValue(savedOption);
 
-      const result = await service.register(id, option_group_id, optionData);
+    const result = await service.register(id, option_group_id, option);
 
-      expect(entityManager.create).toHaveBeenCalledWith(ProductOptionEntity, {
-        option_group: { id: option_group_id },
-        ...optionData,
-      });
-      expect(result).toEqual(createdEntity);
-    });
+    expect(result).toEqual(savedOption);
+    expect(repository.save).toHaveBeenCalledWith({ option_group_id, ...option });
   });
 
-  describe("updateOptions", () => {
-    it("기존 옵션을 찾아 병합하고 저장", async () => {
-      const id = 1;
-      const option_id = 100;
-      const existingOption = { id: option_id, name: "old" } as ProductOptionEntity;
-      const updateData = { name: "new" } as Product_Option;
-      const mergedEntity = { id: option_id, name: "new" };
+  it("옵션 수정", async () => {
+    const product_id = 1;
+    const option_id = 1;
+    const options = { name: "옵션 수정" } as Omit<Product_Option, "option_group_id">;
+    const updatedOption = { id: option_id, ...options } as Product_Option;
 
-      entityManager.findOne = jest.fn().mockResolvedValue(existingOption);
-      entityManager.merge = jest.fn().mockReturnValue(mergedEntity);
-      entityManager.save = jest.fn().mockResolvedValue(mergedEntity);
+    repository.update = jest.fn().mockResolvedValue(true);
+    repository.find_by_id = jest.fn().mockResolvedValue(updatedOption);
 
-      const result = await service.update(id, option_id, updateData);
+    const result = await service.update(product_id, option_id, options);
 
-      expect(entityManager.findOne).toHaveBeenCalledWith(ProductOptionEntity, {
-        where: { id: option_id },
-      });
-      expect(entityManager.merge).toHaveBeenCalledWith(
-        ProductOptionEntity,
-        existingOption,
-        updateData,
-      );
-      expect(entityManager.save).toHaveBeenCalledWith(mergedEntity);
-      expect(result).toEqual(mergedEntity);
-    });
+    expect(result).toEqual(updatedOption);
+    expect(repository.update).toHaveBeenCalledWith(options, option_id);
+    expect(repository.find_by_id).toHaveBeenCalledWith(option_id);
   });
 
-  describe("deleteOptions", () => {
-    it("옵션 삭제", async () => {
-      const id = 1;
-      const option_id = 200;
+  it("옵션 수정 실패 시 NotFoundException 발생", async () => {
+    const product_id = 1;
+    const option_id = 1;
+    const options = { name: "옵션 수정" } as Omit<Product_Option, "option_group_id">;
 
-      await service.remove(id, option_id);
+    repository.update = jest.fn().mockResolvedValue(false);
 
-      expect(entityManager.delete).toHaveBeenCalledWith(ProductOptionEntity, option_id);
-    });
+    await expect(service.update(product_id, option_id, options)).rejects.toThrow(NotFoundException);
+    expect(repository.update).toHaveBeenCalledWith(options, option_id);
   });
 
-  describe("addImages", () => {
-    it("이미지를 저장", async () => {
-      const id = 1;
-      const option_id = 2;
-      const imageData = { url: "http://image.jpg" } as Product_Image;
-      const createdImageEntity = { id: 500, ...imageData };
+  it("옵션 삭제", async () => {
+    const product_id = 1;
+    const option_id = 1;
 
-      entityManager.create = jest.fn().mockResolvedValue(createdImageEntity);
-      entityManager.save = jest.fn().mockResolvedValue(createdImageEntity);
+    repository.delete = jest.fn().mockResolvedValue(true);
 
-      const result = await service.register_images(id, option_id, imageData);
+    await service.remove(product_id, option_id);
 
-      expect(entityManager.create).toHaveBeenCalledWith(ProductImageEntity, {
-        ...imageData,
-        option: { id: option_id },
-        product: { id },
-      });
-      expect(result).toEqual(createdImageEntity);
+    expect(repository.delete).toHaveBeenCalledWith(option_id);
+  });
+
+  it("옵션 삭제 실패 시 NotFoundException 발생", async () => {
+    const product_id = 1;
+    const option_id = 1;
+
+    repository.delete = jest.fn().mockResolvedValue(false);
+
+    await expect(service.remove(product_id, option_id)).rejects.toThrow(NotFoundException);
+    expect(repository.delete).toHaveBeenCalledWith(option_id);
+  });
+
+  it("옵션 이미지 등록", async () => {
+    const id = 1;
+    const option_id = 1;
+    const image = { url: "image-url" } as Omit<Product_Image, "product_id" | "option_id">;
+    const savedImage = {
+      id: 1,
+      product_id: id,
+      option_id,
+      ...image,
+    } as Product_Image;
+
+    productImageRepository.save = jest.fn().mockResolvedValue(savedImage);
+
+    const result = await service.register_images(id, option_id, image);
+
+    expect(result).toEqual({ id: 1, url: "image-url", product_id: 1, option_id: undefined });
+    expect(productImageRepository.save).toHaveBeenCalledWith({
+      product_id: id,
+      option_id,
+      ...image,
     });
   });
 });

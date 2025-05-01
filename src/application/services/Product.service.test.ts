@@ -1,13 +1,31 @@
+import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
-import { Product_Category, Product_Image, Product_Option_Group } from "src/domain/entities";
-import { ProductEntity } from "src/infrastructure/entities";
+import {
+  Product,
+  Product_Catalog,
+  Product_Category,
+  Product_Detail,
+  Product_Image,
+  Product_Option_Group,
+  Product_Price,
+  Product_Summary,
+  Product_Tag,
+} from "src/domain/entities";
+import { IRepository } from "src/domain/repositories";
 import { ProductInputDTO } from "../dto";
 import ProductService from "./Product.service";
 
 describe("ProductService", () => {
   let service: ProductService;
+  let repository: IRepository<Product | Product_Summary | Product_Catalog>;
+  let productDetailRepository: IRepository<Product_Detail>;
+  let productPriceRepository: IRepository<Product_Price>;
+  let productCategoryRepository: IRepository<Product_Category>;
+  let productOptionGroupRepository: IRepository<Product_Option_Group>;
+  let productImageRepository: IRepository<Product_Image>;
+  let productTagRepository: IRepository<Product_Tag>;
   let entityManager: EntityManager;
 
   beforeEach(async () => {
@@ -15,103 +33,267 @@ describe("ProductService", () => {
       providers: [
         ProductService,
         {
-          provide: EntityManager,
+          provide: "IProductRepository",
           useValue: {
-            findOne: jest.fn(),
-            create: jest.fn(),
             save: jest.fn(),
+            find_by_id: jest.fn(),
+            find_by_filters: jest.fn(),
             update: jest.fn(),
             delete: jest.fn(),
-            getRepository: jest.fn().mockReturnValue({
-              createQueryBuilder: jest.fn().mockReturnValue({
-                leftJoinAndSelect: jest.fn().mockReturnThis(),
-                where: jest.fn().mockReturnThis(),
-                andWhere: jest.fn().mockReturnThis(),
-                orderBy: jest.fn().mockReturnThis(),
-                skip: jest.fn().mockReturnThis(),
-                take: jest.fn().mockReturnThis(),
-                offset: jest.fn().mockReturnThis(),
-                limit: jest.fn().mockReturnThis(),
-                getMany: jest.fn(),
-              }),
-            }),
+          },
+        },
+        {
+          provide: "IProductDetailRepository",
+          useValue: { save: jest.fn(), update: jest.fn() },
+        },
+        {
+          provide: "IProductPriceRepository",
+          useValue: { save: jest.fn(), update: jest.fn() },
+        },
+        {
+          provide: "IProductCategoryRepository",
+          useValue: { saves: jest.fn(), update: jest.fn() },
+        },
+        {
+          provide: "IProductOptionGroupRepository",
+          useValue: { saves: jest.fn() },
+        },
+        {
+          provide: "IProductImageRepository",
+          useValue: { saves: jest.fn() },
+        },
+        {
+          provide: "IProductTagRepository",
+          useValue: { saves: jest.fn() },
+        },
+        {
+          provide: EntityManager,
+          useValue: {
+            transaction: jest.fn((callback) => callback({})),
           },
         },
       ],
     }).compile();
 
     service = module.get<ProductService>(ProductService);
+    repository =
+      module.get<IRepository<Product | Product_Summary | Product_Catalog>>("IProductRepository");
+    productDetailRepository = module.get<IRepository<Product_Detail>>("IProductDetailRepository");
+    productPriceRepository = module.get<IRepository<Product_Price>>("IProductPriceRepository");
+    productCategoryRepository = module.get<IRepository<Product_Category>>(
+      "IProductCategoryRepository",
+    );
+    productOptionGroupRepository = module.get<IRepository<Product_Option_Group>>(
+      "IProductOptionGroupRepository",
+    );
+    productImageRepository = module.get<IRepository<Product_Image>>("IProductImageRepository");
+    productTagRepository = module.get<IRepository<Product_Tag>>("IProductTagRepository");
     entityManager = module.get<EntityManager>(EntityManager);
   });
 
-  describe("create", () => {
-    it("상품 생성", async () => {
-      const mockProductInput = { name: "Product Name" } as ProductInputDTO;
-      const mockSavedProduct = { id: 1, ...mockProductInput };
+  it("상품 등록", async () => {
+    const input: ProductInputDTO = {
+      name: "슈퍼 편안한 소파",
+      slug: "super-comfortable-sofa",
+      short_description: "최고급 소재로 만든 편안한 소파",
+      full_description: "<p>이 소파는 최고급 소재로 제작되었으며...</p>",
+      seller_id: 1,
+      brand_id: 2,
+      status: "ACTIVE",
+      detail: {
+        weight: 25.5,
+        dimensions: {
+          width: 200,
+          height: 85,
+          depth: 90,
+        },
+        materials: "가죽, 목재, 폼",
+        country_of_origin: "대한민국",
+        warranty_info: "2년 품질 보증",
+        care_instructions: "마른 천으로 표면을 닦아주세요",
+        additional_info: {
+          assembly_required: true,
+          assembly_time: "30분",
+        },
+      },
+      price: {
+        base_price: 599000,
+        sale_price: 499000,
+        cost_price: 350000,
+        currency: "KRW",
+        tax_rate: 10,
+      },
+      categories: [
+        {
+          category_id: 5,
+          is_primary: true,
+        },
+      ],
+      option_groups: [
+        {
+          name: "색상",
+          display_order: 1,
+          options: [
+            {
+              name: "브라운",
+              additional_price: 0,
+              sku: "SOFA-BRN",
+              stock: 10,
+              display_order: 1,
+            },
+          ],
+        },
+      ],
+      images: [
+        {
+          url: "https://example.com/images/sofa1.jpg",
+          alt_text: "브라운 소파 정면",
+          is_primary: true,
+          display_order: 1,
+          option_id: null,
+        },
+      ],
+      tags: [1, 4, 7],
+    };
+    const savedProduct = {
+      id: 1,
+      name: "상품명",
+      slug: "product-slug",
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+    entityManager.transaction = jest.fn().mockResolvedValue(savedProduct);
 
-      entityManager.findOne = jest
-        .fn()
-        .mockResolvedValueOnce({ id: 1, name: "Seller" })
-        .mockResolvedValueOnce({ id: 1, name: "Brand" });
-      entityManager.create = jest.fn().mockReturnValue(mockSavedProduct);
-      entityManager.save = jest.fn().mockResolvedValue(mockSavedProduct);
+    const result = await service.register(input);
 
-      await expect(service.register(mockProductInput)).resolves.toEqual(mockSavedProduct);
+    expect(result).toEqual({
+      id: 1,
+      name: "상품명",
+      slug: "product-slug",
+      created_at: savedProduct.created_at,
+      updated_at: savedProduct.updated_at,
     });
+    expect(entityManager.transaction).toHaveBeenCalled();
   });
 
-  describe("getAll", () => {
-    it("페이지네이션된 상품들을 반환", async () => {
-      const mockProducts = [
-        { id: 1, name: "Product 1" },
-        { id: 2, name: "Product 2" },
-      ];
-      (
-        entityManager.getRepository(ProductEntity).createQueryBuilder().getMany as jest.Mock
-      ).mockResolvedValue(mockProducts);
+  it("상품 조회", async () => {
+    const product = { id: 1, name: "상품명" };
+    repository.find_by_id = jest.fn().mockResolvedValue(product);
 
-      const result = await service.find_all({ page: 1, per_page: 10 });
+    const result = await service.find(1);
 
-      expect(result.items).toEqual(mockProducts);
-      expect(result.pagination).toEqual({
-        total_items: mockProducts.length,
-        total_pages: 1,
-        current_page: 1,
-        per_page: 10,
-      });
-    });
+    expect(result).toEqual(product);
+    expect(repository.find_by_id).toHaveBeenCalledWith(1);
   });
 
-  describe("getById", () => {
-    it("id로 상품을 반환", async () => {
-      const mockProduct = { id: 1, name: "Product 1" };
-      entityManager.findOne = jest.fn().mockResolvedValue(mockProduct);
+  it("상품 조회 실패 시 NotFoundException 발생", async () => {
+    repository.find_by_id = jest.fn().mockResolvedValue(null);
 
-      const result = await service.find(1);
-      expect(result).toEqual(mockProduct);
-    });
+    await expect(service.find(1)).rejects.toThrow(NotFoundException);
+    expect(repository.find_by_id).toHaveBeenCalledWith(1);
   });
 
-  describe("update", () => {
-    it("상품을 업데이트", async () => {
-      const mockProduct = { id: 1, name: "Updated Product" };
-      const mockProductInput = { name: "Product Name" } as ProductInputDTO;
-      entityManager.update = jest.fn().mockResolvedValue({});
-      entityManager.findOne = jest.fn().mockResolvedValue(mockProduct);
+  it("상품 수정", async () => {
+    const input: ProductInputDTO = {
+      name: "슈퍼 편안한 소파",
+      slug: "super-comfortable-sofa",
+      short_description: "최고급 소재로 만든 편안한 소파",
+      full_description: "<p>이 소파는 최고급 소재로 제작되었으며...</p>",
+      seller_id: 1,
+      brand_id: 2,
+      status: "ACTIVE",
+      detail: {
+        weight: 25.5,
+        dimensions: {
+          width: 200,
+          height: 85,
+          depth: 90,
+        },
+        materials: "가죽, 목재, 폼",
+        country_of_origin: "대한민국",
+        warranty_info: "2년 품질 보증",
+        care_instructions: "마른 천으로 표면을 닦아주세요",
+        additional_info: {
+          assembly_required: true,
+          assembly_time: "30분",
+        },
+      },
+      price: {
+        base_price: 599000,
+        sale_price: 499000,
+        cost_price: 350000,
+        currency: "KRW",
+        tax_rate: 10,
+      },
+      categories: [
+        {
+          category_id: 5,
+          is_primary: true,
+        },
+      ],
+      option_groups: [
+        {
+          name: "색상",
+          display_order: 1,
+          options: [
+            {
+              name: "브라운",
+              additional_price: 0,
+              sku: "SOFA-BRN",
+              stock: 10,
+              display_order: 1,
+            },
+          ],
+        },
+      ],
+      images: [
+        {
+          url: "https://example.com/images/sofa1.jpg",
+          alt_text: "브라운 소파 정면",
+          is_primary: true,
+          display_order: 1,
+          option_id: null,
+        },
+      ],
+      tags: [1, 4, 7],
+    };
+    const updatedProduct = {
+      id: 1,
+      name: "수정된 상품명",
+      slug: "updated-slug",
+      updated_at: new Date(),
+    };
+    entityManager.transaction = jest.fn().mockResolvedValue(true);
+    repository.find_by_id = jest.fn().mockResolvedValue(updatedProduct);
 
-      const result = await service.edit(1, mockProductInput);
+    const result = await service.edit(1, input);
 
-      expect(result).toEqual(mockProduct);
-      expect(entityManager.update).toHaveBeenCalledWith(ProductEntity, 1, mockProductInput);
+    expect(result).toEqual({
+      id: 1,
+      name: "수정된 상품명",
+      slug: "updated-slug",
+      updated_at: updatedProduct.updated_at,
     });
+    expect(entityManager.transaction).toHaveBeenCalled();
   });
 
-  describe("delete", () => {
-    it("상품 삭제", async () => {
-      entityManager.delete = jest.fn().mockResolvedValue({ affected: 1 });
+  it("상품 수정 실패 시 NotFoundException 발생", async () => {
+    entityManager.transaction = jest.fn().mockResolvedValue(false);
 
-      await expect(service.remove(1)).resolves.not.toThrow();
-      expect(entityManager.delete).toHaveBeenCalledWith(ProductEntity, 1);
-    });
+    await expect(service.edit(1, {} as ProductInputDTO)).rejects.toThrow(NotFoundException);
+  });
+
+  it("상품 삭제", async () => {
+    repository.delete = jest.fn().mockResolvedValue(true);
+    await service.remove(1);
+
+    expect(repository.delete).toHaveBeenCalledWith(1);
+  });
+
+  it("상품 삭제 실패 시 NotFoundException 발생", async () => {
+    repository.delete = jest.fn().mockResolvedValue(false);
+
+    await expect(service.remove(1)).rejects.toThrow(NotFoundException);
+    expect(repository.delete).toHaveBeenCalledWith(1);
   });
 });
