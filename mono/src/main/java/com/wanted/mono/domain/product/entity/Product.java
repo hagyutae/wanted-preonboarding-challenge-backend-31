@@ -111,6 +111,15 @@ public class Product {
         product.fullDescription = request.getFullDescription();
         product.createdAt = LocalDateTime.now();
         product.updatedAt = LocalDateTime.now();
+        product.status = ProductStatus.valueOf(request.getStatus());
         return product;
+    }
+
+    public void addSeller(Seller seller) {
+        this.seller = seller;
+    }
+
+    public void addBrand(Brand brand) {
+        this.brand = brand;
     }
 }

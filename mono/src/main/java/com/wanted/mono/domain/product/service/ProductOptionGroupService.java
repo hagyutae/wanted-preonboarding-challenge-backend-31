@@ -23,7 +23,6 @@ public class ProductOptionGroupService {
 
     @Transactional
     public void createProductOptionGroup(List<ProductOptionGroupRequest> productOptionGroupRequests, Product product) {
-        List<ProductOptionGroup> productOptionGroupEntities = new ArrayList<>();
         for (ProductOptionGroupRequest productOptionGroupRequest : productOptionGroupRequests) {
             log.info("ProductOptionGroup 엔티티 생성");
             ProductOptionGroup productOptionGroup = ProductOptionGroup.of(productOptionGroupRequest);
@@ -31,13 +30,11 @@ public class ProductOptionGroupService {
             log.info("ProductOptionGroup, Product 연관관계 주입");
             productOptionGroup.addProduct(product);
 
-            productOptionGroupEntities.add(productOptionGroup);
+            log.info("ProductOptionGroup 엔티티 영속성 저장");
+            productOptionGroupRepository.save(productOptionGroup);
 
             log.info("ProductOptionGroup -> List<ProductOption> 엔티티 화");
             productOptionService.createProductOption(productOptionGroupRequest.getOptions(), productOptionGroup);
         }
-
-        log.info("ProductOptionGroup 엔티티 리스트 저장");
-        productOptionGroupRepository.saveAll(productOptionGroupEntities);
     }
 }

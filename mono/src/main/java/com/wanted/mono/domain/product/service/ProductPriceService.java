@@ -18,6 +18,8 @@ public class ProductPriceService {
 
     @Transactional
     public Long createProductPrice(ProductPriceRequest productPriceRequest, Product product) {
+        log.info("ProductPriceRequest : {}", productPriceRequest);
+
         log.info("ProductPrice 생성");
         ProductPrice productPrice = ProductPrice.of(productPriceRequest);
 

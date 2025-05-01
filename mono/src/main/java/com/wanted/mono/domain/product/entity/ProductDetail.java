@@ -2,6 +2,7 @@ package com.wanted.mono.domain.product.entity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import com.wanted.mono.domain.product.dto.AdditionalInfo;
 import com.wanted.mono.domain.product.dto.Dimension;
 import com.wanted.mono.domain.product.dto.ProductDetailRequest;
@@ -11,6 +12,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
 
@@ -37,8 +39,8 @@ public class ProductDetail {
     private BigDecimal weight;
 
     // 크기 (JSON)
-    @Column(columnDefinition = "JSONB")
-    @Convert(converter = DimensionConverter.class)
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
     private Dimension dimensions;
 
     // 소재 정보
@@ -55,8 +57,8 @@ public class ProductDetail {
     private String careInstructions;
 
     // 추가 정보 (JSONB)
-    @Column(columnDefinition = "JSONB")
-    @Convert(converter = AdditionalInfoConverter.class)
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
     private AdditionalInfo additionalInfo;
 
     // -----------------------------------------
