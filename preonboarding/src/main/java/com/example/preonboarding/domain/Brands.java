@@ -24,4 +24,6 @@ public class Brands {
 
     @OneToMany(mappedBy = "brands")
     private List<Products> products = new ArrayList<>();
+
+
 }

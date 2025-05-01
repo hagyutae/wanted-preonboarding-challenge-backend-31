@@ -51,6 +51,21 @@ public class ProductRestController {
         return CommonResponse.success(productService.findProductsById(id));
     }
 
+    @PutMapping(value = "/products/{id}")
+    public CommonResponse updateProducts(@PathVariable("id")Long id,@Validated @RequestBody ProductsRequest request, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> details = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(error ->
+                    details.put(toSnakeCase(error.getField()), error.getDefaultMessage())
+            );
+            throw new BadRequestException(ErrorCode.INVALID_INPUT, details);
+        }
+
+        Products products = productService.updateProducts(request,id);
+        ProductsDTO dto = new ProductsDTO(products);
+        return CommonResponse.success(dto);
+    }
+
     private String toSnakeCase(String fieldPath) {
         String[] parts = fieldPath.split("\\.");
         return Arrays.stream(parts)

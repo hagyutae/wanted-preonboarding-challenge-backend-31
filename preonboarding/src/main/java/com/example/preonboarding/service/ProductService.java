@@ -2,12 +2,16 @@ package com.example.preonboarding.service;
 
 import com.example.preonboarding.domain.*;
 import com.example.preonboarding.dto.*;
+import com.example.preonboarding.exception.NotFoundResourceException;
 import com.example.preonboarding.exception.ProductRegisterException;
+import com.example.preonboarding.repository.brands.BrandsRepository;
 import com.example.preonboarding.repository.categories.CategoriesRepository;
 import com.example.preonboarding.repository.products.ProductRepository;
 import com.example.preonboarding.repository.products.ProductRepositoryCustom;
 import com.example.preonboarding.repository.reviews.RatingRepository;
+import com.example.preonboarding.repository.sellers.SellerRepository;
 import com.example.preonboarding.repository.tags.TagsRepository;
+import com.example.preonboarding.request.CategoryRequest;
 import com.example.preonboarding.request.ProductSearchRequest;
 import com.example.preonboarding.request.ProductsRequest;
 import com.example.preonboarding.response.*;
@@ -38,6 +42,8 @@ public class ProductService {
     private final CategoriesRepository categoriesRepository;
     private final TagsRepository tagsRepository;
     private final ProductRepository productRepository;
+    private final SellerRepository sellerRepository;
+    private final BrandsRepository brandsRepository;
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
@@ -298,4 +304,53 @@ public class ProductService {
                 .build();
 
     }
+
+    @Transactional
+    public Products updateProducts(ProductsRequest request, Long id) {
+
+        Products products = productRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.RESOURCE_NOT_FOUND));
+        Brands brands = brandsRepository.findById(request.getBrandId()).orElseThrow(() -> new IllegalArgumentException("not found brand"));
+        Sellers sellers = sellerRepository.findById(request.getSellerId()).orElseThrow(() -> new IllegalArgumentException("not found seller"));
+        products.updateFrom(request,brands,sellers);
+
+
+        //detail
+        DetailDTO detail = request.getDetail();
+
+        ProductDetails.builder()
+                .products(products)
+                .weight(detail.getWeight())
+                .dimensions(objectMapper.valueToTree(detail.getDimensions()))
+                .careInstructions(detail.getCareInstructions())
+                .materials(detail.getMaterials())
+                .warrantyInfo(detail.getWarrantyInfo())
+                .additionalInfo(objectMapper.valueToTree(detail.getAdditionalInfo()))
+                .build();
+
+        //categories
+        List<CategoryRequest> categories = request.getCategories();
+        List<ProductCategories> productCategories = categories.stream().map(i -> ProductCategories.builder()
+                .products(products)
+                .categories(categoriesRepository.findById(i.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("not found category")))
+                .isPrimary(i.isPrimary())
+                .build()).collect(Collectors.toList());
+
+        products.setProductCategories(productCategories);
+
+        //price
+        PriceDTO price = request.getPrice();
+        ProductPrices productPrices = ProductPrices.builder()
+                .products(products)
+                .basePrice(price.getBasePrice())
+                .salePrice(price.getSalePrice())
+                .costPrice(price.getCostPrice())
+                .currency(price.getCurrency())
+                .tax_rate(price.getTax_rate())
+                .build();
+
+        products.setProductPrices(productPrices);
+
+        return products;
+    }
+
 }

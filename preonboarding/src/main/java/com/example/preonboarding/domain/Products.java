@@ -10,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -53,6 +54,17 @@ public class Products {
 
     @OneToMany(mappedBy = "products")
     private List<Reviews> reviews = new ArrayList<>();
+
+    public void updateFrom(ProductsRequest request, Brands brands, Sellers sellers) {
+        this.name = request.getName();
+        this.slug = request.getSlug();
+        this.shortDescription = request.getShortDescription();
+        this.fullDescription = request.getFullDescription();
+        this.status = request.getStatus();
+        this.updatedAt = LocalDateTime.now();
+        this.brands = brands;
+        this.sellers = sellers;
+    }
 
 
     public void setBrands(Brands brands) {
