@@ -3,9 +3,7 @@ import { ApiExtraModels, ApiResponse, getSchemaPath } from "@nestjs/swagger";
 
 import { ErrorDTO, HttpStatusToErrorCodeMap } from "../dto";
 
-export function ApiBadRequestResponse(
-  description = "다른 사용자의 리뷰를 삭제할 권한이 없습니다.",
-) {
+export function ApiBadRequestResponse(description = "입력 데이터가 유효하지 않습니다..") {
   return get_apply_decorators(400, description);
 }
 
