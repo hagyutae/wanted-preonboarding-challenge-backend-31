@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { ProductService } from "src/application/services";
 import { ProductEntity } from "src/infrastructure/entities";
-import { ProductDetailView, ProductSummaryView } from "src/infrastructure/views";
+import { ProductCatalogView, ProductSummaryView } from "src/infrastructure/views";
 import { BodyDTO, ParamDTO, ProductQueryDTO, ResponseDTO } from "../dto";
 import ProductController from "./Product.controller";
 
@@ -82,7 +82,7 @@ describe("ProductController", () => {
       created_at: new Date(),
       updated_at: new Date(),
       status: "available",
-    } as ProductDetailView;
+    } as ProductCatalogView;
     const response: ResponseDTO = {
       success: true,
       data,

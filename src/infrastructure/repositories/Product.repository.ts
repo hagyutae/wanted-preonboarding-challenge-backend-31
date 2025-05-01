@@ -3,7 +3,7 @@ import { EntityManager } from "typeorm";
 
 import { Product } from "src/domain/entities";
 import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "../entities";
-import { ProductDetailView, ProductSummaryView } from "../views";
+import { ProductCatalogView, ProductSummaryView } from "../views";
 import BaseRepository from "./BaseRepository";
 
 @Injectable()
@@ -78,8 +78,8 @@ export default class ProductRepository extends BaseRepository<
     return await query.getMany();
   }
 
-  async find_by_id(id: number): Promise<ProductDetailView | null> {
-    return this.entity_manager.findOne(ProductDetailView, { where: { id } });
+  async find_by_id(id: number): Promise<ProductCatalogView | null> {
+    return this.entity_manager.findOne(ProductCatalogView, { where: { id } });
   }
 
   async update({ seller_id, brand_id, ...product }: Product, id: number): Promise<ProductEntity> {

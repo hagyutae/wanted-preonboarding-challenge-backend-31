@@ -134,7 +134,7 @@ import {
       .addGroupBy("product_details");
   },
 })
-export default class ProductDetailView {
+export default class ProductCatalogView {
   @ViewColumn() id: number;
   @ViewColumn() name: string;
   @ViewColumn() slug: string;
