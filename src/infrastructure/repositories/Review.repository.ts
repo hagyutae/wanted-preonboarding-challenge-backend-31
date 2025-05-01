@@ -12,11 +12,10 @@ export default class ReviewRepository extends BaseRepository<Review> {
   }
 
   async save({ product_id, ...review }: Review): Promise<Review> {
-    const review_entity = this.entity_manager.create(ReviewEntity, {
+    return this.entity_manager.save(ReviewEntity, {
       ...review,
       product: { id: product_id },
     });
-    return this.entity_manager.save(review_entity);
   }
 
   async find_by_filters({
