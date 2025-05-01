@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { ProductService } from "src/application/services";
-import { Product_Catalog, Product_Summary } from "src/domain/entities";
+import { Product_Catalog } from "src/domain/entities";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -11,9 +11,9 @@ import {
 } from "../decorators";
 import {
   BodyDTO,
-  PaginationSummaryDTO,
   ParamDTO,
   ProductQueryDTO,
+  ProductResponseBundle,
   ProductResponseDTO,
   ResponseDTO,
 } from "../dto";
@@ -44,12 +44,7 @@ export default class ProductController {
   @ApiStandardResponse("상품 목록을 성공적으로 조회했습니다.")
   @ApiBadRequestResponse("상품 목록 조회에 실패했습니다.")
   @Get()
-  async read_all(@Query() query: ProductQueryDTO): Promise<
-    ResponseDTO<{
-      items: Product_Summary[];
-      pagination: PaginationSummaryDTO;
-    }>
-  > {
+  async read_all(@Query() query: ProductQueryDTO): Promise<ResponseDTO<ProductResponseBundle>> {
     const data = await this.service.find_all(to_FilterDTO(query));
 
     return {

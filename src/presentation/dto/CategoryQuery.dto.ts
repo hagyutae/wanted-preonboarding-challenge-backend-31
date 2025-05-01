@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsBoolean, IsInt, IsOptional } from "class-validator";
 
-export default class FiltersByCategoryDTO {
+export default class CategoryQueryDTO {
   @ApiPropertyOptional({ description: "페이지 번호", example: 1, required: false })
   @IsOptional()
   @IsInt()

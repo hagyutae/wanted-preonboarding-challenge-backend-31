@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
 import { CategoryService } from "src/application/services";
-import { FiltersByCategoryDTO } from "../dto";
+import { CategoryQueryDTO } from "../dto";
 import CategoryController from "./Category.controller";
 
 describe("CategoryController", () => {
@@ -46,7 +46,7 @@ describe("CategoryController", () => {
   describe("readProducts", () => {
     it("특정 카테고리의 상품 목록 조회 성공", async () => {
       const id = 1;
-      const query = { page: 1, perPage: 10 } as FiltersByCategoryDTO;
+      const query = { page: 1, perPage: 10 } as CategoryQueryDTO;
       const data = { category: "Category 1" };
       mockService.find_products_by_category_id = jest.fn().mockResolvedValue(data);
 

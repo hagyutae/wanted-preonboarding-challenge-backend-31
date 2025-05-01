@@ -10,14 +10,7 @@ import {
   ApiForbiddenResponse,
   ApiStandardResponse,
 } from "../decorators";
-import {
-  PaginationSummaryDTO,
-  ParamDTO,
-  ResponseDTO,
-  ReviewBodyDTO,
-  ReviewQueryDTO,
-  ReviewSummaryDTO,
-} from "../dto";
+import { ParamDTO, ResponseDTO, ReviewBodyDTO, ReviewQueryDTO, ReviewResponseBundle } from "../dto";
 import { to_FilterDTO } from "../mappers";
 
 @ApiTags("리뷰")
@@ -34,13 +27,7 @@ export default class ReviewController {
   async read(
     @Param() { id }: ParamDTO,
     @Query() query: ReviewQueryDTO,
-  ): Promise<
-    ResponseDTO<{
-      items: Review[];
-      summary: ReviewSummaryDTO;
-      pagination: PaginationSummaryDTO;
-    }>
-  > {
+  ): Promise<ResponseDTO<ReviewResponseBundle>> {
     const data = await this.service.find(id, to_FilterDTO(query));
 
     return {

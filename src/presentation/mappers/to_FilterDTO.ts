@@ -1,5 +1,5 @@
 import { FilterDTO } from "src/application/dto";
-import { FiltersByCategoryDTO, ProductQueryDTO, ReviewQueryDTO } from "../dto";
+import { CategoryQueryDTO, ProductQueryDTO, ReviewQueryDTO } from "../dto";
 
 const field_mapping = {
   includeSubcategories: "has_sub",
@@ -9,7 +9,7 @@ const field_mapping = {
 };
 
 export default function to_FilterDTO(
-  query: ProductQueryDTO | FiltersByCategoryDTO | ReviewQueryDTO,
+  query: ProductQueryDTO | CategoryQueryDTO | ReviewQueryDTO,
 ): FilterDTO {
   return Object.entries(query).reduce((acc, [field, value]) => {
     const mapped_field = field_mapping[field] || field;

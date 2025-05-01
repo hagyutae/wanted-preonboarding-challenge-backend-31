@@ -2,12 +2,11 @@ import { Controller, Get, Param, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { CategoryService } from "src/application/services";
-import { Category, Product_Summary } from "src/domain/entities";
 import { ApiBadRequestResponse, ApiErrorResponse, ApiStandardResponse } from "../decorators";
 import {
-  FiltersByCategoryDTO,
+  CategoryQueryDTO,
+  CategoryResponseBundle,
   NestedCategoryDTO,
-  PaginationSummaryDTO,
   ParamDTO,
   ResponseDTO,
 } from "../dto";
@@ -42,14 +41,8 @@ export default class CategoryController {
   @Get(":id/products")
   async read_products(
     @Param() { id }: ParamDTO,
-    @Query() query: FiltersByCategoryDTO,
-  ): Promise<
-    ResponseDTO<{
-      category: Category;
-      items: Product_Summary[];
-      pagination: PaginationSummaryDTO;
-    }>
-  > {
+    @Query() query: CategoryQueryDTO,
+  ): Promise<ResponseDTO<CategoryResponseBundle>> {
     const data = await this.service.find_products_by_category_id(id, to_FilterDTO(query));
 
     return {
