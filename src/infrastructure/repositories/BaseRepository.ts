@@ -22,10 +22,10 @@ export default abstract class BaseRepository<T> implements IRepository<T> {
   find_by_filters(filters: any): Promise<T[]> {
     throw new Error("Method not implemented.");
   }
-  update(param: T, id?: number): Promise<void | T> {
+  update(param: T, id?: number): Promise<T | boolean> {
     throw new Error("Method not implemented.");
   }
-  delete(id: number): Promise<void> {
+  delete(id: number): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
 }

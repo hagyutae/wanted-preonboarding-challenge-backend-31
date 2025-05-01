@@ -10,17 +10,18 @@ export default class NotFoundExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
 
     const status = exception.getStatus();
-    const exception_response = exception.getResponse();
-    const message =
-      typeof exception_response === "string"
-        ? exception_response
-        : (exception_response as any).message;
+
+    const { message, details } = exception.getResponse() as {
+      message: string;
+      details?: string[];
+    };
 
     response.status(status).json({
       success: false,
       error: {
         code: ErrorCode.NOT_FOUND,
         message,
+        details,
       },
     });
   }

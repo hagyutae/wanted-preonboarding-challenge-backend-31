@@ -38,8 +38,7 @@ describe("ProductController", () => {
       data: { id: 1, ...body },
       message: "상품이 성공적으로 등록되었습니다.",
     } as ResponseDTO;
-
-    jest.spyOn(productService, "register").mockResolvedValue(response.data as ProductEntity);
+    productService.register = jest.fn().mockResolvedValue(response.data as ProductEntity);
 
     const result = await productController.create(body);
 
@@ -64,8 +63,7 @@ describe("ProductController", () => {
       data: { items, pagination },
       message: "상품 목록을 성공적으로 조회했습니다.",
     };
-
-    jest.spyOn(productService, "find_all").mockResolvedValue({ items, pagination });
+    productService.find_all = jest.fn().mockResolvedValue({ items, pagination });
 
     const result = await productController.read_all(query);
 
@@ -88,8 +86,7 @@ describe("ProductController", () => {
       data,
       message: "상품 상세 정보를 성공적으로 조회했습니다.",
     };
-
-    jest.spyOn(productService, "find").mockResolvedValue(data);
+    productService.find = jest.fn().mockResolvedValue(data);
 
     const result = await productController.read(param);
 
@@ -111,8 +108,7 @@ describe("ProductController", () => {
       data,
       message: "상품이 성공적으로 수정되었습니다.",
     };
-
-    jest.spyOn(productService, "edit").mockResolvedValue(data);
+    productService.edit = jest.fn().mockResolvedValue(data);
 
     const result = await productController.update(param, body);
 
@@ -127,8 +123,7 @@ describe("ProductController", () => {
       data: undefined,
       message: "상품이 성공적으로 삭제되었습니다.",
     };
-
-    jest.spyOn(productService, "remove").mockResolvedValue(undefined);
+    productService.remove = jest.fn().mockResolvedValue(true);
 
     const result = await productController.delete(param);
 

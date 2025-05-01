@@ -11,7 +11,7 @@ export default class ProductImageRepository extends BaseRepository<Product_Image
     super(entity_manager);
   }
 
-  async save({ product_id, option_id, ...image }: Product_Image): Promise<ProductImageEntity> {
+  async save({ product_id, option_id, ...image }: Product_Image) {
     return await this.entity_manager.save(ProductImageEntity, {
       ...image,
       product: { id: product_id },
@@ -19,7 +19,7 @@ export default class ProductImageRepository extends BaseRepository<Product_Image
     });
   }
 
-  async saves(images: Product_Image[]): Promise<ProductImageEntity[]> {
+  async saves(images: Product_Image[]) {
     return await this.entity_manager.save(ProductImageEntity, images);
   }
 }

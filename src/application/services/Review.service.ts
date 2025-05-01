@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { Review } from "src/domain/entities";
 import { IRepository } from "src/domain/repositories";
@@ -53,10 +53,26 @@ export default class ReviewService {
   }
 
   async edit(id: number, review: Omit<Review, "product_id">) {
-    return await this.repository.update(review, id);
+    const is_updated = await this.repository.update(review, id);
+
+    if (!is_updated) {
+      throw new NotFoundException({
+        message: "요청한 리소스를 찾을 수 없습니다.",
+        details: { resourceType: "Review", resourceId: id },
+      });
+    }
+
+    return await this.repository.find_by_id(id);
   }
 
   async remove(id: number) {
-    return await this.repository.delete(id);
+    const is_deleted = await this.repository.delete(id);
+
+    if (!is_deleted) {
+      throw new NotFoundException({
+        message: "요청한 리소스를 찾을 수 없습니다.",
+        details: { resourceType: "Review", resourceId: id },
+      });
+    }
   }
 }

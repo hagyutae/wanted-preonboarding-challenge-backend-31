@@ -81,16 +81,19 @@ export default class ProductRepository extends BaseRepository<
     return this.entity_manager.findOne(ProductCatalogView, { where: { id } });
   }
 
-  async update({ seller_id, brand_id, ...product }: Product, id: number): Promise<Product> {
-    return await this.entity_manager.save(ProductEntity, {
-      ...product,
-      id,
-      seller: { id: seller_id },
-      brand: { id: brand_id },
-    });
+  async update({ seller_id, brand_id, ...product }: Product, id: number) {
+    const { affected } = await this.entity_manager.update(
+      ProductEntity,
+      {
+        id,
+      },
+      { ...product, seller: { id: seller_id }, brand: { id: brand_id } },
+    );
+    return !!affected;
   }
 
   async delete(id: number) {
-    await this.entity_manager.delete(ProductEntity, id);
+    const { affected } = await this.entity_manager.delete(ProductEntity, id);
+    return !!affected;
   }
 }

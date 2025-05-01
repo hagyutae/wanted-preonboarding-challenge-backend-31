@@ -1,5 +1,5 @@
-import { EntityManager } from "typeorm";
 import { Injectable } from "@nestjs/common";
+import { EntityManager } from "typeorm";
 
 import { Product_Detail } from "src/domain/entities";
 import { ProductDetailEntity } from "../entities";
@@ -19,6 +19,11 @@ export default class ProductDetailRepository extends BaseRepository<Product_Deta
   }
 
   async update({ product_id, ...detail }: Product_Detail) {
-    await this.entity_manager.update(ProductDetailEntity, { product: { id: product_id } }, detail);
+    const { affected } = await this.entity_manager.update(
+      ProductDetailEntity,
+      { product: { id: product_id } },
+      detail,
+    );
+    return !!affected;
   }
 }

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import {
@@ -128,7 +128,15 @@ export default class ProductService {
   }
 
   async find(id: number) {
-    return this.repository.find_by_id(id);
+    const product = await this.repository.find_by_id(id);
+
+    if (!product) {
+      throw new NotFoundException({
+        message: "요청한 리소스를 찾을 수 없습니다.",
+        details: { resourceType: "Product", resourceId: id },
+      });
+    }
+    return product;
   }
 
   async edit(
@@ -136,7 +144,7 @@ export default class ProductService {
     { detail, seller_id, brand_id, price, categories, ...product }: ProductInputDTO,
   ) {
     try {
-      const updated_product_entity = await this.entity_manager.transaction(async (manager) => {
+      const is_updated = await this.entity_manager.transaction(async (manager) => {
         // 상품 디테일 업데이트
         await this.product_detail_repository
           .with_transaction(manager)
@@ -165,22 +173,34 @@ export default class ProductService {
         );
       });
 
-      if (!updated_product_entity) {
-        throw new Error("상품 업데이트에 실패했습니다.");
+      if (!is_updated) {
+        throw new NotFoundException({
+          message: "요청한 리소스를 찾을 수 없습니다.",
+          details: { resourceType: "Product", resourceId: product_id },
+        });
       }
+
+      const updated_product = await this.repository.find_by_id(product_id);
 
       return (({ id, name, slug, updated_at }) => ({
         id,
         name,
         slug,
         updated_at,
-      }))(updated_product_entity);
+      }))(updated_product!);
     } catch (error) {
       throw new Error((error as Error).message);
     }
   }
 
   async remove(id: number) {
-    return this.repository.delete(id);
+    const is_deleted = await this.repository.delete(id);
+
+    if (!is_deleted) {
+      throw new NotFoundException({
+        message: "요청한 리소스를 찾을 수 없습니다.",
+        details: { resourceType: "Product", resourceId: id },
+      });
+    }
   }
 }

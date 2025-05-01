@@ -86,7 +86,7 @@ describe("ReviewController", () => {
   describe("delete", () => {
     it("리뷰 삭제 성공", async () => {
       const id = 1;
-      mockReviewService.remove.mockResolvedValue(undefined);
+      mockReviewService.remove = jest.fn().mockResolvedValue(true);
 
       const result: ResponseDTO = await controller.delete({ id } as ParamDTO);
 

@@ -11,7 +11,7 @@ export default class ProductPriceRepository extends BaseRepository<Product_Price
     super(entity_manager);
   }
 
-  async save({ product_id, ...price }: Product_Price): Promise<ProductPriceEntity> {
+  async save({ product_id, ...price }: Product_Price) {
     return await this.entity_manager.save(ProductPriceEntity, {
       ...price,
       product: { id: product_id },
@@ -19,6 +19,11 @@ export default class ProductPriceRepository extends BaseRepository<Product_Price
   }
 
   async update({ product_id, ...price }: Product_Price) {
-    await this.entity_manager.update(ProductPriceEntity, { product: { id: product_id } }, price);
+    const { affected } = await this.entity_manager.update(
+      ProductPriceEntity,
+      { product: { id: product_id } },
+      price,
+    );
+    return !!affected;
   }
 }

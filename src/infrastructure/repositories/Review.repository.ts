@@ -49,10 +49,12 @@ export default class ReviewRepository extends BaseRepository<Review> {
   }
 
   async update(review: Review, id: number) {
-    await this.entity_manager.update(ReviewEntity, id, review);
+    const { affected } = await this.entity_manager.update(ReviewEntity, id, review);
+    return !!affected;
   }
 
-  async delete(id: number): Promise<void> {
-    await this.entity_manager.delete(ReviewEntity, id);
+  async delete(id: number) {
+    const { affected } = await this.entity_manager.delete(ReviewEntity, id);
+    return !!affected;
   }
 }

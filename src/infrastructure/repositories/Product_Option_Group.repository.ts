@@ -11,7 +11,7 @@ export default class ProductOptionGroupRepository extends BaseRepository<Product
     super(entity_manager);
   }
 
-  async saves(option_groups: Product_Option_Group[]): Promise<ProductOptionGroupEntity[]> {
+  async saves(option_groups: Product_Option_Group[]) {
     const option_group_entities: ProductOptionGroupEntity[] = [];
 
     for (const { options, product_id, ...group_entity } of option_groups) {

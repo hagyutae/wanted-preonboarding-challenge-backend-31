@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { Product_Image, Product_Option } from "src/domain/entities";
 import { IRepository } from "src/domain/repositories";
@@ -25,15 +25,27 @@ export default class ProductOptionsService {
     option_id: number,
     options: Omit<Product_Option, "option_group_id">,
   ): Promise<Product_Option> {
-    const updated_option = await this.repository.update(options, option_id);
-    if (!updated_option) {
-      throw new Error("Failed to update the product option.");
+    const is_updated = await this.repository.update(options, option_id);
+
+    if (!is_updated) {
+      throw new NotFoundException({
+        message: "요청한 리소스를 찾을 수 없습니다.",
+        details: { resourceType: "Option", resourceId: option_id },
+      });
     }
-    return updated_option;
+
+    return (await this.repository.find_by_id(option_id))!;
   }
 
   async remove(product_id: number, option_id: number): Promise<void> {
-    await this.repository.delete(option_id);
+    const is_deleted = await this.repository.delete(option_id);
+
+    if (!is_deleted) {
+      throw new NotFoundException({
+        message: "요청한 리소스를 찾을 수 없습니다.",
+        details: { resourceType: "Option", resourceId: option_id },
+      });
+    }
   }
 
   async register_images(
