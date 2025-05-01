@@ -79,11 +79,20 @@ public class ProductRestController {
 
     @PostMapping(value = "/products/{id}/options")
     public ResponseEntity<CommonResponse> addProductOptions(@PathVariable("id") Long id, @RequestBody ProductOptionRequest request) {
-        Long optionGroupId = request.getOptionGroupId();
-        System.out.println(optionGroupId);
-        ProductOption productOption = productService.addProductOptions(id, request);
-        OptionDTO dto = new OptionDTO(productOption);
+        OptionDTO dto = new OptionDTO(productService.addProductOptions(id, request));
         return ResponseEntity.ok().body(CommonResponse.success(dto, "상품 옵션이 성공적으로 추가 되었습니다."));
+    }
+
+    @PutMapping(value = "/products/{id}/options/{optionId}")
+    public ResponseEntity<CommonResponse> updateProductOptions(@PathVariable("id")Long id,@PathVariable("optionId")Long optionId,@RequestBody ProductOptionRequest request){
+        OptionDTO dto = new OptionDTO(productService.updateProductOptions(id, optionId, request));
+        return ResponseEntity.ok().body(CommonResponse.success(dto, "상품 옵션이 성공적으로 수정되었습니다."));
+    }
+
+    @DeleteMapping(value = "/products/{id}/options/{optionId}")
+    public ResponseEntity<CommonResponse> deleteProductOptions(@PathVariable("id")Long id,@PathVariable("optionId")Long optionId,@RequestBody ProductOptionRequest request){
+        productService.deleteProductOptions(id, optionId, request);
+        return ResponseEntity.ok().body(CommonResponse.success(null, "상품 옵션이 성공적으로 삭제되었습니다."));
     }
 
     private String toSnakeCase(String fieldPath) {

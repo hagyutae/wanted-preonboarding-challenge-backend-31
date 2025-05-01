@@ -10,6 +10,7 @@ import java.util.List;
 @Table(name = "product_options")
 @Getter
 @Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOption {

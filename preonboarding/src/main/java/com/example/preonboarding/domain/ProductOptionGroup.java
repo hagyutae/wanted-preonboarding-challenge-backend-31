@@ -30,4 +30,8 @@ public class ProductOptionGroup {
     public void setProducts(Products products) {
         this.products = products;
     }
+    public void addOption(ProductOption option) {
+        this.optionGroups.add(option);
+        option.setOptionGroups(this);
+    }
 }

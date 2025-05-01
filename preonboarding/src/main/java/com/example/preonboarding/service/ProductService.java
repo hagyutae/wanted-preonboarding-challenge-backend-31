@@ -422,4 +422,43 @@ public class ProductService {
 
         return savedOption;
     }
+
+    @Transactional
+    public ProductOption updateProductOptions(Long id, Long optionId, ProductOptionRequest request) {
+        ProductOption productOption = productOptionRepository.findById(optionId).orElseThrow(() -> new IllegalArgumentException("not found option"));
+
+        productOption.setName(request.getName());
+        productOption.setSku(request.getSku());
+        productOption.setAdditionalPrice(request.getAdditionalPrice());
+        productOption.setStock(request.getStock());
+        productOption.setDisplayOrder(request.getDisplayOrder());
+
+        if (request.getOptionGroupId() != null) {
+            ProductOptionGroup oldGroup = productOption.getOptionGroups();
+            ProductOptionGroup newGroup = productOptionGroupRepository.findById(request.getOptionGroupId())
+                    .orElseThrow(() -> new IllegalArgumentException("not found option group"));
+
+            if(oldGroup == null || !oldGroup.equals(newGroup)){
+                if(oldGroup != null){
+                    oldGroup.getOptionGroups().remove(productOption);
+                }
+                newGroup.addOption(productOption);
+            }
+        }
+
+        return productOption;
+    }
+
+    @Transactional
+    public void deleteProductOptions(Long id, Long optionId, ProductOptionRequest request) {
+        ProductOption productOption = productOptionRepository.findById(optionId).orElseThrow(() -> new IllegalArgumentException("not found option"));
+
+        ProductOptionGroup productOptionGroup = productOption.getOptionGroups();
+        if(productOptionGroup != null){
+            productOptionGroup.getOptionGroups().remove(productOption);
+            productOption.setOptionGroups(null);
+        }
+
+        productOptionRepository.delete(productOption);
+    }
 }
