@@ -1,8 +1,10 @@
 package com.example.preonboarding.response.error;
 
 public enum ErrorCode {
-    INVALID_INPUT(400, "INVALID_INPUT", "잘못된 입력 데이터"),
+    INVALID_INPUT(400, "INVALID_INPUT", "상품 등록에 실패했습니다."),
+    RESOURCE_NOT_FOUND(404, "RESOURCE_NOT_FOUND", "요청한 상품을 찾을 수 없습니다."),
     INTERNAL_ERROR(500, "INTERNAL_ERROR", "서버 내부 오류"),
+    DUPLICATE_PRODUCT(400, "DUPLICATE_PRODUCT", "상품 등록에 실패했습니다."),
     ;
 
 

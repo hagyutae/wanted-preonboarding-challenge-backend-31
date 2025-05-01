@@ -2,6 +2,7 @@ package com.example.preonboarding.service;
 
 import com.example.preonboarding.domain.*;
 import com.example.preonboarding.dto.*;
+import com.example.preonboarding.exception.ProductRegisterException;
 import com.example.preonboarding.repository.categories.CategoriesRepository;
 import com.example.preonboarding.repository.products.ProductRepository;
 import com.example.preonboarding.repository.products.ProductRepositoryCustom;
@@ -10,6 +11,7 @@ import com.example.preonboarding.repository.tags.TagsRepository;
 import com.example.preonboarding.request.ProductSearchRequest;
 import com.example.preonboarding.request.ProductsRequest;
 import com.example.preonboarding.response.*;
+import com.example.preonboarding.response.error.ErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,14 +19,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,7 +41,7 @@ public class ProductService {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Transactional
-    public Products addProducts(ProductsRequest request) {
+    public Products addProducts(ProductsRequest request){
 
         //products
         Products products = Products.from(request);
@@ -145,9 +145,16 @@ public class ProductService {
 
         products.setProductTags(productTags);
 
-        Products savedProducts = productRepository.save(products);
-
-        return savedProducts;
+        try {
+            Products savedProducts = productRepository.save(products);
+            return savedProducts;
+        }catch (DataIntegrityViolationException e){
+            Map<String, Object> details = new LinkedHashMap<>();
+            details.put("name", "이미 등록된 상품입니다.");
+            throw new ProductRegisterException(ErrorCode.INTERNAL_ERROR,details);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
 
