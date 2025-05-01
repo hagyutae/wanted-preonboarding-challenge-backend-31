@@ -8,7 +8,6 @@ services:
     environment:
       POSTGRES_USER: sandro
       POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: wanted-shop
     ports:
       - "5432:5432"
     volumes:
