@@ -1,9 +1,18 @@
 package com.wanted.mono.domain.product.entity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vladmihalcea.hibernate.type.json.JsonType;
+import com.wanted.mono.domain.product.dto.AdditionalInfo;
+import com.wanted.mono.domain.product.dto.Dimension;
+import com.wanted.mono.domain.product.dto.ProductDetailRequest;
+import com.wanted.mono.global.AdditionalInfoConverter;
+import com.wanted.mono.global.DimensionConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
 
@@ -30,8 +39,9 @@ public class ProductDetail {
     private BigDecimal weight;
 
     // 크기 (JSON)
-    @Column(columnDefinition = "JSONB")
-    private String dimensions;
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    private Dimension dimensions;
 
     // 소재 정보
     private String materials;
@@ -47,6 +57,26 @@ public class ProductDetail {
     private String careInstructions;
 
     // 추가 정보 (JSONB)
-    @Column(columnDefinition = "JSONB")
-    private String additionalInfo;
+    @Type(JsonType.class)
+    @Column(columnDefinition = "jsonb")
+    private AdditionalInfo additionalInfo;
+
+    // -----------------------------------------
+
+    public static ProductDetail of(ProductDetailRequest request) {
+        ProductDetail detail = new ProductDetail();
+        detail.weight = request.getWeight();
+        detail.materials = request.getMaterials();
+        detail.countryOfOrigin = request.getCountryOfOrigin();
+        detail.warrantyInfo = request.getWarrantyInfo();
+        detail.careInstructions = request.getCareInstructions();
+        detail.dimensions = request.getDimensions();
+        detail.additionalInfo = request.getAdditionalInfo();
+
+        return detail;
+    }
+
+    public void addProduct(Product product) {
+        this.product = product;
+    }
 }

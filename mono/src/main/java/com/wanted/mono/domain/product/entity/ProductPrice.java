@@ -1,5 +1,6 @@
 package com.wanted.mono.domain.product.entity;
 
+import com.wanted.mono.domain.product.dto.ProductPriceRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,4 +42,20 @@ public class ProductPrice {
     // 세율
     @Column(precision = 5, scale = 2)
     private BigDecimal taxRate;
+
+    // -----------------------------------
+
+    public static ProductPrice of(ProductPriceRequest request) {
+        ProductPrice productPrice = new ProductPrice();
+        productPrice.basePrice = request.getBasePrice();
+        productPrice.salePrice = request.getSalePrice();
+        productPrice.costPrice = request.getCostPrice();
+        productPrice.currency = request.getCurrency();
+        productPrice.taxRate = request.getTaxRate();
+        return productPrice;
+    }
+
+    public void addProduct(Product product) {
+        this.product = product;
+    }
 }

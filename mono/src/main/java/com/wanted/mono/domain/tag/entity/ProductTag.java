@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "product_tags")
 public class ProductTag {
@@ -27,4 +26,16 @@ public class ProductTag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
+
+    // ---------------------
+    public ProductTag() {
+    }
+
+    public void addTag(Tag tag) {
+        this.tag = tag;
+    }
+
+    public void addProduct(Product product) {
+        this.product = product;
+    }
 }

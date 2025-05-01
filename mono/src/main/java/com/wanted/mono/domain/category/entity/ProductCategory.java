@@ -1,5 +1,6 @@
 package com.wanted.mono.domain.category.entity;
 
+import com.wanted.mono.domain.product.dto.ProductCategoryRequest;
 import com.wanted.mono.domain.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,4 +30,22 @@ public class ProductCategory {
 
     // 주요 카테고리 여부
     private Boolean isPrimary = false;
+
+    public static ProductCategory of(ProductCategoryRequest request) {
+        ProductCategory productCategory = new ProductCategory();
+        productCategory.isPrimary = request.getIsPrimary();
+        return productCategory;
+    }
+
+    /**
+     * 연관 관계용 메소드들
+     *
+     */
+    public void addCategory(Category category) {
+        this.category = category;
+    }
+    
+    public void addProduct(Product product) {
+        this.product = product;
+    }
 }
