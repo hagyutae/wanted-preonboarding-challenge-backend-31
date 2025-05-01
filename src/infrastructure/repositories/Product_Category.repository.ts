@@ -3,7 +3,7 @@ import { EntityManager } from "typeorm";
 
 import { Product_Category } from "src/domain/entities";
 import IRepository from "src/domain/repositories/IRepository";
-import { ProductCategoryEntity, ProductEntity } from "../entities";
+import { ProductCategoryEntity } from "../entities";
 
 @Injectable()
 export default class ProductCategoryRepository

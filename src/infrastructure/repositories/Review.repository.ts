@@ -46,7 +46,7 @@ export default class ReviewRepository implements IRepository<Review, ReviewEntit
     return await query.getMany();
   }
 
-  async update(review: Omit<Review, "product_id">, id: number) {
+  async update(review: Review, id: number) {
     await this.entity_manager.update(ReviewEntity, id, review);
   }
 

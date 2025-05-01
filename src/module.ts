@@ -4,7 +4,14 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import * as services from "./application/services";
 import typeormConfigProvider from "./infrastructure/provider";
-import * as repositories from "./infrastructure/repositories";
+import {
+  ProductRepository,
+  ProductOptionsRepository,
+  ProductImageRepository,
+  ReviewRepository,
+  CategoryRepository,
+  MainRepository,
+} from "./infrastructure/repositories";
 import * as controllers from "./presentation/controllers";
 
 @Module({
@@ -15,7 +22,33 @@ import * as controllers from "./presentation/controllers";
       envFilePath: [".env"],
     }),
   ],
-  providers: [...Object.values(services), ...Object.values(repositories)],
+  providers: [
+    ...Object.values(services),
+    {
+      provide: "IProductRepository",
+      useClass: ProductRepository,
+    },
+    {
+      provide: "IProductOptionsRepository",
+      useClass: ProductOptionsRepository,
+    },
+    {
+      provide: "IProductImageRepository",
+      useClass: ProductImageRepository,
+    },
+    {
+      provide: "IReviewRepository",
+      useClass: ReviewRepository,
+    },
+    {
+      provide: "ICategoryRepository",
+      useClass: CategoryRepository,
+    },
+    {
+      provide: "IMainRepository",
+      useClass: MainRepository,
+    },
+  ],
   controllers: [...Object.values(controllers)],
 })
 export class AppModule {}

@@ -1,12 +1,16 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 
 import { Review } from "src/domain/entities";
-import { ReviewRepository } from "src/infrastructure/repositories";
+import IRepository from "src/domain/repositories/IRepository";
+import { ReviewEntity } from "src/infrastructure/entities";
 import { FilterDTO } from "../dto";
 
 @Injectable()
 export default class ReviewService {
-  constructor(private readonly repository: ReviewRepository) {}
+  constructor(
+    @Inject("IReviewRepository")
+    private readonly repository: IRepository<Review, ReviewEntity>,
+  ) {}
 
   async find(product_id: number, { page = 1, per_page = 10, sort, rating }: FilterDTO) {
     const [sort_field, sort_order] = sort?.split(":") ?? ["created_at", "DESC"];

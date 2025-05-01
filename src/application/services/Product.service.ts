@@ -1,6 +1,9 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
+import { Product } from "src/domain/entities";
+import IRepository from "src/domain/repositories/IRepository";
+import { ProductEntity } from "src/infrastructure/entities";
 import {
   ProductCategoryRepository,
   ProductDetailRepository,
@@ -10,13 +13,15 @@ import {
   ProductRepository,
   ProductTagRepository,
 } from "src/infrastructure/repositories";
+import { ProductSummaryView } from "src/infrastructure/views";
 import { FilterDTO, ProductInputDTO } from "../dto";
 
 @Injectable()
 export default class ProductService {
   constructor(
+    @Inject("IProductRepository")
+    private readonly repository: IRepository<Product, ProductEntity | ProductSummaryView>,
     private readonly entity_manager: EntityManager,
-    private readonly repository: ProductRepository,
   ) {}
 
   async register({

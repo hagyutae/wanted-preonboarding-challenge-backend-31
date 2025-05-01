@@ -1,14 +1,18 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 
-import { CategoryEntity } from "src/infrastructure/entities";
-import { CategoryRepository, ProductRepository } from "src/infrastructure/repositories";
+import { Product } from "src/domain/entities";
+import IRepository from "src/domain/repositories/IRepository";
+import { CategoryEntity, ProductEntity } from "src/infrastructure/entities";
+import { ProductSummaryView } from "src/infrastructure/views";
 import { FilterDTO } from "../dto";
 
 @Injectable()
 export default class CategoryService {
   constructor(
-    private readonly repository: CategoryRepository,
-    private readonly product_repository: ProductRepository,
+    @Inject("ICategoryRepository")
+    private readonly repository: IRepository<CategoryEntity, CategoryEntity>,
+    @Inject("IProductRepository")
+    private readonly product_repository: IRepository<Product, ProductEntity | ProductSummaryView>,
   ) {}
 
   async find_all_as_tree(level: number = 1) {
@@ -35,7 +39,7 @@ export default class CategoryService {
     }
 
     // 카테고리 정보 조회
-    const categories = await this.repository.find_by_filters();
+    const categories = await this.repository.find_by_filters({});
 
     // 카테고리 트리 구조로 변환
     return build_tree(categories, level);
@@ -48,7 +52,10 @@ export default class CategoryService {
     const [sort_field, sort_order] = sort?.split(":") ?? ["created_at", "DESC"];
 
     // 카테고리 정보 조회
-    const category = await this.repository.find_by_id(category_id, has_sub);
+    const category = await this.repository.find_by_id(category_id);
+    if (!has_sub) {
+      delete category?.parent;
+    }
 
     // 아이템 필터링
     const items = await this.product_repository.find_by_filters({

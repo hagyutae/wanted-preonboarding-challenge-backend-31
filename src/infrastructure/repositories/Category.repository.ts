@@ -14,10 +14,10 @@ export default class CategoryRepository implements IRepository<CategoryEntity, C
     });
   }
 
-  async find_by_id(category_id: number, has_sub?: boolean) {
+  async find_by_id(category_id: number) {
     return this.entity_manager.findOne(CategoryEntity, {
       where: { id: category_id },
-      relations: has_sub ? ["parent"] : undefined,
+      relations: ["parent"],
     });
   }
 
