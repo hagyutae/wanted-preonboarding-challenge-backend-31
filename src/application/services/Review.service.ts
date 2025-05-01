@@ -2,14 +2,13 @@ import { Inject, Injectable } from "@nestjs/common";
 
 import { Review } from "src/domain/entities";
 import IRepository from "src/domain/repositories/IRepository";
-import { ReviewEntity } from "src/infrastructure/entities";
 import { FilterDTO } from "../dto";
 
 @Injectable()
 export default class ReviewService {
   constructor(
     @Inject("IReviewRepository")
-    private readonly repository: IRepository<Review, ReviewEntity>,
+    private readonly repository: IRepository<Review>,
   ) {}
 
   async find(product_id: number, { page = 1, per_page = 10, sort, rating }: FilterDTO) {
@@ -50,14 +49,14 @@ export default class ReviewService {
   }
 
   async register(product_id: number, review: Omit<Review, "product_id">) {
-    return this.repository.save({ product_id, ...review });
+    return await this.repository.save({ product_id, ...review });
   }
 
   async edit(id: number, review: Omit<Review, "product_id">) {
-    return this.repository.update(review, id);
+    return await this.repository.update(review, id);
   }
 
   async remove(id: number) {
-    return this.repository.delete(id);
+    return await this.repository.delete(id);
   }
 }

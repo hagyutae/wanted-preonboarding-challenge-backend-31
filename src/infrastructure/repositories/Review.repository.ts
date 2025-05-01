@@ -6,12 +6,12 @@ import { ReviewEntity } from "src/infrastructure/entities";
 import BaseRepository from "./BaseRepository";
 
 @Injectable()
-export default class ReviewRepository extends BaseRepository<Review, ReviewEntity> {
+export default class ReviewRepository extends BaseRepository<Review> {
   constructor(protected readonly entity_manager: EntityManager) {
     super(entity_manager);
   }
 
-  async save({ product_id, ...review }: Review): Promise<ReviewEntity> {
+  async save({ product_id, ...review }: Review): Promise<Review> {
     const review_entity = this.entity_manager.create(ReviewEntity, {
       ...review,
       product: { id: product_id },
@@ -33,7 +33,7 @@ export default class ReviewRepository extends BaseRepository<Review, ReviewEntit
     sort_field?: string;
     sort_order?: string;
     rating?: number;
-  }): Promise<ReviewEntity[]> {
+  }): Promise<Review[]> {
     const query = this.entity_manager
       .getRepository(ReviewEntity)
       .createQueryBuilder("reviews")

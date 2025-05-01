@@ -6,10 +6,7 @@ import { ProductImageEntity } from "../entities";
 import BaseRepository from "./BaseRepository";
 
 @Injectable()
-export default class ProductImageRepository extends BaseRepository<
-  Product_Image,
-  ProductImageEntity
-> {
+export default class ProductImageRepository extends BaseRepository<Product_Image> {
   constructor(protected readonly entity_manager: EntityManager) {
     super(entity_manager);
   }

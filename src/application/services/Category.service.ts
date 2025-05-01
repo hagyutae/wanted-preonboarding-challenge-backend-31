@@ -1,23 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { Product } from "src/domain/entities";
+import { Category, Product, Product_Catalog, Product_Summary } from "src/domain/entities";
 import IRepository from "src/domain/repositories/IRepository";
-import { CategoryEntity, ProductEntity } from "src/infrastructure/entities";
-import { ProductSummaryView } from "src/infrastructure/views";
 import { FilterDTO } from "../dto";
 
 @Injectable()
 export default class CategoryService {
   constructor(
     @Inject("ICategoryRepository")
-    private readonly repository: IRepository<CategoryEntity, CategoryEntity>,
+    private readonly repository: IRepository<Category>,
     @Inject("IProductRepository")
-    private readonly product_repository: IRepository<Product, ProductEntity | ProductSummaryView>,
+    private readonly product_repository: IRepository<Product | Product_Summary | Product_Catalog>,
   ) {}
 
   async find_all_as_tree(level: number = 1) {
     function build_tree(
-      categories: CategoryEntity[],
+      categories: Category[],
       level: number, // 1: 대분류, 2: 중분류, 3: 소분류
       parent_id?: number,
     ) {

@@ -3,9 +3,9 @@ export default class Category {
     public name: string,
     public slug: string,
     public description: string,
-    public level: string,
+    public level: number,
     public image_url: string,
-    public parent: Category | null,
+    public parent?: Category | null,
     public id?: number,
   ) {}
 }

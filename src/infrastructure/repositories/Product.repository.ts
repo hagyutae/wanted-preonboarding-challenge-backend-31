@@ -1,21 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { Product } from "src/domain/entities";
+import { Product, Product_Catalog, Product_Summary } from "src/domain/entities";
 import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "../entities";
 import { ProductCatalogView, ProductSummaryView } from "../views";
 import BaseRepository from "./BaseRepository";
 
 @Injectable()
 export default class ProductRepository extends BaseRepository<
-  Product,
-  ProductEntity | ProductSummaryView
+  Product | Product_Summary | Product_Catalog
 > {
   constructor(protected readonly entity_manager: EntityManager) {
     super(entity_manager);
   }
 
-  async save({ seller_id, brand_id, ...product }: Product): Promise<ProductEntity> {
+  async save({ seller_id, brand_id, ...product }: Product): Promise<Product> {
     return this.entity_manager.save(ProductEntity, {
       ...product,
       seller: { id: seller_id },
@@ -47,7 +46,7 @@ export default class ProductRepository extends BaseRepository<
     seller?: number;
     brand?: number;
     search?: string;
-  }): Promise<ProductSummaryView[]> {
+  }): Promise<Product_Summary[]> {
     // 카테고리 조인
     const inner_query = this.entity_manager
       .createQueryBuilder()
@@ -78,11 +77,11 @@ export default class ProductRepository extends BaseRepository<
     return await query.getMany();
   }
 
-  async find_by_id(id: number): Promise<ProductCatalogView | null> {
+  async find_by_id(id: number): Promise<Product_Catalog | null> {
     return this.entity_manager.findOne(ProductCatalogView, { where: { id } });
   }
 
-  async update({ seller_id, brand_id, ...product }: Product, id: number): Promise<ProductEntity> {
+  async update({ seller_id, brand_id, ...product }: Product, id: number): Promise<Product> {
     return await this.entity_manager.save(ProductEntity, {
       ...product,
       id,

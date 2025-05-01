@@ -6,10 +6,7 @@ import { ProductOptionEntity, ProductOptionGroupEntity } from "../entities";
 import BaseRepository from "./BaseRepository";
 
 @Injectable()
-export default class ProductOptionGroupRepository extends BaseRepository<
-  Product_Option_Group,
-  ProductOptionGroupEntity
-> {
+export default class ProductOptionGroupRepository extends BaseRepository<Product_Option_Group> {
   constructor(protected readonly entity_manager: EntityManager) {
     super(entity_manager);
   }
@@ -28,7 +25,7 @@ export default class ProductOptionGroupRepository extends BaseRepository<
       // 상품 옵션 그룹에 속한 옵션 등록
       await this.entity_manager.save(
         ProductOptionEntity,
-        options.map((option) => ({ ...option, option_group: option_group_entity })),
+        (options ?? []).map((option) => ({ ...option, option_group: option_group_entity })),
       );
     }
     return option_group_entities;

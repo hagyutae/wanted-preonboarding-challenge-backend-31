@@ -5,7 +5,7 @@ export default class Product_Price {
     public cost_price: number,
     public currency: string,
     public tax_rate: number,
-    public product_id: number,
+    public product_id?: number,
     public id?: number,
   ) {}
 }

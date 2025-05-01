@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
+import { Category } from "src/domain/entities";
 import { CategoryEntity } from "src/infrastructure/entities";
 import BaseRepository from "./BaseRepository";
 
 @Injectable()
-export default class CategoryRepository extends BaseRepository<CategoryEntity, CategoryEntity> {
+export default class CategoryRepository extends BaseRepository<Category> {
   constructor(protected readonly entity_manager: EntityManager) {
     super(entity_manager);
   }
