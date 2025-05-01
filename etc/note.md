@@ -79,3 +79,22 @@
 - POST /api/products/{id}/reviews: 리뷰 작성
 - PUT /api/reviews/{id}: 리뷰 수정
 - DELETE /api/reviews/{id}: 리뷰 삭제
+
+---
+# TODO
+
+- CRUD
+  - 상품
+    - 상품가격
+    - 상품상세
+    - 옵션
+    - 이미지
+  - 리뷰
+    - 상품
+    - 사용자 (작성자)
+- 조회
+  - 브랜드
+  - 판매자
+  - 태그
+  - 카테고리
+  - 사용자

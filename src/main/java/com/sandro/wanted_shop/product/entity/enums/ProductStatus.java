@@ -1,4 +1,4 @@
-package com.sandro.wanted_shop.domain.enums;
+package com.sandro.wanted_shop.product.entity.enums;
 
 public enum ProductStatus {
     DRAFT,
