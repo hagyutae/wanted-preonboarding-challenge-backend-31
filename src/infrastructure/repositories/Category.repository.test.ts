@@ -6,7 +6,7 @@ import CategoryRepository from "./Category.repository";
 
 describe("CategoryRepository", () => {
   let repository: CategoryRepository;
-  let entityManager: EntityManager;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -14,16 +14,12 @@ describe("CategoryRepository", () => {
         CategoryRepository,
         {
           provide: EntityManager,
-          useValue: {
-            find: jest.fn(),
-            findOne: jest.fn(),
-          },
+          useValue: mockEntityManager,
         },
       ],
     }).compile();
 
     repository = module.get<CategoryRepository>(CategoryRepository);
-    entityManager = module.get<EntityManager>(EntityManager);
   });
 
   describe("find_by_filters", () => {
@@ -32,12 +28,12 @@ describe("CategoryRepository", () => {
         { id: 1, name: "Electronics", parent: null },
         { id: 2, name: "Laptops", parent: { id: 1, name: "Electronics" } },
       ];
-      jest.spyOn(entityManager, "find").mockResolvedValue(categories);
+      mockEntityManager.find = jest.fn().mockResolvedValue(categories);
 
       const result = await repository.find_by_filters();
 
       expect(result).toEqual(categories);
-      expect(entityManager.find).toHaveBeenCalledWith(CategoryEntity, {
+      expect(mockEntityManager.find).toHaveBeenCalledWith(CategoryEntity, {
         relations: ["parent"],
       });
     });
@@ -46,24 +42,24 @@ describe("CategoryRepository", () => {
   describe("find_by_id", () => {
     it("ID로 카테고리를 조회", async () => {
       const category = { id: 1, name: "Electronics", parent: null };
-      jest.spyOn(entityManager, "findOne").mockResolvedValue(category);
+      mockEntityManager.findOne = jest.fn().mockResolvedValue(category);
 
       const result = await repository.find_by_id(1);
 
       expect(result).toEqual(category);
-      expect(entityManager.findOne).toHaveBeenCalledWith(CategoryEntity, {
+      expect(mockEntityManager.findOne).toHaveBeenCalledWith(CategoryEntity, {
         where: { id: 1 },
         relations: ["parent"],
       });
     });
 
     it("존재하지 않는 ID로 조회 시 null 반환", async () => {
-      jest.spyOn(entityManager, "findOne").mockResolvedValue(null);
+      mockEntityManager.findOne = jest.fn().mockResolvedValue(null);
 
       const result = await repository.find_by_id(999);
 
       expect(result).toBeNull();
-      expect(entityManager.findOne).toHaveBeenCalledWith(CategoryEntity, {
+      expect(mockEntityManager.findOne).toHaveBeenCalledWith(CategoryEntity, {
         where: { id: 999 },
         relations: ["parent"],
       });

@@ -6,33 +6,9 @@ import ProductRepository from "./Product.repository";
 
 describe("ProductRepository", () => {
   let repository: ProductRepository;
-  let mockEntityManager: jest.Mocked<EntityManager>;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
-    mockEntityManager = {
-      save: jest.fn(),
-      findOne: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      getRepository: jest.fn().mockReturnThis(),
-      createQueryBuilder: jest.fn().mockReturnValue({
-        subQuery: jest.fn().mockReturnThis(),
-        select: jest.fn().mockReturnThis(),
-        from: jest.fn().mockReturnThis(),
-        leftJoin: jest.fn().mockReturnThis(),
-        where: jest.fn().mockReturnThis(),
-        getQuery: jest.fn().mockReturnValue("mockInnerQuery"),
-        getRepository: jest.fn().mockReturnThis(),
-        createQueryBuilder: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        orderBy: jest.fn().mockReturnThis(),
-        offset: jest.fn().mockReturnThis(),
-        limit: jest.fn().mockReturnThis(),
-        setParameter: jest.fn().mockReturnThis(),
-        getMany: jest.fn(),
-      }),
-    } as unknown as jest.Mocked<EntityManager>;
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductRepository,
@@ -81,7 +57,9 @@ describe("ProductRepository", () => {
       };
 
       const mockProducts = [{ id: 1, name: "Test Product" }] as Product_Summary[];
-      mockEntityManager.createQueryBuilder().getMany = jest.fn().mockResolvedValue(mockProducts);
+      mockEntityManager.getRepository().createQueryBuilder().getMany = jest
+        .fn()
+        .mockResolvedValue(mockProducts);
 
       const result = await repository.find_by_filters(filters);
 

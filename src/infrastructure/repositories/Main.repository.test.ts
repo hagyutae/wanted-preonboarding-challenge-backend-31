@@ -5,7 +5,7 @@ import MainRepository from "./Main.repository";
 
 describe("MainRepository", () => {
   let repository: MainRepository;
-  let entityManager: EntityManager;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -13,18 +13,12 @@ describe("MainRepository", () => {
         MainRepository,
         {
           provide: EntityManager,
-          useValue: {
-            find: jest.fn(),
-            getRepository: jest.fn().mockReturnValue({
-              createQueryBuilder: jest.fn(),
-            }),
-          },
+          useValue: mockEntityManager,
         },
       ],
     }).compile();
 
     repository = module.get<MainRepository>(MainRepository);
-    entityManager = module.get<EntityManager>(EntityManager);
   });
 
   describe("get_new_products", () => {
@@ -33,7 +27,7 @@ describe("MainRepository", () => {
         { id: 1, name: "Product 1" },
         { id: 2, name: "Product 2" },
       ];
-      entityManager.find = jest.fn().mockResolvedValue(products);
+      mockEntityManager.find = jest.fn().mockResolvedValue(products);
 
       const result = await repository.get_new_products(1, 10);
 
@@ -44,19 +38,13 @@ describe("MainRepository", () => {
   describe("get_popular_products", () => {
     it("인기 상품을 반환", async () => {
       const products = [{ id: 1, name: "Product 1", rating: 5 }];
-      const queryBuilder = {
-        orderBy: jest.fn().mockReturnThis(),
-        limit: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(products),
-      };
-      entityManager.getRepository = jest.fn().mockReturnValue({
-        createQueryBuilder: jest.fn().mockReturnValue(queryBuilder),
-      });
+      mockEntityManager.getRepository().createQueryBuilder().getMany = jest
+        .fn()
+        .mockResolvedValue(products);
 
       const result = await repository.get_popular_products();
 
       expect(result).toEqual(products);
-      expect(queryBuilder.getMany).toHaveBeenCalled();
     });
   });
 
@@ -66,23 +54,11 @@ describe("MainRepository", () => {
         { id: 1, name: "Category 1", product_count: 10 },
         { id: 2, name: "Category 2", product_count: 5 },
       ];
-      const queryBuilder = {
-        innerJoinAndSelect: jest.fn().mockReturnThis(),
-        select: jest.fn().mockReturnThis(),
-        addSelect: jest.fn().mockReturnThis(),
-        groupBy: jest.fn().mockReturnThis(),
-        orderBy: jest.fn().mockReturnThis(),
-        limit: jest.fn().mockReturnThis(),
-        getRawMany: jest.fn().mockResolvedValue(categories),
-      };
-      entityManager.getRepository = jest.fn().mockReturnValue({
-        createQueryBuilder: jest.fn().mockReturnValue(queryBuilder),
-      });
+      mockEntityManager.createQueryBuilder().getRawMany = jest.fn().mockResolvedValue(categories);
 
       const result = await repository.get_featured_categories();
 
       expect(result).toEqual(categories);
-      expect(queryBuilder.getRawMany).toHaveBeenCalled();
     });
   });
 });

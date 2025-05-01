@@ -6,13 +6,9 @@ import ProductOptionGroupRepository from "./Product_Option_Group.repository";
 
 describe("ProductOptionGroupRepository", () => {
   let repository: ProductOptionGroupRepository;
-  let mockEntityManager: jest.Mocked<EntityManager>;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
-    mockEntityManager = {
-      save: jest.fn(),
-    } as unknown as jest.Mocked<EntityManager>;
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductOptionGroupRepository,

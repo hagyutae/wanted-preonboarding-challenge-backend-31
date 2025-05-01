@@ -1,19 +1,14 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager, UpdateResult } from "typeorm";
 
-import ProductPriceRepository from "./Product_Price.repository";
 import { Product_Price } from "src/domain/entities";
+import ProductPriceRepository from "./Product_Price.repository";
 
 describe("ProductPriceRepository", () => {
   let repository: ProductPriceRepository;
-  let mockEntityManager: jest.Mocked<EntityManager>;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
-    mockEntityManager = {
-      save: jest.fn(),
-      update: jest.fn(),
-    } as unknown as jest.Mocked<EntityManager>;
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductPriceRepository,

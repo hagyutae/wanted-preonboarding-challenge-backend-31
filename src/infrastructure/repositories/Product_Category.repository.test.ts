@@ -6,7 +6,7 @@ import ProductCategoryRepository from "./Product_Category.repository";
 
 describe("ProductCategoryRepository", () => {
   let repository: ProductCategoryRepository;
-  let entityManager: EntityManager;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -14,16 +14,12 @@ describe("ProductCategoryRepository", () => {
         ProductCategoryRepository,
         {
           provide: EntityManager,
-          useValue: {
-            save: jest.fn(),
-            update: jest.fn(),
-          },
+          useValue: mockEntityManager,
         },
       ],
     }).compile();
 
     repository = module.get<ProductCategoryRepository>(ProductCategoryRepository);
-    entityManager = module.get<EntityManager>(EntityManager);
   });
 
   describe("saves", () => {
@@ -36,7 +32,7 @@ describe("ProductCategoryRepository", () => {
         { id: 1, product: { id: 1 }, category: { id: 2 }, is_primary: true },
         { id: 2, product: { id: 1 }, category: { id: 3 }, is_primary: false },
       ];
-      jest.spyOn(entityManager, "save").mockResolvedValue(savedEntities);
+      mockEntityManager.save = jest.fn().mockResolvedValue(savedEntities);
 
       const result = await repository.saves(categories);
 
@@ -51,7 +47,7 @@ describe("ProductCategoryRepository", () => {
         category_id: 2,
         is_primary: true,
       };
-      jest.spyOn(entityManager, "update").mockResolvedValue({ affected: 1 } as UpdateResult);
+      mockEntityManager.update = jest.fn().mockResolvedValue({ affected: 1 } as UpdateResult);
 
       const result = await repository.update(category);
 
@@ -64,7 +60,7 @@ describe("ProductCategoryRepository", () => {
         category_id: 2,
         is_primary: true,
       };
-      jest.spyOn(entityManager, "update").mockResolvedValue({ affected: 0 } as UpdateResult);
+      mockEntityManager.update = jest.fn().mockResolvedValue({ affected: 0 } as UpdateResult);
 
       const result = await repository.update(category);
 

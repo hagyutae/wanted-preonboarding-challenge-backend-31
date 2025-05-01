@@ -6,13 +6,9 @@ import ProductTagRepository from "./Product_Tag.repository";
 
 describe("ProductTagRepository", () => {
   let repository: ProductTagRepository;
-  let mockEntityManager: jest.Mocked<EntityManager>;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
-    mockEntityManager = {
-      save: jest.fn(),
-    } as unknown as jest.Mocked<EntityManager>;
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductTagRepository,

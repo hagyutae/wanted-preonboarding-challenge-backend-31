@@ -6,13 +6,9 @@ import ProductImageRepository from "./Product_Image.repository";
 
 describe("ProductImageRepository", () => {
   let repository: ProductImageRepository;
-  let mockEntityManager: jest.Mocked<EntityManager>;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
-    mockEntityManager = {
-      save: jest.fn(),
-    } as unknown as jest.Mocked<EntityManager>;
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductImageRepository,

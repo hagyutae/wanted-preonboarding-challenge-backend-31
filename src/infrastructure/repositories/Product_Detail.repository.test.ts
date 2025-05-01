@@ -6,7 +6,7 @@ import ProductDetailRepository from "./Product_Detail.repository";
 
 describe("ProductDetailRepository", () => {
   let repository: ProductDetailRepository;
-  let entityManager: EntityManager;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -14,16 +14,12 @@ describe("ProductDetailRepository", () => {
         ProductDetailRepository,
         {
           provide: EntityManager,
-          useValue: {
-            save: jest.fn(),
-            update: jest.fn(),
-          },
+          useValue: mockEntityManager,
         },
       ],
     }).compile();
 
     repository = module.get<ProductDetailRepository>(ProductDetailRepository);
-    entityManager = module.get<EntityManager>(EntityManager);
   });
 
   describe("save", () => {
@@ -38,7 +34,7 @@ describe("ProductDetailRepository", () => {
         ...productDetail,
         product: { id: productDetail.product_id },
       };
-      entityManager.save = jest.fn().mockResolvedValue(savedEntity);
+      mockEntityManager.save = jest.fn().mockResolvedValue(savedEntity);
 
       const result = await repository.save(productDetail);
 
@@ -53,7 +49,7 @@ describe("ProductDetailRepository", () => {
         materials: "플라스틱",
         country_of_origin: "한국",
       } as Product_Detail;
-      jest.spyOn(entityManager, "update").mockResolvedValue({ affected: 1 } as UpdateResult);
+      mockEntityManager.update = jest.fn().mockResolvedValue({ affected: 1 } as UpdateResult);
 
       const result = await repository.update(productDetail);
 
@@ -66,7 +62,7 @@ describe("ProductDetailRepository", () => {
         materials: "수정 플라스틱",
         country_of_origin: "수정 한국",
       } as Product_Detail;
-      jest.spyOn(entityManager, "update").mockResolvedValue({ affected: 0 } as UpdateResult);
+      mockEntityManager.update = jest.fn().mockResolvedValue({ affected: 0 } as UpdateResult);
 
       const result = await repository.update(productDetail);
 

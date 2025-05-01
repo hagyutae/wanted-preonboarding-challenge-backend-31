@@ -6,19 +6,9 @@ import ReviewRepository from "./Review.repository";
 
 describe("ReviewRepository", () => {
   let repository: ReviewRepository;
-  let mockEntityManager: jest.Mocked<EntityManager>;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
-    mockEntityManager = {
-      create: jest.fn(),
-      save: jest.fn(),
-      getRepository: jest.fn().mockReturnValue({
-        createQueryBuilder: jest.fn(),
-      }),
-      update: jest.fn(),
-      delete: jest.fn(),
-    } as unknown as jest.Mocked<EntityManager>;
-
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ReviewRepository,
