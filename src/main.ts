@@ -1,6 +1,7 @@
-import { ValidationPipe } from "@nestjs/common";
+import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { ValidationError } from "class-validator";
 
 import { AppModule } from "./module";
 import * as exception_filters from "./presentation/filters";
@@ -14,6 +15,7 @@ async function bootstrap() {
     new ValidationPipe({
       transform: true,
       transformOptions: { enableImplicitConversion: true },
+      exceptionFactory,
     }),
   );
 
@@ -37,3 +39,19 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
+
+// class-validator 유효성 검사 에러 핸들링
+function exceptionFactory(errors: ValidationError[]) {
+  const details: Record<string, string> = {};
+  for (const error of errors) {
+    const field = error.property;
+    const messages = Object.values(error.constraints || {});
+    if (messages.length > 0) {
+      details[field] = messages[0];
+    }
+  }
+  return new BadRequestException({
+    message: "입력 데이터가 유효하지 않습니다.",
+    details,
+  });
+}

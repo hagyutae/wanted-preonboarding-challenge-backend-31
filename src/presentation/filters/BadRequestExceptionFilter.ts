@@ -10,17 +10,17 @@ export default class BadRequestExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
 
     const status = exception.getStatus();
-    const exception_response = exception.getResponse();
-    const message =
-      typeof exception_response === "string"
-        ? exception_response
-        : (exception_response as any).message;
+    const body = exception.getResponse() as {
+      message: string;
+      details?: string[];
+    };
 
     response.status(status).json({
       success: false,
       error: {
         code: ErrorCode.INVALID_INPUT,
-        message,
+        message: body.message || "잘못된 요청입니다.",
+        details: body.details || [],
       },
     });
   }
