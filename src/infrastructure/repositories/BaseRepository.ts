@@ -1,6 +1,6 @@
 import { EntityManager } from "typeorm";
 
-import IRepository from "src/domain/repositories/IRepository";
+import { IRepository } from "src/domain/repositories";
 
 export default abstract class BaseRepository<T> implements IRepository<T> {
   constructor(protected readonly entity_manager: EntityManager) {}

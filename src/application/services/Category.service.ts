@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 
 import { Category, Product, Product_Catalog, Product_Summary } from "src/domain/entities";
-import IRepository from "src/domain/repositories/IRepository";
+import { IRepository } from "src/domain/repositories";
 import { FilterDTO } from "../dto";
 
 @Injectable()

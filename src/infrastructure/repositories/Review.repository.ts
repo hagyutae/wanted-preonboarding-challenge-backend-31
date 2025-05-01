@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
 import { Review } from "src/domain/entities";
-import { ReviewEntity } from "src/infrastructure/entities";
+import { ReviewEntity } from "../entities";
 import BaseRepository from "./BaseRepository";
 
 @Injectable()

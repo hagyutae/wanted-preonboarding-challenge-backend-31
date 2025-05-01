@@ -12,7 +12,7 @@ import {
   Product_Summary,
   Product_Tag,
 } from "src/domain/entities";
-import IRepository from "src/domain/repositories/IRepository";
+import { IRepository } from "src/domain/repositories";
 import { ProductRepository } from "src/infrastructure/repositories";
 import { FilterDTO, ProductInputDTO } from "../dto";
 
