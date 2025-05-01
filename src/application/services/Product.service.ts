@@ -1,25 +1,39 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { Product, Product_Catalog, Product_Summary } from "src/domain/entities";
-import IRepository from "src/domain/repositories/IRepository";
 import {
-  ProductCategoryRepository,
-  ProductDetailRepository,
-  ProductImageRepository,
-  ProductOptionGroupRepository,
-  ProductPriceRepository,
-  ProductRepository,
-  ProductTagRepository,
-} from "src/infrastructure/repositories";
+  Product,
+  Product_Catalog,
+  Product_Category,
+  Product_Detail,
+  Product_Image,
+  Product_Option_Group,
+  Product_Price,
+  Product_Summary,
+  Product_Tag,
+} from "src/domain/entities";
+import IRepository from "src/domain/repositories/IRepository";
+import { ProductRepository } from "src/infrastructure/repositories";
 import { FilterDTO, ProductInputDTO } from "../dto";
 
 @Injectable()
 export default class ProductService {
   constructor(
+    private readonly entity_manager: EntityManager,
     @Inject("IProductRepository")
     private readonly repository: IRepository<Product | Product_Summary | Product_Catalog>,
-    private readonly entity_manager: EntityManager,
+    @Inject("IProductDetailRepository")
+    private readonly product_detail_repository: IRepository<Product_Detail>,
+    @Inject("IProductPriceRepository")
+    private readonly product_price_repository: IRepository<Product_Price>,
+    @Inject("IProductCategoryRepository")
+    private readonly product_category_repository: IRepository<Product_Category>,
+    @Inject("IProductOptionGroupRepository")
+    private readonly product_option_group_repository: IRepository<Product_Option_Group>,
+    @Inject("IProductImageRepository")
+    private readonly product_image_repository: IRepository<Product_Image>,
+    @Inject("IProductTagRepository")
+    private readonly product_tag_repository: IRepository<Product_Tag>,
   ) {}
 
   async register({
@@ -45,30 +59,36 @@ export default class ProductService {
         const { id: product_id } = product_entity;
 
         // 상품 상세 등록
-        await new ProductDetailRepository(manager).save({ ...detail, product_id });
+        await this.product_detail_repository.with_transaction(manager).save({
+          ...detail,
+          product_id,
+        });
 
         // 상품 가격 등록
-        await new ProductPriceRepository(manager).save({ ...price, product_id });
+        await this.product_price_repository.with_transaction(manager).save({
+          ...price,
+          product_id,
+        });
 
         // 상품 카테고리 등록
-        await new ProductCategoryRepository(manager).saves(
-          categories.map((category) => ({ ...category, product_id })),
-        );
+        await this.product_category_repository
+          .with_transaction(manager)
+          .saves(categories.map((category) => ({ ...category, product_id })));
 
         // 상품 옵션 등록
-        await new ProductOptionGroupRepository(manager).saves(
-          option_groups.map((group) => ({ ...group, product_id })),
-        );
+        await this.product_option_group_repository
+          .with_transaction(manager)
+          .saves(option_groups.map((group) => ({ ...group, product_id })));
 
         // 상품 이미지 등록
-        await new ProductImageRepository(manager).saves(
-          images.map((image) => ({ ...image, product_id })),
-        );
+        await this.product_image_repository
+          .with_transaction(manager)
+          .saves(images.map((image) => ({ ...image, product_id })));
 
         // 상품 태그 등록
-        await new ProductTagRepository(manager).saves(
-          tag_ids.map((tag_id) => ({ tag_id, product_id })),
-        );
+        await this.product_tag_repository
+          .with_transaction(manager)
+          .saves(tag_ids.map((tag_id) => ({ tag_id, product_id })));
 
         return product_entity;
       });
@@ -118,18 +138,24 @@ export default class ProductService {
     try {
       const updated_product_entity = await this.entity_manager.transaction(async (manager) => {
         // 상품 디테일 업데이트
-        await new ProductDetailRepository(manager).update({ ...detail, product_id });
+        await this.product_detail_repository
+          .with_transaction(manager)
+          .update({ ...detail, product_id });
 
         // 상품 가격 업데이트
-        await new ProductPriceRepository(manager).update({ ...price, product_id });
+        await this.product_price_repository
+          .with_transaction(manager)
+          .update({ ...price, product_id });
 
         // 상품 카테고리 업데이트
         for (const category of categories) {
-          await new ProductCategoryRepository(manager).update({ ...category, product_id });
+          await this.product_category_repository
+            .with_transaction(manager)
+            .update({ ...category, product_id });
         }
 
         // 상품 제품 업데이트
-        const updated_product_entity = await new ProductRepository(manager).update(
+        return this.repository.with_transaction(manager).update(
           {
             seller_id,
             brand_id,
@@ -137,9 +163,12 @@ export default class ProductService {
           },
           product_id,
         );
-
-        return updated_product_entity;
       });
+
+      if (!updated_product_entity) {
+        throw new Error("상품 업데이트에 실패했습니다.");
+      }
+
       return (({ id, name, slug, updated_at }) => ({
         id,
         name,

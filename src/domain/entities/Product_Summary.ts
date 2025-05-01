@@ -11,9 +11,10 @@ export default class Product_Summary {
     public brand: { id: number; name: string },
     public seller: { id: number; name: string },
     public status: string,
-    public created_at: Date,
     public in_stock: boolean,
     public rating: number,
     public review_count: number,
+    public created_at: Date,
+    public updated_at?: Date,
   ) {}
 }
