@@ -8,3 +8,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    sql: debug
+    org.hibernate.orm.jdbc.bind: trace  # 파라미터 바인딩 로그
