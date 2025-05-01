@@ -1,5 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsBoolean, IsInt, IsOptional } from "class-validator";
+import { Transform } from "class-transformer";
+import { IsArray, IsBoolean, IsInt, IsOptional } from "class-validator";
 
 export default class ProductQueryDTO {
   @ApiPropertyOptional({ description: "페이지 번호 (기본값: 1)", example: 1, required: false })
@@ -46,10 +47,13 @@ export default class ProductQueryDTO {
   @ApiPropertyOptional({
     description: "카테고리 ID 필터 (여러 개인 경우 콤마로 구분)",
     example: [5],
+    type: [Number],
     required: false,
   })
   @IsOptional()
+  @IsArray()
   @IsInt({ each: true })
+  @Transform(({ value }) => (typeof value === "string" ? value.split(",") : value).map(Number))
   category?: number[];
 
   @ApiPropertyOptional({ description: "판매자 ID 필터", example: 1, required: false })
