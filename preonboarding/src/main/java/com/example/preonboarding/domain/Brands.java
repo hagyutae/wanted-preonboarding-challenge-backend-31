@@ -26,4 +26,7 @@ public class Brands {
     private List<Products> products = new ArrayList<>();
 
 
+    public void setProducts(List<Products> products) {
+        this.products = products;
+    }
 }

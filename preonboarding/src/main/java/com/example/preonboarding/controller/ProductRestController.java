@@ -66,6 +66,12 @@ public class ProductRestController {
         return CommonResponse.success(dto);
     }
 
+    @DeleteMapping(value = "/products/{id}")
+    public CommonResponse deleteProducts(@PathVariable("id")Long id) {
+        productService.deleteProducts(id);
+        return CommonResponse.delete();
+    }
+
     private String toSnakeCase(String fieldPath) {
         String[] parts = fieldPath.split("\\.");
         return Arrays.stream(parts)

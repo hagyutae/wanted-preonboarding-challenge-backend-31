@@ -353,4 +353,54 @@ public class ProductService {
         return products;
     }
 
+    public void deleteProducts(Long id) {
+        Products products = productRepository.findById(id).orElseThrow(() -> new NotFoundResourceException(ErrorCode.RESOURCE_NOT_FOUND));
+
+        products.getProductImages().stream().forEach(images -> images.setProducts(null));
+        products.getProductImages().clear();
+
+        products.getProductCategories().forEach(productCategories -> productCategories.setProducts(null));
+        products.getProductCategories().clear();
+
+        ProductDetails productDetails = products.getProductDetails();
+        if (productDetails != null && productDetails.getId() != null) {
+            productDetails.setProducts(null);
+            products.setProductDetails(null);
+        }
+
+        ProductPrices productPrices = products.getProductPrices();
+        if (productPrices != null && productPrices.getId() != null) {
+            productPrices.setProducts(null);
+            products.setProductPrices(null);
+        }
+
+        products.getProductTags().forEach(productTags -> productTags.setProducts(null));
+        products.getProductTags().clear();
+
+        products.getProductOptionGroups().forEach(productOptionGroup -> productOptionGroup.setProducts(null));
+        products.getProductOptionGroups().clear();
+
+        List<Reviews> reviews = products.getReviews();
+        if(!reviews.isEmpty()){
+            reviews.stream().filter(i->i.getId() != null)
+                    .forEach(review->review.setProducts(null));
+            products.getReviews().clear();
+        }
+
+
+
+        Brands brands = products.getBrands();
+        if (brands != null) {
+            products.setBrands(null);
+        }
+
+        Sellers sellers = products.getSellers();
+        if (sellers != null) {
+            products.setSellers(null);
+        }
+
+
+
+        productRepository.delete(products);
+    }
 }

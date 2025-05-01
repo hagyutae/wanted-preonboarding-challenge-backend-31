@@ -34,25 +34,25 @@ public class Products {
     @JoinColumn(name = "seller_id")
     private Sellers sellers;
 
-    @OneToMany(mappedBy ="products",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy ="products",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ProductTags> productTags = new ArrayList<>();
 
-    @OneToMany(mappedBy ="products", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy ="products", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ProductCategories> productCategories = new ArrayList<>();
 
-    @OneToOne(mappedBy = "products", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "products", cascade = CascadeType.ALL,orphanRemoval = true)
     private ProductPrices productPrices;
 
-    @OneToOne(mappedBy = "products",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "products",cascade = CascadeType.ALL,orphanRemoval = true)
     private ProductDetails productDetails;
 
-    @OneToMany(mappedBy = "products",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "products",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ProductImages> productImages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "products",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "products",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ProductOptionGroup> productOptionGroups = new ArrayList<>();
 
-    @OneToMany(mappedBy = "products")
+    @OneToMany(mappedBy = "products",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reviews> reviews = new ArrayList<>();
 
     public void updateFrom(ProductsRequest request, Brands brands, Sellers sellers) {
@@ -77,12 +77,16 @@ public class Products {
 
     public void setProductDetails(ProductDetails details) {
         this.productDetails = details;
-        details.setProducts(this);
+        if (details != null) {
+            details.setProducts(this);
+        }
     }
 
     public void setProductPrices(ProductPrices productPrices) {
         this.productPrices = productPrices;
-        productPrices.setProducts(this);
+        if (productPrices != null) {
+            productPrices.setProducts(this);
+        }
     }
 
     public void setProductImages(List<ProductImages> productImages) {

@@ -27,7 +27,11 @@ public class Reviews {
     private String title;
     private String content;
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
     private boolean verifiedPurchase;
     private int helpfulVotes;
+
+    public void setProducts(Products products) {
+        this.products = products;
+    }
 }

@@ -25,10 +25,15 @@ public class ProductCategoriesDTO {
         this.description = categories.getDescription();
         this.imageUrl = categories.getImageUrl();
         this.isPrimary = primary;
-        this.parent = CategoriesDTO.builder()
-                .id(parent.getId())
-                .name(parent.getName())
-                .slug(parent.getSlug())
-                .build();
+        if (parent != null) {
+            this.parent = CategoriesDTO.builder()
+                    .id(parent.getId())
+                    .name(parent.getName())
+                    .slug(parent.getSlug())
+                    .build();
+        }else{
+            this.parent = null;
+        }
+
     }
 }

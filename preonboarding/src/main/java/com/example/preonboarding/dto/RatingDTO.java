@@ -13,8 +13,21 @@ public class RatingDTO {
     private Map<Integer, Long> distribution;
 
     public RatingDTO(Double avg, Long count, Map<Integer, Long> distribution) {
-        this.avg = avg;
-        this.count = count;
-        this.distribution = distribution;
+        if (avg == null) {
+            this.avg = 0d;
+        }else {
+            this.avg = avg;
+        }
+
+        if (count == null) {
+            this.count = 0l;
+        }else {
+            this.count = count;
+        }
+        if (distribution == null) {
+            this.distribution = null;
+        }else{
+            this.distribution = distribution;
+        }
     }
 }

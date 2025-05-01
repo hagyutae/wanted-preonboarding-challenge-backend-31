@@ -27,4 +27,8 @@ public class Sellers {
 
     @OneToMany(mappedBy = "sellers")
     private List<Products> products = new ArrayList<>();
+
+    public void setProducts(List<Products> products) {
+        this.products = products;
+    }
 }

@@ -33,6 +33,10 @@ public class CommonResponse<T> {
         return new CommonResponse(true, data, "요청이 성공적으로 처리되었습니다.");
     }
 
+    public static <T> CommonResponse<CommonResponse> delete() {
+        return new CommonResponse(true, null, "상품이 성공적으로 삭제되었습니다.");
+    }
+
     public static CommonResponse error(ErrorResponse error) {
         return new CommonResponse(false, error);
     }
