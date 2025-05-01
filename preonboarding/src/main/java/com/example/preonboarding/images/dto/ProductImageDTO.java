@@ -20,6 +20,7 @@ public class ProductImageDTO {
     private String altText;
     private boolean isPrimary;
     private int displayOrder;
+    private Long optionId;
     @QueryProjection
     public ProductImageDTO(Long productsId, String imageUrl, String imageAltText) {
         this.id = productsId;
