@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: test
+  output:
+    ansi:
+      enabled: always
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wanted_shop_test
+    username: sandro
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+        show_sql: false
+
+logging:
+  level:
+    sql: debug
+    org.hibernate.orm.jdbc.bind: trace  # 파라미터 바인딩 로그
