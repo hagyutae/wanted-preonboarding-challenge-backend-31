@@ -2,12 +2,9 @@ import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsBoolean, IsInt, IsOptional } from "class-validator";
 
-import { BooleanString } from "../decorators";
-
 export default class FiltersByCategoryDTO {
   @ApiPropertyOptional({ description: "페이지 번호", example: 1, required: false })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   page?: number;
 
@@ -27,7 +24,6 @@ export default class FiltersByCategoryDTO {
 
   @ApiPropertyOptional({ description: "하위 카테고리 포함 여부", example: true, required: false })
   @IsOptional()
-  @BooleanString()
   @IsBoolean()
   includeSubcategories?: boolean;
 }

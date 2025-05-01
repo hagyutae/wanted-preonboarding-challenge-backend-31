@@ -2,28 +2,22 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsBoolean, IsInt, IsNumber, IsOptional, ValidateNested } from "class-validator";
 
-import { BooleanString } from "../decorators";
-
 class Dimensions {
   @ApiProperty({ description: "가로 길이", example: 200 })
-  @Type(() => Number)
   @IsNumber()
   width: number;
 
   @ApiProperty({ description: "세로 길이", example: 85 })
-  @Type(() => Number)
   @IsNumber()
   height: number;
 
   @ApiProperty({ description: "깊이", example: 90 })
-  @Type(() => Number)
   @IsNumber()
   depth: number;
 }
 
 class AdditionalInfo {
   @ApiProperty({ description: "조립 필요 여부", example: true })
-  @BooleanString()
   @IsBoolean()
   assembly_required: boolean;
 
@@ -33,7 +27,6 @@ class AdditionalInfo {
 
 class Detail {
   @ApiProperty({ description: "무게", example: 25.5 })
-  @Type(() => Number)
   @IsNumber()
   weight: number;
 
@@ -62,17 +55,14 @@ class Detail {
 
 class Price {
   @ApiProperty({ description: "기본 가격", example: 599000 })
-  @Type(() => Number)
   @IsInt()
   base_price: number;
 
   @ApiProperty({ description: "할인 가격", example: 499000 })
-  @Type(() => Number)
   @IsInt()
   sale_price: number;
 
   @ApiProperty({ description: "원가", example: 350000 })
-  @Type(() => Number)
   @IsInt()
   cost_price: number;
 
@@ -80,29 +70,25 @@ class Price {
   currency: string;
 
   @ApiProperty({ description: "세율", example: 10 })
-  @Type(() => Number)
   @IsNumber()
   tax_rate: number;
 }
 
 class Category {
   @ApiProperty({ description: "카테고리 ID", example: 5 })
-  @Type(() => Number)
   @IsInt()
   category_id: number;
 
   @ApiProperty({ description: "주요 카테고리 여부", example: true })
-  @BooleanString()
   @IsBoolean()
   is_primary: boolean;
 }
 
-class Option {
+export class Option {
   @ApiProperty({ description: "옵션 이름", example: "브라운" })
   name: string;
 
   @ApiProperty({ description: "추가 가격", example: 0 })
-  @Type(() => Number)
   @IsInt()
   additional_price: number;
 
@@ -110,28 +96,24 @@ class Option {
   sku: string;
 
   @ApiProperty({ description: "재고", example: 10 })
-  @Type(() => Number)
   @IsInt()
   stock: number;
 
   @ApiProperty({ description: "표시 순서", example: 1 })
-  @Type(() => Number)
   @IsInt()
   display_order: number;
 }
 
-class OptionGroup {
+export class OptionGroup {
   @ApiProperty({ description: "옵션 그룹 이름", example: "색상" })
   name: string;
 
   @ApiProperty({ description: "표시 순서", example: 1 })
-  @Type(() => Number)
   @IsInt()
   display_order: number;
 
   @ApiProperty({ description: "옵션 목록", type: [Option] })
   @ValidateNested({ each: true })
-  @Type(() => Option)
   options: Option[];
 }
 
@@ -146,18 +128,15 @@ class Image {
   alt_text: string;
 
   @ApiProperty({ description: "주요 이미지 여부", example: true })
-  @BooleanString()
   @IsBoolean()
   is_primary: boolean;
 
   @ApiProperty({ description: "표시 순서", example: 1 })
-  @Type(() => Number)
   @IsInt()
   display_order: number;
 
   @ApiProperty({ description: "옵션 ID", example: null, nullable: true })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   option_id: number | null;
 }
@@ -181,12 +160,10 @@ export default class ProductBodyDTO {
   full_description: string;
 
   @ApiProperty({ description: "판매자 ID", example: 1 })
-  @Type(() => Number)
   @IsInt()
   seller_id: number;
 
   @ApiProperty({ description: "브랜드 ID", example: 2 })
-  @Type(() => Number)
   @IsInt()
   brand_id: number;
 
@@ -219,7 +196,6 @@ export default class ProductBodyDTO {
   images: Image[];
 
   @ApiProperty({ description: "태그 목록", example: [1, 4, 7] })
-  @Type(() => Number)
   @IsInt({ each: true })
   tags: TagId[];
 }

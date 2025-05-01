@@ -1,11 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsOptional } from "class-validator";
 
-import { BooleanString } from "../decorators";
-
 export default class ResponseDTO {
   @ApiProperty({ description: "요청 성공 여부", example: true })
-  @BooleanString()
   @IsBoolean()
   success: boolean;
 

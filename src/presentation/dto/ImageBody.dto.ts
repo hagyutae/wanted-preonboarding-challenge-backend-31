@@ -2,8 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsBoolean, IsInt } from "class-validator";
 
-import { BooleanString } from "../decorators";
-
 export default class ImageBodyDTO {
   @ApiProperty({ description: "이미지 URL", example: "https://example.com/images/sofa3.jpg" })
   url: string;
@@ -12,7 +10,6 @@ export default class ImageBodyDTO {
   alt_text: string;
 
   @ApiProperty({ description: "대표 이미지 여부", example: false })
-  @BooleanString()
   @IsBoolean()
   is_primary: boolean;
 

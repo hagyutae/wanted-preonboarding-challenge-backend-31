@@ -1,5 +1,4 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
 import { IsInt, IsNumber, IsOptional } from "class-validator";
 
 export default class ReviewQueryDTO {
@@ -9,7 +8,6 @@ export default class ReviewQueryDTO {
     required: false,
   })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   page?: number;
 
@@ -19,7 +17,6 @@ export default class ReviewQueryDTO {
     required: false,
   })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   perPage?: number;
 
@@ -37,7 +34,6 @@ export default class ReviewQueryDTO {
     required: false,
   })
   @IsOptional()
-  @Type(() => Number)
   @IsNumber()
   rating?: number;
 }

@@ -1,13 +1,9 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
 import { IsBoolean, IsInt, IsOptional } from "class-validator";
-
-import { BooleanString } from "../decorators";
 
 export default class ProductQueryDTO {
   @ApiPropertyOptional({ description: "페이지 번호 (기본값: 1)", example: 1, required: false })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   page?: number = 1;
 
@@ -17,7 +13,6 @@ export default class ProductQueryDTO {
     required: false,
   })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   perPage?: number = 10;
 
@@ -40,13 +35,11 @@ export default class ProductQueryDTO {
 
   @ApiPropertyOptional({ description: "최소 가격 필터", example: 10000, required: false })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   minPrice?: number;
 
   @ApiPropertyOptional({ description: "최대 가격 필터", example: 100000, required: false })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   maxPrice?: number;
 
@@ -56,25 +49,21 @@ export default class ProductQueryDTO {
     required: false,
   })
   @IsOptional()
-  @Type(() => Number)
   @IsInt({ each: true })
   category?: number[];
 
   @ApiPropertyOptional({ description: "판매자 ID 필터", example: 1, required: false })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   seller?: number;
 
   @ApiPropertyOptional({ description: "브랜드 ID 필터", example: 2, required: false })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   brand?: number;
 
   @ApiPropertyOptional({ description: "재고 유무 필터", example: true, required: false })
   @IsOptional()
-  @BooleanString()
   @IsBoolean()
   inStock?: boolean;
 

@@ -2,8 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsEnum, IsOptional, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 
-import { BooleanString } from "../decorators";
-
 export class ErrorDetails {
   [key: string]: any;
 }
@@ -50,7 +48,6 @@ class ErrorObject {
 
 export default class ErrorDTO {
   @ApiProperty({ description: "요청 성공 여부", example: false })
-  @BooleanString()
   @IsBoolean()
   success: boolean;
 

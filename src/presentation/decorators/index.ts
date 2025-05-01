@@ -8,4 +8,3 @@ export {
   ApiNotFoundResponse,
   ApiUnauthorizedResponse,
 } from "./ApiErrorResponse";
-export { default as BooleanString } from "./BooleanString";
