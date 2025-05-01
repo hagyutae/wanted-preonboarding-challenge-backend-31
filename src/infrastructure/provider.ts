@@ -33,14 +33,14 @@ export const type_orm_config = {
 
 export const repository_providers = [
   { provide: "IProductRepository", useClass: ProductRepository },
-  { provide: "IProductOptionsRepository", useClass: ProductOptionsRepository },
-  { provide: "IProductImageRepository", useClass: ProductImageRepository },
-  { provide: "IReviewRepository", useClass: ReviewRepository },
-  { provide: "ICategoryRepository", useClass: CategoryRepository },
-  { provide: "IMainRepository", useClass: MainRepository },
   { provide: "IProductDetailRepository", useClass: ProductDetailRepository },
   { provide: "IProductPriceRepository", useClass: ProductPriceRepository },
   { provide: "IProductCategoryRepository", useClass: ProductCategoryRepository },
+  { provide: "IProductOptionsRepository", useClass: ProductOptionsRepository },
   { provide: "IProductOptionGroupRepository", useClass: ProductOptionGroupRepository },
+  { provide: "IProductImageRepository", useClass: ProductImageRepository },
   { provide: "IProductTagRepository", useClass: ProductTagRepository },
+  { provide: "IReviewRepository", useClass: ReviewRepository },
+  { provide: "ICategoryRepository", useClass: CategoryRepository },
+  { provide: "IMainRepository", useClass: MainRepository },
 ];

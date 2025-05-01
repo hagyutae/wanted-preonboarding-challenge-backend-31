@@ -2,93 +2,27 @@ import { NotFoundException } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
-import {
-  Product,
-  Product_Catalog,
-  Product_Category,
-  Product_Detail,
-  Product_Image,
-  Product_Option_Group,
-  Product_Price,
-  Product_Summary,
-  Product_Tag,
-} from "src/domain/entities";
-import { IRepository } from "src/domain/repositories";
 import { ProductInputDTO } from "../dto";
 import ProductService from "./Product.service";
 
 describe("ProductService", () => {
   let service: ProductService;
-  let repository: IRepository<Product | Product_Summary | Product_Catalog>;
-  let productDetailRepository: IRepository<Product_Detail>;
-  let productPriceRepository: IRepository<Product_Price>;
-  let productCategoryRepository: IRepository<Product_Category>;
-  let productOptionGroupRepository: IRepository<Product_Option_Group>;
-  let productImageRepository: IRepository<Product_Image>;
-  let productTagRepository: IRepository<Product_Tag>;
-  let entityManager: EntityManager;
+  const mockProductRepository = global.mockProductRepository;
+  const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductService,
-        {
-          provide: "IProductRepository",
-          useValue: {
-            save: jest.fn(),
-            find_by_id: jest.fn(),
-            find_by_filters: jest.fn(),
-            update: jest.fn(),
-            delete: jest.fn(),
-          },
-        },
-        {
-          provide: "IProductDetailRepository",
-          useValue: { save: jest.fn(), update: jest.fn() },
-        },
-        {
-          provide: "IProductPriceRepository",
-          useValue: { save: jest.fn(), update: jest.fn() },
-        },
-        {
-          provide: "IProductCategoryRepository",
-          useValue: { saves: jest.fn(), update: jest.fn() },
-        },
-        {
-          provide: "IProductOptionGroupRepository",
-          useValue: { saves: jest.fn() },
-        },
-        {
-          provide: "IProductImageRepository",
-          useValue: { saves: jest.fn() },
-        },
-        {
-          provide: "IProductTagRepository",
-          useValue: { saves: jest.fn() },
-        },
+        ...global.mockRepositoryProviders,
         {
           provide: EntityManager,
-          useValue: {
-            transaction: jest.fn((callback) => callback({})),
-          },
+          useValue: mockEntityManager,
         },
       ],
     }).compile();
 
     service = module.get<ProductService>(ProductService);
-    repository =
-      module.get<IRepository<Product | Product_Summary | Product_Catalog>>("IProductRepository");
-    productDetailRepository = module.get<IRepository<Product_Detail>>("IProductDetailRepository");
-    productPriceRepository = module.get<IRepository<Product_Price>>("IProductPriceRepository");
-    productCategoryRepository = module.get<IRepository<Product_Category>>(
-      "IProductCategoryRepository",
-    );
-    productOptionGroupRepository = module.get<IRepository<Product_Option_Group>>(
-      "IProductOptionGroupRepository",
-    );
-    productImageRepository = module.get<IRepository<Product_Image>>("IProductImageRepository");
-    productTagRepository = module.get<IRepository<Product_Tag>>("IProductTagRepository");
-    entityManager = module.get<EntityManager>(EntityManager);
   });
 
   it("상품 등록", async () => {
@@ -162,7 +96,7 @@ describe("ProductService", () => {
       created_at: new Date(),
       updated_at: new Date(),
     };
-    entityManager.transaction = jest.fn().mockResolvedValue(savedProduct);
+    mockEntityManager.transaction = jest.fn().mockResolvedValue(savedProduct);
 
     const result = await service.register(input);
 
@@ -173,24 +107,24 @@ describe("ProductService", () => {
       created_at: savedProduct.created_at,
       updated_at: savedProduct.updated_at,
     });
-    expect(entityManager.transaction).toHaveBeenCalled();
+    expect(mockEntityManager.transaction).toHaveBeenCalled();
   });
 
   it("상품 조회", async () => {
     const product = { id: 1, name: "상품명" };
-    repository.find_by_id = jest.fn().mockResolvedValue(product);
+    mockProductRepository.find_by_id = jest.fn().mockResolvedValue(product);
 
     const result = await service.find(1);
 
     expect(result).toEqual(product);
-    expect(repository.find_by_id).toHaveBeenCalledWith(1);
+    expect(mockProductRepository.find_by_id).toHaveBeenCalledWith(1);
   });
 
   it("상품 조회 실패 시 NotFoundException 발생", async () => {
-    repository.find_by_id = jest.fn().mockResolvedValue(null);
+    mockProductRepository.find_by_id = jest.fn().mockResolvedValue(null);
 
     await expect(service.find(1)).rejects.toThrow(NotFoundException);
-    expect(repository.find_by_id).toHaveBeenCalledWith(1);
+    expect(mockProductRepository.find_by_id).toHaveBeenCalledWith(1);
   });
 
   it("상품 수정", async () => {
@@ -263,8 +197,8 @@ describe("ProductService", () => {
       slug: "updated-slug",
       updated_at: new Date(),
     };
-    entityManager.transaction = jest.fn().mockResolvedValue(true);
-    repository.find_by_id = jest.fn().mockResolvedValue(updatedProduct);
+    mockEntityManager.transaction = jest.fn().mockResolvedValue(true);
+    mockProductRepository.find_by_id = jest.fn().mockResolvedValue(updatedProduct);
 
     const result = await service.edit(1, input);
 
@@ -274,26 +208,26 @@ describe("ProductService", () => {
       slug: "updated-slug",
       updated_at: updatedProduct.updated_at,
     });
-    expect(entityManager.transaction).toHaveBeenCalled();
+    expect(mockEntityManager.transaction).toHaveBeenCalled();
   });
 
   it("상품 수정 실패 시 NotFoundException 발생", async () => {
-    entityManager.transaction = jest.fn().mockResolvedValue(false);
+    mockEntityManager.transaction = jest.fn().mockResolvedValue(false);
 
     await expect(service.edit(1, {} as ProductInputDTO)).rejects.toThrow(NotFoundException);
   });
 
   it("상품 삭제", async () => {
-    repository.delete = jest.fn().mockResolvedValue(true);
+    mockProductRepository.delete = jest.fn().mockResolvedValue(true);
     await service.remove(1);
 
-    expect(repository.delete).toHaveBeenCalledWith(1);
+    expect(mockProductRepository.delete).toHaveBeenCalledWith(1);
   });
 
   it("상품 삭제 실패 시 NotFoundException 발생", async () => {
-    repository.delete = jest.fn().mockResolvedValue(false);
+    mockProductRepository.delete = jest.fn().mockResolvedValue(false);
 
     await expect(service.remove(1)).rejects.toThrow(NotFoundException);
-    expect(repository.delete).toHaveBeenCalledWith(1);
+    expect(mockProductRepository.delete).toHaveBeenCalledWith(1);
   });
 });

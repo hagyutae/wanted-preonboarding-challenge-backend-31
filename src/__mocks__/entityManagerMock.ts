@@ -20,10 +20,13 @@ export const mockEntityManager = {
     where: jest.fn().mockReturnThis(),
     andWhere: jest.fn().mockReturnThis(),
     orderBy: jest.fn().mockReturnThis(),
+    groupBy: jest.fn().mockReturnThis(),
+    having: jest.fn().mockReturnThis(),
     offset: jest.fn().mockReturnThis(),
     limit: jest.fn().mockReturnThis(),
     setParameter: jest.fn().mockReturnThis(),
     getQuery: jest.fn().mockReturnValue("mockInnerQuery"),
     getMany: jest.fn(),
   }),
+  transaction: jest.fn((callback) => callback({})),
 } as unknown as jest.Mocked<EntityManager>;
