@@ -3,7 +3,7 @@ import { EntityManager } from "typeorm";
 
 import { Product } from "src/domain/entities";
 import IRepository from "src/domain/repositories/IRepository";
-import { ProductEntity } from "../entities";
+import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "../entities";
 import { ProductDetailView, ProductSummaryView } from "../views";
 
 @Injectable()
@@ -28,7 +28,7 @@ export default class ProductRepository
     status,
     min_price,
     max_price,
-    category,
+    category: categories,
     seller,
     brand,
     search,
@@ -45,20 +45,31 @@ export default class ProductRepository
     brand?: number;
     search?: string;
   }): Promise<ProductSummaryView[]> {
+    // 카테고리 조인
+    const inner_query = this.entity_manager
+      .createQueryBuilder()
+      .subQuery()
+      .select("product_category.product_id")
+      .from(ProductCategoryEntity, "product_category")
+      .leftJoin(CategoryEntity, "category", "category.id = product_category.category_id")
+      .where("category.id IN (:...categories)")
+      .getQuery();
+
     // 상품 집계 처리 쿼리
     const query = this.entity_manager
       .getRepository(ProductSummaryView)
       .createQueryBuilder("summary")
-      .andWhere(status ? "summary.status = :status" : "1=1", { status })
+      .where(status ? "summary.status = :status" : "1=1", { status })
       .andWhere(min_price ? "summary.base_price >= :minPrice" : "1=1", { minPrice: min_price })
       .andWhere(max_price ? "summary.base_price <= :maxPrice" : "1=1", { maxPrice: max_price })
-      .andWhere(category ? "summary.id IN (:...category)" : "1=1", { category })
+      .andWhere(categories ? `summary.id IN ${inner_query}` : "1=1")
       .andWhere(seller ? "summary.seller->>'id' = :seller" : "1=1", { seller })
       .andWhere(brand ? "summary.brand->>'id' = :brand" : "1=1", { brand })
       .andWhere(search ? "summary.name LIKE :search" : "1=1", { search: `%${search}%` })
       .orderBy(`summary.${sort_field}`, sort_order.toUpperCase() as "ASC" | "DESC")
       .offset((page - 1) * per_page)
-      .limit(per_page);
+      .limit(per_page)
+      .setParameter("categories", categories);
 
     // 쿼리 실행
     return await query.getMany();

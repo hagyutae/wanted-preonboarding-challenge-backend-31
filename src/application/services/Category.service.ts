@@ -1,12 +1,15 @@
 import { Injectable } from "@nestjs/common";
 
 import { CategoryEntity } from "src/infrastructure/entities";
-import { CategoryRepository } from "src/infrastructure/repositories";
+import { CategoryRepository, ProductRepository } from "src/infrastructure/repositories";
 import { FilterDTO } from "../dto";
 
 @Injectable()
 export default class CategoryService {
-  constructor(private readonly repository: CategoryRepository) {}
+  constructor(
+    private readonly repository: CategoryRepository,
+    private readonly product_repository: ProductRepository,
+  ) {}
 
   async find_all_as_tree(level: number = 1) {
     function build_tree(
@@ -42,14 +45,18 @@ export default class CategoryService {
     category_id: number,
     { page = 1, per_page = 10, sort = "created_at:desc", has_sub = true }: FilterDTO,
   ) {
+    const [sort_field, sort_order] = sort?.split(":") ?? ["created_at", "DESC"];
+
     // 카테고리 정보 조회
     const category = await this.repository.find_by_id(category_id, has_sub);
 
-    const items = await this.repository.get_products_by_category_id({
-      category_id,
+    // 아이템 필터링
+    const items = await this.product_repository.find_by_filters({
       page,
       per_page,
-      sort,
+      sort_field,
+      sort_order,
+      category: [category_id],
     });
 
     // 페이지네이션 요약 정보
