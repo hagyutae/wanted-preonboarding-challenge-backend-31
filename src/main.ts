@@ -3,8 +3,9 @@ import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ValidationError } from "class-validator";
 
-import { AppModule } from "./module";
+import { JwtInterceptor } from "./infrastructure/auth/jwtInterceptor";
 import * as exception_filters from "./presentation/filters";
+import { AppModule } from "./module";
 
 async function bootstrap() {
   // 모듈 등록
@@ -23,6 +24,9 @@ async function bootstrap() {
   for (const filter of Object.values(exception_filters)) {
     app.useGlobalFilters(new filter());
   }
+
+  // JWT 인터셉터
+  app.useGlobalInterceptors(new JwtInterceptor());
 
   // 스웨거 설정
   const swagger_config = new DocumentBuilder()
