@@ -1,6 +1,6 @@
 package com.example.preonboarding.request;
 
-import com.example.preonboarding.dto.OptionDTO;
+import com.example.preonboarding.options.dto.OptionDTO;
 import lombok.Data;
 
 import java.util.List;

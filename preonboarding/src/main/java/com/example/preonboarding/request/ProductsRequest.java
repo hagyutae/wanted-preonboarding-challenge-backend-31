@@ -1,6 +1,8 @@
 package com.example.preonboarding.request;
 
-import com.example.preonboarding.dto.*;
+import com.example.preonboarding.details.dto.DetailDTO;
+import com.example.preonboarding.images.dto.ProductImageDTO;
+import com.example.preonboarding.price.dto.PriceDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;

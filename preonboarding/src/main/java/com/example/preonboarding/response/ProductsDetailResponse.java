@@ -1,8 +1,12 @@
 package com.example.preonboarding.response;
 
-import com.example.preonboarding.domain.ProductDetails;
-import com.example.preonboarding.domain.ProductOptionGroup;
-import com.example.preonboarding.dto.*;
+import com.example.preonboarding.categories.dto.ProductCategoriesDTO;
+import com.example.preonboarding.details.dto.DetailDTO;
+import com.example.preonboarding.images.dto.ProductImageDTO;
+import com.example.preonboarding.options.dto.ProductOptionDTO;
+import com.example.preonboarding.price.dto.PriceDTO;
+import com.example.preonboarding.reviews.dto.RatingDTO;
+import com.example.preonboarding.tags.dto.TagsDTO;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;

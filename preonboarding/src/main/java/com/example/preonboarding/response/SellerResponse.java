@@ -1,6 +1,6 @@
 package com.example.preonboarding.response;
 
-import com.example.preonboarding.domain.Sellers;
+import com.example.preonboarding.seller.domain.Sellers;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
