@@ -14,5 +14,5 @@ export class OptionParamDTO {
 
   @ApiProperty({ description: "옵션에 대한 식별자", example: "456" })
   @IsInt()
-  option_id: number;
+  optionId: number;
 }

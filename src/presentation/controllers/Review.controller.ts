@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { ReviewService } from "src/application/services";
-import { ParamDTO, ResponseDTO, ReviewBodyDTO, ReviewQueryDTO } from "../dto";
+import { Review } from "src/domain/entities";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -10,11 +10,19 @@ import {
   ApiForbiddenResponse,
   ApiStandardResponse,
 } from "../decorators";
+import {
+  PaginationSummaryDTO,
+  ParamDTO,
+  ResponseDTO,
+  ReviewBodyDTO,
+  ReviewQueryDTO,
+  ReviewSummaryDTO,
+} from "../dto";
 import { to_FilterDTO } from "../mappers";
 
 @ApiTags("리뷰")
 @ApiBearerAuth()
-@Controller("reviews")
+@Controller("")
 @ApiErrorResponse()
 export default class ReviewController {
   constructor(private readonly service: ReviewService) {}
@@ -22,8 +30,17 @@ export default class ReviewController {
   @ApiOperation({ summary: "상품 리뷰 조회" })
   @ApiStandardResponse("상품 리뷰를 성공적으로 조회했습니다.")
   @ApiBadRequestResponse("상품 리뷰 조회에 실패했습니다.")
-  @Get(":id")
-  async read(@Param() { id }: ParamDTO, @Query() query: ReviewQueryDTO): Promise<ResponseDTO> {
+  @Get("products/:id/reviews")
+  async read(
+    @Param() { id }: ParamDTO,
+    @Query() query: ReviewQueryDTO,
+  ): Promise<
+    ResponseDTO<{
+      items: Review[];
+      summary: ReviewSummaryDTO;
+      pagination: PaginationSummaryDTO;
+    }>
+  > {
     const data = await this.service.find(id, to_FilterDTO(query));
 
     return {
@@ -36,8 +53,11 @@ export default class ReviewController {
   @ApiOperation({ summary: "리뷰 작성" })
   @ApiCreatedResponse("리뷰가 성공적으로 작성되었습니다.")
   @ApiBadRequestResponse("리뷰 작성에 실패했습니다.")
-  @Post(":id")
-  async create(@Param() { id }: ParamDTO, @Body() body: ReviewBodyDTO): Promise<ResponseDTO> {
+  @Post("products/:id/reviews")
+  async create(
+    @Param() { id }: ParamDTO,
+    @Body() body: ReviewBodyDTO,
+  ): Promise<ResponseDTO<Review>> {
     const data = await this.service.register(id, body);
 
     return {
@@ -50,8 +70,11 @@ export default class ReviewController {
   @ApiOperation({ summary: "리뷰 수정" })
   @ApiStandardResponse("리뷰가 성공적으로 수정되었습니다.")
   @ApiForbiddenResponse("다른 사용자의 리뷰를 수정할 권한이 없습니다.")
-  @Put(":id")
-  async update(@Param() { id }: ParamDTO, @Body() body: ReviewBodyDTO): Promise<ResponseDTO> {
+  @Put("reviews/:id")
+  async update(
+    @Param() { id }: ParamDTO,
+    @Body() body: ReviewBodyDTO,
+  ): Promise<ResponseDTO<Review>> {
     const data = await this.service.edit(id, body);
 
     return {
@@ -64,8 +87,8 @@ export default class ReviewController {
   @ApiOperation({ summary: "리뷰 삭제" })
   @ApiStandardResponse("리뷰가 성공적으로 삭제되었습니다.")
   @ApiForbiddenResponse("다른 사용자의 리뷰를 삭제할 권한이 없습니다.")
-  @Delete(":id")
-  async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO> {
+  @Delete("reviews/:id")
+  async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO<null>> {
     await this.service.remove(id);
 
     return {

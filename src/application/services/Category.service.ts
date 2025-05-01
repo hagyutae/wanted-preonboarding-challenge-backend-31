@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { Category, Product, Product_Catalog, Product_Summary } from "src/domain/entities";
 import { IRepository } from "src/domain/repositories";
@@ -51,18 +51,24 @@ export default class CategoryService {
 
     // 카테고리 정보 조회
     const category = await this.repository.find_by_id(category_id);
+    if (!category) {
+      throw new NotFoundException({
+        message: "요청한 리소스를 찾을 수 없습니다.",
+        details: { resourceType: "Category", resourceId: category_id },
+      });
+    }
     if (!has_sub) {
       delete category?.parent;
     }
 
     // 아이템 필터링
-    const items = await this.product_repository.find_by_filters({
+    const items = (await this.product_repository.find_by_filters({
       page,
       per_page,
       sort_field,
       sort_order,
       category: [category_id],
-    });
+    })) as Product_Summary[];
 
     // 페이지네이션 요약 정보
     const pagination = {

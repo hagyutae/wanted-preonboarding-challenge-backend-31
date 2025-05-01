@@ -33,11 +33,11 @@ describe("ProductController", () => {
 
   it("상품 생성", async () => {
     const body = { name: "상품1" } as BodyDTO;
-    const response = {
+    const response: ResponseDTO<any> = {
       success: true,
       data: { id: 1, ...body },
       message: "상품이 성공적으로 등록되었습니다.",
-    } as ResponseDTO;
+    };
     productService.register = jest.fn().mockResolvedValue(response.data as ProductEntity);
 
     const result = await productController.create(body);
@@ -58,7 +58,7 @@ describe("ProductController", () => {
       },
     ] as ProductSummaryView[];
     const pagination = { total_items: 1, total_pages: 1, current_page: 1, per_page: 10 };
-    const response: ResponseDTO = {
+    const response: ResponseDTO<any> = {
       success: true,
       data: { items, pagination },
       message: "상품 목록을 성공적으로 조회했습니다.",
@@ -81,7 +81,7 @@ describe("ProductController", () => {
       updated_at: new Date(),
       status: "available",
     } as ProductCatalogView;
-    const response: ResponseDTO = {
+    const response: ResponseDTO<any> = {
       success: true,
       data,
       message: "상품 상세 정보를 성공적으로 조회했습니다.",
@@ -103,7 +103,7 @@ describe("ProductController", () => {
       slug: "product-1",
       updated_at: new Date(),
     };
-    const response: ResponseDTO = {
+    const response: ResponseDTO<any> = {
       success: true,
       data,
       message: "상품이 성공적으로 수정되었습니다.",
@@ -118,7 +118,7 @@ describe("ProductController", () => {
 
   it("상품을 삭제", async () => {
     const param = { id: 1 } as ParamDTO;
-    const response: ResponseDTO = {
+    const response: ResponseDTO<any> = {
       success: true,
       data: undefined,
       message: "상품이 성공적으로 삭제되었습니다.",

@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { Product_Image, Product_Option } from "src/domain/entities";
 import { ProductOptionsService } from "src/application/services";
-import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO } from "../dto";
+import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO, ResponseDTO } from "../dto";
 import ProductOptionsController from "./Product_Options.controller";
 
 describe("ProductOptionsController", () => {
@@ -39,7 +39,7 @@ describe("ProductOptionsController", () => {
       } as Product_Option;
       mockService.register = jest.fn().mockResolvedValue(data);
 
-      const result = await mockController.create_option(param, body);
+      const result: ResponseDTO<any> = await mockController.create_option(param, body);
 
       expect(mockService.register).toHaveBeenCalledWith(param.id, body.option_group_id, body);
       expect(result).toEqual({
@@ -52,23 +52,23 @@ describe("ProductOptionsController", () => {
 
   describe("updateOptions", () => {
     it("상품 옵션 수정 성공", async () => {
-      const param = { id: 1, option_id: 2 };
+      const param = { id: 1, optionId: 2 };
       const body = { name: "Updated Option" } as OptionBodyDTO;
       const data = {
         id: param.id,
-        option_group_id: param.option_id,
+        option_group_id: param.optionId,
         ...body,
       } as Product_Option;
       mockService.update = jest.fn().mockResolvedValue(data);
 
-      const result = await mockController.update_option(param, body);
+      const result: ResponseDTO<any> = await mockController.update_option(param, body);
 
-      expect(mockService.update).toHaveBeenCalledWith(param.id, param.option_id, body);
+      expect(mockService.update).toHaveBeenCalledWith(param.id, param.optionId, body);
       expect(result).toEqual({
         success: true,
         data: {
           id: param.id,
-          option_group_id: param.option_id,
+          option_group_id: param.optionId,
           ...body,
         },
         message: "상품 옵션이 성공적으로 수정되었습니다.",
@@ -78,12 +78,12 @@ describe("ProductOptionsController", () => {
 
   describe("deleteOptions", () => {
     it("상품 옵션 삭제 성공", async () => {
-      const param = { id: 1, option_id: 2 };
+      const param = { id: 1, optionId: 2 };
       mockService.remove = jest.fn().mockResolvedValue(undefined);
 
-      const result = await mockController.delete_option(param);
+      const result: ResponseDTO<any> = await mockController.delete_option(param);
 
-      expect(mockService.remove).toHaveBeenCalledWith(param.id, param.option_id);
+      expect(mockService.remove).toHaveBeenCalledWith(param.id, param.optionId);
       expect(result).toEqual({
         success: true,
         data: null,
@@ -99,7 +99,7 @@ describe("ProductOptionsController", () => {
       const data = { id: param.id, url: body.url } as Product_Image;
       mockService.register_images = jest.fn().mockResolvedValue(data);
 
-      const result = await mockController.create_image(param, body);
+      const result: ResponseDTO<any> = await mockController.create_image(param, body);
 
       expect(mockService.register_images).toHaveBeenCalledWith(param.id, body.option_id, body);
       expect(result).toEqual({

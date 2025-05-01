@@ -40,7 +40,7 @@ describe("MainController", () => {
         featured_categories: mockFeaturedCategories,
       });
 
-      const result: ResponseDTO = await controller.read_main_products();
+      const result: ResponseDTO<any> = await controller.read_main_products();
 
       expect(mockMainService.find).toHaveBeenCalled();
       expect(result).toEqual({

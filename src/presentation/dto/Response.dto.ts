@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsOptional } from "class-validator";
 
-export default class ResponseDTO {
+export default class ResponseDTO<T> {
   @ApiProperty({ description: "요청 성공 여부", example: true })
   @IsBoolean()
   success: boolean;
 
   @ApiProperty({ description: "응답 데이터", example: {} })
-  data: any;
+  data: T;
 
   @ApiProperty({
     description: "응답 메시지",

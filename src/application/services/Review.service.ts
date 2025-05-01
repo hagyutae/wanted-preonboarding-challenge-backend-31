@@ -62,7 +62,7 @@ export default class ReviewService {
       });
     }
 
-    return await this.repository.find_by_id(id);
+    return (await this.repository.find_by_id(id))!;
   }
 
   async remove(id: number) {

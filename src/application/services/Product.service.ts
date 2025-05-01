@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
@@ -93,24 +94,24 @@ export default class ProductService {
     });
     // 상품 등록 결과 반환
     return (({ id, name, slug, created_at, updated_at }) => ({
-      id,
+      id: id!,
       name,
       slug,
-      created_at,
-      updated_at,
+      created_at: created_at!,
+      updated_at: updated_at!,
     }))(product_entity);
   }
 
   async find_all({ page = 1, per_page = 10, sort, ...rest }: FilterDTO) {
     const [sort_field, sort_order] = sort?.split(":") ?? ["created_at", "DESC"];
 
-    const items = await this.repository.find_by_filters({
+    const items = (await this.repository.find_by_filters({
       page,
       per_page,
       sort_field,
       sort_order,
       ...rest,
-    });
+    })) as Product_Summary[];
 
     // 페이지네이션 요약 정보
     const pagination = {
@@ -132,7 +133,7 @@ export default class ProductService {
         details: { resourceType: "Product", resourceId: id },
       });
     }
-    return product;
+    return product as Product_Catalog;
   }
 
   async edit(
@@ -178,10 +179,10 @@ export default class ProductService {
     const updated_product = await this.repository.find_by_id(product_id);
 
     return (({ id, name, slug, updated_at }) => ({
-      id,
+      id: id!,
       name,
       slug,
-      updated_at,
+      updated_at: updated_at!,
     }))(updated_product!);
   }
 
