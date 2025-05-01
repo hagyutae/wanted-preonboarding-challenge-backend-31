@@ -1,7 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
+import { IsNumber } from "class-validator";
 
 export default class ReviewBodyDTO {
   @ApiProperty({ description: "평점", example: 5 })
+  @Type(() => Number)
+  @IsNumber()
   rating: number;
 
   @ApiProperty({ description: "제목", example: "완벽한 소파입니다!" })

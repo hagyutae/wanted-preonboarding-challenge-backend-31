@@ -1,6 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsBoolean, IsEnum, IsOptional, ValidateNested } from "class-validator";
+import { Type } from "class-transformer";
 
-export interface ErrorDetails {
+import { BooleanString } from "../decorators";
+
+export class ErrorDetails {
   [key: string]: any;
 }
 
@@ -27,6 +31,7 @@ class ErrorObject {
     enum: ErrorCode,
     description: "에러 발생 시 응답은 다음 형식을 따릅니다",
   })
+  @IsEnum(ErrorCode)
   code: ErrorCode;
 
   @ApiProperty({ description: "에러 메시지", example: "에러가 발생했습니다." })
@@ -37,16 +42,23 @@ class ErrorObject {
     required: false,
     type: Object,
   })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ErrorDetails)
   details?: ErrorDetails;
 }
 
 export default class ErrorDTO {
   @ApiProperty({ description: "요청 성공 여부", example: false })
+  @BooleanString()
+  @IsBoolean()
   success: boolean;
 
   @ApiProperty({
     description: "공통 에러 코드",
     type: () => ErrorObject,
   })
+  @ValidateNested()
+  @Type(() => ErrorObject)
   error: ErrorObject;
 }
