@@ -12,7 +12,7 @@ export default class MainController {
   constructor(private readonly service: MainService) {}
 
   @ApiOperation({ summary: "메인 페이지용 상품 목록" })
-  @ApiStandardResponse("메인 페이지 상품 목록을 성공적으로 조회했습니다.")
+  @ApiStandardResponse("메인 페이지 상품 목록을 성공적으로 조회했습니다.", MainResponseBundle)
   @Get()
   async read_main_products(): Promise<ResponseDTO<MainResponseBundle>> {
     const data = await this.service.find();

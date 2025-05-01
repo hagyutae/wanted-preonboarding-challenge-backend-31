@@ -21,7 +21,7 @@ export default class ReviewController {
   constructor(private readonly service: ReviewService) {}
 
   @ApiOperation({ summary: "상품 리뷰 조회" })
-  @ApiStandardResponse("상품 리뷰를 성공적으로 조회했습니다.")
+  @ApiStandardResponse("상품 리뷰를 성공적으로 조회했습니다.", ReviewResponseBundle)
   @ApiBadRequestResponse("상품 리뷰 조회에 실패했습니다.")
   @Get("products/:id/reviews")
   async read(
@@ -38,7 +38,7 @@ export default class ReviewController {
   }
 
   @ApiOperation({ summary: "리뷰 작성" })
-  @ApiCreatedResponse("리뷰가 성공적으로 작성되었습니다.")
+  @ApiCreatedResponse("리뷰가 성공적으로 작성되었습니다.", Review)
   @ApiBadRequestResponse("리뷰 작성에 실패했습니다.")
   @Post("products/:id/reviews")
   async create(
@@ -55,7 +55,7 @@ export default class ReviewController {
   }
 
   @ApiOperation({ summary: "리뷰 수정" })
-  @ApiStandardResponse("리뷰가 성공적으로 수정되었습니다.")
+  @ApiStandardResponse("리뷰가 성공적으로 수정되었습니다.", Review)
   @ApiForbiddenResponse("다른 사용자의 리뷰를 수정할 권한이 없습니다.")
   @Put("reviews/:id")
   async update(

@@ -20,7 +20,7 @@ export default class ProductOptionsController {
 
   @ApiOperation({ summary: "상품 옵션 추가" })
   @ApiParam({ name: "id", description: "상품 ID" })
-  @ApiCreatedResponse("상품 옵션이 성공적으로 추가되었습니다.")
+  @ApiCreatedResponse("상품 옵션이 성공적으로 추가되었습니다.", Product_Option)
   @ApiBadRequestResponse("상품 옵션 추가에 실패했습니다.")
   @Post(":id/options")
   async create_option(
@@ -39,7 +39,7 @@ export default class ProductOptionsController {
   @ApiOperation({ summary: "상품 옵션 수정" })
   @ApiParam({ name: "id", description: "상품 ID" })
   @ApiParam({ name: "optionId", description: "옵션 ID" })
-  @ApiStandardResponse("상품 옵션이 성공적으로 수정되었습니다.")
+  @ApiStandardResponse("상품 옵션이 성공적으로 수정되었습니다.", Product_Option)
   @ApiBadRequestResponse("상품 옵션 수정에 실패했습니다.")
   @Put(":id/options/:optionId")
   async update_option(
@@ -73,7 +73,7 @@ export default class ProductOptionsController {
 
   @ApiOperation({ summary: "상품 이미지 추가" })
   @ApiParam({ name: "id", description: "상품 ID" })
-  @ApiCreatedResponse("상품 이미지가 성공적으로 추가되었습니다.")
+  @ApiCreatedResponse("상품 이미지가 성공적으로 추가되었습니다.", Product_Image)
   @ApiBadRequestResponse("상품 이미지 추가에 실패했습니다.")
   @Post(":id/images")
   async create_image(

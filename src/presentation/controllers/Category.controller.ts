@@ -20,7 +20,7 @@ export default class CategoryController {
   constructor(private readonly service: CategoryService) {}
 
   @ApiOperation({ summary: "카테고리 목록 조회" })
-  @ApiStandardResponse("카테고리 목록을 성공적으로 조회했습니다.")
+  @ApiStandardResponse("카테고리 목록을 성공적으로 조회했습니다.", NestedCategoryDTO)
   @ApiBadRequestResponse("카테고리 목록 조회에 실패했습니다.")
   @Get()
   async read_categories(
@@ -36,7 +36,10 @@ export default class CategoryController {
   }
 
   @ApiOperation({ summary: "특정 카테고리의 상품 목록 조회" })
-  @ApiStandardResponse("특정 카테고리의 상품 목록을 성공적으로 조회했습니다.")
+  @ApiStandardResponse(
+    "특정 카테고리의 상품 목록을 성공적으로 조회했습니다.",
+    CategoryResponseBundle,
+  )
   @ApiBadRequestResponse("특정 카테고리의 상품 목록 조회에 실패했습니다.")
   @Get(":id/products")
   async read_products(
