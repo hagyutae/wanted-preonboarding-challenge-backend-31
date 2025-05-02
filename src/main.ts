@@ -1,11 +1,11 @@
 import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ValidationError } from "class-validator";
 
 import { JwtInterceptor } from "./infrastructure/auth/jwtInterceptor";
-import * as exception_filters from "./presentation/filters";
 import { AppModule } from "./module";
+import * as exception_filters from "./presentation/filters";
+import generatorSwagger from "./utility/generatorSwagger";
 
 async function bootstrap() {
   // 모듈 등록
@@ -28,31 +28,8 @@ async function bootstrap() {
   // JWT 인터셉터
   app.useGlobalInterceptors(new JwtInterceptor());
 
-  // 스웨거 설정
-  const swagger_config = new DocumentBuilder()
-    .setTitle("API")
-    .setDescription("API 명세서")
-    .setVersion("1.0")
-    .addBearerAuth()
-    .build();
-
-  const document = SwaggerModule.createDocument(app, swagger_config);
-
-  // 스웨거 UI 설정
-  SwaggerModule.setup("swagger-ui", app, document, {
-    /**
-     * 제거 필요
-     * 인증, 인가 미구현으로 자동 통과되도록 설정
-     *
-     **/
-    swaggerOptions: {
-      persistAuthorization: true,
-      requestInterceptor: (req: { headers: { [x: string]: string } }) => {
-        req.headers["Authorization"] = "Bearer Token";
-        return req;
-      },
-    },
-  });
+  // Swagger 설정
+  generatorSwagger(app);
 
   // 앱 실행
   await app.listen(process.env.PORT ?? 3000);
