@@ -1,4 +1,4 @@
-package com.wanted.mono.global;
+package com.wanted.mono.global.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -34,28 +34,6 @@ public class CommonResponse<T> {
      */
     public static <T> CommonResponse<T> success(T data, String message) {
         return new CommonResponse<>(true, data, message, null);
-    }
-
-    /**
-     * 실패한 API 반환인 경우
-     * @param code
-     * @param message 넓은 범위의 실패한 이유 설명
-     * @param details 각 항목별로 실패한 이유에 대한 설명
-     * @return 예시
-     * {
-     *  "success": false,
-     *  "error": {
-     *    "code": "INVALID_INPUT",
-     *    "message": "상품 등록에 실패했습니다.",
-     *    "details": {
-     *      "name": "상품명은 필수 항목입니다.",
-     *      "base_price": "기본 가격은 0보다 커야 합니다."
-     *    }
-     *  }
-     * }
-     */
-    public static CommonResponse<?> error(String code, String message, Map<String, String> details) {
-        return new CommonResponse<>(false, null, null, new ErrorResponse(code, message, details));
     }
 
 }

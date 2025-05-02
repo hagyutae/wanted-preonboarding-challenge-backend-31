@@ -2,11 +2,11 @@ package com.wanted.mono.domain.product.controller;
 
 import com.wanted.mono.domain.product.dto.ProductRequest;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
-import com.wanted.mono.domain.product.entity.Product;
 import com.wanted.mono.domain.product.service.ProductService;
-import com.wanted.mono.global.CommonResponse;
+import com.wanted.mono.global.common.CommonResponse;
 import com.wanted.mono.global.message.MessageCode;
 import com.wanted.mono.global.util.MessageUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class ProductController {
      *
      */
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<?> create(@Valid @RequestBody ProductRequest productRequest) {
         log.info("상품 등록 요청, 이름 : {}", productRequest.getName());
         ProductSaveResponse saveResponse = productService.createProduct(productRequest);
         log.info("상품 등록 완료 : {}", saveResponse.getId());
