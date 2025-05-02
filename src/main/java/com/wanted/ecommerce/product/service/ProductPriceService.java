@@ -11,5 +11,7 @@ public interface ProductPriceService {
 
     ProductPrice findProductPriceByProductId(Long productId);
 
+    void updatePrice(ProductPrice price, ProductPriceRequest request);
+
     ProductPriceResponse createPriceResponse(ProductPrice price);
 }

@@ -6,7 +6,7 @@ import com.wanted.ecommerce.brand.dto.response.BrandResponse;
 
 public interface BrandService {
 
-    Brand findBrandById(Long brandId);
+    Brand getBrandById(Long brandId);
 
     BrandResponse createBrandResponse(Long brandId, String BrandName);
     BrandDetailResponse createBrandDetailResponse(Brand brand);

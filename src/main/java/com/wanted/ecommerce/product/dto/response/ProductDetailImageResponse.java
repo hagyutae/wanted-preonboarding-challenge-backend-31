@@ -21,4 +21,14 @@ public record ProductDetailImageResponse(
             .optionId(optionId)
             .build();
     }
+
+    public static ProductDetailImageResponse of(Long id, String url, String altText, Boolean isPrimary, Integer displayOrder){
+        return ProductDetailImageResponse.builder()
+            .id(id)
+            .url(url)
+            .altText(altText)
+            .isPrimary(isPrimary)
+            .displayOrder(displayOrder)
+            .build();
+    }
 }

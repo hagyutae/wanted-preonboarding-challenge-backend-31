@@ -45,4 +45,10 @@ public class ProductCategory {
             .primary(isPrimary)
             .build();
     }
+
+    public void update(Product product, Category category, boolean isPrimary){
+        this.product = product;
+        this.category = category;
+        this.primary = isPrimary;
+    }
 }

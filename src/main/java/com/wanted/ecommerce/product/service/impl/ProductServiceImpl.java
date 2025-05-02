@@ -22,6 +22,7 @@ import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductOptionGroupResponse;
 import com.wanted.ecommerce.product.dto.response.ProductPriceResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
+import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
 import com.wanted.ecommerce.product.dto.response.RelatedProductResponse;
 import com.wanted.ecommerce.product.repository.ProductRepository;
 import com.wanted.ecommerce.product.service.ProductCategoryService;
@@ -70,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse create(ProductCreateRequest request) {
         Seller seller = sellerService.getSellerById(request.getSellerId());
-        Brand brand = brandService.findBrandById(request.getBrandId());
+        Brand brand = brandService.getBrandById(request.getBrandId());
 
         Product product = Product.of(
             request.getName(),
@@ -86,8 +87,8 @@ public class ProductServiceImpl implements ProductService {
 
         productCategoryService.saveProductCategories(saved, request.getCategories());
         productDetailService.saveDetail(saved, request.getDetail());
+        productOptionGroupService.saveProductOptionsAndGroup(saved, request.getOptionGroups());
         productImageService.saveProductImages(saved, request.getImages());
-        productOptionGroupService.createProductOptions(saved, request.getOptionGroups());
         productPriceService.saveProductPrice(saved, request.getPrice());
         createProductTags(saved, request.getTags());
         return ProductResponse.of(saved.getId(), saved.getName(), saved.getSlug(),
@@ -171,6 +172,41 @@ public class ProductServiceImpl implements ProductService {
             relatedProductResponses);
     }
 
+    @Transactional
+    @Override
+    public ProductUpdateResponse update(long productId, ProductCreateRequest request) {
+        // seller
+        Seller seller = sellerService.getSellerById(request.getSellerId());
+        // brand
+        Brand brand = brandService.getBrandById(request.getBrandId());
+
+        Product target = productRepository.findById(productId)
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
+        target.update(request.getName(), request.getSlug(), request.getShortDescription(),
+            request.getFullDescription(), seller, brand,
+            ProductStatus.valueOf(request.getStatus()));
+
+        // detail
+        productDetailService.updateDetail(target.getDetail(), request.getDetail());
+
+        // price
+        productPriceService.updatePrice(target.getPrice(), request.getPrice());
+
+        //categories
+        productCategoryService.updateCategories(target, request.getCategories());
+
+        //option group, option
+        productOptionGroupService.deleteProductOptionGroup(target.getId());
+        productOptionGroupService.saveProductOptionsAndGroup(target, request.getOptionGroups());
+
+        // image
+        productImageService.deleteProductImageByProductId(target.getId());
+        productImageService.saveProductImages(target, request.getImages());
+
+        return ProductUpdateResponse.of(target.getId(), target.getName(), target.getSlug(),
+            target.getUpdatedAt());
+    }
+
     private List<Long> createProductTags(Product saved, List<Long> tagIds) {
         List<Tag> tags = tagIds.stream().map(tagService::getTagByTagId)
             .toList();
@@ -200,7 +236,6 @@ public class ProductServiceImpl implements ProductService {
                     relatedProduct.getId());
 
                 ProductPrice productPrice = relatedProduct.getPrice();
-
                 return RelatedProductResponse.of(relatedProduct.getId(), relatedProduct.getName(),
                     relatedProduct.getSlug(), relatedProduct.getShortDescription(), imageResponse,
                     productPrice.getBasePrice(), productPrice.getSalePrice(),

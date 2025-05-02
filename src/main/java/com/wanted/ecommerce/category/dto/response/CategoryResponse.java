@@ -22,4 +22,13 @@ public record CategoryResponse(
             .parent(parent)
             .build();
     }
+
+    public static CategoryResponse of(Long id, String name, String slug, Boolean isPrimary){
+        return CategoryResponse.builder()
+            .id(id)
+            .name(name)
+            .slug(slug)
+            .isPrimary(isPrimary)
+            .build();
+    }
 }

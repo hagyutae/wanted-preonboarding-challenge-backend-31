@@ -10,6 +10,7 @@ import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
+import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
 import com.wanted.ecommerce.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -64,11 +65,12 @@ public class ProductController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> updateProduct(
+    public ResponseEntity<ApiResponse<ProductUpdateResponse>> updateProduct(
         @PathVariable Long id,
         @Valid @RequestBody ProductCreateRequest productCreateRequest
     ) {
-        return null;
+        ProductUpdateResponse response = productService.update(id, productCreateRequest);
+        return ResponseEntity.ok(ApiResponse.success(response, MessageConstants.UPDATED_PRODUCT.getMessage()));
     }
 
     @DeleteMapping("/{id}")

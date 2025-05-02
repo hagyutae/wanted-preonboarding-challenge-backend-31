@@ -3,6 +3,7 @@ package com.wanted.ecommerce.product.domain;
 import com.wanted.ecommerce.brand.domain.Brand;
 import com.wanted.ecommerce.common.domain.BaseEntity;
 import com.wanted.ecommerce.seller.domain.Seller;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -33,6 +34,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,31 +59,32 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductCategory> categories;
 
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private ProductDetail detail;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> images;
 
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private ProductPrice price;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOptionGroup> optionGroups;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductTag> tags;
 
     @PrePersist
     @PreUpdate
-    public void preUpdate(){
+    public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public static Product of(String name, String slug, String shortDescription, String fullDescription, Seller seller, Brand brand, ProductStatus status){
+    public static Product of(String name, String slug, String shortDescription,
+        String fullDescription, Seller seller, Brand brand, ProductStatus status) {
         return Product.builder()
             .name(name)
             .slug(slug)
@@ -91,5 +94,16 @@ public class Product extends BaseEntity {
             .brand(brand)
             .status(status)
             .build();
+    }
+
+    public void update(String name, String slug, String shortDescription, String fullDescription,
+        Seller seller, Brand brand, ProductStatus status) {
+        this.name = name;
+        this.slug = slug;
+        this.shortDescription = shortDescription;
+        this.fullDescription = fullDescription;
+        this.seller = seller;
+        this.brand = brand;
+        this.status = status;
     }
 }

@@ -7,8 +7,10 @@ import com.wanted.ecommerce.product.dto.response.ProductOptionGroupResponse;
 import java.util.List;
 
 public interface ProductOptionGroupService {
-    ProductOptionGroup saveProductOptionGroup(Product product, ProductOptionGroupRequest groupRequest);
-    List<Long> createProductOptions(Product saved,List<ProductOptionGroupRequest> optionGroups);
+    ProductOptionGroup saveOptionGroup(Product product, ProductOptionGroupRequest groupRequest);
+    List<ProductOptionGroup> saveProductOptionsAndGroup(Product saved,List<ProductOptionGroupRequest> optionGroups);
+
+    void deleteProductOptionGroup(Long productId);
 
     List<ProductOptionGroupResponse> createOptionGroupResponse(
         List<ProductOptionGroup> optionGroups);

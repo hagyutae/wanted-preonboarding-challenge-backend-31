@@ -7,7 +7,11 @@ import com.wanted.ecommerce.product.dto.response.DetailResponse;
 
 public interface ProductDetailService {
 
-    Long saveDetail(Product product, ProductDetailRequest detailRequest);
+    ProductDetail saveDetail(Product product, ProductDetailRequest detailRequest);
+
+    void updateDetail(ProductDetail detail, ProductDetailRequest request);
 
     DetailResponse createProductDetailResponse(ProductDetail detail);
+
+    ProductDetail getProductDetailByProductId(Long productId);
 }

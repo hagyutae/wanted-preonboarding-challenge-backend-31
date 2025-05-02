@@ -5,23 +5,20 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 
 @Builder
-public record ProductResponse(
+public record ProductUpdateResponse(
     Long id,
     String name,
     String slug,
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    LocalDateTime createdAt,
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     LocalDateTime updatedAt
 ) {
 
-    public static ProductResponse of(long id, String name, String slug, LocalDateTime createdAt,
+    public static ProductUpdateResponse of(long id, String name, String slug,
         LocalDateTime updatedAt) {
-        return ProductResponse.builder()
+        return ProductUpdateResponse.builder()
             .id(id)
             .name(name)
             .slug(slug)
-            .createdAt(createdAt)
             .updatedAt(updatedAt)
             .build();
     }

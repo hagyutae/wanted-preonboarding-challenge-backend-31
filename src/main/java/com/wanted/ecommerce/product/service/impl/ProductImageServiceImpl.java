@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     private final ProductImageRepository productImageRepository;
     private final ProductOptionService optionService;
 
+    @Transactional
     @Override
     public List<ProductImage> saveProductImages(Product product, List<ProductImageRequest> imageRequestList) {
         List<ProductImage> images = imageRequestList.stream().map(imageRequest ->
@@ -31,6 +33,7 @@ public class ProductImageServiceImpl implements ProductImageService {
         return productImageRepository.saveAll(images);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<ProductImage> findPrimaryProduct(Long productId) {
         return productImageRepository.findByProductIdAndPrimaryTrue(productId);
@@ -43,12 +46,23 @@ public class ProductImageServiceImpl implements ProductImageService {
             .orElse(null);
     }
 
+    @Transactional
+    @Override
+    public void deleteProductImageByProductId(Long productId) {
+        productImageRepository.deleteByProductId(productId);
+    }
+
     @Override
     public List<ProductDetailImageResponse> createImageResponse(List<ProductImage> images) {
         return images.stream()
-            .map(image -> ProductDetailImageResponse.of(image.getId(), image.getUrl(),
-                image.getAltText(), image.isPrimary(), image.getDisplayOrder(),
-                image.getOption()
-                    .getId())).toList();
+            .map(image -> {
+                if(image.getOption() != null){
+                    return ProductDetailImageResponse.of(image.getId(), image.getUrl(),
+                        image.getAltText(), image.isPrimary(), image.getDisplayOrder(),
+                        image.getOption().getId());
+                }
+                return ProductDetailImageResponse.of(image.getId(), image.getUrl(),
+                    image.getAltText(), image.isPrimary(), image.getDisplayOrder());
+            }).toList();
     }
 }

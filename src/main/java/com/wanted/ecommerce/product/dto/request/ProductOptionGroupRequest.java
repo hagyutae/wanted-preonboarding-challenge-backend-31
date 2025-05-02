@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductOptionGroupRequest {
     private String name;
-    private int displayOrder;
+    private Integer displayOrder;
     private List<ProductOptionRequest> options;
 }

@@ -70,4 +70,16 @@ public class ProductDetail {
             .additionalInfo(additionalInfo)
             .build();
     }
+
+    public void update(BigDecimal weight,
+        Dimensions dimensions, String materials, String countryOfOrigin,
+        String warrantyInfo, String careInstructions, Map<String, Object> additionalInfo){
+        this.weight = weight;
+        this.dimensions = dimensions;
+        this.materials = materials;
+        this.countryOfOrigin = countryOfOrigin;
+        this.warrantyInfo = warrantyInfo;
+        this.careInstructions = careInstructions;
+        this.additionalInfo = additionalInfo;
+    }
 }

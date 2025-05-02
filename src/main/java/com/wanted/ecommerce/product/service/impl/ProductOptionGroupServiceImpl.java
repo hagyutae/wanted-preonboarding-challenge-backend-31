@@ -11,6 +11,7 @@ import com.wanted.ecommerce.product.service.ProductOptionService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,23 +19,31 @@ public class ProductOptionGroupServiceImpl implements ProductOptionGroupService 
     private final ProductOptionGroupRepository optionGroupRepository;
     private final ProductOptionService productOptionService;
 
+    @Transactional
     @Override
-    public ProductOptionGroup saveProductOptionGroup(Product product, ProductOptionGroupRequest groupRequest) {
+    public ProductOptionGroup saveOptionGroup(Product product, ProductOptionGroupRequest groupRequest) {
         ProductOptionGroup optionGroup = ProductOptionGroup.of(product,
             groupRequest.getName(), groupRequest.getDisplayOrder());
         return optionGroupRepository.save(optionGroup);
     }
 
+    @Transactional
     @Override
-    public List<Long> createProductOptions(Product saved,
+    public List<ProductOptionGroup> saveProductOptionsAndGroup(Product saved,
         List<ProductOptionGroupRequest> optionGroups) {
         return optionGroups.stream()
             .map(groupRequest -> {
-                ProductOptionGroup optionGroup = saveProductOptionGroup( saved, groupRequest);
+                ProductOptionGroup optionGroup = saveOptionGroup( saved, groupRequest);
                 productOptionService.saveAllProductOption(groupRequest.getOptions(), optionGroup);
-                return optionGroup.getId();
+                return optionGroup;
             })
             .toList();
+    }
+
+    @Transactional
+    @Override
+    public void deleteProductOptionGroup(Long productId) {
+        optionGroupRepository.deleteByProductId(productId);
     }
 
     @Override

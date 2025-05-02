@@ -22,6 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,4 +37,26 @@ public class Category {
     private Category parent;
     private Integer level;
     private String imageUrl;
+
+    public static Category of(String name, String slug, String description, Category parent,
+        Integer level, String imageUrl){
+        return Category.builder()
+            .name(name)
+            .slug(slug)
+            .description(description)
+            .parent(parent)
+            .level(level)
+            .imageUrl(imageUrl)
+            .build();
+    }
+
+    public void update(String name, String slug, String description, Category parent,
+        Integer level, String imageUrl){
+        this.name = name;
+        this.slug = slug;
+        this.description = description;
+        this.parent = parent;
+        this.level = level;
+        this.imageUrl = imageUrl;
+    }
 }

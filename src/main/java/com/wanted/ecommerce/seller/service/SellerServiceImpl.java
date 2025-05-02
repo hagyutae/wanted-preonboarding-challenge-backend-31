@@ -9,6 +9,7 @@ import com.wanted.ecommerce.seller.repository.SellerRepository;
 import java.math.RoundingMode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class SellerServiceImpl implements SellerService {
 
     private final SellerRepository sellerRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public Seller getSellerById(Long sellerId) {
         return sellerRepository.findById(sellerId).orElseThrow(
