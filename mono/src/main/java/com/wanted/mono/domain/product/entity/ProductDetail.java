@@ -6,8 +6,6 @@ import com.vladmihalcea.hibernate.type.json.JsonType;
 import com.wanted.mono.domain.product.dto.AdditionalInfo;
 import com.wanted.mono.domain.product.dto.Dimension;
 import com.wanted.mono.domain.product.dto.ProductDetailRequest;
-import com.wanted.mono.global.AdditionalInfoConverter;
-import com.wanted.mono.global.DimensionConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
