@@ -14,18 +14,17 @@
 
 ## API 명세서
 
-본 프로젝트의 API 명세서는 Swagger UI를 통해 제공됩니다.  
-GitHub Pages로 제공됩니다.
+본 프로젝트의 API 명세서는 GitHub Pages을 통해 Swagger UI로 제공됩니다.
 
 | [![Swagger](https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swagger/swagger-original.svg)](https://narcisource.github.io/wanted-preonboarding-challenge-backend-31/) |
 | --- |
 | &nbsp;&nbsp;&nbsp;[API 명세서 바로가기](https://narcisource.github.io/wanted-preonboarding-challenge-backend-31/)&nbsp;&nbsp;&nbsp; |
 
-GitHub Pages에 게시된 Swagger 문서는 정적 문서용으로 제공되며,  
-백엔드 서버 및 데이터베이스가 연결되어 있지 않기 때문에 실제 요청은 처리되지 않습니다.
+- GitHub Pages에 게시된 Swagger 문서는 **정적 문서용**으로 제공되며,  
+  백엔드 서버 및 데이터베이스가 연결되어 있지 않기 때문에 실제 요청은 처리되지 않습니다.
 
-API 요청을 정상적으로 테스트하려면,  
-로컬 환경에서 Docker Compose를 사용해 서버와 데이터베이스를 실행한 후 Swagger UI에 접속합니다.
+- API 요청을 정상적으로 테스트하려면,  
+  로컬 환경에서 Docker Compose를 사용해 서버와 데이터베이스를 실행한 후 Swagger UI에 접속합니다.
 
 ## 테스트 리포트
 
@@ -36,7 +35,8 @@ API 요청을 정상적으로 테스트하려면,
 | [테스트 리포트 바로가기](https://narcisource.github.io/wanted-preonboarding-challenge-backend-31/test-report) | [커버리지 대시보드 바로가기](https://codecov.io/gh/narcisource/wanted-preonboarding-challenge-backend-31) |
 
 커버리지는 Codecov를 통해 분석됩니다.  
-[![codecov](https://codecov.io/gh/NarciSource/wanted-preonboarding-challenge-backend-31/branch/challenge/NarciSource/graph/badge.svg)](https://codecov.io/gh/NarciSource/test)  
+[![codecov](https://codecov.io/gh/NarciSource/wanted-preonboarding-challenge-backend-31/branch/challenge/NarciSource/graph/badge.svg)](https://codecov.io/gh/NarciSource/test)
+
 ![Sunburst-graph](https://codecov.io/gh/narcisource/wanted-preonboarding-challenge-backend-31/graphs/sunburst.svg)
 
 ## 📂 폴더 구조
@@ -58,28 +58,9 @@ wanted-preonboarding-challenge-backend-31
 │  ├─ 09.users.sql
 │  └─ 10.reviews.sql
 ├─ src
-│  ├─ application
-│  │  ├─ dto
-│  │  │  └─ index.ts
-│  │  │     ├─ Filter.dto.ts
-│  │  │     └─ ProductInput.dto.ts
-│  │  └─ services
-│  │     └─ index.ts
-│  │        ├─ Category.service.ts
-│  │        │  └─ Category.service.test.ts
-│  │        ├─ Main.service.ts
-│  │        │  └─ Main.service.test.ts
-│  │        ├─ Product.service.ts
-│  │        │  └─ Product.service.test.ts
-│  │        ├─ Product_Options.service.ts
-│  │        │  └─ Product_Options.service.test.ts
-│  │        └─ Review.service.ts
-│  │           └─ Review.service.test.ts
 │  ├─ domain
 │  │  ├─ entities
 │  │  │  └─ index.ts
-│  │  │     ├─ Brand.ts
-│  │  │     ├─ Category.ts
 │  │  │     ├─ Product.ts
 │  │  │     ├─ Product_Catalog.ts
 │  │  │     ├─ Product_Category.ts
@@ -90,6 +71,8 @@ wanted-preonboarding-challenge-backend-31
 │  │  │     ├─ Product_Price.ts
 │  │  │     ├─ Product_Summary.ts
 │  │  │     ├─ Product_Tag.ts
+│  │  │     ├─ Brand.ts
+│  │  │     ├─ Category.ts
 │  │  │     ├─ Review.ts
 │  │  │     ├─ Seller.ts
 │  │  │     ├─ Tag.ts
@@ -98,47 +81,60 @@ wanted-preonboarding-challenge-backend-31
 │  │     └─ index.ts
 │  │        ├─ IMainRepository.ts
 │  │        └─ IRepository.ts
+│  ├─ application
+│  │  ├─ dto
+│  │  │  └─ index.ts
+│  │  │     ├─ Filter.dto.ts
+│  │  │     └─ ProductInput.dto.ts
+│  │  └─ services
+│  │     └─ index.ts
+│  │        ├─ Product.service.ts
+│  │        │  └─ Product.service.test.ts
+│  │        ├─ Product_Options.service.ts
+│  │        │  └─ Product_Options.service.test.ts
+│  │        ├─ Main.service.ts
+│  │        │  └─ Main.service.test.ts
+│  │        ├─ Category.service.ts
+│  │        │  └─ Category.service.test.ts
+│  │        └─ Review.service.ts
+│  │           └─ Review.service.test.ts
 │  ├─ infrastructure
 │  │  ├─ auth
 │  │  │  ├─ jwtInterceptor.ts
 │  │  │  └─ verifier.ts
 │  │  ├─ entities
 │  │  │  └─ index.ts
+│  │  │     ├─ Product.entity.ts
+│  │  │     │  └─ Product.entity.test.ts
+│  │  │     ├─ Product_Category.entity.ts
+│  │  │     │  └─ Product_Category.entity.test.ts
+│  │  │     ├─ Product_Detail.entity.ts
+│  │  │     │  └─ Product_Detail.entity.test.ts
+│  │  │     ├─ Product_Image.entity.ts
+│  │  │     │  └─ Product_Image.entity.test.ts
+│  │  │     ├─ Product_Option.entity.ts
+│  │  │     │  └─ Product_Option.entity.test.ts
+│  │  │     ├─ Product_Option_Group.entity.ts
+│  │  │     │  └─ Product_Option_Group.entity.test.ts
+│  │  │     ├─ Product_Price.entity.ts
+│  │  │     │  └─ Product_Price.entity.test.ts
+│  │  │     ├─ Product_Tag.entity.ts
+│  │  │     │  └─ Product_Tag.entity.test.ts
 │  │  │     ├─ Brand.entity.ts
 │  │  │     │  └─ Brand.entity.test.ts
 │  │  │     ├─ Category.entity.ts
 │  │  │     │  └─ Category.entity.test.ts
-│  │  │     ├─ Product.entity.ts
-│  │  │     │  └─ Product.entity.test.ts
-│  │  │     │  └─ Product_Category.entity.test.ts
-│  │  │     ├─ Product_Category.entity.ts
-│  │  │     │  └─ Product_Detail.entity.test.ts
-│  │  │     ├─ Product_Detail.entity.ts
-│  │  │     │  └─ Product_Image.entity.test.ts
-│  │  │     ├─ Product_Image.entity.ts
-│  │  │     │  └─ Product_Option.entity.test.ts
-│  │  │     ├─ Product_Option.entity.ts
-│  │  │     │  └─ Product_Option_Group.entity.test.ts
-│  │  │     ├─ Product_Option_Group.entity.ts
-│  │  │     │  └─ Product_Price.entity.test.ts
-│  │  │     ├─ Product_Price.entity.ts
-│  │  │     │  └─ Product_Tag.entity.test.ts
-│  │  │     ├─ Product_Tag.entity.ts
-│  │  │     │  └─ Review.entity.test.ts
 │  │  │     ├─ Review.entity.ts
-│  │  │     │  └─ Seller.entity.test.ts
+│  │  │     │  └─ Review.entity.test.ts
 │  │  │     ├─ Seller.entity.ts
-│  │  │     │  └─ Tag.entity.test.ts
+│  │  │     │  └─ Seller.entity.test.ts
 │  │  │     ├─ Tag.entity.ts
-│  │  │     │  └─ User.entity.test.ts
+│  │  │     │  └─ Tag.entity.test.ts
 │  │  │     └─ User.entity.ts
+│  │  │        └─ User.entity.test.ts
 │  │  ├─ repositories
 │  │  │  └─ index.ts
 │  │  │     ├─ BaseRepository.ts
-│  │  │     ├─ Category.repository.ts
-│  │  │     │  └─ Category.repository.test.ts
-│  │  │     ├─ Main.repository.ts
-│  │  │     │  └─ Main.repository.test.ts
 │  │  │     ├─ Product.repository.ts
 │  │  │     │  └─ Product.repository.test.ts
 │  │  │     ├─ Product_Category.repository.ts
@@ -155,6 +151,10 @@ wanted-preonboarding-challenge-backend-31
 │  │  │     │  └─ Product_Price.repository.test.ts
 │  │  │     ├─ Product_Tag.repository.ts
 │  │  │     │  └─ Product_Tag.repository.test.ts
+│  │  │     ├─ Main.repository.ts
+│  │  │     │  └─ Main.repository.test.ts
+│  │  │     ├─ Category.repository.ts
+│  │  │     │  └─ Category.repository.test.ts
 │  │  │     └─ Review.repository.ts
 │  │  │        └─ Review.repository.test.ts
 │  │  ├─ views
@@ -167,34 +167,36 @@ wanted-preonboarding-challenge-backend-31
 │  ├─ presentation
 │  │  ├─ controllers
 │  │  │  └─ index.ts
-│  │  │     ├─ Category.controller.ts
-│  │  │     │  └─ Category.controller.test.ts
-│  │  │     ├─ Main.controller.ts
-│  │  │     │  └─ Main.controller.test.ts
 │  │  │     ├─ Product.controller.ts
 │  │  │     │  └─ Product.controller.test.ts
 │  │  │     ├─ Product_Options.controller.ts
 │  │  │     │  └─ Product_Options.controller.test.ts
+│  │  │     ├─ Main.controller.ts
+│  │  │     │  └─ Main.controller.test.ts
+│  │  │     ├─ Category.controller.ts
+│  │  │     │  └─ Category.controller.test.ts
 │  │  │     └─ Review.controller.ts
-│  │  │     └─ Review.controller.test.ts
+│  │  │        └─ Review.controller.test.ts
 │  │  ├─ decorators
 │  │  │  └─ index.ts
 │  │  │     ├─ ApiErrorResponse.ts
 │  │  │     └─ ApiStandardResponse.ts
 │  │  ├─ dto
 │  │  │  └─ index.ts
-│  │  │     ├─ CategoryQuery.dto.ts
-│  │  │     │  └─ CategoryQuery.dto.test.ts
+│  │  │     ├─ Response.dto.ts
+│  │  │     │  └─ Response.dto.test.ts
 │  │  │     ├─ Error.dto.ts
 │  │  │     │  └─ Error.dto.test.ts
+│  │  │     ├─ PaginationSummary.dto.ts
+│  │  │     │  └─ PaginationSummary.dto.test.ts
+│  │  │     ├─ CategoryQuery.dto.ts
+│  │  │     │  └─ CategoryQuery.dto.test.ts
 │  │  │     ├─ ImageBody.dto.ts
 │  │  │     │  └─ ImageBody.dto.test.ts
 │  │  │     ├─ NestedCategory.dto.ts
 │  │  │     │  └─ NestedCategory.dto.test.ts
 │  │  │     ├─ OptionsBody.dto.ts
 │  │  │     │  └─ OptionsBody.dto.test.ts
-│  │  │     ├─ PaginationSummary.dto.ts
-│  │  │     │  └─ PaginationSummary.dto.test.ts
 │  │  │     ├─ Param.dto.ts
 │  │  │     │  └─ Param.dto.test.ts
 │  │  │     ├─ ProductBody.dto.ts
@@ -203,8 +205,6 @@ wanted-preonboarding-challenge-backend-31
 │  │  │     │  └─ ProductBody.dto.test.ts
 │  │  │     ├─ ProductResponse.dto.ts
 │  │  │     │  └─ ProductResponse.dto.test.ts
-│  │  │     ├─ Response.dto.ts
-│  │  │     │  └─ Response.dto.test.ts
 │  │  │     ├─ ReviewBody.dto.ts
 │  │  │     │  └─ ReviewBody.dto.test.ts
 │  │  │     ├─ ReviewQuery.dto.ts
