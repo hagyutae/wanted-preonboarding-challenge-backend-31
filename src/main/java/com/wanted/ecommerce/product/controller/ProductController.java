@@ -77,7 +77,8 @@ public class ProductController {
     public ResponseEntity<Object> DeleteProduct(
         @PathVariable Long id
     ) {
-        return null;
+        productService.delete(id);
+        return ResponseEntity.ok(ApiResponse.success(null, MessageConstants.DELETED_PRODUCT.getMessage()));
     }
 
     @PostMapping("/{id}/options")

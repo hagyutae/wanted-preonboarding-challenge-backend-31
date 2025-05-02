@@ -134,8 +134,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDetailResponse readDetail(long productId) {
         // product
-        Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
+        Product product = getProductById(productId);
         // brand
         BrandDetailResponse brandDetailResponse = brandService.createBrandDetailResponse(
             product.getBrand());
@@ -180,8 +179,8 @@ public class ProductServiceImpl implements ProductService {
         // brand
         Brand brand = brandService.getBrandById(request.getBrandId());
 
-        Product target = productRepository.findById(productId)
-            .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
+        Product target = getProductById(productId);
+
         target.update(request.getName(), request.getSlug(), request.getShortDescription(),
             request.getFullDescription(), seller, brand,
             ProductStatus.valueOf(request.getStatus()));
@@ -205,6 +204,13 @@ public class ProductServiceImpl implements ProductService {
 
         return ProductUpdateResponse.of(target.getId(), target.getName(), target.getSlug(),
             target.getUpdatedAt());
+    }
+
+    @Transactional
+    @Override
+    public void delete(long productId) {
+        Product product = getProductById(productId);
+        productRepository.delete(product);
     }
 
     private List<Long> createProductTags(Product saved, List<Long> tagIds) {
@@ -241,5 +247,10 @@ public class ProductServiceImpl implements ProductService {
                     productPrice.getBasePrice(), productPrice.getSalePrice(),
                     productPrice.getCurrency());
             }).toList();
+    }
+
+    private Product getProductById(long id){
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
     }
 }

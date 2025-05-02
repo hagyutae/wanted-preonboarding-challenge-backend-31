@@ -17,4 +17,6 @@ public interface ProductService {
     ProductDetailResponse readDetail(long productId);
 
     ProductUpdateResponse update(long productId, ProductCreateRequest request);
+
+    void delete(long productId);
 }
