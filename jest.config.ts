@@ -1,6 +1,7 @@
 import type { Config } from "jest";
 
 const config: Config = {
+  testTimeout: 30000,
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -20,12 +21,7 @@ const config: Config = {
   coverageDirectory: "coverage",
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: [
-    "\\\\node_modules\\\\",
-    "src/domain",
-    "src/infrastructure/entities",
-    "src/presentation/dto",
-  ],
+  coveragePathIgnorePatterns: ["\\\\node_modules\\\\", "\\\\dist\\\\"],
 
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: "v8",
@@ -143,7 +139,7 @@ const config: Config = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  // testEnvironment: "jest-environment-node",
+  testEnvironment: "node",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -152,7 +148,7 @@ const config: Config = {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
+  testMatch: ["**/__tests__/**/*.ts?(x)", "**/?(*.)+(spec|test).ts?(x)"],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [
