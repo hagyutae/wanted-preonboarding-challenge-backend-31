@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNumber } from "class-validator";
+import { IsInt, IsNumber, Max, Min } from "class-validator";
 
 export default class ReviewSummaryDTO {
   @ApiProperty({
@@ -7,6 +7,8 @@ export default class ReviewSummaryDTO {
     example: 4.5,
   })
   @IsNumber()
+  @Min(1)
+  @Max(5)
   average_rating: number;
 
   @ApiProperty({

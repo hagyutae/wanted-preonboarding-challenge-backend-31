@@ -1,6 +1,6 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
-import ProductBodyDTO from "./ProductBody.dto";
+import ProductBodyDTO, { AdditionalInfo } from "./ProductBody.dto";
 
 describe("ProductBodyDTO", () => {
   const validData = {
@@ -114,5 +114,62 @@ describe("ProductBodyDTO", () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors[0].property).toBe("tags");
+  });
+
+  describe("AdditionalInfo", () => {
+    it("유효한 데이터로 유효성 검사가 성공", async () => {
+      const validAdditionalInfo = {
+        assembly_required: true,
+        assembly_time: "30분",
+      };
+
+      const dto = plainToInstance(AdditionalInfo, validAdditionalInfo);
+
+      const errors = await validate(dto);
+
+      expect(errors.length).toBe(0);
+    });
+
+    it("assembly_time이 잘못된 형식으로 유효성 검사가 실패", async () => {
+      const invalidAdditionalInfo = {
+        assembly_required: true,
+        assembly_time: "30분1시간간",
+      };
+
+      const dto = plainToInstance(AdditionalInfo, invalidAdditionalInfo);
+
+      const errors = await validate(dto);
+
+      expect(errors.length).toBeGreaterThan(0);
+      expect(errors[0].property).toBe("assembly_time");
+    });
+
+    it("currency 필드가 유효한 형식일 때 유효성 검사가 성공", async () => {
+      const dto = plainToInstance(ProductBodyDTO, validData);
+
+      const errors = await validate(dto);
+
+      expect(errors.length).toBe(0);
+    });
+
+    it("currency 필드가 잘못된 형식일 때 유효성 검사가 실패", async () => {
+      const invalidData = { ...validData, price: { ...validData.price, currency: "US" } };
+      const dto = plainToInstance(ProductBodyDTO, invalidData);
+
+      const errors = await validate(dto);
+
+      expect(errors.length).toBeGreaterThan(0);
+      expect(errors[0].property).toBe("price");
+    });
+
+    it("currency 필드가 숫자일 때 유효성 검사가 실패", async () => {
+      const invalidData = { ...validData, price: { ...validData.price, currency: 123 } };
+      const dto = plainToInstance(ProductBodyDTO, invalidData);
+
+      const errors = await validate(dto);
+
+      expect(errors.length).toBeGreaterThan(0);
+      expect(errors[0].property).toBe("price");
+    });
   });
 });

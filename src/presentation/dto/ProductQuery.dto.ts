@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsArray, IsBoolean, IsInt, IsOptional, Matches } from "class-validator";
+import { IsArray, IsBoolean, IsIn, IsInt, IsOptional, Matches, Min } from "class-validator";
 
 const SORT_REGEX = /^(\w+:(asc|desc))(,\w+:(asc|desc))*$/;
 
@@ -8,6 +8,7 @@ export default class ProductQueryDTO {
   @ApiPropertyOptional({ description: "페이지 번호 (기본값: 1)", example: 1, required: false })
   @IsOptional()
   @IsInt()
+  @Min(1)
   page?: number = 1;
 
   @ApiPropertyOptional({
@@ -17,6 +18,7 @@ export default class ProductQueryDTO {
   })
   @IsOptional()
   @IsInt()
+  @Min(1)
   perPage?: number = 10;
 
   @ApiPropertyOptional({
@@ -37,16 +39,21 @@ export default class ProductQueryDTO {
     required: false,
   })
   @IsOptional()
+  @IsIn(["ACTIVE", "OUT_OF_STOCK", "DELETED"], {
+    message: "status는 ACTIVE, OUT_OF_STOCK 또는 DELETED만 허용됩니다.",
+  })
   status?: string;
 
   @ApiPropertyOptional({ description: "최소 가격 필터", example: 10000, required: false })
   @IsOptional()
   @IsInt()
+  @Min(0)
   minPrice?: number;
 
   @ApiPropertyOptional({ description: "최대 가격 필터", example: 100000, required: false })
   @IsOptional()
   @IsInt()
+  @Min(0)
   maxPrice?: number;
 
   @ApiPropertyOptional({

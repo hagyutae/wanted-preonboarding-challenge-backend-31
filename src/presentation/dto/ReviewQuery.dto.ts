@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsInt, IsNumber, IsOptional, Max, Min } from "class-validator";
+import { IsInt, IsOptional, Matches, Max, Min } from "class-validator";
 
 export default class ReviewQueryDTO {
   @ApiPropertyOptional({
@@ -8,8 +8,8 @@ export default class ReviewQueryDTO {
     required: false,
   })
   @IsOptional()
-  @Min(1)
   @IsInt()
+  @Min(1)
   page?: number;
 
   @ApiPropertyOptional({
@@ -19,6 +19,7 @@ export default class ReviewQueryDTO {
   })
   @IsOptional()
   @IsInt()
+  @Min(1)
   perPage?: number;
 
   @ApiPropertyOptional({
@@ -26,17 +27,20 @@ export default class ReviewQueryDTO {
     example: "created_at:desc",
     required: false,
   })
+  @Matches(/^(\w+:(asc|desc))(,\w+:(asc|desc))*$/, {
+    message: "sort 형식은 field:asc|desc 이어야 합니다.",
+  })
   @IsOptional()
-  sort?: string;
+  sort?: string = "created_at:desc";
 
   @ApiPropertyOptional({
     description: "평점 필터 (1-5)",
     example: 4,
     required: false,
   })
+  @IsOptional()
+  @IsInt()
   @Min(1)
   @Max(5)
-  @IsOptional()
-  @IsNumber()
   rating?: number;
 }

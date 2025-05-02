@@ -1,33 +1,50 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsBoolean, IsInt, IsNumber, IsOptional, ValidateNested } from "class-validator";
+import {
+  IsBoolean,
+  IsIn,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsUrl,
+  Matches,
+  Min,
+  ValidateNested,
+} from "class-validator";
 
 class Dimensions {
   @ApiProperty({ description: "가로 길이", example: 200 })
   @IsNumber()
+  @Min(0)
   width: number;
 
   @ApiProperty({ description: "세로 길이", example: 85 })
   @IsNumber()
+  @Min(0)
   height: number;
 
   @ApiProperty({ description: "깊이", example: 90 })
   @IsNumber()
+  @Min(0)
   depth: number;
 }
 
-class AdditionalInfo {
+export class AdditionalInfo {
   @ApiProperty({ description: "조립 필요 여부", example: true })
   @IsBoolean()
   assembly_required: boolean;
 
   @ApiProperty({ description: "조립 시간", example: "30분" })
+  @Matches(/^(\d+시간)?(\d+분)?(\d+초)?$/, {
+    message: "조립 시간 형식은 'X시간 Y분 Z초'이어야 합니다.",
+  })
   assembly_time: string;
 }
 
 class Detail {
   @ApiProperty({ description: "무게", example: 25.5 })
   @IsNumber()
+  @Min(0)
   weight: number;
 
   @ApiProperty({ description: "크기 정보", type: Dimensions })
@@ -53,24 +70,29 @@ class Detail {
   additional_info: AdditionalInfo;
 }
 
-class Price {
+export class Price {
   @ApiProperty({ description: "기본 가격", example: 599000 })
   @IsInt()
+  @Min(0)
   base_price: number;
 
   @ApiProperty({ description: "할인 가격", example: 499000 })
   @IsInt()
+  @Min(0)
   sale_price: number;
 
   @ApiProperty({ description: "원가", example: 350000 })
   @IsInt()
+  @Min(0)
   cost_price: number;
 
   @ApiProperty({ description: "통화", example: "KRW" })
+  @Matches(/^[A-Z]{3}$/, { message: "통화 코드는 3자리 대문자여야 합니다 (예: USD, KRW)" })
   currency: string;
 
   @ApiProperty({ description: "세율", example: 10 })
   @IsNumber()
+  @Min(0)
   tax_rate: number;
 }
 
@@ -90,6 +112,7 @@ export class Option {
 
   @ApiProperty({ description: "추가 가격", example: 0 })
   @IsInt()
+  @Min(0)
   additional_price: number;
 
   @ApiProperty({ description: "SKU", example: "SOFA-BRN" })
@@ -97,10 +120,12 @@ export class Option {
 
   @ApiProperty({ description: "재고", example: 10 })
   @IsInt()
+  @Min(1)
   stock: number;
 
   @ApiProperty({ description: "표시 순서", example: 1 })
   @IsInt()
+  @Min(1)
   display_order: number;
 }
 
@@ -110,6 +135,7 @@ export class OptionGroup {
 
   @ApiProperty({ description: "표시 순서", example: 1 })
   @IsInt()
+  @Min(1)
   display_order: number;
 
   @ApiProperty({ description: "옵션 목록", type: [Option] })
@@ -122,6 +148,7 @@ class Image {
     description: "이미지 URL",
     example: "https://example.com/images/sofa1.jpg",
   })
+  @IsUrl({}, { message: "유효한 URL 형식이 아닙니다." })
   url: string;
 
   @ApiProperty({ description: "대체 텍스트", example: "브라운 소파 정면" })
@@ -133,6 +160,7 @@ class Image {
 
   @ApiProperty({ description: "표시 순서", example: 1 })
   @IsInt()
+  @Min(1)
   display_order: number;
 
   @ApiProperty({ description: "옵션 ID", example: null, nullable: true })
@@ -168,6 +196,9 @@ export default class ProductBodyDTO {
   brand_id: number;
 
   @ApiProperty({ description: "상태", example: "ACTIVE" })
+  @IsIn(["ACTIVE", "OUT_OF_STOCK", "DELETED"], {
+    message: "status는 ACTIVE, OUT_OF_STOCK 또는 DELETED만 허용됩니다.",
+  })
   status: string;
 
   @ApiProperty({ description: "상세 정보", type: Detail })

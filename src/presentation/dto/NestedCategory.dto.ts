@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsInt, IsOptional, ValidateNested } from "class-validator";
+import { IsArray, IsInt, IsOptional, IsUrl, ValidateNested } from "class-validator";
 
 export default class NestedCategoryDTO {
   @ApiPropertyOptional({ description: "카테고리 ID" })
@@ -27,6 +27,7 @@ export default class NestedCategoryDTO {
 
   @ApiPropertyOptional({ description: "카테고리 이미지 URL" })
   @IsOptional()
+  @IsUrl({}, { message: "유효한 URL 형식이 아닙니다." })
   image_url: string;
 
   @ApiPropertyOptional({ type: () => [NestedCategoryDTO], description: "중첩 카테고리 목록" })

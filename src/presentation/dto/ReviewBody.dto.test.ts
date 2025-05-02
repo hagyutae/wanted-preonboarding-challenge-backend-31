@@ -23,4 +23,14 @@ describe("ReviewBodyDTO", () => {
 
     expect(errors).toHaveLength(0);
   });
+
+  it("유효하지 않은 평점은 검증 실패", async () => {
+    const dto: Partial<ReviewBodyDTO> = {
+      rating: 6,
+    };
+
+    const errors = await validateDTO(dto);
+
+    expect(errors.length).toBeGreaterThan(0);
+  });
 });
