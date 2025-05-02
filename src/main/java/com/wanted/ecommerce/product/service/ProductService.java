@@ -1,9 +1,11 @@
 package com.wanted.ecommerce.product.service;
 
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
+import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
 import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
+import com.wanted.ecommerce.product.dto.response.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
@@ -27,4 +29,6 @@ public interface ProductService {
     ProductOptionResponse updateProductOption(long id, long optionId, ProductOptionRequest optionRequest);
 
     void deleteProductOption(long id, long optionId);
+
+    ProductImageCreateResponse addProductImage(long id, ProductImageRequest imageRequest);
 }

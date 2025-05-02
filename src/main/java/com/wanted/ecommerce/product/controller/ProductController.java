@@ -8,6 +8,7 @@ import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
 import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
+import com.wanted.ecommerce.product.dto.response.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
@@ -117,10 +118,12 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/images")
-    public ResponseEntity<Object> addProductImages(
+    public ResponseEntity<ApiResponse<ProductImageCreateResponse>> addProductImages(
         @PathVariable Long id,
         @Valid @RequestBody ProductImageRequest imageRequest
     ) {
-        return null;
+        ProductImageCreateResponse response = productService.addProductImage(id, imageRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ApiResponse.success(response, MessageConstants.CREATED_IMAGE.getMessage()));
     }
 }

@@ -5,6 +5,7 @@ import com.wanted.ecommerce.product.domain.ProductImage;
 import com.wanted.ecommerce.product.domain.ProductOption;
 import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
 import com.wanted.ecommerce.product.dto.response.ProductDetailImageResponse;
+import com.wanted.ecommerce.product.dto.response.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.repository.ProductImageRepository;
 import com.wanted.ecommerce.product.service.ProductImageService;
@@ -18,12 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ProductImageServiceImpl implements ProductImageService {
+
     private final ProductImageRepository productImageRepository;
     private final ProductOptionService optionService;
 
     @Transactional
     @Override
-    public List<ProductImage> saveProductImages(Product product, List<ProductImageRequest> imageRequestList) {
+    public List<ProductImage> createProductImages(Product product,
+        List<ProductImageRequest> imageRequestList) {
         List<ProductImage> images = imageRequestList.stream().map(imageRequest ->
         {
             ProductOption option = optionService.findOptionById(imageRequest.getOptionId());
@@ -33,15 +36,26 @@ public class ProductImageServiceImpl implements ProductImageService {
         return productImageRepository.saveAll(images);
     }
 
+    @Override
+    public ProductImageCreateResponse createProductImage(Product product, ProductOption option,
+        ProductImageRequest imageRequest) {
+        ProductImage image = ProductImage.of(product, imageRequest.getUrl(),
+            imageRequest.getAltText(), imageRequest.getIsPrimary(), imageRequest.getDisplayOrder(),
+            option);
+        ProductImage saved = productImageRepository.save(image);
+        return ProductImageCreateResponse.of(saved.getId(), saved.getUrl(), saved.getAltText(),
+            saved.isPrimary(), saved.getDisplayOrder(), option.getId());
+    }
+
     @Transactional(readOnly = true)
     @Override
-    public Optional<ProductImage> findPrimaryProduct(Long productId) {
+    public Optional<ProductImage> getPrimaryProduct(Long productId) {
         return productImageRepository.findByProductIdAndPrimaryTrue(productId);
     }
 
     @Override
-    public ProductImageResponse createPrimaryProductImageResponse(Long productId){
-        return findPrimaryProduct(productId)
+    public ProductImageResponse createPrimaryProductImageResponse(Long productId) {
+        return getPrimaryProduct(productId)
             .map(image -> ProductImageResponse.of(image.getUrl(), image.getAltText()))
             .orElse(null);
     }
@@ -56,7 +70,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     public List<ProductDetailImageResponse> createImageResponse(List<ProductImage> images) {
         return images.stream()
             .map(image -> {
-                if(image.getOption() != null){
+                if (image.getOption() != null) {
                     return ProductDetailImageResponse.of(image.getId(), image.getUrl(),
                         image.getAltText(), image.isPrimary(), image.getDisplayOrder(),
                         image.getOption().getId());

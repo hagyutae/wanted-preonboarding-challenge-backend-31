@@ -9,16 +9,19 @@ import com.wanted.ecommerce.common.exception.ErrorType;
 import com.wanted.ecommerce.common.exception.ResourceNotFoundException;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductCategory;
+import com.wanted.ecommerce.product.domain.ProductOption;
 import com.wanted.ecommerce.product.domain.ProductOptionGroup;
 import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.domain.ProductTag;
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
+import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
 import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
 import com.wanted.ecommerce.product.dto.response.DetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductDetailImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
+import com.wanted.ecommerce.product.dto.response.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductOptionGroupResponse;
@@ -91,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
         productCategoryService.saveProductCategories(saved, request.getCategories());
         productDetailService.saveDetail(saved, request.getDetail());
         productOptionGroupService.saveProductOptionsAndGroup(saved, request.getOptionGroups());
-        productImageService.saveProductImages(saved, request.getImages());
+        productImageService.createProductImages(saved, request.getImages());
         productPriceService.saveProductPrice(saved, request.getPrice());
         createProductTags(saved, request.getTags());
         return ProductResponse.of(saved.getId(), saved.getName(), saved.getSlug(),
@@ -203,7 +206,7 @@ public class ProductServiceImpl implements ProductService {
 
         // image
         productImageService.deleteProductImageByProductId(target.getId());
-        productImageService.saveProductImages(target, request.getImages());
+        productImageService.createProductImages(target, request.getImages());
 
         return ProductUpdateResponse.of(target.getId(), target.getName(), target.getSlug(),
             target.getUpdatedAt());
@@ -239,6 +242,13 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductOption(long id, long optionId) {
         checkExistOption(id, optionId);
         productOptionService.deleteProductOption(optionId);
+    }
+
+    @Override
+    public ProductImageCreateResponse addProductImage(long id, ProductImageRequest imageRequest) {
+        Product product = getProductById(id);
+        ProductOption option = productOptionService.findOptionById(imageRequest.getOptionId());
+        return productImageService.createProductImage(product, option, imageRequest);
     }
 
     private List<Long> createProductTags(Product saved, List<Long> tagIds) {
