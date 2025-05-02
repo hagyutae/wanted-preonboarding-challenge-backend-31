@@ -19,7 +19,7 @@ public class Categories {
     private String slug;
     private String description;
     private Long parentId;
-    private int level;
+    private Integer level;
     private String imageUrl;
 
     @OneToMany(mappedBy = "categories")
