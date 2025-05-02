@@ -9,6 +9,7 @@ import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
+import com.wanted.ecommerce.product.dto.response.ProductOptionCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
 import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
 import com.wanted.ecommerce.product.service.ProductService;
@@ -70,7 +71,8 @@ public class ProductController {
         @Valid @RequestBody ProductCreateRequest productCreateRequest
     ) {
         ProductUpdateResponse response = productService.update(id, productCreateRequest);
-        return ResponseEntity.ok(ApiResponse.success(response, MessageConstants.UPDATED_PRODUCT.getMessage()));
+        return ResponseEntity.ok(
+            ApiResponse.success(response, MessageConstants.UPDATED_PRODUCT.getMessage()));
     }
 
     @DeleteMapping("/{id}")
@@ -78,15 +80,18 @@ public class ProductController {
         @PathVariable Long id
     ) {
         productService.delete(id);
-        return ResponseEntity.ok(ApiResponse.success(null, MessageConstants.DELETED_PRODUCT.getMessage()));
+        return ResponseEntity.ok(
+            ApiResponse.success(null, MessageConstants.DELETED_PRODUCT.getMessage()));
     }
 
     @PostMapping("/{id}/options")
-    public ResponseEntity<Object> addProductOptions(
+    public ResponseEntity<ApiResponse<ProductOptionCreateResponse>> addProductOptions(
         @PathVariable Long id,
-        @Valid @RequestBody ProductOptionRequest createRequest
+        @Valid @RequestBody ProductOptionRequest optionRequest
     ) {
-        return null;
+        ProductOptionCreateResponse response = productService.addProductOption(id, optionRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ApiResponse.success(response, MessageConstants.CREATED_OPTION.getMessage()));
     }
 
     @PutMapping("/{id}/options/{optionId}")

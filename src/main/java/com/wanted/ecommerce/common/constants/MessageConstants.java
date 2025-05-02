@@ -10,7 +10,9 @@ public enum MessageConstants {
     FUNDED_ALL_PRODUCTS("상품 목록을 성공적으로 조회했습니다."),
     FUNDED_PRODUCT_DETAIL("상품 상세 정보를 성공적으로 조회했습니다."),
     UPDATED_PRODUCT("상품이 성공적으로 수정되었습니다."),
-    DELETED_PRODUCT("상품이 성공적으로 삭제되었습니다.");
+    DELETED_PRODUCT("상품이 성공적으로 삭제되었습니다."),
+    CREATED_OPTION("상품 옵션이 성공적으로 추가되었습니다.");
+
 
     private final String message;
 }

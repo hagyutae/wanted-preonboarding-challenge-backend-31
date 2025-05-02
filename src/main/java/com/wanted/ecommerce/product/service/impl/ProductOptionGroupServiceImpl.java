@@ -1,5 +1,7 @@
 package com.wanted.ecommerce.product.service.impl;
 
+import com.wanted.ecommerce.common.exception.ErrorType;
+import com.wanted.ecommerce.common.exception.ResourceNotFoundException;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductOptionGroup;
 import com.wanted.ecommerce.product.dto.request.ProductOptionGroupRequest;
@@ -16,12 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ProductOptionGroupServiceImpl implements ProductOptionGroupService {
+
     private final ProductOptionGroupRepository optionGroupRepository;
     private final ProductOptionService productOptionService;
 
     @Transactional
     @Override
-    public ProductOptionGroup saveOptionGroup(Product product, ProductOptionGroupRequest groupRequest) {
+    public ProductOptionGroup saveOptionGroup(Product product,
+        ProductOptionGroupRequest groupRequest) {
         ProductOptionGroup optionGroup = ProductOptionGroup.of(product,
             groupRequest.getName(), groupRequest.getDisplayOrder());
         return optionGroupRepository.save(optionGroup);
@@ -33,7 +37,7 @@ public class ProductOptionGroupServiceImpl implements ProductOptionGroupService 
         List<ProductOptionGroupRequest> optionGroups) {
         return optionGroups.stream()
             .map(groupRequest -> {
-                ProductOptionGroup optionGroup = saveOptionGroup( saved, groupRequest);
+                ProductOptionGroup optionGroup = saveOptionGroup(saved, groupRequest);
                 productOptionService.saveAllProductOption(groupRequest.getOptions(), optionGroup);
                 return optionGroup;
             })
@@ -62,5 +66,11 @@ public class ProductOptionGroupServiceImpl implements ProductOptionGroupService 
                     optionGroup.getDisplayOrder(), options);
             })
             .toList();
+    }
+
+    @Override
+    public ProductOptionGroup getOptionGroupByIdAndProductId(Long id, Long productId) {
+        return optionGroupRepository.findByIdAndProductId(id, productId)
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
     }
 }

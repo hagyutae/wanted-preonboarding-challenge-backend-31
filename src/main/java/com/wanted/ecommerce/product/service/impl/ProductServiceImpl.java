@@ -9,16 +9,19 @@ import com.wanted.ecommerce.common.exception.ErrorType;
 import com.wanted.ecommerce.common.exception.ResourceNotFoundException;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductCategory;
+import com.wanted.ecommerce.product.domain.ProductOptionGroup;
 import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.domain.ProductTag;
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
+import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
 import com.wanted.ecommerce.product.dto.response.DetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductDetailImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
+import com.wanted.ecommerce.product.dto.response.ProductOptionCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductOptionGroupResponse;
 import com.wanted.ecommerce.product.dto.response.ProductPriceResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
@@ -213,6 +216,16 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(product);
     }
 
+    @Transactional
+    @Override
+    public ProductOptionCreateResponse addProductOption(long id,
+        ProductOptionRequest optionRequest) {
+        Product product = getProductById(id);
+        ProductOptionGroup optionGroup = productOptionGroupService.getOptionGroupByIdAndProductId(
+            optionRequest.getOptionGroupId(), product.getId());
+        return productOptionService.createProductOption(product, optionGroup, optionRequest);
+    }
+
     private List<Long> createProductTags(Product saved, List<Long> tagIds) {
         List<Tag> tags = tagIds.stream().map(tagService::getTagByTagId)
             .toList();
@@ -249,7 +262,7 @@ public class ProductServiceImpl implements ProductService {
             }).toList();
     }
 
-    private Product getProductById(long id){
+    public Product getProductById(long id) {
         return productRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
     }
