@@ -4,7 +4,7 @@ import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductOption;
 import com.wanted.ecommerce.product.domain.ProductOptionGroup;
 import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
-import com.wanted.ecommerce.product.dto.response.ProductOptionCreateResponse;
+import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.repository.ProductOptionRepository;
 import com.wanted.ecommerce.product.service.ProductOptionService;
 import java.util.List;
@@ -47,7 +47,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
 
     @Transactional
     @Override
-    public ProductOptionCreateResponse createProductOption(Product product, ProductOptionGroup optionGroup,
+    public ProductOptionResponse createProductOption(Product product, ProductOptionGroup optionGroup,
         ProductOptionRequest optionRequest) {
 
         ProductOption option = ProductOption.of(optionGroup, optionRequest.getName(),
@@ -55,7 +55,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
             optionRequest.getDisplayOrder());
 
         ProductOption saved = optionRepository.save(option);
-        return ProductOptionCreateResponse.of(saved.getId(), saved.getOptionGroup().getId(),
+        return ProductOptionResponse.of(saved.getId(), saved.getOptionGroup().getId(),
             saved.getName(), saved.getAdditionalPrice().doubleValue(), saved.getSku(),
             saved.getStock(), saved.getDisplayOrder());
     }

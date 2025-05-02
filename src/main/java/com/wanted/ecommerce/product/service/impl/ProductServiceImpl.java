@@ -21,7 +21,7 @@ import com.wanted.ecommerce.product.dto.response.ProductDetailImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
-import com.wanted.ecommerce.product.dto.response.ProductOptionCreateResponse;
+import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.dto.response.ProductOptionGroupResponse;
 import com.wanted.ecommerce.product.dto.response.ProductPriceResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
@@ -218,7 +218,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductOptionCreateResponse addProductOption(long id,
+    public ProductOptionResponse addProductOption(long id,
         ProductOptionRequest optionRequest) {
         Product product = getProductById(id);
         ProductOptionGroup optionGroup = productOptionGroupService.updateOptionGroup(product,

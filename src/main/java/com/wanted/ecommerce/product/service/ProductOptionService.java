@@ -4,7 +4,7 @@ import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductOption;
 import com.wanted.ecommerce.product.domain.ProductOptionGroup;
 import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
-import com.wanted.ecommerce.product.dto.response.ProductOptionCreateResponse;
+import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import java.util.List;
 
 public interface ProductOptionService {
@@ -13,7 +13,7 @@ public interface ProductOptionService {
 
     ProductOption findOptionById(Long optionId);
 
-    ProductOptionCreateResponse createProductOption(Product product, ProductOptionGroup optionGroup, ProductOptionRequest optionRequest);
+    ProductOptionResponse createProductOption(Product product, ProductOptionGroup optionGroup, ProductOptionRequest optionRequest);
 
     Boolean isExistStock(Long productId, Integer compStock);
 }

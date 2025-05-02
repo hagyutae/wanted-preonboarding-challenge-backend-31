@@ -9,7 +9,7 @@ import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
-import com.wanted.ecommerce.product.dto.response.ProductOptionCreateResponse;
+import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
 import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
 import com.wanted.ecommerce.product.service.ProductService;
@@ -85,11 +85,11 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/options")
-    public ResponseEntity<ApiResponse<ProductOptionCreateResponse>> addProductOptions(
+    public ResponseEntity<ApiResponse<ProductOptionResponse>> addProductOptions(
         @PathVariable Long id,
         @Valid @RequestBody ProductOptionRequest optionRequest
     ) {
-        ProductOptionCreateResponse response = productService.addProductOption(id, optionRequest);
+        ProductOptionResponse response = productService.addProductOption(id, optionRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ApiResponse.success(response, MessageConstants.CREATED_OPTION.getMessage()));
     }
