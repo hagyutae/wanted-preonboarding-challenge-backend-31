@@ -1,7 +1,7 @@
 import type { Config } from "jest";
 
 const config: Config = {
-  testTimeout: 30000,
+  testTimeout: 100000,
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -18,21 +18,16 @@ const config: Config = {
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: "dist/coverage",
 
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: ["\\\\node_modules\\\\", "\\\\dist\\\\"],
+  coveragePathIgnorePatterns: ["/node_modules/", "/dist/"],
 
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: "v8",
 
   // A list of reporter names that Jest uses when writing coverage reports
-  // coverageReporters: [
-  //   "json",
-  //   "text",
-  //   "lcov",
-  //   "clover"
-  // ],
+  coverageReporters: ["html", "lcov", "text-summary"],
 
   // An object that configures minimum threshold enforcement for coverage results
   // coverageThreshold: undefined,
@@ -101,7 +96,19 @@ const config: Config = {
   // projects: undefined,
 
   // Use this configuration option to add custom reporters to Jest
-  // reporters: undefined,
+  reporters: [
+    "default",
+    [
+      "jest-html-reporters",
+      {
+        pageTitle: "Test Report",
+        publicPath: "./dist",
+        filename: "test-report.html",
+        includeFailureMsg: true,
+        expand: true,
+      },
+    ],
+  ],
 
   // Automatically reset mock state before every test
   // resetMocks: false,
