@@ -53,4 +53,8 @@ public class ProductOptionGroup {
         this.displayOrder = displayOrder;
         this.options = options;
     }
+
+    public void updateProduct(Product product){
+        this.product = product;
+    }
 }

@@ -15,5 +15,5 @@ public interface ProductOptionGroupService {
     List<ProductOptionGroupResponse> createOptionGroupResponse(
         List<ProductOptionGroup> optionGroups);
 
-    ProductOptionGroup getOptionGroupByIdAndProductId(Long id, Long productId);
+    ProductOptionGroup updateOptionGroup(Product product, Long optionGroupId);
 }

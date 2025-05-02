@@ -68,9 +68,15 @@ public class ProductOptionGroupServiceImpl implements ProductOptionGroupService 
             .toList();
     }
 
-    @Override
-    public ProductOptionGroup getOptionGroupByIdAndProductId(Long id, Long productId) {
-        return optionGroupRepository.findByIdAndProductId(id, productId)
+    private ProductOptionGroup getOptionGroupById(Long id) {
+        return optionGroupRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
+    }
+
+    @Override
+    public ProductOptionGroup updateOptionGroup(Product product, Long optionGroupId) {
+        ProductOptionGroup optionGroup = getOptionGroupById(optionGroupId);
+        optionGroup.updateProduct(product);
+        return optionGroup;
     }
 }

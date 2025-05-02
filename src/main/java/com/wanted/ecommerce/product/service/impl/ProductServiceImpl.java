@@ -221,8 +221,8 @@ public class ProductServiceImpl implements ProductService {
     public ProductOptionCreateResponse addProductOption(long id,
         ProductOptionRequest optionRequest) {
         Product product = getProductById(id);
-        ProductOptionGroup optionGroup = productOptionGroupService.getOptionGroupByIdAndProductId(
-            optionRequest.getOptionGroupId(), product.getId());
+        ProductOptionGroup optionGroup = productOptionGroupService.updateOptionGroup(product,
+            optionRequest.getOptionGroupId());
         return productOptionService.createProductOption(product, optionGroup, optionRequest);
     }
 

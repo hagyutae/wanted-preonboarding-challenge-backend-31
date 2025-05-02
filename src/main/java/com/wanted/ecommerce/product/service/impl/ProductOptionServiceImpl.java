@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     private final ProductOptionRepository optionRepository;
 
 
+    @Transactional
     @Override
     public List<ProductOption> saveAllProductOption(List<ProductOptionRequest> optionRequests,
         ProductOptionGroup optionGroup) {
@@ -35,6 +37,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
         return optionRepository.saveAll(options);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public ProductOption findOptionById(Long optionId) {
         return Optional.ofNullable(optionId)
@@ -42,6 +45,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
             .orElse(null);
     }
 
+    @Transactional
     @Override
     public ProductOptionCreateResponse createProductOption(Product product, ProductOptionGroup optionGroup,
         ProductOptionRequest optionRequest) {
@@ -56,6 +60,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
             saved.getStock(), saved.getDisplayOrder());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Boolean isExistStock(Long productId, Integer compStock) {
         return optionRepository.existsByOptionGroupProductIdAndStockGreaterThan(
