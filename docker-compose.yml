@@ -18,7 +18,7 @@ services:
   server:
     depends_on:
       - database
-    image: wanted-preonboarding-challenge-backend-31
+    image: e-commerce-server
     container_name: server
     build:
       context: .
@@ -26,7 +26,7 @@ services:
     networks:
       - network
     ports:
-      - "3000:3000"
+      - "${PORT}:3000"
     env_file:
       - .env
     environment:

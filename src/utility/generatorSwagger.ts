@@ -3,8 +3,8 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 export default function generatorSwagger(app: INestApplication<any>) {
   const swagger_config = new DocumentBuilder()
-    .setTitle("API")
-    .setDescription("API 명세서")
+    .setTitle("API 명세서")
+    .setDescription("CQRS 시스템 설계/구축 챌린지 - API 명세서")
     .setVersion("1.0")
     .addBearerAuth()
     .build();
