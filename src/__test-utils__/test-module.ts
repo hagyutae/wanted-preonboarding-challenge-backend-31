@@ -5,6 +5,7 @@ import { DataSource } from "typeorm";
 
 import { repository_providers } from "../infrastructure/provider";
 import * as entities from "../infrastructure/entities";
+import * as views from "../infrastructure/views";
 
 let container: StartedPostgreSqlContainer;
 let test_module: TestingModule;
@@ -29,11 +30,11 @@ export async function get_module() {
           username: container.getUsername(),
           password: container.getPassword(),
           database: container.getDatabase(),
-          entities,
+          entities: [...Object.values(entities), ...Object.values(views)],
           synchronize: true,
         }),
       }),
-      TypeOrmModule.forFeature(Object.values(entities)),
+      TypeOrmModule.forFeature([...Object.values(entities), ...Object.values(views)]),
     ],
     providers: [...repository_providers],
   }).compile();
