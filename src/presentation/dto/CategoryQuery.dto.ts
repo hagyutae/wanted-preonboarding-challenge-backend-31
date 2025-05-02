@@ -1,6 +1,8 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsBoolean, IsInt, IsOptional } from "class-validator";
+import { IsBoolean, IsInt, IsOptional, Matches } from "class-validator";
+
+const SORT_REGEX = /^(\w+:(asc|desc))*$/;
 
 export default class CategoryQueryDTO {
   @ApiPropertyOptional({ description: "페이지 번호", example: 1, required: false })
@@ -20,7 +22,10 @@ export default class CategoryQueryDTO {
     required: false,
   })
   @IsOptional()
-  sort?: string;
+  @Matches(SORT_REGEX, {
+    message: "sort 형식은 field:asc|desc이어야 합니다.",
+  })
+  sort?: string = "created_at:desc";
 
   @ApiPropertyOptional({ description: "하위 카테고리 포함 여부", example: true, required: false })
   @IsOptional()

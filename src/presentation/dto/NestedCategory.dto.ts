@@ -1,10 +1,11 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsOptional, IsArray, ValidateNested } from "class-validator";
+import { IsArray, IsInt, IsOptional, ValidateNested } from "class-validator";
 
 export default class NestedCategoryDTO {
   @ApiPropertyOptional({ description: "카테고리 ID" })
   @IsOptional()
+  @IsInt()
   id: number;
 
   @ApiPropertyOptional({ description: "카테고리 이름" })
@@ -21,6 +22,7 @@ export default class NestedCategoryDTO {
 
   @ApiPropertyOptional({ description: "카테고리 레벨" })
   @IsOptional()
+  @IsInt()
   level: number;
 
   @ApiPropertyOptional({ description: "카테고리 이미지 URL" })

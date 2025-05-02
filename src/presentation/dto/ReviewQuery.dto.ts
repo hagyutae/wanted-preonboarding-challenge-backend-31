@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsInt, IsNumber, IsOptional } from "class-validator";
+import { IsInt, IsNumber, IsOptional, Max, Min } from "class-validator";
 
 export default class ReviewQueryDTO {
   @ApiPropertyOptional({
@@ -8,6 +8,7 @@ export default class ReviewQueryDTO {
     required: false,
   })
   @IsOptional()
+  @Min(1)
   @IsInt()
   page?: number;
 
@@ -33,6 +34,8 @@ export default class ReviewQueryDTO {
     example: 4,
     required: false,
   })
+  @Min(1)
+  @Max(5)
   @IsOptional()
   @IsNumber()
   rating?: number;

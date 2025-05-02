@@ -120,7 +120,7 @@ describe("ProductController", () => {
     const param = { id: 1 } as ParamDTO;
     const response: ResponseDTO<any> = {
       success: true,
-      data: undefined,
+      data: null,
       message: "상품이 성공적으로 삭제되었습니다.",
     };
     productService.remove = jest.fn().mockResolvedValue(undefined);

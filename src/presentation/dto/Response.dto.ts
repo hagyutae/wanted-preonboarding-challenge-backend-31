@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsBoolean, IsOptional } from "class-validator";
+import { IsArray, IsBoolean, IsOptional, ValidateNested } from "class-validator";
 
 import { Category, Product_Summary, Review } from "src/domain/entities";
 import PaginationSummaryDTO from "./PaginationSummary.dto";
@@ -24,6 +24,8 @@ export default class ResponseDTO<T> {
 
 export class ProductResponseBundle {
   @ApiProperty({ type: () => Product_Summary, description: "상품 정보" })
+  @IsArray()
+  @ValidateNested()
   items: Product_Summary[];
 
   @ApiProperty({ description: "페이지네이션 정보" })
@@ -32,10 +34,12 @@ export class ProductResponseBundle {
 
 export class CategoryResponseBundle {
   @ApiProperty({ description: "카테고리 정보" })
+  @ValidateNested()
   category: Category;
 
   @ApiProperty({ type: () => [Product_Summary], description: "상품 요약 목록" })
   @IsArray()
+  @ValidateNested()
   items: Product_Summary[];
 
   @ApiProperty({ description: "페이지네이션 정보" })
@@ -45,22 +49,28 @@ export class CategoryResponseBundle {
 export class ReviewResponseBundle {
   @ApiProperty({ type: () => [Product_Summary], description: "리뷰 목록" })
   @IsArray()
+  @ValidateNested()
   items: Review[];
 
   @ApiProperty({ description: "리뷰 요약 정보" })
+  @ValidateNested()
   summary: ReviewSummaryDTO;
 
   @ApiProperty({ description: "페이지네이션 정보" })
+  @ValidateNested()
   pagination: PaginationSummaryDTO;
 }
 
 export class MainResponseBundle {
   @ApiProperty({ type: () => [Product_Summary], description: "신상품 목록" })
+  @IsArray()
   new_products: Product_Summary[];
 
   @ApiProperty({ type: () => [Product_Summary], description: "인기 상품 목록" })
+  @IsArray()
   popular_products: Product_Summary[];
 
   @ApiProperty({ type: () => [Category], description: "추천 카테고리 목록" })
+  @IsArray()
   featured_categories: Category[];
 }

@@ -1,6 +1,8 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsArray, IsBoolean, IsInt, IsOptional } from "class-validator";
+import { IsArray, IsBoolean, IsInt, IsOptional, Matches } from "class-validator";
+
+const SORT_REGEX = /^(\w+:(asc|desc))(,\w+:(asc|desc))*$/;
 
 export default class ProductQueryDTO {
   @ApiPropertyOptional({ description: "페이지 번호 (기본값: 1)", example: 1, required: false })
@@ -24,6 +26,9 @@ export default class ProductQueryDTO {
     required: false,
   })
   @IsOptional()
+  @Matches(SORT_REGEX, {
+    message: "sort 형식은 field:asc|desc (복수는 콤마로 구분) 이어야 합니다.",
+  })
   sort?: string = "created_at:desc";
 
   @ApiPropertyOptional({
