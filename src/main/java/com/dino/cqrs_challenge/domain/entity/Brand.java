@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "brands")
+@Table(name = "brands", schema = "commerce")
 public class Brand {
 
     @Id
@@ -35,6 +35,6 @@ public class Brand {
     private String logoUrl;
 
     @Column(length = 255)
-    private String webSite;
+    private String website;
 
 }

@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "product_prices")
+@Table(name = "product_prices", schema = "commerce")
 public class ProductPrice {
 
     @Id

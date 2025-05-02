@@ -21,7 +21,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "categories")
+@Table(name = "categories", schema = "commerce")
 public class Category {
 
     @Id

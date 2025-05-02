@@ -26,7 +26,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "products")
+@Table(name = "products", schema = "commerce")
 public class Product extends BaseEntity {
 
     @Id

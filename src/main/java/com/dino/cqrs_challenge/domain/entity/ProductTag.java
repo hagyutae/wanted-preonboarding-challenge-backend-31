@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "product_tags")
+@Table(name = "product_tags", schema = "commerce")
 public class ProductTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

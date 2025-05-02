@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "product_categories")
+@Table(name = "product_categories", schema = "commerce")
 public class ProductCategory {
 
     @Id
@@ -33,7 +33,7 @@ public class ProductCategory {
     private Category category;
 
     @Column(nullable = false)
-    private boolean isPrimary = false;
+    private Boolean isPrimary = false;
 
 }
 

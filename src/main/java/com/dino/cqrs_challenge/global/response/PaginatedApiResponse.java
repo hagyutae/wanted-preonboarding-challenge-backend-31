@@ -31,7 +31,7 @@ public class PaginatedApiResponse<T> {
     public static class Pagination {
 
         @Schema(description = "전체 항목 수", example = "100")
-        private int totalItems;
+        private long totalItems;
 
         @Schema(description = "전체 페이지 수", example = "10")
         private int totalPages;

@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "reviews")
+@Table(name = "reviews", schema = "commerce")
 public class Review extends BaseEntity {
 
     @Id

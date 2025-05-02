@@ -12,14 +12,17 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "product_details")
+@Table(name = "product_details", schema = "commerce")
 public class ProductDetail {
 
     @Id
@@ -33,8 +36,9 @@ public class ProductDetail {
     @Column(precision = 10, scale = 2)
     private BigDecimal weight;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private String dimensions;
+    private Map<String, Object> dimensions;
 
     @Column(columnDefinition = "text")
     private String materials;
@@ -48,7 +52,8 @@ public class ProductDetail {
     @Column(columnDefinition = "text")
     private String careInstructions;
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private String additionalInfo;
+    private Map<String, Object> additionalInfo;
 
 }

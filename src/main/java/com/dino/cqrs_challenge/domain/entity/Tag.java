@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "tags")
+@Table(name = "tags", schema = "commerce")
 public class Tag {
 
     @Id

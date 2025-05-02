@@ -22,7 +22,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "product_option_groups")
+@Table(name = "product_option_groups", schema = "commerce")
 public class ProductOptionGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
