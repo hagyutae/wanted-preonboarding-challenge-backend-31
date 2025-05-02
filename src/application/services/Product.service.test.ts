@@ -110,6 +110,63 @@ describe("ProductService", () => {
     expect(mockEntityManager.transaction).toHaveBeenCalled();
   });
 
+  it("상품 목록 조회", async () => {
+    const filterDTO = {
+      page: 1,
+      per_page: 10,
+      sort: "created_at:DESC",
+    };
+    const mockProducts = [
+      { id: 1, name: "상품1", slug: "product-1" },
+      { id: 2, name: "상품2", slug: "product-2" },
+    ];
+    mockProductRepository.find_by_filters = jest.fn().mockResolvedValue(mockProducts);
+
+    const result = await service.find_all(filterDTO);
+
+    expect(result).toEqual({
+      items: mockProducts,
+      pagination: {
+        total_items: mockProducts.length,
+        total_pages: 1,
+        current_page: 1,
+        per_page: 10,
+      },
+    });
+    expect(mockProductRepository.find_by_filters).toHaveBeenCalledWith({
+      page: 1,
+      per_page: 10,
+      sort_field: "created_at",
+      sort_order: "DESC",
+    });
+  });
+
+  it("상품 목록 조회 시 기본값 적용", async () => {
+    const mockProducts = [
+      { id: 1, name: "상품1", slug: "product-1" },
+      { id: 2, name: "상품2", slug: "product-2" },
+    ];
+    mockProductRepository.find_by_filters = jest.fn().mockResolvedValue(mockProducts);
+
+    const result = await service.find_all({});
+
+    expect(result).toEqual({
+      items: mockProducts,
+      pagination: {
+        total_items: mockProducts.length,
+        total_pages: 1,
+        current_page: 1,
+        per_page: 10,
+      },
+    });
+    expect(mockProductRepository.find_by_filters).toHaveBeenCalledWith({
+      page: 1,
+      per_page: 10,
+      sort_field: "created_at",
+      sort_order: "DESC",
+    });
+  });
+
   it("상품 조회", async () => {
     const product = { id: 1, name: "상품명" };
     mockProductRepository.find_by_id = jest.fn().mockResolvedValue(product);

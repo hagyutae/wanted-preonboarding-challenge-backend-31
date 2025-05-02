@@ -5,7 +5,6 @@ import { DataSource, Repository, UpdateResult } from "typeorm";
 import BrandEntity from "./Brand.entity";
 
 import { get_module } from "src/__test-utils__/test-module";
-import ProductEntity from "./Product.entity";
 
 describe("BrandEntity", () => {
   let data_source: DataSource;
