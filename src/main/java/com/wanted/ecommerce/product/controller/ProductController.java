@@ -95,12 +95,15 @@ public class ProductController {
     }
 
     @PutMapping("/{id}/options/{optionId}")
-    public ResponseEntity<Object> updateProductOptions(
+    public ResponseEntity<ApiResponse<ProductOptionResponse>> updateProductOptions(
         @PathVariable Long id,
         @PathVariable Long optionId,
         @Valid @RequestBody ProductOptionRequest updateRequest
     ) {
-        return null;
+        ProductOptionResponse response = productService.updateProductOption(id, optionId,
+            updateRequest);
+        return ResponseEntity.ok(
+            ApiResponse.success(response, MessageConstants.CREATED_OPTION.getMessage()));
     }
 
     @DeleteMapping("/{id}/options/{optionId}")

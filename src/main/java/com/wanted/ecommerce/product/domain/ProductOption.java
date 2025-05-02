@@ -51,4 +51,13 @@ public class ProductOption {
             .displayOrder(displayOrder)
             .build();
     }
+
+    public void update(String name, BigDecimal additionalPrice, String sku, int stock,
+        int displayOrder) {
+        this.name = name;
+        this.additionalPrice = additionalPrice;
+        this.sku = sku;
+        this.stock = stock;
+        this.displayOrder = displayOrder;
+    }
 }

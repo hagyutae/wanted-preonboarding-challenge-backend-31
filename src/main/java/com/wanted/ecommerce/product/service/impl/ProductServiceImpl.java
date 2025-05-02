@@ -21,8 +21,8 @@ import com.wanted.ecommerce.product.dto.response.ProductDetailImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
-import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.dto.response.ProductOptionGroupResponse;
+import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.dto.response.ProductPriceResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
 import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
@@ -224,6 +224,21 @@ public class ProductServiceImpl implements ProductService {
         ProductOptionGroup optionGroup = productOptionGroupService.updateOptionGroup(product,
             optionRequest.getOptionGroupId());
         return productOptionService.createProductOption(product, optionGroup, optionRequest);
+    }
+
+    @Override
+    public ProductOptionResponse updateProductOption(long id, long optionId,
+        ProductOptionRequest optionRequest) {
+        Product product = getProductById(id);
+
+        boolean isExistOption = product.getOptionGroups().stream()
+            .flatMap(optionGroup -> optionGroup.getOptions().stream())
+            .anyMatch(option -> option.getId().equals(optionId));
+
+        if (!isExistOption) {
+            throw new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND);
+        }
+        return productOptionService.updateProductOption(optionId, product, optionRequest);
     }
 
     private List<Long> createProductTags(Product saved, List<Long> tagIds) {

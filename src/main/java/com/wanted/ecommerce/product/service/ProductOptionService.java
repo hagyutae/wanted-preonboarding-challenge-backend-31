@@ -15,5 +15,7 @@ public interface ProductOptionService {
 
     ProductOptionResponse createProductOption(Product product, ProductOptionGroup optionGroup, ProductOptionRequest optionRequest);
 
+    ProductOptionResponse updateProductOption(long optionId, Product product, ProductOptionRequest optionRequest);
+
     Boolean isExistStock(Long productId, Integer compStock);
 }
