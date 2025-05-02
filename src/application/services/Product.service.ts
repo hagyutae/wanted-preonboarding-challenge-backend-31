@@ -14,7 +14,6 @@ import {
   Product_Tag,
 } from "src/domain/entities";
 import { IRepository } from "src/domain/repositories";
-import { ProductRepository } from "src/infrastructure/repositories";
 import { FilterDTO, ProductInputDTO } from "../dto";
 
 @Injectable()
@@ -51,7 +50,7 @@ export default class ProductService {
     // 상품 등록 트랜잭션 처리
     const product_entity = await this.entity_manager.transaction(async (manager) => {
       // 상품 등록
-      const product_entity = await new ProductRepository(manager).save({
+      const product_entity = await this.repository.with_transaction(manager).save({
         ...product,
         seller_id,
         brand_id,
