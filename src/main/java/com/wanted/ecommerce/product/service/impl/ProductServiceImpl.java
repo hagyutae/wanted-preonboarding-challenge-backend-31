@@ -230,15 +230,15 @@ public class ProductServiceImpl implements ProductService {
     public ProductOptionResponse updateProductOption(long id, long optionId,
         ProductOptionRequest optionRequest) {
         Product product = getProductById(id);
+        checkExistOption(product.getId(), optionId);
 
-        boolean isExistOption = product.getOptionGroups().stream()
-            .flatMap(optionGroup -> optionGroup.getOptions().stream())
-            .anyMatch(option -> option.getId().equals(optionId));
-
-        if (!isExistOption) {
-            throw new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND);
-        }
         return productOptionService.updateProductOption(optionId, product, optionRequest);
+    }
+
+    @Override
+    public void deleteProductOption(long id, long optionId) {
+        checkExistOption(id, optionId);
+        productOptionService.deleteProductOption(optionId);
     }
 
     private List<Long> createProductTags(Product saved, List<Long> tagIds) {
@@ -280,5 +280,16 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductById(long id) {
         return productRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
+    }
+
+    private void checkExistOption(long productId, long optionId){
+        Product product = getProductById(productId);
+        boolean isExistOption = product.getOptionGroups().stream()
+            .flatMap(optionGroup -> optionGroup.getOptions().stream())
+            .anyMatch(option -> option.getId().equals(optionId));
+
+        if (!isExistOption) {
+            throw new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND);
+        }
     }
 }

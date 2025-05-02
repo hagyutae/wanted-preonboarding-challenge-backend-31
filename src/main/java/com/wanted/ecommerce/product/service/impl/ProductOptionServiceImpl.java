@@ -78,6 +78,14 @@ public class ProductOptionServiceImpl implements ProductOptionService {
             option.getStock(), option.getDisplayOrder());
     }
 
+    @Override
+    public void deleteProductOption(long optionId) {
+        ProductOption option = optionRepository.findById(optionId)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                ErrorType.RESOURCE_NOT_FOUND));
+        optionRepository.delete(option);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public Boolean isExistStock(Long productId, Integer compStock) {

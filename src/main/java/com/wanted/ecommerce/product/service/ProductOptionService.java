@@ -17,5 +17,7 @@ public interface ProductOptionService {
 
     ProductOptionResponse updateProductOption(long optionId, Product product, ProductOptionRequest optionRequest);
 
+    void deleteProductOption(long optionId);
+
     Boolean isExistStock(Long productId, Integer compStock);
 }

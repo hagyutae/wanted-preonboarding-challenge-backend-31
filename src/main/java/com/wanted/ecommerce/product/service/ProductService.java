@@ -25,4 +25,6 @@ public interface ProductService {
     ProductOptionResponse addProductOption(long id, ProductOptionRequest optionRequest);
 
     ProductOptionResponse updateProductOption(long id, long optionId, ProductOptionRequest optionRequest);
+
+    void deleteProductOption(long id, long optionId);
 }

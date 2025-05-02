@@ -103,7 +103,7 @@ public class ProductController {
         ProductOptionResponse response = productService.updateProductOption(id, optionId,
             updateRequest);
         return ResponseEntity.ok(
-            ApiResponse.success(response, MessageConstants.CREATED_OPTION.getMessage()));
+            ApiResponse.success(response, MessageConstants.UPDATED_OPTION.getMessage()));
     }
 
     @DeleteMapping("/{id}/options/{optionId}")
@@ -111,7 +111,9 @@ public class ProductController {
         @PathVariable Long id,
         @PathVariable Long optionId
     ) {
-        return null;
+        productService.deleteProductOption(id, optionId);
+        return ResponseEntity.ok(
+            ApiResponse.success(null, MessageConstants.DELETED_OPTION.getMessage()));
     }
 
     @PostMapping("/{id}/images")
