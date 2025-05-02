@@ -48,6 +48,15 @@ public class ProductOptionGroup {
             .build();
     }
 
+    public static ProductOptionGroup of(Long id, Product product, String name, Integer displayOrder) {
+        return ProductOptionGroup.builder()
+            .id(id)
+            .product(product)
+            .name(name)
+            .displayOrder(displayOrder)
+            .build();
+    }
+
     public void update(String name, Integer displayOrder, List<ProductOption>options){
         this.name = name;
         this.displayOrder = displayOrder;

@@ -292,12 +292,11 @@ public class ProductServiceImpl implements ProductService {
             .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
     }
 
-    private void checkExistOption(long productId, long optionId){
+    private void checkExistOption(long productId, long optionId) {
         Product product = getProductById(productId);
+        ProductOption option = productOptionService.findOptionById(optionId);
         boolean isExistOption = product.getOptionGroups().stream()
-            .flatMap(optionGroup -> optionGroup.getOptions().stream())
-            .anyMatch(option -> option.getId().equals(optionId));
-
+            .anyMatch(optionGroup -> optionGroup.getId().equals(option.getOptionGroup().getId()));
         if (!isExistOption) {
             throw new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND);
         }
