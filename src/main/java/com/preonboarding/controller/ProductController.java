@@ -63,6 +63,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.editProductOption(id,optionId,dto));
     }
 
+    @DeleteMapping("/{id}/options/{optionId}")
+    public ResponseEntity<BaseResponse<ProductOptionResponse>> deleteOption(@PathVariable("id") Long id, @PathVariable("optionId") Long optionId) {
+        return ResponseEntity.ok(productService.deleteProductOption(id,optionId));
+    }
+
     @DeleteMapping
     public ResponseEntity<BaseResponse<ProductResponse>> deleteProduct(@RequestParam Long id) {
         return ResponseEntity.ok(productService.deleteProduct(id));

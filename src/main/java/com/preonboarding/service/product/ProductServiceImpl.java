@@ -152,6 +152,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
+    public BaseResponse<ProductOptionResponse> deleteProductOption(Long id, Long optionId) {
+        productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+
+        ProductOption productOption = productOptionRepository.findById(optionId)
+                        .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.OPTION_NOT_FOUND)));
+        productOptionRepository.delete(productOption);
+
+        return BaseResponse.<ProductOptionResponse>builder()
+                .success(true)
+                .data(null)
+                .message("상품 옵션이 성공적으로 삭제되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
     public BaseResponse<ProductResponse> deleteProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));

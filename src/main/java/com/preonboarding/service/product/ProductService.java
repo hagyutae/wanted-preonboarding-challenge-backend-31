@@ -20,4 +20,5 @@ public interface ProductService {
 
     BaseResponse<ProductOptionResponse> addProductOption(Long id, ProductOptionAddRequestDto dto);
     BaseResponse<ProductOptionResponse> editProductOption(Long id,Long optionId ,ProductOptionRequestDto dto);
+    BaseResponse<ProductOptionResponse> deleteProductOption(Long id, Long optionId);
 }
