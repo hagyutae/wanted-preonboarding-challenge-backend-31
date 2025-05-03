@@ -13,7 +13,8 @@ public enum ErrorCode {
     UNAUTHORIZED("UNAUTHORIZED", HttpStatus.UNAUTHORIZED, "error.unauthorized"),
     FORBIDDEN("FORBIDDEN", HttpStatus.FORBIDDEN, "error.forbidden"),
     CONFLICT("CONFLICT", HttpStatus.CONFLICT, "error.conflict"),
-    INTERNAL_ERROR("INTERNAL_ERROR", HttpStatus.INTERNAL_SERVER_ERROR, "error.internal_error");
+    INTERNAL_ERROR("INTERNAL_ERROR", HttpStatus.INTERNAL_SERVER_ERROR, "error.internal_error"),
+    PRODUCT_LIST_EMPTY("RESOURCE_NOT_FOUND", HttpStatus.NOT_FOUND, "error.product.list_empty");
 
     private final String code;
     private final HttpStatus status;
