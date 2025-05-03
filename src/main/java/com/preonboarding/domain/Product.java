@@ -106,18 +106,8 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public void updateProductOptionGroupList(List<ProductOptionGroup> productOptionGroupList) {
-        this.productOptionGroupList = productOptionGroupList;
-    }
-
-    private static List<ProductImage> createProductImage(List<ProductImageRequestDto> dtoList) {
-        List<ProductImage> productImageList = new ArrayList<>();
-
-        for (ProductImageRequestDto imageRequestDto : dtoList) {
-            productImageList.add(ProductImage.of(imageRequestDto));
-        }
-
-        return productImageList;
+    public void deleteProduct() {
+        this.status = "INACTIVE";
     }
 
     @Override

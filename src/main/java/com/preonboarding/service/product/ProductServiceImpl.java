@@ -6,7 +6,10 @@ import com.preonboarding.dto.request.ProductImageRequestDto;
 import com.preonboarding.dto.request.ProductOptionGroupRequestDto;
 import com.preonboarding.dto.request.ProductOptionRequestDto;
 import com.preonboarding.dto.response.ProductResponse;
+import com.preonboarding.global.code.ErrorCode;
+import com.preonboarding.global.response.BaseException;
 import com.preonboarding.global.response.BaseResponse;
+import com.preonboarding.global.response.ErrorResponseDto;
 import com.preonboarding.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +52,21 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-    private void createProductOptionGroup(List<ProductOptionGroupRequestDto> dtoList,Product product) {
+    @Override
+    @Transactional
+    public BaseResponse<ProductResponse> deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+        product.deleteProduct();
+
+        return BaseResponse.<ProductResponse>builder()
+                .success(true)
+                .data(null)
+                .message("상품이 성공적으로 삭제되었습니다.")
+                .build();
+    }
+
+    private void createProductOptionGroup(List<ProductOptionGroupRequestDto> dtoList, Product product) {
         for (ProductOptionGroupRequestDto productOptionGroupRequestDto : dtoList) {
             ProductOptionGroup productOptionGroup = ProductOptionGroup.from(product,productOptionGroupRequestDto);
 

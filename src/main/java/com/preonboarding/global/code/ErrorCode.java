@@ -3,13 +3,12 @@ package com.preonboarding.global.code;
 import lombok.Getter;
 
 @Getter
-public enum ErrorCode {
-    INVALID_INPUT("INVALID_INPUT","잘못된 입력 데이터"), //400
+public enum ErrorCode {//400
     INVALID_PRODUCT_BASE_PRICE_INPUT("INVALID_INPUT","잘못된 기본 가격 입력"),
     INVALID_PRODUCT_SALE_PRICE_INPUT("INVALID_INPUT","잘못된 판매 가격 입력"),
     INVALID_STOCK_INPUT("INVALID_INPUT","잘못된 재고 입력"),
 
-    NOT_FOUND("RESOURCE_NOT_FOUND","요청한 리소스를 찾을 없음"),
+    PRODUCT_NOT_FOUND("RESOURCE_NOT_FOUND","상품을 찾을 수 없습니다."),
     SELLER_NOT_FOUND("RESOURCE_NOT_FOUND","판매자를 찾을 수 없습니다."),
     BRAND_NOT_FOUND("RESOURCE_NOT_FOUND","브랜드를 찾을 수 없습니다."),
     CATEGORY_NOT_FOUND("RESOURCE_NOT_FOUND","카테고리를 잦을 수 없습니다."),

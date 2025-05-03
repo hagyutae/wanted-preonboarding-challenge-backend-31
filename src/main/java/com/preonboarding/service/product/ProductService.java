@@ -10,4 +10,5 @@ import java.util.List;
 public interface ProductService {
     BaseResponse<ProductResponse> createProduct(ProductCreateRequestDto dto, List<ProductCategory> productCategoryList, List<ProductTag> productTagList,
                                                 Seller seller, Brand brand);
+    BaseResponse<ProductResponse> deleteProduct(Long id);
 }
