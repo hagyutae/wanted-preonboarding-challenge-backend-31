@@ -4,6 +4,8 @@ import com.preonboarding.domain.*;
 import com.preonboarding.dto.request.ProductCreateRequestDto;
 import com.preonboarding.dto.request.ProductEditRequestDto;
 import com.preonboarding.dto.request.ProductOptionAddRequestDto;
+import com.preonboarding.dto.request.ProductOptionRequestDto;
+import com.preonboarding.dto.response.ProductOptionResponse;
 import com.preonboarding.dto.response.ProductResponse;
 import com.preonboarding.global.response.BaseResponse;
 import com.preonboarding.service.brand.BrandService;
@@ -41,7 +43,7 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/options")
-    public ResponseEntity<BaseResponse<ProductResponse>> addOption(@PathVariable("id") Long id, @RequestBody ProductOptionAddRequestDto dto) {
+    public ResponseEntity<BaseResponse<ProductOptionResponse>> addOption(@PathVariable("id") Long id, @RequestBody ProductOptionAddRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.addProductOption(id,dto));
     }
@@ -54,6 +56,11 @@ public class ProductController {
         List<ProductTag> productTagList = tagService.createProductTag(dto.getTags());
 
         return ResponseEntity.ok(productService.editProduct(id,dto,productCategoryList,productTagList,seller,brand));
+    }
+
+    @PutMapping("/{id}/options/{optionId}")
+    public ResponseEntity<BaseResponse<ProductOptionResponse>> editOption(@PathVariable("id") Long id, @PathVariable("optionId") Long optionId, @RequestBody ProductOptionRequestDto dto) {
+        return ResponseEntity.ok(productService.editProductOption(id,optionId,dto));
     }
 
     @DeleteMapping

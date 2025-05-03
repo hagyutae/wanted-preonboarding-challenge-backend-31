@@ -57,6 +57,14 @@ public class ProductOption {
                 .build();
     }
 
+    public void updateProductOptions(ProductOptionRequestDto dto) {
+        this.name = dto.getName();
+        this.additionalPrice = dto.getAdditionalPrice();
+        this.sku = dto.getSku();
+        this.stock = dto.getStock();
+        this.displayOrder = dto.getDisplayOrder();
+    }
+
     public void updateProductOptionGroup(ProductOptionGroup productOptionGroup) {
         if (this.productOptionGroup != null) {
             this.productOptionGroup.getProductOptionList().remove(this);

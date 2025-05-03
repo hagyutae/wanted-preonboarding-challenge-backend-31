@@ -2,6 +2,7 @@ package com.preonboarding.service.product;
 
 import com.preonboarding.domain.*;
 import com.preonboarding.dto.request.*;
+import com.preonboarding.dto.response.ProductOptionResponse;
 import com.preonboarding.dto.response.ProductResponse;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final ProductOptionRepository productOptionRepository;
     private final ProductOptionGroupRepository productOptionGroupRepository;
 
     @Override
@@ -93,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public BaseResponse<ProductResponse> addProductOption(Long id,ProductOptionAddRequestDto dto) {
+    public BaseResponse<ProductOptionResponse> addProductOption(Long id, ProductOptionAddRequestDto dto) {
         productRepository.findById(id)
                 .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
 
@@ -104,7 +106,7 @@ public class ProductServiceImpl implements ProductService {
         productOption.updateProductOptionGroup(productOptionGroup);
         productOptionGroupRepository.save(productOptionGroup);
 
-        ProductResponse response = ProductResponse.builder()
+        ProductOptionResponse response = ProductOptionResponse.builder()
                 .id(productOption.getId())
                 .optionGroupId(productOptionGroup.getId())
                 .name(productOption.getName())
@@ -114,10 +116,37 @@ public class ProductServiceImpl implements ProductService {
                 .displayOrder(productOption.getDisplayOrder())
                 .build();
 
-        return BaseResponse.<ProductResponse>builder()
+        return BaseResponse.<ProductOptionResponse>builder()
                 .success(true)
                 .data(response)
                 .message("상품 옵션이 성공적으로 추가되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductOptionResponse> editProductOption(Long id, Long optionId, ProductOptionRequestDto dto) {
+        productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+
+        ProductOption productOption = productOptionRepository.findById(optionId)
+                .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.OPTION_NOT_FOUND)));
+        productOption.updateProductOptions(dto);
+
+        ProductOptionResponse response = ProductOptionResponse.builder()
+                .id(productOption.getId())
+                .optionGroupId(productOption.getProductOptionGroup().getId())
+                .name(productOption.getName())
+                .additionalPrice(productOption.getAdditionalPrice())
+                .sku(productOption.getSku())
+                .stock(productOption.getStock())
+                .displayOrder(productOption.getDisplayOrder())
+                .build();
+
+        return BaseResponse.<ProductOptionResponse>builder()
+                .success(true)
+                .data(response)
+                .message("상품 옵션이 성공적으로 수정되었습니다.")
                 .build();
     }
 

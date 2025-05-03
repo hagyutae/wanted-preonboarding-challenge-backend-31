@@ -13,6 +13,7 @@ public enum ErrorCode {//400
     BRAND_NOT_FOUND("RESOURCE_NOT_FOUND","브랜드를 찾을 수 없습니다."),
     CATEGORY_NOT_FOUND("RESOURCE_NOT_FOUND","카테고리를 잦을 수 없습니다."),
     TAG_NOT_FOUND("RESOURCE_NOT_FOUND","태그를 찾을 수 없습니다."),
+    OPTION_NOT_FOUND("RESOURCE_NOT_FOUND","상품 옵션을 찾을 수 없습니다."),
     OPTION_GROUP_NOT_FOUND("RESOURCE_NOT_FOUND","옵션 그룹을 찾을 수 없습니다."),
 
     UNAUTHORIZED("UNAUTHORIZED","인증되지 않은 요청"), // 401
