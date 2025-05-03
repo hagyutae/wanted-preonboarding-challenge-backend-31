@@ -3,6 +3,7 @@ package com.preonboarding.controller;
 import com.preonboarding.domain.*;
 import com.preonboarding.dto.request.ProductCreateRequestDto;
 import com.preonboarding.dto.request.ProductEditRequestDto;
+import com.preonboarding.dto.request.ProductOptionAddRequestDto;
 import com.preonboarding.dto.response.ProductResponse;
 import com.preonboarding.global.response.BaseResponse;
 import com.preonboarding.service.brand.BrandService;
@@ -11,6 +12,7 @@ import com.preonboarding.service.product.ProductService;
 import com.preonboarding.service.seller.SellerService;
 import com.preonboarding.service.tag.TagService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,12 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.createProduct(dto,productCategoryList,productTagList,seller,brand));
+    }
+
+    @PostMapping("/{id}/options")
+    public ResponseEntity<BaseResponse<ProductResponse>> addOption(@PathVariable("id") Long id, @RequestBody ProductOptionAddRequestDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(productService.addProductOption(id,dto));
     }
 
     @PutMapping

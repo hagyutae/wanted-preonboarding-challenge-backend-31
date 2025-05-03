@@ -21,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final ProductOptionGroupRepository productOptionGroupRepository;
 
     @Override
     @Transactional
@@ -76,10 +77,47 @@ public class ProductServiceImpl implements ProductService {
         List<ProductOptionGroup> productOptionGroupList = createProductOptionGroup(dto.getOptionGroups(),product);
         product.updateProductOptionGroup(productOptionGroupList);
 
+        ProductResponse response = ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .slug(product.getSlug())
+                .updatedAt(product.getUpdatedAt())
+                .build();
+
         return BaseResponse.<ProductResponse>builder()
                 .success(true)
-                .data(ProductResponse.createdOf(product))
+                .data(response)
                 .message("상품이 성공적으로 수정되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductResponse> addProductOption(Long id,ProductOptionAddRequestDto dto) {
+        productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+
+        ProductOptionGroup productOptionGroup = productOptionGroupRepository.findById(dto.getOptionGroupId())
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.OPTION_GROUP_NOT_FOUND)));
+
+        ProductOption productOption = ProductOption.of(dto);
+        productOption.updateProductOptionGroup(productOptionGroup);
+        productOptionGroupRepository.save(productOptionGroup);
+
+        ProductResponse response = ProductResponse.builder()
+                .id(productOption.getId())
+                .optionGroupId(productOptionGroup.getId())
+                .name(productOption.getName())
+                .additionalPrice(productOption.getAdditionalPrice())
+                .sku(productOption.getSku())
+                .stock(productOption.getStock())
+                .displayOrder(productOption.getDisplayOrder())
+                .build();
+
+        return BaseResponse.<ProductResponse>builder()
+                .success(true)
+                .data(response)
+                .message("상품 옵션이 성공적으로 추가되었습니다.")
                 .build();
     }
 
