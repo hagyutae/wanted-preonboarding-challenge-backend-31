@@ -1,0 +1,33 @@
+package com.example.preonboarding.reviews.dto;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.Map;
+
+@Getter
+@NoArgsConstructor
+public class RatingDTO {
+    private double avg;
+    private Long count;
+    private Map<Integer, Long> distribution;
+
+    public RatingDTO(Double avg, Long count, Map<Integer, Long> distribution) {
+        if (avg == null) {
+            this.avg = 0d;
+        }else {
+            this.avg = avg;
+        }
+
+        if (count == null) {
+            this.count = 0l;
+        }else {
+            this.count = count;
+        }
+        if (distribution == null) {
+            this.distribution = null;
+        }else{
+            this.distribution = distribution;
+        }
+    }
+}

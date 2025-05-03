@@ -1,0 +1,38 @@
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  datasource:
+    url: jdbc:postgresql://localhost:5432/preonboarding
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: never
+      data-locations:
+        - classpath:/data/sellers.sql
+        - classpath:/data/brands.sql
+        - classpath:/data/categories.sql
+        - classpath:/data/tags.sql
+        - classpath:/data/products.sql
+        - classpath:/data/product_options.sql
+        - classpath:/data/product_extended.sql
+        - classpath:/data/users.sql
+        - classpath:/data/reviews.sql
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        type: debug
+        default_batch_fetch_size: 10
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  defer-datasource-initialization: true
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
