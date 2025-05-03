@@ -14,11 +14,13 @@ import com.wanted.mono.domain.product.repository.ProductRepository;
 import com.wanted.mono.domain.seller.entity.Seller;
 import com.wanted.mono.domain.seller.service.SellerService;
 import com.wanted.mono.domain.tag.service.ProductTagService;
+import com.wanted.mono.global.exception.ProductListEmptyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -73,7 +75,13 @@ public class ProductService {
     }
 
     public ProductSearchResponse searchProduct(ProductSearchRequest request) {
+        log.info("ProductService 페이징 및 필터 처리 조회");
         Page<Product> searchResult = productQueryRepository.search(request);
+
+        log.error("ProductService 조회 값이 없을 시 예외처리");
+        if (!searchResult.hasContent()) {
+            throw new ProductListEmptyException();
+        }
 
         List<ProductSearchItem> displayProducts = new ArrayList<>();
         for (Product product : searchResult.getContent()) {
