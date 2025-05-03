@@ -1,10 +1,11 @@
-package com.wanted.mono.domain.product.dto;
+package com.wanted.mono.domain.product.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wanted.mono.domain.product.dto.AdditionalInfo;
+import com.wanted.mono.domain.product.dto.Dimension;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 @Getter
 @AllArgsConstructor

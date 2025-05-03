@@ -2,19 +2,28 @@ package com.wanted.mono.domain.product.service;
 
 import com.wanted.mono.domain.brand.entity.Brand;
 import com.wanted.mono.domain.brand.service.BrandService;
-import com.wanted.mono.domain.product.dto.ProductRequest;
+import com.wanted.mono.domain.product.dto.Pagination;
+import com.wanted.mono.domain.product.dto.ProductSearchItem;
+import com.wanted.mono.domain.product.dto.request.ProductRequest;
+import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
+import com.wanted.mono.domain.product.dto.response.ProductSearchResponse;
 import com.wanted.mono.domain.product.entity.Product;
+import com.wanted.mono.domain.product.repository.ProductQueryRepository;
 import com.wanted.mono.domain.product.repository.ProductRepository;
 import com.wanted.mono.domain.seller.entity.Seller;
 import com.wanted.mono.domain.seller.service.SellerService;
 import com.wanted.mono.domain.tag.service.ProductTagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -30,6 +39,8 @@ public class ProductService {
     private final ProductTagService productTagService;
     private final SellerService sellerService;
     private final BrandService brandService;
+    private final ProductQueryRepository productQueryRepository;
+    private final ProductItemService productItemService;
 
     @Transactional
     public ProductSaveResponse createProduct(ProductRequest productRequest) {
@@ -59,5 +70,26 @@ public class ProductService {
         LocalDateTime createdAt = product.getCreatedAt();
         LocalDateTime updatedAt = product.getUpdatedAt();
         return new ProductSaveResponse(productId, name, slug, createdAt, updatedAt);
+    }
+
+    public ProductSearchResponse searchProduct(ProductSearchRequest request) {
+        Page<Product> searchResult = productQueryRepository.search(request);
+
+        List<ProductSearchItem> displayProducts = new ArrayList<>();
+        for (Product product : searchResult.getContent()) {
+            ProductSearchItem dto = productItemService.toDto(product);
+            displayProducts.add(dto);
+        }
+
+        Pagination pagination = new Pagination(
+                (int) searchResult.getTotalElements(),
+                searchResult.getTotalPages(),
+                searchResult.getNumber() + 1,
+                searchResult.getSize()
+        );
+
+
+        return new ProductSearchResponse(displayProducts, pagination);
+
     }
 }

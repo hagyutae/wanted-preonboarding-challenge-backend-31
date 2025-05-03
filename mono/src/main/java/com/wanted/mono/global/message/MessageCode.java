@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum MessageCode {
     PRODUCT_CREATE_SUCCESS("product.create.success"),
-    PRODUCT_DELETE_FAIL("product.delete.fail");
-    // ... 다른 메시지 키들도 여기에 추가
+    PRODUCT_DELETE_FAIL("product.delete.fail"),
+    PRODUCT_SEARCH_SUCCESS("product.search.success");
 
     private final String code;
 

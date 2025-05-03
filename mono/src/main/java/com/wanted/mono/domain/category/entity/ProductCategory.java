@@ -1,6 +1,6 @@
 package com.wanted.mono.domain.category.entity;
 
-import com.wanted.mono.domain.product.dto.ProductCategoryRequest;
+import com.wanted.mono.domain.product.dto.request.ProductCategoryRequest;
 import com.wanted.mono.domain.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

@@ -1,6 +1,6 @@
 package com.wanted.mono.domain.product.service;
 
-import com.wanted.mono.domain.product.dto.ProductImageRequest;
+import com.wanted.mono.domain.product.dto.request.ProductImageRequest;
 import com.wanted.mono.domain.product.entity.Product;
 import com.wanted.mono.domain.product.entity.ProductImage;
 import com.wanted.mono.domain.product.repository.ProductImageRepository;

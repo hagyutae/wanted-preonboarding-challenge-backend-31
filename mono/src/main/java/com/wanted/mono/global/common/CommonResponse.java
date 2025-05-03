@@ -13,7 +13,6 @@ public class CommonResponse<T> {
     private boolean success;
     private T data;
     private String message;
-    private ErrorResponse error;
 
     /**
      * 성공적인 API 반환인 경우
@@ -33,7 +32,7 @@ public class CommonResponse<T> {
      * }
      */
     public static <T> CommonResponse<T> success(T data, String message) {
-        return new CommonResponse<>(true, data, message, null);
+        return new CommonResponse<>(true, data, message);
     }
 
 }

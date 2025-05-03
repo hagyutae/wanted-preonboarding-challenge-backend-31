@@ -1,16 +1,14 @@
 package com.wanted.mono.domain.product.service;
 
-import com.wanted.mono.domain.product.dto.ProductOptionGroupRequest;
+import com.wanted.mono.domain.product.dto.request.ProductOptionGroupRequest;
 import com.wanted.mono.domain.product.entity.Product;
 import com.wanted.mono.domain.product.entity.ProductOptionGroup;
 import com.wanted.mono.domain.product.repository.ProductOptionGroupRepository;
-import com.wanted.mono.domain.product.repository.ProductOptionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

@@ -3,7 +3,7 @@ package com.wanted.mono.domain.product.service;
 import com.wanted.mono.domain.category.entity.Category;
 import com.wanted.mono.domain.category.entity.ProductCategory;
 import com.wanted.mono.domain.category.service.CategoryService;
-import com.wanted.mono.domain.product.dto.ProductCategoryRequest;
+import com.wanted.mono.domain.product.dto.request.ProductCategoryRequest;
 import com.wanted.mono.domain.product.entity.Product;
 import com.wanted.mono.domain.product.repository.ProductCategoryRepository;
 import lombok.RequiredArgsConstructor;
