@@ -1,11 +1,9 @@
 package com.wanted.mono.domain.product.entity;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import com.wanted.mono.domain.product.dto.AdditionalInfo;
 import com.wanted.mono.domain.product.dto.Dimension;
-import com.wanted.mono.domain.product.dto.ProductDetailRequest;
+import com.wanted.mono.domain.product.dto.request.ProductDetailRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

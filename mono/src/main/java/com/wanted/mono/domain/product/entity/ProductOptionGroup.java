@@ -1,6 +1,6 @@
 package com.wanted.mono.domain.product.entity;
 
-import com.wanted.mono.domain.product.dto.ProductOptionGroupRequest;
+import com.wanted.mono.domain.product.dto.request.ProductOptionGroupRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

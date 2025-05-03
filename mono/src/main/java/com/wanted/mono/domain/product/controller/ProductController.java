@@ -1,7 +1,11 @@
 package com.wanted.mono.domain.product.controller;
 
-import com.wanted.mono.domain.product.dto.ProductRequest;
+import com.wanted.mono.domain.product.dto.ProductSearchItem;
+import com.wanted.mono.domain.product.dto.request.ProductRequest;
+import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
+import com.wanted.mono.domain.product.dto.response.ProductSearchResponse;
+import com.wanted.mono.domain.product.entity.Product;
 import com.wanted.mono.domain.product.service.ProductService;
 import com.wanted.mono.global.common.CommonResponse;
 import com.wanted.mono.global.message.MessageCode;
@@ -11,10 +15,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static com.wanted.mono.global.message.MessageCode.*;
 
 
 @RestController
@@ -35,7 +40,15 @@ public class ProductController {
         log.info("상품 등록 완료 : {}", saveResponse.getId());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(CommonResponse.success(saveResponse, messageUtil.get(MessageCode.PRODUCT_CREATE_SUCCESS)));
+                .body(CommonResponse.success(saveResponse, messageUtil.get(PRODUCT_CREATE_SUCCESS)));
+    }
+
+    @GetMapping()
+    public ResponseEntity<?> search(@Valid @ModelAttribute ProductSearchRequest productSearchRequest) {
+        ProductSearchResponse productSearchResponse = productService.searchProduct(productSearchRequest);
+
+        return ResponseEntity.ok()
+                .body(CommonResponse.success(productSearchResponse, messageUtil.get(PRODUCT_SEARCH_SUCCESS)));
     }
 
 }

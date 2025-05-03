@@ -1,4 +1,4 @@
-package com.wanted.mono.domain.product.dto;
+package com.wanted.mono.domain.product.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;

@@ -2,7 +2,7 @@ package com.wanted.mono.domain.product.entity;
 
 import com.wanted.mono.domain.brand.entity.Brand;
 import com.wanted.mono.domain.category.entity.ProductCategory;
-import com.wanted.mono.domain.product.dto.ProductRequest;
+import com.wanted.mono.domain.product.dto.request.ProductRequest;
 import com.wanted.mono.domain.review.entity.Review;
 import com.wanted.mono.domain.seller.entity.Seller;
 import com.wanted.mono.domain.tag.entity.ProductTag;
@@ -63,8 +63,7 @@ public class Product {
     private Brand brand;
 
     // 상태 (판매중, 품절, 삭제됨 등)
-    @Enumerated(EnumType.STRING)
-    private ProductStatus status;
+    private String status;
 
     // 상품 상세 설명들
     // 상품 삭제 시 같이 삭제됨
@@ -111,7 +110,7 @@ public class Product {
         product.fullDescription = request.getFullDescription();
         product.createdAt = LocalDateTime.now();
         product.updatedAt = LocalDateTime.now();
-        product.status = ProductStatus.valueOf(request.getStatus());
+        product.status = request.getStatus();
         return product;
     }
 

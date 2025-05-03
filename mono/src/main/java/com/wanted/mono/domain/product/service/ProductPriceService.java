@@ -1,6 +1,6 @@
 package com.wanted.mono.domain.product.service;
 
-import com.wanted.mono.domain.product.dto.ProductPriceRequest;
+import com.wanted.mono.domain.product.dto.request.ProductPriceRequest;
 import com.wanted.mono.domain.product.entity.Product;
 import com.wanted.mono.domain.product.entity.ProductPrice;
 import com.wanted.mono.domain.product.repository.ProductPriceRepository;
