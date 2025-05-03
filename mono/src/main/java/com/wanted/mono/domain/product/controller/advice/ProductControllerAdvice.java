@@ -7,6 +7,7 @@ import com.wanted.mono.global.exception.ProductListEmptyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestControllerAdvice
 @Slf4j
@@ -73,4 +76,43 @@ public class ProductControllerAdvice {
         log.info("Not Found 반환");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex, Locale locale) {
+        log.error("중복 키 예외 발생", ex);
+
+        ErrorCode errorCode = ErrorCode.CONFLICT;
+        String localizedMessage = messageSource.getMessage(errorCode.getMessageKey(), null, locale);
+
+        Map<String, String> details = new HashMap<>();
+        String errorMessage = ex.getRootCause() != null ? ex.getRootCause().getMessage() : "";
+
+        if (errorMessage.contains("slug")) {
+            String duplicateValue = extractDuplicateValue(errorMessage);
+            details.put("field", "slug");
+            details.put("value", duplicateValue);
+            details.put("message", "해당 슬러그는 이미 사용 중입니다.");
+        }
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .success(false)
+                .error(Error.builder()
+                        .code(errorCode.getCode())
+                        .message(localizedMessage)
+                        .details(details)
+                        .build())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    private String extractDuplicateValue(String raw) {
+        Pattern pattern = Pattern.compile("\\(slug\\)=\\((.*?)\\)");
+        Matcher matcher = pattern.matcher(raw);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
 }
