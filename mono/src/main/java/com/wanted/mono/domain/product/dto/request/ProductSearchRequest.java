@@ -19,7 +19,7 @@ public class ProductSearchRequest {
 
     // 정렬 기준. 형식: {필드}:{asc|desc}. 여러 개인 경우 콤마로 구분
     @Builder.Default
-    private String sort = "createdAt:desc";
+    private String sort = "created_at:desc";
 
     // 상품 상태 필터 (ACTIVE, OUT_OF_STOCK, DELETED)
     private String status;
