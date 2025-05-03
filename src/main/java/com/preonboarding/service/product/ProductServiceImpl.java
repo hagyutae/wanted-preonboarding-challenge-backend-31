@@ -2,6 +2,7 @@ package com.preonboarding.service.product;
 
 import com.preonboarding.domain.*;
 import com.preonboarding.dto.request.*;
+import com.preonboarding.dto.response.ProductImageResponse;
 import com.preonboarding.dto.response.ProductOptionResponse;
 import com.preonboarding.dto.response.ProductResponse;
 import com.preonboarding.global.code.ErrorCode;
@@ -147,6 +148,35 @@ public class ProductServiceImpl implements ProductService {
                 .success(true)
                 .data(response)
                 .message("상품 옵션이 성공적으로 수정되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductImageResponse> addProductImage(Long id, ProductImageRequestDto dto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+
+        ProductOption productOption = productOptionRepository.findById(dto.getOptionId())
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.OPTION_NOT_FOUND)));
+
+        ProductImage productImage = ProductImage.of(dto);
+        productImage.updateProduct(product);
+        productImage.updateProductOption(productOption);
+
+        ProductImageResponse response = ProductImageResponse.builder()
+                .id(productImage.getId())
+                .url(productImage.getUrl())
+                .altText(productImage.getAltText())
+                .isPrimary(productImage.getIsPrimary())
+                .displayOrder(productImage.getDisplayOrder())
+                .optionId(productOption.getId())
+                .build();
+
+        return BaseResponse.<ProductImageResponse>builder()
+                .success(true)
+                .data(response)
+                .message("상품 이미지가 성공적으로 추가되었습니다.")
                 .build();
     }
 

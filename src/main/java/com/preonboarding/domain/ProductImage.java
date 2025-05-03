@@ -49,6 +49,10 @@ public class ProductImage {
                 .build();
     }
 
+    public void updateProductOption(ProductOption productOption) {
+        this.option = productOption;
+    }
+
     public void updateProduct(Product product) {
         if (this.product != null) {
             this.product.getProductImageList().remove(this);

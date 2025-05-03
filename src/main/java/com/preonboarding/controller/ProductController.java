@@ -1,10 +1,8 @@
 package com.preonboarding.controller;
 
 import com.preonboarding.domain.*;
-import com.preonboarding.dto.request.ProductCreateRequestDto;
-import com.preonboarding.dto.request.ProductEditRequestDto;
-import com.preonboarding.dto.request.ProductOptionAddRequestDto;
-import com.preonboarding.dto.request.ProductOptionRequestDto;
+import com.preonboarding.dto.request.*;
+import com.preonboarding.dto.response.ProductImageResponse;
 import com.preonboarding.dto.response.ProductOptionResponse;
 import com.preonboarding.dto.response.ProductResponse;
 import com.preonboarding.global.response.BaseResponse;
@@ -46,6 +44,12 @@ public class ProductController {
     public ResponseEntity<BaseResponse<ProductOptionResponse>> addOption(@PathVariable("id") Long id, @RequestBody ProductOptionAddRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.addProductOption(id,dto));
+    }
+
+    @PostMapping("/{id}/images")
+    public ResponseEntity<BaseResponse<ProductImageResponse>> addProductImage(@PathVariable("id") Long id, @RequestBody ProductImageRequestDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(productService.addProductImage(id,dto));
     }
 
     @PutMapping

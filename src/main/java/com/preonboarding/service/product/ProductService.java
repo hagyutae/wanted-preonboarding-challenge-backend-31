@@ -1,10 +1,8 @@
 package com.preonboarding.service.product;
 
 import com.preonboarding.domain.*;
-import com.preonboarding.dto.request.ProductCreateRequestDto;
-import com.preonboarding.dto.request.ProductEditRequestDto;
-import com.preonboarding.dto.request.ProductOptionAddRequestDto;
-import com.preonboarding.dto.request.ProductOptionRequestDto;
+import com.preonboarding.dto.request.*;
+import com.preonboarding.dto.response.ProductImageResponse;
 import com.preonboarding.dto.response.ProductOptionResponse;
 import com.preonboarding.dto.response.ProductResponse;
 import com.preonboarding.global.response.BaseResponse;
@@ -21,4 +19,6 @@ public interface ProductService {
     BaseResponse<ProductOptionResponse> addProductOption(Long id, ProductOptionAddRequestDto dto);
     BaseResponse<ProductOptionResponse> editProductOption(Long id,Long optionId ,ProductOptionRequestDto dto);
     BaseResponse<ProductOptionResponse> deleteProductOption(Long id, Long optionId);
+
+    BaseResponse<ProductImageResponse> addProductImage(Long id, ProductImageRequestDto dto);
 }
