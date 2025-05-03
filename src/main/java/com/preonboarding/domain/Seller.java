@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Entity
@@ -30,7 +31,6 @@ public class Seller {
     @Column(name = "logo_url")
     private String logoUrl;
 
-    // numeric(3, 2) 매핑
     @Column(precision = 3, scale = 2)
     private BigDecimal rating;
 
@@ -40,8 +40,21 @@ public class Seller {
     @Column(name = "contact_phone", length = 20)
     private String contactPhone;
 
-    // timestamp default CURRENT_TIMESTAMP 매핑
-    @CreationTimestamp // Hibernate annotation for automatic creation timestamp
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Seller that = (Seller) o;
+        if (id == null && that.id == null) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

@@ -19,7 +19,7 @@ public class ProductCreateRequestDto {
     private String status;
     private ProductDetailRequestDto detail;
     private ProductPriceRequestDto price;
-    private List<ProductCategoryRequestDto> categories;
+    private List<CategoryRequestDto> categories;
     private List<ProductOptionGroupRequestDto> optionGroups;
     private List<ProductImageRequestDto> images;
     private List<Long> tags;

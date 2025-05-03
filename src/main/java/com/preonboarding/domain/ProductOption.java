@@ -1,5 +1,9 @@
 package com.preonboarding.domain;
 
+import com.preonboarding.dto.request.ProductOptionRequestDto;
+import com.preonboarding.global.code.ErrorCode;
+import com.preonboarding.global.response.BaseException;
+import com.preonboarding.global.response.ErrorResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "product_options")
@@ -21,7 +26,7 @@ public class ProductOption {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_group_id")
-    private ProductOptionGroup optionGroup;
+    private ProductOptionGroup productOptionGroup;
 
     @Column(nullable = false, length = 100)
     private String name;
@@ -37,4 +42,41 @@ public class ProductOption {
 
     @Column(name = "display_order")
     private Integer displayOrder;
+
+    public static ProductOption of(ProductOptionRequestDto dto) {
+        if (dto.getStock() == 0) {
+            throw new BaseException(false, ErrorResponseDto.of(ErrorCode.INVALID_STOCK_INPUT));
+        }
+
+        return ProductOption.builder()
+                .name(dto.getName())
+                .additionalPrice(dto.getAdditionalPrice())
+                .sku(dto.getSku())
+                .stock(dto.getStock())
+                .displayOrder(dto.getDisplayOrder())
+                .build();
+    }
+
+    public void updateProductOptionGroup(ProductOptionGroup productOptionGroup) {
+        if (this.productOptionGroup != null) {
+            this.productOptionGroup.getProductOptionList().remove(this);
+        }
+
+        this.productOptionGroup = productOptionGroup;
+        productOptionGroup.getProductOptionList().add(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductOption that = (ProductOption) o;
+        if (id == null && that.id == null) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

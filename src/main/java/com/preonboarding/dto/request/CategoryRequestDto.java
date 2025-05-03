@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductCategoryRequestDto {
+public class CategoryRequestDto {
     private Long categoryId;
     private boolean isPrimary;
 }

@@ -1,6 +1,7 @@
 package com.preonboarding.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.preonboarding.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,4 +20,14 @@ public class ProductResponse {
     private String slug;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public static ProductResponse of(Product product) {
+        return ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .slug(product.getSlug())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .build();
+    }
 }

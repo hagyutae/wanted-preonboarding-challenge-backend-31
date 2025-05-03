@@ -1,7 +1,6 @@
 package com.preonboarding.dto.request;
 
 import lombok.*;
-
 import java.util.List;
 
 @Getter
