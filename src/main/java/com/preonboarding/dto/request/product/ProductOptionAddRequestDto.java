@@ -1,4 +1,4 @@
-package com.preonboarding.dto.request;
+package com.preonboarding.dto.request.product;
 
 import lombok.*;
 

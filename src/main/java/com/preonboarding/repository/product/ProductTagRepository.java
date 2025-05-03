@@ -1,4 +1,4 @@
-package com.preonboarding.repository;
+package com.preonboarding.repository.product;
 
 import com.preonboarding.domain.ProductTag;
 import org.springframework.data.jpa.repository.JpaRepository;

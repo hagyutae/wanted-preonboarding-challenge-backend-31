@@ -1,4 +1,4 @@
-package com.preonboarding.dto.response;
+package com.preonboarding.dto.response.product;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.preonboarding.domain.Product;

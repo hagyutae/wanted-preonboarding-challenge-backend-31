@@ -1,15 +1,17 @@
 package com.preonboarding.service.product;
 
 import com.preonboarding.domain.*;
-import com.preonboarding.dto.request.*;
-import com.preonboarding.dto.response.ProductImageResponse;
-import com.preonboarding.dto.response.ProductOptionResponse;
-import com.preonboarding.dto.response.ProductResponse;
+import com.preonboarding.dto.request.product.*;
+import com.preonboarding.dto.response.product.ProductImageResponse;
+import com.preonboarding.dto.response.product.ProductOptionResponse;
+import com.preonboarding.dto.response.product.ProductResponse;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
 import com.preonboarding.global.response.BaseResponse;
 import com.preonboarding.global.response.ErrorResponseDto;
-import com.preonboarding.repository.*;
+import com.preonboarding.repository.product.ProductOptionGroupRepository;
+import com.preonboarding.repository.product.ProductOptionRepository;
+import com.preonboarding.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,8 +30,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public BaseResponse<ProductResponse> createProduct(ProductCreateRequestDto dto,List<ProductCategory> productCategoryList,List<ProductTag> productTagList
-            ,Seller seller,Brand brand) {
+    public BaseResponse<ProductResponse> createProduct(ProductCreateRequestDto dto, List<ProductCategory> productCategoryList, List<ProductTag> productTagList
+            , Seller seller, Brand brand) {
         Product product = Product.from(seller,brand,dto);
 
         productCategoryList.forEach(productCategory -> productCategory.updateProduct(product));
@@ -55,8 +57,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public BaseResponse<ProductResponse> editProduct(Long id, ProductEditRequestDto dto,List<ProductCategory> productCategoryList,List<ProductTag> productTagList
-                                                     ,Seller seller,Brand brand) {
+    public BaseResponse<ProductResponse> editProduct(Long id, ProductEditRequestDto dto, List<ProductCategory> productCategoryList, List<ProductTag> productTagList
+                                                     , Seller seller, Brand brand) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
         product.updateProduct(dto);

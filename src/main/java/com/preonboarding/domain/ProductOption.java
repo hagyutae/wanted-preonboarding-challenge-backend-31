@@ -1,6 +1,6 @@
 package com.preonboarding.domain;
 
-import com.preonboarding.dto.request.ProductOptionRequestDto;
+import com.preonboarding.dto.request.product.ProductOptionRequestDto;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
 import com.preonboarding.global.response.ErrorResponseDto;

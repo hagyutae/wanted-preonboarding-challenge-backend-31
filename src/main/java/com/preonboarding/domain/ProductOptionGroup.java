@@ -1,7 +1,6 @@
 package com.preonboarding.domain;
 
-import com.preonboarding.dto.request.ProductOptionGroupRequestDto;
-import com.preonboarding.dto.request.ProductOptionRequestDto;
+import com.preonboarding.dto.request.product.ProductOptionGroupRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

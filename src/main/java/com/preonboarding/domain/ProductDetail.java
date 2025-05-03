@@ -1,6 +1,6 @@
 package com.preonboarding.domain;
 
-import com.preonboarding.dto.request.ProductDetailRequestDto;
+import com.preonboarding.dto.request.product.ProductDetailRequestDto;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

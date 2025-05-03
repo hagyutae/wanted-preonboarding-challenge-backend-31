@@ -1,9 +1,7 @@
 package com.preonboarding.domain;
 
-import com.preonboarding.dto.request.*;
-import com.preonboarding.global.code.ErrorCode;
-import com.preonboarding.global.response.BaseException;
-import com.preonboarding.global.response.ErrorResponseDto;
+import com.preonboarding.dto.request.product.ProductCreateRequestDto;
+import com.preonboarding.dto.request.product.ProductEditRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +80,7 @@ public class Product {
     @Builder.Default
     private List<ProductTag> productTagList = new ArrayList<>();
 
-    public static Product from(Seller seller,Brand brand,ProductCreateRequestDto dto) {
+    public static Product from(Seller seller, Brand brand, ProductCreateRequestDto dto) {
         return Product.builder()
                 .seller(seller)
                 .brand(brand)

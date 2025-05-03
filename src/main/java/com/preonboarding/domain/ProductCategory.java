@@ -1,6 +1,5 @@
 package com.preonboarding.domain;
 
-import com.preonboarding.dto.request.CategoryRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

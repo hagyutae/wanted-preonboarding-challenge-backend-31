@@ -1,5 +1,6 @@
-package com.preonboarding.dto.request;
+package com.preonboarding.dto.request.product;
 
+import com.preonboarding.dto.request.category.CategoryRequestDto;
 import lombok.*;
 
 import java.util.List;
