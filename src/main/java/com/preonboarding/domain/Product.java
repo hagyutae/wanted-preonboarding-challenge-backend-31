@@ -1,9 +1,6 @@
 package com.preonboarding.domain;
 
-import com.preonboarding.dto.request.ProductCreateRequestDto;
-import com.preonboarding.dto.request.ProductDetailRequestDto;
-import com.preonboarding.dto.request.ProductImageRequestDto;
-import com.preonboarding.dto.request.ProductPriceRequestDto;
+import com.preonboarding.dto.request.*;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
 import com.preonboarding.global.response.ErrorResponseDto;
@@ -98,6 +95,34 @@ public class Product {
                 .build();
     }
 
+    public void updateProductCategoryList(List<ProductCategory> productCategoryList) {
+        this.productCategoryList.clear();
+        this.productCategoryList.addAll(productCategoryList);
+    }
+
+    public void updateProductTagList(List<ProductTag> productTagList) {
+        this.productTagList.clear();
+        this.productTagList.addAll(productTagList);
+    }
+
+    public void updateProductImageList(List<ProductImage> productImageList) {
+        this.productImageList.clear();
+        this.productImageList.addAll(productImageList);
+    }
+
+    public void updateProductOptionGroup(List<ProductOptionGroup> productOptionGroupList) {
+        this.productOptionGroupList.clear();
+        this.productOptionGroupList.addAll(productOptionGroupList);
+    }
+
+    public void updateProduct(ProductEditRequestDto dto) {
+        this.name = dto.getName();
+        this.slug = dto.getSlug();
+        this.shortDescription = dto.getShortDescription();
+        this.fullDescription = dto.getFullDescription();
+        this.status = dto.getStatus();
+    }
+
     public void updateProductDetail(ProductDetail productDetail) {
         this.productDetail = productDetail;
     }
@@ -106,9 +131,19 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public void deleteProduct() {
-        this.status = "INACTIVE";
+    public void updateSeller(Seller seller) {
+        this.seller = seller;
     }
+
+    public void updateBrand(Brand brand) {
+        this.brand = brand;
+    }
+
+    public void deleteProduct() {
+        this.status = "DELETED";
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

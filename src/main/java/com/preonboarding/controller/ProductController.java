@@ -2,6 +2,7 @@ package com.preonboarding.controller;
 
 import com.preonboarding.domain.*;
 import com.preonboarding.dto.request.ProductCreateRequestDto;
+import com.preonboarding.dto.request.ProductEditRequestDto;
 import com.preonboarding.dto.response.ProductResponse;
 import com.preonboarding.global.response.BaseResponse;
 import com.preonboarding.service.brand.BrandService;
@@ -35,6 +36,16 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.createProduct(dto,productCategoryList,productTagList,seller,brand));
+    }
+
+    @PutMapping
+    public ResponseEntity<BaseResponse<ProductResponse>> editProduct(@RequestParam Long id,@RequestBody ProductEditRequestDto dto) {
+        Seller seller = sellerService.getSeller(dto.getSellerId());
+        Brand brand = brandService.getBrand(dto.getBrandId());
+        List<ProductCategory> productCategoryList = categoryService.createProductCategories(dto.getCategories());
+        List<ProductTag> productTagList = tagService.createProductTag(dto.getTags());
+
+        return ResponseEntity.ok(productService.editProduct(id,dto,productCategoryList,productTagList,seller,brand));
     }
 
     @DeleteMapping

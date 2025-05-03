@@ -30,4 +30,13 @@ public class ProductResponse {
                 .updatedAt(product.getUpdatedAt())
                 .build();
     }
+
+    public static ProductResponse createdOf(Product product) {
+        return ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .slug(product.getSlug())
+                .updatedAt(product.getUpdatedAt())
+                .build();
+    }
 }

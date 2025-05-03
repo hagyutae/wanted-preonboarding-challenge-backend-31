@@ -1,10 +1,7 @@
 package com.preonboarding.service.product;
 
 import com.preonboarding.domain.*;
-import com.preonboarding.dto.request.ProductCreateRequestDto;
-import com.preonboarding.dto.request.ProductImageRequestDto;
-import com.preonboarding.dto.request.ProductOptionGroupRequestDto;
-import com.preonboarding.dto.request.ProductOptionRequestDto;
+import com.preonboarding.dto.request.*;
 import com.preonboarding.dto.response.ProductResponse;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
@@ -54,6 +51,40 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
+    public BaseResponse<ProductResponse> editProduct(Long id, ProductEditRequestDto dto,List<ProductCategory> productCategoryList,List<ProductTag> productTagList
+                                                     ,Seller seller,Brand brand) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+        product.updateProduct(dto);
+        product.updateSeller(seller);
+        product.updateBrand(brand);
+
+        productCategoryList.forEach(productCategory -> productCategory.updateProduct(product));
+        product.updateProductCategoryList(productCategoryList);
+        productTagList.forEach(productTag -> productTag.updateProduct(product));
+        product.updateProductTagList(productTagList);
+
+        ProductDetail productDetail = ProductDetail.of(dto.getDetail());
+        productDetail.updateProduct(product);
+
+        ProductPrice productPrice = ProductPrice.of(dto.getPrice());
+        productPrice.updateProduct(product);
+
+        List<ProductImage> productImageList = createProductImageList(dto.getImages(),product);
+        product.updateProductImageList(productImageList);
+
+        List<ProductOptionGroup> productOptionGroupList = createProductOptionGroup(dto.getOptionGroups(),product);
+        product.updateProductOptionGroup(productOptionGroupList);
+
+        return BaseResponse.<ProductResponse>builder()
+                .success(true)
+                .data(ProductResponse.createdOf(product))
+                .message("상품이 성공적으로 수정되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
     public BaseResponse<ProductResponse> deleteProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
@@ -66,7 +97,9 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
-    private void createProductOptionGroup(List<ProductOptionGroupRequestDto> dtoList, Product product) {
+    private List<ProductOptionGroup> createProductOptionGroup(List<ProductOptionGroupRequestDto> dtoList, Product product) {
+        List<ProductOptionGroup> productOptionGroupList = new ArrayList<>();
+
         for (ProductOptionGroupRequestDto productOptionGroupRequestDto : dtoList) {
             ProductOptionGroup productOptionGroup = ProductOptionGroup.from(product,productOptionGroupRequestDto);
 
@@ -76,13 +109,21 @@ public class ProductServiceImpl implements ProductService {
             }
 
             productOptionGroup.updateProduct(product);
+            productOptionGroupList.add(productOptionGroup);
         }
+
+        return productOptionGroupList;
     }
 
-    private void createProductImageList(List<ProductImageRequestDto> dtoList,Product product) {
+    private List<ProductImage> createProductImageList(List<ProductImageRequestDto> dtoList,Product product) {
+        List<ProductImage> productImageList = new ArrayList<>();
+
         for (ProductImageRequestDto productImageRequestDto : dtoList) {
             ProductImage productImage = ProductImage.of(productImageRequestDto);
             productImage.updateProduct(product);
+            productImageList.add(productImage);
         }
+
+        return productImageList;
     }
 }
