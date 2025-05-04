@@ -9,3 +9,6 @@ spring:
       ddl-auto: none
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  secret: ${SECRET_KEY}

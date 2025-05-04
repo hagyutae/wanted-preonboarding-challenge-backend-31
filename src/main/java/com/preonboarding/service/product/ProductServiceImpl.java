@@ -5,6 +5,7 @@ import com.preonboarding.dto.request.product.*;
 import com.preonboarding.dto.response.product.ProductImageResponse;
 import com.preonboarding.dto.response.product.ProductOptionResponse;
 import com.preonboarding.dto.response.product.ProductResponse;
+import com.preonboarding.dto.response.product.ProductReviewResponse;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
 import com.preonboarding.global.response.BaseResponse;
@@ -180,6 +181,12 @@ public class ProductServiceImpl implements ProductService {
                 .data(response)
                 .message("상품 이미지가 성공적으로 추가되었습니다.")
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductReviewResponse> addProductReview(Long id, ProductReviewRequestDto dto) {
+        return null;
     }
 
     @Override

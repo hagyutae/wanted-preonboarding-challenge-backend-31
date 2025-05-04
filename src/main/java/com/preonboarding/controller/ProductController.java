@@ -5,6 +5,7 @@ import com.preonboarding.dto.request.product.*;
 import com.preonboarding.dto.response.product.ProductImageResponse;
 import com.preonboarding.dto.response.product.ProductOptionResponse;
 import com.preonboarding.dto.response.product.ProductResponse;
+import com.preonboarding.dto.response.product.ProductReviewResponse;
 import com.preonboarding.global.response.BaseResponse;
 import com.preonboarding.service.brand.BrandService;
 import com.preonboarding.service.category.CategoryService;
@@ -49,6 +50,12 @@ public class ProductController {
     public ResponseEntity<BaseResponse<ProductImageResponse>> addProductImage(@PathVariable("id") Long id, @RequestBody ProductImageRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(productService.addProductImage(id,dto));
+    }
+
+    @PostMapping("/{id}/reviews")
+    public ResponseEntity<BaseResponse<ProductReviewResponse>> addProductReview(@PathVariable("id") Long id,@RequestBody ProductReviewRequestDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(productService.addProductReview(id,dto));
     }
 
     @PutMapping

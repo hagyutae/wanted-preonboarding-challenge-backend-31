@@ -5,6 +5,7 @@ import com.preonboarding.dto.request.product.*;
 import com.preonboarding.dto.response.product.ProductImageResponse;
 import com.preonboarding.dto.response.product.ProductOptionResponse;
 import com.preonboarding.dto.response.product.ProductResponse;
+import com.preonboarding.dto.response.product.ProductReviewResponse;
 import com.preonboarding.global.response.BaseResponse;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface ProductService {
     BaseResponse<ProductOptionResponse> deleteProductOption(Long id, Long optionId);
 
     BaseResponse<ProductImageResponse> addProductImage(Long id, ProductImageRequestDto dto);
+
+    BaseResponse<ProductReviewResponse> addProductReview(Long id,ProductReviewRequestDto dto);
 }
