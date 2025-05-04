@@ -1,18 +1,10 @@
-package com.wanted.mono.domain.product.repository;
+package com.wanted.mono.domain.product.repository.query;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.wanted.mono.domain.brand.entity.QBrand;
-import com.wanted.mono.domain.category.entity.QProductCategory;
 import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
 import com.wanted.mono.domain.product.entity.Product;
-import com.wanted.mono.domain.product.entity.QProduct;
-import com.wanted.mono.domain.product.entity.QProductPrice;
-import com.wanted.mono.domain.review.entity.QReview;
-import com.wanted.mono.domain.seller.entity.QSeller;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,28 +13,22 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-
-import com.wanted.mono.domain.product.entity.*;
 
 import static com.wanted.mono.domain.brand.entity.QBrand.brand;
 import static com.wanted.mono.domain.category.entity.QCategory.category;
 import static com.wanted.mono.domain.category.entity.QProductCategory.productCategory;
 import static com.wanted.mono.domain.product.entity.QProduct.product;
 import static com.wanted.mono.domain.product.entity.QProductPrice.productPrice;
-import static com.wanted.mono.domain.review.entity.QReview.review;
 import static com.wanted.mono.domain.seller.entity.QSeller.seller;
-import static com.wanted.mono.domain.tag.entity.QTag.tag;
 
 
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class ProductQueryRepository {
+public class ProductSearchQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
