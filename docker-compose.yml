@@ -117,6 +117,11 @@ services:
       - "9300:9300"
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
+    command: >
+      bash -c '
+        bin/elasticsearch-plugin install analysis-nori || true;
+        /usr/local/bin/docker-entrypoint.sh elasticsearch
+      '
 
   # Kibana - Elasticsearch 관리 및 모니터링용
   kibana:
