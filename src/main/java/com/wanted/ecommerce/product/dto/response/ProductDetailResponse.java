@@ -27,7 +27,7 @@ public record ProductDetailResponse(
     ProductPriceResponse price,
     List<CategoryResponse> categories,
     List<ProductOptionGroupResponse> optionGroups,
-    List<ProductDetailImageResponse> images,
+    List<ProductImageCreateResponse> images,
     List<TagResponse> tags,
     RatingResponse rating,
     List<RelatedProductResponse> relatedProducts
@@ -38,7 +38,7 @@ public record ProductDetailResponse(
         String shortDescription, String fullDescription, SellerDetailResponse seller,
         BrandDetailResponse brand, String status, LocalDateTime createdAt, LocalDateTime updatedAt,
         DetailResponse detail, ProductPriceResponse price, List<CategoryResponse> categories,
-        List<ProductOptionGroupResponse> optionGroups, List<ProductDetailImageResponse> images,
+        List<ProductOptionGroupResponse> optionGroups, List<ProductImageCreateResponse> images,
         List<TagResponse> tags, RatingResponse rating, List<RelatedProductResponse> relatedProducts) {
         return ProductDetailResponse.builder()
             .id(id)

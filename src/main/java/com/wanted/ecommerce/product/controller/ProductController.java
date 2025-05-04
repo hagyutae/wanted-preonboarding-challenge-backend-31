@@ -4,13 +4,9 @@ import com.wanted.ecommerce.common.constants.MessageConstants;
 import com.wanted.ecommerce.common.response.ApiResponse;
 import com.wanted.ecommerce.common.response.PaginationResponse;
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
-import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
-import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
-import com.wanted.ecommerce.product.dto.response.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
-import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
 import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
 import com.wanted.ecommerce.product.service.ProductService;
@@ -57,7 +53,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductDetailResponse>> getProductById(
+    public ResponseEntity<ApiResponse<ProductDetailResponse>> getProduct(
         @PathVariable Long id
     ) {
         ProductDetailResponse response = productService.readDetail(id);
@@ -83,47 +79,5 @@ public class ProductController {
         productService.delete(id);
         return ResponseEntity.ok(
             ApiResponse.success(null, MessageConstants.DELETED_PRODUCT.getMessage()));
-    }
-
-    @PostMapping("/{id}/options")
-    public ResponseEntity<ApiResponse<ProductOptionResponse>> addProductOptions(
-        @PathVariable Long id,
-        @Valid @RequestBody ProductOptionRequest optionRequest
-    ) {
-        ProductOptionResponse response = productService.addProductOption(id, optionRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(ApiResponse.success(response, MessageConstants.CREATED_OPTION.getMessage()));
-    }
-
-    @PutMapping("/{id}/options/{optionId}")
-    public ResponseEntity<ApiResponse<ProductOptionResponse>> updateProductOptions(
-        @PathVariable Long id,
-        @PathVariable Long optionId,
-        @Valid @RequestBody ProductOptionRequest updateRequest
-    ) {
-        ProductOptionResponse response = productService.updateProductOption(id, optionId,
-            updateRequest);
-        return ResponseEntity.ok(
-            ApiResponse.success(response, MessageConstants.UPDATED_OPTION.getMessage()));
-    }
-
-    @DeleteMapping("/{id}/options/{optionId}")
-    public ResponseEntity<Object> deleteProductOptions(
-        @PathVariable Long id,
-        @PathVariable Long optionId
-    ) {
-        productService.deleteProductOption(id, optionId);
-        return ResponseEntity.ok(
-            ApiResponse.success(null, MessageConstants.DELETED_OPTION.getMessage()));
-    }
-
-    @PostMapping("/{id}/images")
-    public ResponseEntity<ApiResponse<ProductImageCreateResponse>> addProductImages(
-        @PathVariable Long id,
-        @Valid @RequestBody ProductImageRequest imageRequest
-    ) {
-        ProductImageCreateResponse response = productService.addProductImage(id, imageRequest);
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(ApiResponse.success(response, MessageConstants.CREATED_IMAGE.getMessage()));
     }
 }

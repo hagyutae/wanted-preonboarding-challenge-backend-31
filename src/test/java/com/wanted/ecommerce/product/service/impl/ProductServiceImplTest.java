@@ -19,21 +19,15 @@ import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductCategory;
 import com.wanted.ecommerce.product.domain.ProductDetail;
 import com.wanted.ecommerce.product.domain.ProductImage;
-import com.wanted.ecommerce.product.domain.ProductOption;
-import com.wanted.ecommerce.product.domain.ProductOptionGroup;
 import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.domain.ProductTag;
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
-import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
-import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
 import com.wanted.ecommerce.product.dto.response.DetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
-import com.wanted.ecommerce.product.dto.response.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
-import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.dto.response.ProductPriceResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
 import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
@@ -104,8 +98,6 @@ class ProductServiceImplTest {
     private ProductPrice price;
     private ProductDetail detail;
     private List<ProductCategory> categories;
-    private ProductOptionGroup optionGroup;
-    private ProductOption option;
     private List<ProductImage> images;
     private List<ProductTag> tags;
 
@@ -116,8 +108,6 @@ class ProductServiceImplTest {
         price = createPrice();
         detail = createDetail();
         categories = createCategories();
-        optionGroup = createOptionGroup();
-        option = createOption();
         images = createImages();
         tags = createTags();
         product = createProduct();
@@ -235,50 +225,6 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void test_addProductOption_success() {
-        ProductOptionRequest request = mock(ProductOptionRequest.class);
-        ProductOptionGroup group = ProductOptionGroup.of(product, "optionGroup", 1);
-
-        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
-        when(productOptionGroupService.updateOptionGroup(any(), anyLong())).thenReturn(group);
-        when(productOptionService.createProductOption(any(), any(), any())).thenReturn(mock(
-            ProductOptionResponse.class));
-
-        ProductOptionResponse response = productService.addProductOption(1L, request);
-        assertNotNull(response);
-    }
-
-    @Test
-    void test_updateProductOption_success() {
-        ProductOptionRequest request = mock(ProductOptionRequest.class);
-        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
-        when(productOptionService.findOptionById(anyLong())).thenReturn(option);
-        when(productOptionService.updateProductOption(anyLong(), any(), any())).thenReturn(mock(ProductOptionResponse.class));
-
-        ProductOptionResponse response = productService.updateProductOption(1L, 1L, request);
-        assertNotNull(response);
-    }
-
-    @Test
-    void test_deleteProductOption_success() {
-        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
-        when(productOptionService.findOptionById(anyLong())).thenReturn(option);
-        productService.deleteProductOption(1L, 1L);
-        verify(productOptionService).deleteProductOption(1L);
-    }
-
-    @Test
-    void test_addProductImage_success() {
-        ProductImageRequest request = mock(ProductImageRequest.class);
-        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
-        when(productOptionService.findOptionById(anyLong())).thenReturn(mock(ProductOption.class));
-        when(productImageService.createProductImage(any(), any(), any())).thenReturn(mock(ProductImageCreateResponse.class));
-
-        ProductImageCreateResponse response = productService.addProductImage(1L, request);
-        assertNotNull(response);
-    }
-
-    @Test
     void test_getProductById_success() {
         when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
         Product result = productService.getProductById(1L);
@@ -323,7 +269,6 @@ class ProductServiceImplTest {
             .categories(categories)
             .detail(detail)
             .price(price)
-            .optionGroups(List.of(optionGroup))
             .images(images)
             .tags(tags)
             .build();
@@ -348,10 +293,6 @@ class ProductServiceImplTest {
         return List.of(productCategory);
     }
 
-    private ProductOptionGroup createOptionGroup() {
-        return ProductOptionGroup.of(1L, null, "optionGroup", 1);
-    }
-
     private List<ProductImage> createImages() {
         return List.of();
     }
@@ -373,14 +314,9 @@ class ProductServiceImplTest {
             .categories(categories)
             .detail(detail)
             .price(price)
-            .optionGroups(List.of(optionGroup))
             .images(images)
             .tags(tags)
             .build();
     }
 
-    private ProductOption createOption() {
-        return ProductOption.of(optionGroup, "option", new BigDecimal(10), "sku",
-            10, 1);
-    }
 }

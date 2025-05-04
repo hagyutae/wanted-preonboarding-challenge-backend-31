@@ -13,6 +13,17 @@ public record ProductImageCreateResponse(
 ) {
 
     public static ProductImageCreateResponse of(Long id, String url, String altText,
+        Boolean isPrimary, Integer displayOrder){
+        return ProductImageCreateResponse.builder()
+            .id(id)
+            .url(url)
+            .altText(altText)
+            .isPrimary(isPrimary)
+            .displayOrder(displayOrder)
+            .build();
+    }
+
+    public static ProductImageCreateResponse of(Long id, String url, String altText,
         Boolean isPrimary, Integer displayOrder, Long optionId){
         return ProductImageCreateResponse.builder()
             .id(id)

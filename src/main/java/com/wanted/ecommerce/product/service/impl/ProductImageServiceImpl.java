@@ -4,14 +4,13 @@ import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductImage;
 import com.wanted.ecommerce.product.domain.ProductOption;
 import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
-import com.wanted.ecommerce.product.dto.response.ProductDetailImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.repository.ProductImageRepository;
 import com.wanted.ecommerce.product.service.ProductImageService;
 import com.wanted.ecommerce.product.service.ProductOptionService;
+import com.wanted.ecommerce.product.service.ProductService;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,41 +20,36 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductImageServiceImpl implements ProductImageService {
 
     private final ProductImageRepository productImageRepository;
+    private final ProductService productService;
     private final ProductOptionService optionService;
 
     @Transactional
     @Override
-    public List<ProductImage> createProductImages(Product product,
+    public List<ProductImageCreateResponse> createProductImages(Product product,
         List<ProductImageRequest> imageRequestList) {
         List<ProductImage> images = imageRequestList.stream().map(imageRequest ->
         {
-            ProductOption option = optionService.findOptionById(imageRequest.getOptionId());
+            ProductOption option = optionService.getOptionById(imageRequest.getOptionId());
             return ProductImage.of(product, imageRequest.getUrl(), imageRequest.getAltText(),
                 imageRequest.getIsPrimary(), imageRequest.getDisplayOrder(), option);
         }).toList();
-        return productImageRepository.saveAll(images);
+
+        return productImageRepository.saveAll(images).stream().map(image -> ProductImageCreateResponse.of(image.getId(), image.getUrl(), image.getAltText(),
+            image.isPrimary(), image.getDisplayOrder(), image.getOption().getId())).toList();
     }
 
+    @Transactional
     @Override
-    public ProductImageCreateResponse createProductImage(Product product, ProductOption option,
+    public ProductImageCreateResponse createProductImage(long productId,
         ProductImageRequest imageRequest) {
-        ProductImage image = ProductImage.of(product, imageRequest.getUrl(),
-            imageRequest.getAltText(), imageRequest.getIsPrimary(), imageRequest.getDisplayOrder(),
-            option);
-        ProductImage saved = productImageRepository.save(image);
-        return ProductImageCreateResponse.of(saved.getId(), saved.getUrl(), saved.getAltText(),
-            saved.isPrimary(), saved.getDisplayOrder(), option.getId());
+        Product product = productService.getProductById(productId);
+        return createProductImages(product, List.of(imageRequest)).get(0);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<ProductImage> getPrimaryProduct(Long productId) {
-        return productImageRepository.findByProductIdAndPrimaryTrue(productId);
-    }
-
-    @Override
     public ProductImageResponse createPrimaryProductImageResponse(Long productId) {
-        return getPrimaryProduct(productId)
+        return productImageRepository.findByProductIdAndPrimaryTrue(productId)
             .map(image -> ProductImageResponse.of(image.getUrl(), image.getAltText()))
             .orElse(null);
     }
@@ -67,15 +61,15 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
     @Override
-    public List<ProductDetailImageResponse> createImageResponse(List<ProductImage> images) {
+    public List<ProductImageCreateResponse> createImageResponse(List<ProductImage> images) {
         return images.stream()
             .map(image -> {
                 if (image.getOption() != null) {
-                    return ProductDetailImageResponse.of(image.getId(), image.getUrl(),
+                    return ProductImageCreateResponse.of(image.getId(), image.getUrl(),
                         image.getAltText(), image.isPrimary(), image.getDisplayOrder(),
                         image.getOption().getId());
                 }
-                return ProductDetailImageResponse.of(image.getId(), image.getUrl(),
+                return ProductImageCreateResponse.of(image.getId(), image.getUrl(),
                     image.getAltText(), image.isPrimary(), image.getDisplayOrder());
             }).toList();
     }

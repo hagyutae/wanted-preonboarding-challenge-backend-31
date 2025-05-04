@@ -9,23 +9,17 @@ import com.wanted.ecommerce.common.exception.ErrorType;
 import com.wanted.ecommerce.common.exception.ResourceNotFoundException;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductCategory;
-import com.wanted.ecommerce.product.domain.ProductOption;
-import com.wanted.ecommerce.product.domain.ProductOptionGroup;
 import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.domain.ProductTag;
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
-import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
-import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
 import com.wanted.ecommerce.product.dto.response.DetailResponse;
-import com.wanted.ecommerce.product.dto.response.ProductDetailImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductOptionGroupResponse;
-import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.dto.response.ProductPriceResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
 import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
@@ -160,7 +154,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductOptionGroupResponse> optionGroupResponses = productOptionGroupService.createOptionGroupResponse(
             product.getOptionGroups());
         // images
-        List<ProductDetailImageResponse> imageResponses = productImageService.createImageResponse(
+        List<ProductImageCreateResponse> imageResponses = productImageService.createImageResponse(
             product.getImages());
         // tags
         List<TagResponse> tagResponses = createTagResponse(product);
@@ -219,38 +213,6 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(product);
     }
 
-    @Transactional
-    @Override
-    public ProductOptionResponse addProductOption(long id,
-        ProductOptionRequest optionRequest) {
-        Product product = getProductById(id);
-        ProductOptionGroup optionGroup = productOptionGroupService.updateOptionGroup(product,
-            optionRequest.getOptionGroupId());
-        return productOptionService.createProductOption(product, optionGroup, optionRequest);
-    }
-
-    @Override
-    public ProductOptionResponse updateProductOption(long id, long optionId,
-        ProductOptionRequest optionRequest) {
-        Product product = getProductById(id);
-        checkExistOption(product.getId(), optionId);
-
-        return productOptionService.updateProductOption(optionId, product, optionRequest);
-    }
-
-    @Override
-    public void deleteProductOption(long id, long optionId) {
-        checkExistOption(id, optionId);
-        productOptionService.deleteProductOption(optionId);
-    }
-
-    @Override
-    public ProductImageCreateResponse addProductImage(long id, ProductImageRequest imageRequest) {
-        Product product = getProductById(id);
-        ProductOption option = productOptionService.findOptionById(imageRequest.getOptionId());
-        return productImageService.createProductImage(product, option, imageRequest);
-    }
-
     private List<Long> createProductTags(Product saved, List<Long> tagIds) {
         List<Tag> tags = tagIds.stream().map(tagService::getTagByTagId)
             .toList();
@@ -287,18 +249,9 @@ public class ProductServiceImpl implements ProductService {
             }).toList();
     }
 
+    @Override
     public Product getProductById(long id) {
         return productRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
-    }
-
-    private void checkExistOption(long productId, long optionId) {
-        Product product = getProductById(productId);
-        ProductOption option = productOptionService.findOptionById(optionId);
-        boolean isExistOption = product.getOptionGroups().stream()
-            .anyMatch(optionGroup -> optionGroup.getId().equals(option.getOptionGroup().getId()));
-        if (!isExistOption) {
-            throw new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND);
-        }
     }
 }
