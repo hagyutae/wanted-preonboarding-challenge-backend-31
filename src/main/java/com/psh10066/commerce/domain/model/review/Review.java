@@ -1,6 +1,7 @@
-package com.psh10066.commerce.domain.model;
+package com.psh10066.commerce.domain.model.review;
 
 import com.psh10066.commerce.domain.common.BaseUpdatableEntity;
+import com.psh10066.commerce.domain.model.User;
 import com.psh10066.commerce.domain.model.product.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

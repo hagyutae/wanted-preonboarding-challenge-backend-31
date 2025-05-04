@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Entity
 @Table(name = "product_prices")
@@ -45,5 +46,12 @@ public class ProductPrice {
         this.costPrice = costPrice;
         this.currency = currency;
         this.taxRate = taxRate;
+    }
+
+    public Integer calculateDiscountPercentage() {
+        if (salePrice == null) {
+            return 0;
+        }
+        return salePrice.subtract(basePrice).multiply(BigDecimal.valueOf(100)).divide(basePrice, 0, RoundingMode.HALF_UP).intValue();
     }
 }

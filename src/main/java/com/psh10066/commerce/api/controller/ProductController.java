@@ -6,10 +6,10 @@ import com.psh10066.commerce.api.dto.request.CreateProductRequest;
 import com.psh10066.commerce.api.dto.request.GetAllProductsRequest;
 import com.psh10066.commerce.api.dto.response.CreateProductResponse;
 import com.psh10066.commerce.api.dto.response.GetAllProductsResponse;
+import com.psh10066.commerce.api.dto.response.GetProductDetailResponse;
 import com.psh10066.commerce.domain.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +34,12 @@ public class ProductController {
 
         PaginationResponse<GetAllProductsResponse> response = productService.getAllProducts(request);
         return ApiResponse.success(response, "상품 목록을 성공적으로 조회했습니다.");
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<GetProductDetailResponse> getProductDetail(@PathVariable Long id) {
+
+        GetProductDetailResponse response = productService.getProductDetail(id);
+        return ApiResponse.success(response, "상품 상세 정보를 성공적으로 조회했습니다.");
     }
 }

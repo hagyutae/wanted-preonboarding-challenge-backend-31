@@ -5,11 +5,14 @@ import com.psh10066.commerce.api.dto.request.CreateProductRequest;
 import com.psh10066.commerce.api.dto.request.GetAllProductsRequest;
 import com.psh10066.commerce.api.dto.response.CreateProductResponse;
 import com.psh10066.commerce.api.dto.response.GetAllProductsResponse;
+import com.psh10066.commerce.api.dto.response.GetProductDetailResponse;
 import com.psh10066.commerce.domain.model.brand.Brand;
 import com.psh10066.commerce.domain.model.brand.BrandRepository;
 import com.psh10066.commerce.domain.model.category.Category;
 import com.psh10066.commerce.domain.model.category.CategoryRepository;
 import com.psh10066.commerce.domain.model.product.*;
+import com.psh10066.commerce.domain.model.review.ReviewFirstCollection;
+import com.psh10066.commerce.domain.model.review.ReviewRepository;
 import com.psh10066.commerce.domain.model.seller.Seller;
 import com.psh10066.commerce.domain.model.seller.SellerRepository;
 import com.psh10066.commerce.domain.model.tag.Tag;
@@ -31,6 +34,7 @@ public class ProductService {
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     public CreateProductResponse createProduct(CreateProductRequest request) {
@@ -124,5 +128,88 @@ public class ProductService {
     public PaginationResponse<GetAllProductsResponse> getAllProducts(GetAllProductsRequest request) {
         Page<GetAllProductsResponse> products = productRepository.getAllProducts(request);
         return PaginationResponse.of(products, product -> product);
+    }
+
+    public GetProductDetailResponse getProductDetail(Long id) {
+        Product product = productRepository.getById(id);
+        Seller seller = product.getSeller();
+        Brand brand = product.getBrand();
+        ProductDetail productDetail = productRepository.getProductDetailById(id);
+        ProductDetail.Dimensions dimensions = productDetail.getDimensions();
+        ProductPrice productPrice = productRepository.getProductPriceById(id);
+        List<ProductCategory> productCategories = productRepository.findProductCategoriesById(id);
+        List<ProductOptionGroup> productOptionGroups = productRepository.findProductOptionGroupsById(id);
+        List<ProductImage> productImages = productRepository.findProductImagesById(id);
+        List<ProductTag> productTags = productRepository.findProductTagsById(id);
+        ReviewFirstCollection reviews = new ReviewFirstCollection(reviewRepository.findAllByProductId(product.getId()));
+
+        return GetProductDetailResponse.builder()
+            .id(product.getId())
+            .name(product.getName())
+            .slug(product.getSlug())
+            .shortDescription(product.getShortDescription())
+            .fullDescription(product.getFullDescription())
+            .seller(new GetProductDetailResponse.Seller(
+                seller.getId(), seller.getName(), seller.getDescription(), seller.getLogoUrl(), seller.getRating(), seller.getContactEmail(), seller.getContactPhone()
+            ))
+            .brand(new GetProductDetailResponse.Brand(
+                brand.getId(), brand.getName(), brand.getDescription(), brand.getLogoUrl(), brand.getWebsite()
+            ))
+            .status(product.getStatus())
+            .createdAt(product.getCreatedAt())
+            .updatedAt(product.getUpdatedAt())
+            .detail(new GetProductDetailResponse.Detail(
+                productDetail.getWeight(),
+                new GetProductDetailResponse.Dimensions(dimensions.getWidth(), dimensions.getHeight(), dimensions.getDepth()),
+                productDetail.getMaterials(),
+                productDetail.getCountryOfOrigin(),
+                productDetail.getWarrantyInfo(),
+                productDetail.getCareInstructions(),
+                productDetail.getAdditionalInfo()
+            ))
+            .price(new GetProductDetailResponse.Price(
+                productPrice.getBasePrice(), productPrice.getSalePrice(), productPrice.getCurrency(), productPrice.getTaxRate(), productPrice.calculateDiscountPercentage()
+            ))
+            .categories(productCategories.stream()
+                .map(productCategory -> {
+                    Category category = productCategory.getCategory();
+                    Category parentCategory = category.getParent();
+                    return new GetProductDetailResponse.Category(
+                        category.getId(), category.getName(), category.getSlug(), productCategory.getIsPrimary(),
+                        new GetProductDetailResponse.ParentCategory(parentCategory.getId(), parentCategory.getName(), parentCategory.getSlug())
+                    );
+                })
+                .toList())
+            .optionGroups(productOptionGroups.stream()
+                .map(productOptionGroup -> {
+                    List<ProductOption> productOptions = productRepository.findProductOptionsByProductOptionGroupId(productOptionGroup.getId());
+                    return new GetProductDetailResponse.OptionGroup(
+                        productOptionGroup.getId(), productOptionGroup.getName(), productOptionGroup.getDisplayOrder(),
+                        productOptions.stream()
+                            .map(productOption -> new GetProductDetailResponse.Option(
+                                productOption.getId(), productOption.getName(), productOption.getAdditionalPrice(), productOption.getSku(), productOption.getStock(), productOption.getDisplayOrder()
+                            ))
+                            .toList()
+                    );
+                })
+                .toList())
+            .images(productImages.stream()
+                .map(productImage -> new GetProductDetailResponse.Image(
+                    productImage.getId(), productImage.getUrl(), productImage.getAltText(), productImage.getIsPrimary(), productImage.getDisplayOrder(), productImage.getOption() != null ? productImage.getOption().getId() : null
+                ))
+                .toList())
+            .tags(productTags.stream()
+                .map(productTag -> {
+                    Tag tag = productTag.getTag();
+                    return new GetProductDetailResponse.Tag(tag.getId(), tag.getName(), tag.getSlug());
+                })
+                .toList())
+            .rating(new GetProductDetailResponse.Rating(
+                reviews.getAverage(),
+                reviews.getSize(),
+                reviews.getDistribution()
+            ))
+//            .relatedProducts() // TODO
+            .build();
     }
 }

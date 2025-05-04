@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
@@ -70,5 +72,48 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Page<GetAllProductsResponse> getAllProducts(GetAllProductsRequest request) {
         return productJpaRepository.getAllProducts(request);
+    }
+
+    @Override
+    public Product getById(Long id) {
+        return productJpaRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Product", id));
+    }
+
+    @Override
+    public ProductDetail getProductDetailById(Long id) {
+        return productDetailJpaRepository.findByProductId(id)
+            .orElseThrow(() -> new ResourceNotFoundException("ProductDetail", id));
+    }
+
+    @Override
+    public ProductPrice getProductPriceById(Long id) {
+        return productPriceJpaRepository.findByProductId(id)
+            .orElseThrow(() -> new ResourceNotFoundException("ProductPrice", id));
+    }
+
+    @Override
+    public List<ProductCategory> findProductCategoriesById(Long id) {
+        return productCategoryJpaRepository.findAllByProductId(id);
+    }
+
+    @Override
+    public List<ProductOptionGroup> findProductOptionGroupsById(Long id) {
+        return productOptionGroupJpaRepository.findAllByProductId(id);
+    }
+
+    @Override
+    public List<ProductImage> findProductImagesById(Long id) {
+        return productImageJpaRepository.findAllByProductId(id);
+    }
+
+    @Override
+    public List<ProductTag> findProductTagsById(Long id) {
+        return productTagJpaRepository.findAllByProductId(id);
+    }
+
+    @Override
+    public List<ProductOption> findProductOptionsByProductOptionGroupId(Long productOptionGroupId) {
+        return productOptionJpaRepository.findAllProductOptionsByOptionGroupId(productOptionGroupId);
     }
 }

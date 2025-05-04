@@ -2,9 +2,10 @@ package com.psh10066.commerce.infrastructure.dao.product;
 
 import com.psh10066.commerce.api.dto.request.GetAllProductsRequest;
 import com.psh10066.commerce.api.dto.response.GetAllProductsResponse;
-import com.psh10066.commerce.domain.model.Review;
 import com.psh10066.commerce.domain.model.product.Product;
 import com.psh10066.commerce.domain.model.product.ProductStatus;
+import com.psh10066.commerce.domain.model.review.Review;
+import com.psh10066.commerce.domain.model.review.ReviewFirstCollection;
 import com.psh10066.commerce.infrastructure.dao.common.OrderGenerator;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -19,18 +20,17 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.psh10066.commerce.domain.model.QReview.review;
 import static com.psh10066.commerce.domain.model.brand.QBrand.brand;
 import static com.psh10066.commerce.domain.model.product.QProduct.product;
 import static com.psh10066.commerce.domain.model.product.QProductCategory.productCategory;
 import static com.psh10066.commerce.domain.model.product.QProductImage.productImage;
 import static com.psh10066.commerce.domain.model.product.QProductPrice.productPrice;
+import static com.psh10066.commerce.domain.model.review.QReview.review;
 import static com.psh10066.commerce.domain.model.seller.QSeller.seller;
 
 @Repository
@@ -87,14 +87,14 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
         List<GetAllProductsResponse> newResult = new ArrayList<>();
 
         result.forEach(response -> {
-            List<Review> reviews = reviewsByProductId.get(response.id());
-            if (reviews == null || reviews.isEmpty()) {
+            ReviewFirstCollection reviews = new ReviewFirstCollection(reviewsByProductId.get(response.id()));
+            if (reviews.isNullOrEmpty()) {
                 newResult.add(response);
                 return;
             }
             newResult.add(response.toBuilder()
-                .rating(BigDecimal.valueOf(reviews.stream().mapToInt(Review::getRating).average().getAsDouble()).setScale(1, RoundingMode.HALF_UP))
-                .reviewCount(reviews.size())
+                .rating(reviews.getAverage())
+                .reviewCount(reviews.getSize())
                 .build());
         });
 
