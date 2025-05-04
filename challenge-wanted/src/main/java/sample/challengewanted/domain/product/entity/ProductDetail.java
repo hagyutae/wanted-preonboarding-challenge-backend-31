@@ -24,7 +24,6 @@ public class ProductDetail {
 
     private Double weight;
 
-
     @Column(columnDefinition = "jsonb")
     @JdbcTypeCode(SqlTypes.JSON)
     private String dimensions;
@@ -59,9 +58,11 @@ public class ProductDetail {
         return new ProductDetail(request);
     }
 
-    public void addReview(Review review) {
-        this.reviews.add(review);
-        review.assingProductDetail(this);
+    public void assignProduct(Product product) {
+        this.product = product;
+        if (product.getProductDetail() != this) {
+            product.assignProductDetail(this);
+        }
     }
 
 }

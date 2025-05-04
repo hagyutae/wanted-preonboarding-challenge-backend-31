@@ -1,4 +1,4 @@
-package sample.challengewanted.config;
+package sample.challengewanted.config.p6spy;
 
 import java.util.Locale;
 

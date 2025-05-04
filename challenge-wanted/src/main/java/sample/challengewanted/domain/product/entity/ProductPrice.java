@@ -49,4 +49,11 @@ public class ProductPrice {
         return new ProductPrice(request, product);
     }
 
+    public void assignProduct(Product product) {
+        this.product = product;
+        if (product.getPrice() != this) {
+            product.assignPrice(this);
+        }
+    }
+
 }

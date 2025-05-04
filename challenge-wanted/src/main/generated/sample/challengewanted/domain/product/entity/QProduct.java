@@ -39,6 +39,10 @@ public class QProduct extends EntityPathBase<Product> {
 
     public final ListPath<sample.challengewanted.domain.category.ProductCategory, sample.challengewanted.domain.category.QProductCategory> productCategories = this.<sample.challengewanted.domain.category.ProductCategory, sample.challengewanted.domain.category.QProductCategory>createList("productCategories", sample.challengewanted.domain.category.ProductCategory.class, sample.challengewanted.domain.category.QProductCategory.class, PathInits.DIRECT2);
 
+    public final QProductDetail productDetail;
+
+    public final ListPath<ProductImage, QProductImage> productImages = this.<ProductImage, QProductImage>createList("productImages", ProductImage.class, QProductImage.class, PathInits.DIRECT2);
+
     public final ListPath<ProductOptionGroup, QProductOptionGroup> productOptionGroups = this.<ProductOptionGroup, QProductOptionGroup>createList("productOptionGroups", ProductOptionGroup.class, QProductOptionGroup.class, PathInits.DIRECT2);
 
     public final ListPath<sample.challengewanted.domain.tag.ProductTag, sample.challengewanted.domain.tag.QProductTag> productTags = this.<sample.challengewanted.domain.tag.ProductTag, sample.challengewanted.domain.tag.QProductTag>createList("productTags", sample.challengewanted.domain.tag.ProductTag.class, sample.challengewanted.domain.tag.QProductTag.class, PathInits.DIRECT2);
@@ -74,6 +78,7 @@ public class QProduct extends EntityPathBase<Product> {
         super(type, metadata, inits);
         this.brand = inits.isInitialized("brand") ? new sample.challengewanted.domain.brand.QBrand(forProperty("brand")) : null;
         this.price = inits.isInitialized("price") ? new QProductPrice(forProperty("price"), inits.get("price")) : null;
+        this.productDetail = inits.isInitialized("productDetail") ? new QProductDetail(forProperty("productDetail"), inits.get("productDetail")) : null;
         this.seller = inits.isInitialized("seller") ? new sample.challengewanted.domain.seller.QSeller(forProperty("seller")) : null;
     }
 

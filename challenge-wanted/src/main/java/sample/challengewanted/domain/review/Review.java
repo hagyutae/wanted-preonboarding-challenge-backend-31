@@ -5,7 +5,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sample.challengewanted.domain.BaseEntity;
+import sample.challengewanted.domain.product.entity.Product;
 import sample.challengewanted.domain.product.entity.ProductDetail;
+
+import java.math.BigDecimal;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,7 +19,7 @@ public class Review extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer rating;
+    private Double rating;
     private String title;
     private String content;
     private boolean verifiedPurchase;
@@ -26,7 +29,10 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "product_id")
     private ProductDetail productDetail;
 
+
     public void assingProductDetail(ProductDetail productDetail) {
         this.productDetail = productDetail;
+        productDetail.getReviews().add(this);
     }
+
 }

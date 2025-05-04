@@ -1,12 +1,12 @@
-package sample.challengewanted.dto;
+package sample.challengewanted.dto.product;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
+@Data
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class ProductSearchCondition {
     private String status;
     private Integer minPrice;

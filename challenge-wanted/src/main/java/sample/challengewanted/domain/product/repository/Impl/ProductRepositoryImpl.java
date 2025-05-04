@@ -1,18 +1,27 @@
 package sample.challengewanted.domain.product.repository.Impl;
 
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import sample.challengewanted.api.controller.product.response.ProductResponse;
-import sample.challengewanted.domain.product.entity.QProduct;
 import sample.challengewanted.domain.product.repository.ProductRepositoryCustom;
-import sample.challengewanted.dto.ProductSearchCondition;
+import sample.challengewanted.domain.review.QReview;
+import sample.challengewanted.dto.product.*;
 
 import java.util.List;
+
+import static sample.challengewanted.domain.brand.QBrand.brand;
+import static sample.challengewanted.domain.product.entity.QProduct.product;
+import static sample.challengewanted.domain.product.entity.QProductDetail.productDetail;
+import static sample.challengewanted.domain.product.entity.QProductImage.*;
+import static sample.challengewanted.domain.product.entity.QProductOption.productOption;
+import static sample.challengewanted.domain.product.entity.QProductOptionGroup.*;
+import static sample.challengewanted.domain.product.entity.QProductPrice.productPrice;
+import static sample.challengewanted.domain.seller.QSeller.seller;
 
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
@@ -20,45 +29,68 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<ProductResponse> searchProducts(ProductSearchCondition condition, Pageable pageable) {
-        // Q타입
-        QProduct product = QProduct.product;
+    public Page<ProductPageResponse> searchProducts(ProductSearchCondition condition, Pageable pageable) {
 
-        // 본문 조회
-        List<ProductResponse> content = queryFactory
-                .select(Projections.constructor(ProductResponse.class,
+        QReview review = QReview.review;
+
+        Expression<Long> reviewCount = JPAExpressions
+                .select(review.count().as("reviewCount"))
+                .from(review)
+                .where(review.productDetail.product.eq(product));
+
+        List<ProductPageResponse> content = queryFactory
+                .select(new QProductPageResponse(
                         product.id,
                         product.name,
                         product.slug,
-                        product.createdAt,
-                        product.updatedAt
+                        product.shortDescription,
+                        productPrice.basePrice,
+                        productPrice.salePrice,
+                        productPrice.currency,
+                        new QImageResponse(productImage.url, productImage.altText),
+                        new QBrandResponse(brand.id, brand.name),
+                        new QSellerResponse(seller.id, seller.name),
+                        review.rating,
+                        reviewCount,
+                        productOption.stock,
+                        product.status,
+                        product.createdAt
                 ))
                 .from(product)
+                .leftJoin(product.brand, brand)
+                .leftJoin(product.seller, seller)
+                .leftJoin(product.productDetail, productDetail)
+                .leftJoin(product.productDetail.reviews, review)
+                .leftJoin(product.price, productPrice)
+                .leftJoin(product.productImages, productImage)
+                .leftJoin(product.productOptionGroups, productOptionGroup)
+                .leftJoin(productOptionGroup.productOptions, productOption)
                 .where(
                         eqStatus(condition.getStatus()),
                         betweenPrice(condition.getMinPrice(), condition.getMaxPrice()),
                         containsName(condition.getSearch()),
                         eqBrand(condition.getBrand()),
-                        eqSeller(condition.getSeller())
-//                        eqInStock(condition.getInStock())
-                        // 카테고리 조인 필요시 추가 가능
+                        eqSeller(condition.getSeller()),
+                        hasStock(condition.getInStock())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .orderBy(product.createdAt.desc())  // 기본 정렬 예시
+                .orderBy(product.createdAt.desc())
                 .fetch();
 
         // total count 조회
         Long total = queryFactory
                 .select(product.count())
                 .from(product)
+                .leftJoin(product.productOptionGroups, productOptionGroup)
+                .leftJoin(productOptionGroup.productOptions, productOption)
                 .where(
                         eqStatus(condition.getStatus()),
                         betweenPrice(condition.getMinPrice(), condition.getMaxPrice()),
                         containsName(condition.getSearch()),
                         eqBrand(condition.getBrand()),
-                        eqSeller(condition.getSeller())
-//                        eqInStock(condition.getInStock())
+                        eqSeller(condition.getSeller()),
+                        hasStock(condition.getInStock())
                 )
                 .fetchOne();
 
@@ -67,34 +99,35 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     // ====== 동적 where 조건 ======
     private BooleanExpression eqStatus(String status) {
-        return status != null ? QProduct.product.status.eq(status) : null;
+        return status != null ? product.status.eq(status) : null;
     }
 
     private BooleanExpression betweenPrice(Integer minPrice, Integer maxPrice) {
         if (minPrice != null && maxPrice != null) {
-            return QProduct.product.price.basePrice.between(minPrice, maxPrice);
+            return product.price.basePrice.between(minPrice, maxPrice);
         } else if (minPrice != null) {
-            return QProduct.product.price.basePrice.goe(minPrice);
+            return product.price.basePrice.goe(minPrice);
         } else if (maxPrice != null) {
-            return QProduct.product.price.basePrice.loe(maxPrice);
+            return product.price.basePrice.loe(maxPrice);
         } else {
             return null;
         }
     }
 
     private BooleanExpression containsName(String search) {
-        return search != null ? QProduct.product.name.containsIgnoreCase(search) : null;
+        return search != null ? product.name.containsIgnoreCase(search) : null;
     }
 
     private BooleanExpression eqBrand(Integer brandId) {
-        return brandId != null ? QProduct.product.brand.id.eq(Long.valueOf(brandId)) : null;
+        return brandId != null ? product.brand.id.eq(Long.valueOf(brandId)) : null;
     }
 
     private BooleanExpression eqSeller(Integer sellerId) {
-        return sellerId != null ? QProduct.product.seller.id.eq(Long.valueOf(sellerId)) : null;
+        return sellerId != null ? product.seller.id.eq(Long.valueOf(sellerId)) : null;
     }
 
-//    private BooleanExpression eqInStock(Boolean inStock) {
-//        return inStock != null ? QProduct.product.eq(inStock) : null;
-//    }
+    private BooleanExpression hasStock(Boolean inStock) {
+        if (inStock == null) return null;
+        return inStock ? productOption.stock.goe(1) : productOption.stock.lt(1);
+    }
 }

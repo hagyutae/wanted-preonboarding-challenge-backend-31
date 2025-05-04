@@ -60,4 +60,10 @@ public class ProductImage {
         this.option = option;
     }
 
+    public void assignProduct(Product product) {
+        this.product = product;
+        product.getProductImages().add(this);
+    }
+
+
 }

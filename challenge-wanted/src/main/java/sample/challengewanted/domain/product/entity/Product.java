@@ -47,8 +47,14 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductOptionGroup> productOptionGroups = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ProductImage> productImages = new ArrayList<>();
+
     @OneToOne(mappedBy = "product")
     private ProductPrice price;
+
+    @OneToOne(mappedBy = "product")
+    private ProductDetail productDetail;
 
     private Product(ProductCreateRequest request, Seller seller, Brand brand) {
         this.name = request.getName();
@@ -85,6 +91,20 @@ public class Product extends BaseEntity {
     public void addProductOptionGroup(ProductOptionGroup productOptionGroup) {
         this.productOptionGroups.add(productOptionGroup);
         productOptionGroup.assignProduct(this);
+    }
+
+    public void assignPrice(ProductPrice productPrice) {
+        this.price = productPrice;
+        if (productPrice.getProduct() != this) {
+            productPrice.assignProduct(this);
+        }
+    }
+
+    public void assignProductDetail(ProductDetail productDetail) {
+        this.productDetail = productDetail;
+        if (productDetail.getProduct() != this) {
+            productDetail.assignProduct(this);
+        }
     }
 
 }

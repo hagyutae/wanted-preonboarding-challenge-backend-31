@@ -20,7 +20,7 @@ import sample.challengewanted.domain.product.repository.ProductDetailRepository;
 import sample.challengewanted.domain.product.repository.ProductPriceRepository;
 import sample.challengewanted.domain.product.repository.ProductRepository;
 import sample.challengewanted.domain.seller.Seller;
-import sample.challengewanted.dto.ProductSearchCondition;
+import sample.challengewanted.dto.product.ProductSearchCondition;
 
 import java.util.List;
 

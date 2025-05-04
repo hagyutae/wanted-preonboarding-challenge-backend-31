@@ -35,7 +35,7 @@ public class QReview extends EntityPathBase<Review> {
 
     public final sample.challengewanted.domain.product.entity.QProductDetail productDetail;
 
-    public final NumberPath<Integer> rating = createNumber("rating", Integer.class);
+    public final NumberPath<Double> rating = createNumber("rating", Double.class);
 
     public final StringPath title = createString("title");
 

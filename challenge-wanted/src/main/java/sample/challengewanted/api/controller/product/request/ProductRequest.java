@@ -16,6 +16,7 @@ public class ProductRequest {
     private Long brandId;
     private String status;
 
+
     @Builder
     private ProductRequest(Long id, String name, String slug, String shortDescription, String fullDescription, Long sellerId, Long brandId, String status) {
         this.id = id;
