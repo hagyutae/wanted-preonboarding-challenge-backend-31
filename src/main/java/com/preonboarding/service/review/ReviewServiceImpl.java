@@ -2,8 +2,8 @@ package com.preonboarding.service.review;
 
 import com.preonboarding.domain.Review;
 import com.preonboarding.domain.User;
-import com.preonboarding.dto.request.product.ProductReviewRequestDto;
-import com.preonboarding.dto.response.product.ProductReviewResponse;
+import com.preonboarding.dto.request.review.ProductReviewRequestDto;
+import com.preonboarding.dto.response.review.ProductReviewResponse;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
 import com.preonboarding.global.response.BaseResponse;

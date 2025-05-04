@@ -2,11 +2,14 @@ package com.preonboarding.service.product;
 
 import com.preonboarding.domain.*;
 import com.preonboarding.dto.request.product.*;
+import com.preonboarding.dto.request.review.ProductReviewRequestDto;
 import com.preonboarding.dto.response.product.ProductImageResponse;
 import com.preonboarding.dto.response.product.ProductOptionResponse;
 import com.preonboarding.dto.response.product.ProductResponse;
-import com.preonboarding.dto.response.product.ProductReviewResponse;
+import com.preonboarding.dto.response.review.ProductReviewResponse;
+import com.preonboarding.dto.response.review.SummaryResponse;
 import com.preonboarding.global.response.BaseResponse;
+import com.preonboarding.global.response.paging.PageBaseResponse;
 
 import java.util.List;
 
@@ -23,5 +26,6 @@ public interface ProductService {
 
     BaseResponse<ProductImageResponse> addProductImage(Long id, ProductImageRequestDto dto);
 
-    BaseResponse<ProductReviewResponse> addProductReview(Long id,ProductReviewRequestDto dto);
+    PageBaseResponse<ProductReviewResponse, SummaryResponse> getProductReviews(Long id,Integer page,Integer perPage,String sort,Integer rating);
+    BaseResponse<ProductReviewResponse> addProductReview(Long id, ProductReviewRequestDto dto);
 }

@@ -1,7 +1,7 @@
 package com.preonboarding.controller;
 
-import com.preonboarding.dto.request.product.ProductReviewRequestDto;
-import com.preonboarding.dto.response.product.ProductReviewResponse;
+import com.preonboarding.dto.request.review.ProductReviewRequestDto;
+import com.preonboarding.dto.response.review.ProductReviewResponse;
 import com.preonboarding.global.response.BaseResponse;
 import com.preonboarding.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;

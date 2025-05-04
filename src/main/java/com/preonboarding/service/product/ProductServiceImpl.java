@@ -2,22 +2,29 @@ package com.preonboarding.service.product;
 
 import com.preonboarding.domain.*;
 import com.preonboarding.dto.request.product.*;
-import com.preonboarding.dto.response.User.UserResponse;
+import com.preonboarding.dto.request.review.ProductReviewRequestDto;
+import com.preonboarding.dto.response.review.SummaryResponse;
 import com.preonboarding.dto.response.product.ProductImageResponse;
 import com.preonboarding.dto.response.product.ProductOptionResponse;
 import com.preonboarding.dto.response.product.ProductResponse;
-import com.preonboarding.dto.response.product.ProductReviewResponse;
+import com.preonboarding.dto.response.review.ProductReviewResponse;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
 import com.preonboarding.global.response.BaseResponse;
 import com.preonboarding.global.response.ErrorResponseDto;
+import com.preonboarding.global.response.paging.PageBaseResponse;
+import com.preonboarding.global.response.paging.PaginationDto;
+import com.preonboarding.global.response.paging.PagingDataDto;
 import com.preonboarding.repository.product.ProductOptionGroupRepository;
 import com.preonboarding.repository.product.ProductOptionRepository;
 import com.preonboarding.repository.product.ProductRepository;
+import com.preonboarding.repository.review.ReviewRepository;
 import com.preonboarding.repository.user.UserRepository;
 import com.preonboarding.util.JwtUtil;
+import com.preonboarding.util.PagingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +39,36 @@ public class ProductServiceImpl implements ProductService {
     private final ProductOptionRepository productOptionRepository;
     private final ProductOptionGroupRepository productOptionGroupRepository;
     private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageBaseResponse<ProductReviewResponse, SummaryResponse> getProductReviews(Long id,Integer page, Integer perPage, String sort, Integer rating) {
+        int pageNum = page!=null ? Math.max(0,page-1):0;
+        int elementNum = perPage!=null ? perPage:10;
+
+        Sort sortValue = PagingUtil.getPagingSort(sort);
+        Pageable pageRequest = PageRequest.of(pageNum,elementNum,sortValue);
+
+        Page<Review> reviewList = reviewRepository.findReviewsWithPaging(id,pageRequest,rating);
+        SummaryResponse summaryResponse = Review.createSummaryResponse(reviewList);
+
+        PaginationDto paginationDto = PaginationDto.from(reviewList,pageNum,elementNum);
+
+        List<ProductReviewResponse> reviewResponseList = reviewList.stream()
+                .map(ProductReviewResponse::of)
+                .toList();
+        PagingDataDto<ProductReviewResponse> pagingDataDto = new PagingDataDto<>(reviewResponseList);
+
+        return PageBaseResponse.<ProductReviewResponse, SummaryResponse>builder()
+                .success(true)
+                .data(pagingDataDto)
+                .summary(summaryResponse)
+                .pagination(paginationDto)
+                .message("상품 리뷰를 성공적으로 조회했습니다.")
+                .build();
+
+    }
 
     @Override
     @Transactional
@@ -202,18 +239,7 @@ public class ProductServiceImpl implements ProductService {
         review.updateUser(user);
         review.updateProduct(product);
 
-        UserResponse userResponse = UserResponse.of(user);
-        ProductReviewResponse reviewResponse = ProductReviewResponse.builder()
-                .id(review.getId())
-                .user(userResponse)
-                .rating(review.getRating())
-                .title(review.getTitle())
-                .content(review.getContent())
-                .createdAt(review.getCreatedAt())
-                .updatedAt(review.getUpdatedAt())
-                .verifiedPurchase(review.getVerifiedPurchase())
-                .helpfulVotes(review.getHelpfulVotes())
-                .build();
+        ProductReviewResponse reviewResponse = ProductReviewResponse.of(review);
 
         return BaseResponse.<ProductReviewResponse>builder()
                 .success(true)

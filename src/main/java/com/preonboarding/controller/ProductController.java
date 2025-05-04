@@ -2,11 +2,14 @@ package com.preonboarding.controller;
 
 import com.preonboarding.domain.*;
 import com.preonboarding.dto.request.product.*;
+import com.preonboarding.dto.request.review.ProductReviewRequestDto;
 import com.preonboarding.dto.response.product.ProductImageResponse;
 import com.preonboarding.dto.response.product.ProductOptionResponse;
 import com.preonboarding.dto.response.product.ProductResponse;
-import com.preonboarding.dto.response.product.ProductReviewResponse;
+import com.preonboarding.dto.response.review.ProductReviewResponse;
+import com.preonboarding.dto.response.review.SummaryResponse;
 import com.preonboarding.global.response.BaseResponse;
+import com.preonboarding.global.response.paging.PageBaseResponse;
 import com.preonboarding.service.brand.BrandService;
 import com.preonboarding.service.category.CategoryService;
 import com.preonboarding.service.product.ProductService;
@@ -28,6 +31,15 @@ public class ProductController {
     private final SellerService sellerService;
     private final BrandService brandService;
     private final TagService tagService;
+
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<PageBaseResponse<ProductReviewResponse, SummaryResponse>> getProductReviews(@PathVariable("id") Long id,
+                                                                                                      @RequestParam(required = false) Integer page,
+                                                                                                      @RequestParam(required = false) Integer perPage,
+                                                                                                      @RequestParam(required = false) String sort,
+                                                                                                      @RequestParam(required = false) Integer rating) {
+        return ResponseEntity.ok(productService.getProductReviews(id,page,perPage,sort,rating));
+    }
 
     @PostMapping
     public ResponseEntity<BaseResponse<ProductResponse>> addProduct(@RequestBody ProductCreateRequestDto dto) {

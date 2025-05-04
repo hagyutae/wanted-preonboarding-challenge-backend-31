@@ -1,4 +1,4 @@
-package com.preonboarding.dto.response.User;
+package com.preonboarding.dto.response.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.preonboarding.domain.User;
