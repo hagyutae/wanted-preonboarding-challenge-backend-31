@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  db:
+    build: .
+    platform: linux/arm64/v8
+    container_name: cqrs-db-containner
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: db_commerce
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale-provider=icu --icu-locale=ko-KR --auth=trust"
+    ports:
+      - "5432:5432"
