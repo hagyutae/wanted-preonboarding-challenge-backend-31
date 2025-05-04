@@ -80,6 +80,10 @@ public class Product {
     @Builder.Default
     private List<ProductTag> productTagList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
+    @Builder.Default
+    private List<Review> reviewList = new ArrayList<>();
+
     public static Product from(Seller seller, Brand brand, ProductCreateRequestDto dto) {
         return Product.builder()
                 .seller(seller)

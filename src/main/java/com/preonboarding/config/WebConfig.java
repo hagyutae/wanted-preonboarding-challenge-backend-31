@@ -12,12 +12,11 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class WebConfig {
     private final UserService userService;
-    private final ObjectMapper objectMapper;
 
     @Bean
-    public FilterRegistrationBean<UserIdFilter> userIdFilterRegistration(UserService userService, ObjectMapper objectMapper) {
+    public FilterRegistrationBean<UserIdFilter> userIdFilterRegistration(UserService userService) {
         FilterRegistrationBean<UserIdFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new UserIdFilter(userService, objectMapper));
+        registrationBean.setFilter(new UserIdFilter(userService));
         registrationBean.addUrlPatterns("/api/products/*");
         registrationBean.setOrder(1);
         return registrationBean;

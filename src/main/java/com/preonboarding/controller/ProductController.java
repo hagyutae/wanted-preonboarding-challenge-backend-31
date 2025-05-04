@@ -54,8 +54,7 @@ public class ProductController {
 
     @PostMapping("/{id}/reviews")
     public ResponseEntity<BaseResponse<ProductReviewResponse>> addProductReview(@PathVariable("id") Long id,@RequestBody ProductReviewRequestDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productService.addProductReview(id,dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProductReview(id,dto));
     }
 
     @PutMapping

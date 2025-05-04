@@ -1,5 +1,6 @@
 package com.preonboarding.domain;
 
+import com.preonboarding.dto.request.product.ProductReviewRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,6 +53,34 @@ public class Review {
 
     @Column(name = "helpful_votes")
     private Integer helpfulVotes;
+
+    public static Review of(ProductReviewRequestDto dto) {
+        return Review.builder()
+                .rating(dto.getRating())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .verifiedPurchase(true)
+                .helpfulVotes(0)
+                .build();
+    }
+
+    public void updateUser(User user) {
+        if (this.user != null) {
+            this.user.getReviewList().remove(this);
+        }
+
+        this.user = user;
+        user.getReviewList().add(this);
+    }
+
+    public void updateProduct(Product product) {
+        if (this.product != null) {
+            this.product.getReviewList().remove(this);
+        }
+
+        this.product = product;
+        product.getReviewList().add(this);
+    }
 
     @Override
     public boolean equals(Object o) {

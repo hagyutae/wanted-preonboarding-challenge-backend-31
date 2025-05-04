@@ -15,11 +15,9 @@ import java.io.IOException;
 
 public class UserIdFilter extends OncePerRequestFilter {
     private final UserService userService;
-    private final ObjectMapper objectMapper;
 
-    public UserIdFilter(UserService userService,ObjectMapper objectMapper) {
+    public UserIdFilter(UserService userService) {
         this.userService = userService;
-        this.objectMapper = objectMapper;
     }
 
     @Override

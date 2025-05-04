@@ -2,6 +2,7 @@ package com.preonboarding.service.product;
 
 import com.preonboarding.domain.*;
 import com.preonboarding.dto.request.product.*;
+import com.preonboarding.dto.response.User.UserResponse;
 import com.preonboarding.dto.response.product.ProductImageResponse;
 import com.preonboarding.dto.response.product.ProductOptionResponse;
 import com.preonboarding.dto.response.product.ProductResponse;
@@ -13,6 +14,8 @@ import com.preonboarding.global.response.ErrorResponseDto;
 import com.preonboarding.repository.product.ProductOptionGroupRepository;
 import com.preonboarding.repository.product.ProductOptionRepository;
 import com.preonboarding.repository.product.ProductRepository;
+import com.preonboarding.repository.user.UserRepository;
+import com.preonboarding.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
     private final ProductOptionGroupRepository productOptionGroupRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -186,7 +190,26 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public BaseResponse<ProductReviewResponse> addProductReview(Long id, ProductReviewRequestDto dto) {
-        return null;
+        Long userId = JwtUtil.getUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.USER_NOT_FOUND)));
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+
+        Review review = Review.of(dto);
+        review.updateUser(user);
+        review.updateProduct(product);
+
+        UserResponse userResponse = UserResponse.of(user);
+        ProductReviewResponse reviewResponse = ProductReviewResponse.from(review,userResponse);
+
+        return BaseResponse.<ProductReviewResponse>builder()
+                .success(true)
+                .data(reviewResponse)
+                .message("리뷰가 성공적으로 등록되었습니다.")
+                .build();
     }
 
     @Override
