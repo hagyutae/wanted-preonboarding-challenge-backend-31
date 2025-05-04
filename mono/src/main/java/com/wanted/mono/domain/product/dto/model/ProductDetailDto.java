@@ -1,14 +1,13 @@
 package com.wanted.mono.domain.product.dto.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wanted.mono.domain.product.dto.AdditionalInfo;
 import com.wanted.mono.domain.product.dto.Dimension;
-import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 @Getter
 @AllArgsConstructor
@@ -25,5 +24,5 @@ public class ProductDetailDto {
     @JsonProperty("care_instructions")
     private String careInstructions;
     @JsonProperty("additional_info")
-    private AdditionalInfo additionalInfo;
+    private Map<String, Object> additionalInfo;
 }
