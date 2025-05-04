@@ -15,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -94,6 +95,27 @@ public class ProductControllerAdvice {
             details.put("message", "해당 슬러그는 이미 사용 중입니다.");
         }
 
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .success(false)
+                .error(Error.builder()
+                        .code(errorCode.getCode())
+                        .message(localizedMessage)
+                        .details(details)
+                        .build())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(MethodArgumentTypeMismatchException ex, Locale locale) {
+        log.error("파라미터 타입 불일치", ex);
+
+        ErrorCode errorCode = ErrorCode.INVALID_TYPE_INPUT;
+        String localizedMessage = messageSource.getMessage(errorCode.getMessageKey(), null, locale);
+
+        Map<String, String> details = new HashMap<>();
+        details.put(ex.getName(), ex.getValue() + "는 유효한 상품 ID가 아닙니다.");
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .success(false)
                 .error(Error.builder()

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     INVALID_INPUT("INVALID_INPUT", HttpStatus.BAD_REQUEST, "error.invalid_input"),
+    INVALID_TYPE_INPUT("INVALID_TYPE_INPUT", HttpStatus.BAD_REQUEST, "error.invalid_type_input"),
     RESOURCE_NOT_FOUND("RESOURCE_NOT_FOUND", HttpStatus.NOT_FOUND, "error.resource_not_found"),
     UNAUTHORIZED("UNAUTHORIZED", HttpStatus.UNAUTHORIZED, "error.unauthorized"),
     FORBIDDEN("FORBIDDEN", HttpStatus.FORBIDDEN, "error.forbidden"),
