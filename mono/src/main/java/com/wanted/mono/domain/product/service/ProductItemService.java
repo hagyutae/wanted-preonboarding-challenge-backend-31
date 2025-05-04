@@ -1,7 +1,8 @@
 package com.wanted.mono.domain.product.service;
 
 import com.wanted.mono.domain.product.dto.BrandAndSellerItem;
-import com.wanted.mono.domain.product.dto.ProductImageDto;
+import com.wanted.mono.domain.product.dto.ProductImageSearchDto;
+import com.wanted.mono.domain.product.dto.model.ProductImageDto;
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
 import com.wanted.mono.domain.product.entity.Product;
 import com.wanted.mono.domain.product.entity.ProductImage;
@@ -36,7 +37,7 @@ public class ProductItemService {
                 product.getProductPrices().get(0).getSalePrice(),
                 "KRW",
                 primaryImage == null ? null :
-                        new ProductImageDto(primaryImage.getUrl(), primaryImage.getAltText()),
+                        new ProductImageSearchDto(primaryImage.getUrl(), primaryImage.getAltText()),
                 new BrandAndSellerItem(product.getBrand().getId(), product.getBrand().getName()),
                 new BrandAndSellerItem(product.getSeller().getId(), product.getSeller().getName()),
                 rating,

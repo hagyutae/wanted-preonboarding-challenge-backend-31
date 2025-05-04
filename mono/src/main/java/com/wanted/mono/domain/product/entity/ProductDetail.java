@@ -1,7 +1,6 @@
 package com.wanted.mono.domain.product.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonType;
-import com.wanted.mono.domain.product.dto.AdditionalInfo;
 import com.wanted.mono.domain.product.dto.Dimension;
 import com.wanted.mono.domain.product.dto.request.ProductDetailRequest;
 import jakarta.persistence.*;
@@ -11,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * 상품 상세 정보를 나타내는 엔티티
@@ -55,7 +55,7 @@ public class ProductDetail {
     // 추가 정보 (JSONB)
     @Type(JsonType.class)
     @Column(columnDefinition = "jsonb")
-    private AdditionalInfo additionalInfo;
+    private Map<String, Object> additionalInfo;
 
     // -----------------------------------------
 

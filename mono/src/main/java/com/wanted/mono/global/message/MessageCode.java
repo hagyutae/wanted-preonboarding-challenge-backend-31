@@ -6,8 +6,8 @@ import lombok.Getter;
 public enum MessageCode {
     PRODUCT_CREATE_SUCCESS("product.create.success"),
     PRODUCT_DELETE_FAIL("product.delete.fail"),
-    PRODUCT_SEARCH_SUCCESS("product.search.success");
-
+    PRODUCT_SEARCH_SUCCESS("product.search.success"),
+    PRODUCT_DETAIL_SUCCESS("product.detail.success");
     private final String code;
 
     MessageCode(String code) {

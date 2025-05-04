@@ -3,7 +3,7 @@ package com.wanted.mono.domain.product.controller.advice;
 import com.wanted.mono.global.common.Error;
 import com.wanted.mono.global.common.ErrorCode;
 import com.wanted.mono.global.common.ErrorResponse;
-import com.wanted.mono.global.exception.ProductListEmptyException;
+import com.wanted.mono.global.exception.ProductEmptyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -15,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -57,11 +58,11 @@ public class ProductControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler(ProductListEmptyException.class)
+    @ExceptionHandler(ProductEmptyException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundResourceException(Exception ex, Locale locale) {
-        log.error("ProductController 상품 목록 조회 결과 없음 : ", ex);
+        log.error("ProductController 조회 결과 없음 : ", ex);
 
-        ErrorCode errorCode = ErrorCode.PRODUCT_LIST_EMPTY;
+        ErrorCode errorCode = ErrorCode.PRODUCT_EMPTY;
 
         String localizedMessage = messageSource.getMessage(errorCode.getMessageKey(), null, locale);
 
@@ -94,6 +95,27 @@ public class ProductControllerAdvice {
             details.put("message", "해당 슬러그는 이미 사용 중입니다.");
         }
 
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .success(false)
+                .error(Error.builder()
+                        .code(errorCode.getCode())
+                        .message(localizedMessage)
+                        .details(details)
+                        .build())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(MethodArgumentTypeMismatchException ex, Locale locale) {
+        log.error("파라미터 타입 불일치", ex);
+
+        ErrorCode errorCode = ErrorCode.INVALID_TYPE_INPUT;
+        String localizedMessage = messageSource.getMessage(errorCode.getMessageKey(), null, locale);
+
+        Map<String, String> details = new HashMap<>();
+        details.put(ex.getName(), ex.getValue() + "는 유효한 상품 ID가 아닙니다.");
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .success(false)
                 .error(Error.builder()

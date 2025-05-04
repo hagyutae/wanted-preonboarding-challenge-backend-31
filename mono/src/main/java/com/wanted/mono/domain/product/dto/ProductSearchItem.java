@@ -1,6 +1,7 @@
 package com.wanted.mono.domain.product.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.wanted.mono.domain.product.dto.model.ProductImageDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class ProductSearchItem {
     private String currency;
 
     @JsonProperty("primary_image")
-    private ProductImageDto primaryImage;
+    private ProductImageSearchDto primaryImage;
 
     private BrandAndSellerItem brand;
 

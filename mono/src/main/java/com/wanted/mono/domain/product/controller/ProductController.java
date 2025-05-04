@@ -1,6 +1,7 @@
 package com.wanted.mono.domain.product.controller;
 
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
+import com.wanted.mono.domain.product.dto.model.ProductInfoDto;
 import com.wanted.mono.domain.product.dto.request.ProductRequest;
 import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
@@ -29,9 +30,12 @@ import static com.wanted.mono.global.message.MessageCode.*;
 public class ProductController {
     private final ProductService productService;
     private final MessageUtil messageUtil;
+
     /**
-     * POST /api/products: 상품 등록 (관련 정보 모두 포함)
-     *
+     * POST /api/products
+     * 새로운 상품을 등록합니다.
+     * @param productRequest
+     * @return
      */
     @PostMapping()
     public ResponseEntity<?> create(@Valid @RequestBody ProductRequest productRequest) {
@@ -43,12 +47,25 @@ public class ProductController {
                 .body(CommonResponse.success(saveResponse, messageUtil.get(PRODUCT_CREATE_SUCCESS)));
     }
 
+    /**
+     * GET /api/products
+     * 상품 목록을 조회합니다.
+     * @param productSearchRequest
+     * @return
+     */
     @GetMapping()
     public ResponseEntity<?> search(@Valid @ModelAttribute ProductSearchRequest productSearchRequest) {
         ProductSearchResponse productSearchResponse = productService.searchProduct(productSearchRequest);
 
         return ResponseEntity.ok()
                 .body(CommonResponse.success(productSearchResponse, messageUtil.get(PRODUCT_SEARCH_SUCCESS)));
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<?> detail(@PathVariable Long productId) {
+        ProductInfoDto productInfoDto = productService.findById(productId);
+        return ResponseEntity.ok()
+                .body(CommonResponse.success(productInfoDto, messageUtil.get(PRODUCT_DETAIL_SUCCESS)));
     }
 
 }

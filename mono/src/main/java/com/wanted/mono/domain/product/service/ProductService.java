@@ -4,28 +4,28 @@ import com.wanted.mono.domain.brand.entity.Brand;
 import com.wanted.mono.domain.brand.service.BrandService;
 import com.wanted.mono.domain.product.dto.Pagination;
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
+import com.wanted.mono.domain.product.dto.model.ProductInfoDto;
 import com.wanted.mono.domain.product.dto.request.ProductRequest;
 import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSearchResponse;
 import com.wanted.mono.domain.product.entity.Product;
-import com.wanted.mono.domain.product.repository.ProductQueryRepository;
+import com.wanted.mono.domain.product.repository.query.ProductInfoQueryRepository;
+import com.wanted.mono.domain.product.repository.query.ProductSearchQueryRepository;
 import com.wanted.mono.domain.product.repository.ProductRepository;
 import com.wanted.mono.domain.seller.entity.Seller;
 import com.wanted.mono.domain.seller.service.SellerService;
 import com.wanted.mono.domain.tag.service.ProductTagService;
-import com.wanted.mono.global.exception.ProductListEmptyException;
+import com.wanted.mono.global.exception.ProductEmptyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -41,8 +41,9 @@ public class ProductService {
     private final ProductTagService productTagService;
     private final SellerService sellerService;
     private final BrandService brandService;
-    private final ProductQueryRepository productQueryRepository;
+    private final ProductSearchQueryRepository productSearchQueryRepository;
     private final ProductItemService productItemService;
+    private final ProductInfoQueryRepository productInfoQueryRepository;
 
     @Transactional
     public ProductSaveResponse createProduct(ProductRequest productRequest) {
@@ -76,12 +77,7 @@ public class ProductService {
 
     public ProductSearchResponse searchProduct(ProductSearchRequest request) {
         log.info("ProductService 페이징 및 필터 처리 조회");
-        Page<Product> searchResult = productQueryRepository.search(request);
-
-        log.error("ProductService 조회 값이 없을 시 예외처리");
-        if (!searchResult.hasContent()) {
-            throw new ProductListEmptyException();
-        }
+        Page<Product> searchResult = productSearchQueryRepository.search(request);
 
         List<ProductSearchItem> displayProducts = new ArrayList<>();
         for (Product product : searchResult.getContent()) {
@@ -98,6 +94,9 @@ public class ProductService {
 
 
         return new ProductSearchResponse(displayProducts, pagination);
+    }
 
+    public ProductInfoDto findById(Long productId) {
+        return productInfoQueryRepository.getProductInfo(productId);
     }
 }
