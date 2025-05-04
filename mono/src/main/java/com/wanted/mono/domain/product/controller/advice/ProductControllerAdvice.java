@@ -3,7 +3,7 @@ package com.wanted.mono.domain.product.controller.advice;
 import com.wanted.mono.global.common.Error;
 import com.wanted.mono.global.common.ErrorCode;
 import com.wanted.mono.global.common.ErrorResponse;
-import com.wanted.mono.global.exception.ProductListEmptyException;
+import com.wanted.mono.global.exception.ProductEmptyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -57,11 +57,11 @@ public class ProductControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler(ProductListEmptyException.class)
+    @ExceptionHandler(ProductEmptyException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundResourceException(Exception ex, Locale locale) {
-        log.error("ProductController 상품 목록 조회 결과 없음 : ", ex);
+        log.error("ProductController 조회 결과 없음 : ", ex);
 
-        ErrorCode errorCode = ErrorCode.PRODUCT_LIST_EMPTY;
+        ErrorCode errorCode = ErrorCode.PRODUCT_EMPTY;
 
         String localizedMessage = messageSource.getMessage(errorCode.getMessageKey(), null, locale);
 

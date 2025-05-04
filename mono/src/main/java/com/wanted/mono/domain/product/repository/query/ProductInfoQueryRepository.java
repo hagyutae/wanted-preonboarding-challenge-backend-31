@@ -23,6 +23,7 @@ import com.wanted.mono.domain.tag.entity.Tag;
 import com.wanted.mono.domain.tag.entity.dto.TagDto;
 import com.wanted.mono.domain.tag.repository.TagRepository;
 import com.wanted.mono.domain.tag.repository.query.ProductTagQueryRepository;
+import com.wanted.mono.global.exception.ProductEmptyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.spel.ast.Projection;
@@ -105,6 +106,11 @@ public class ProductInfoQueryRepository {
                 .leftJoin(product.productPrices, productPrice)
                 .where(product.id.eq(productId))
                 .fetchOne();
+
+        log.error("조회 실패시 (없는 상품일시) 예외 처리");
+        if (dto == null) {
+            throw new ProductEmptyException();
+        }
 
         log.info("ProductPriceDto 할인률 계산");
         dto.getPrice().addDiscountPercentage();
