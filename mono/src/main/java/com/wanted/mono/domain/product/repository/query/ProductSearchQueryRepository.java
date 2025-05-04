@@ -32,6 +32,11 @@ public class ProductSearchQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    /**
+     * 필터링 조건 + 페이징 검색 쿼리
+     * @param req
+     * @return
+     */
     public Page<Product> search(ProductSearchRequest req) {
         log.info("ProductQueryRepository where 절 생성");
         BooleanExpression where = buildWhere(req);

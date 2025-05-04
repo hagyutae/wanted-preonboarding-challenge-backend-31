@@ -4,6 +4,7 @@ import com.wanted.mono.domain.brand.entity.Brand;
 import com.wanted.mono.domain.brand.service.BrandService;
 import com.wanted.mono.domain.product.dto.Pagination;
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
+import com.wanted.mono.domain.product.dto.model.ProductInfoDto;
 import com.wanted.mono.domain.product.dto.request.ProductRequest;
 import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
@@ -100,7 +101,7 @@ public class ProductService {
         return new ProductSearchResponse(displayProducts, pagination);
     }
 
-    public void findById(Long productId) {
-        productInfoQueryRepository.getProductInfo(productId);
+    public ProductInfoDto findById(Long productId) {
+        return productInfoQueryRepository.getProductInfo(productId);
     }
 }

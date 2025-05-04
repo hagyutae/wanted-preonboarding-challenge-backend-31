@@ -1,6 +1,7 @@
 package com.wanted.mono.domain.product.controller;
 
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
+import com.wanted.mono.domain.product.dto.model.ProductInfoDto;
 import com.wanted.mono.domain.product.dto.request.ProductRequest;
 import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
@@ -62,8 +63,9 @@ public class ProductController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<?> detail(@PathVariable Long productId) {
-        productService.findById(productId);
-        return ResponseEntity.ok().build();
+        ProductInfoDto productInfoDto = productService.findById(productId);
+        return ResponseEntity.ok()
+                .body(CommonResponse.success(productInfoDto, messageUtil.get(PRODUCT_DETAIL_SUCCESS)));
     }
 
 }

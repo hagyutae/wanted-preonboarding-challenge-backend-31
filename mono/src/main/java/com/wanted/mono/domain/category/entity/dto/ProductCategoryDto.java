@@ -16,7 +16,7 @@ public class ProductCategoryDto {
     private String name;
     private String slug;
     @JsonProperty("is_primary")
-    private boolean isPrimary;
+    private boolean primary;
     private Parent parent;
 
     @Data
@@ -34,7 +34,7 @@ public class ProductCategoryDto {
         productCategoryDto.id = productCategory.getCategory().getId();
         productCategoryDto.name = productCategory.getCategory().getName();
         productCategoryDto.slug = productCategory.getCategory().getSlug();
-        productCategoryDto.isPrimary = productCategory.getIsPrimary();
+        productCategoryDto.primary = productCategory.getIsPrimary();
 
         Category parent = productCategory.getCategory().getParent();
         productCategoryDto.parent = parent == null
