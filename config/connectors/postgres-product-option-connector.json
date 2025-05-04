@@ -1,0 +1,28 @@
+{
+  "name": "product-option-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "postgres-db",
+    "database.port": "5432",
+    "database.user": "challenge_user",
+    "database.password": "challenge1234",
+    "database.dbname": "challenge",
+    "topic.prefix": "product-option",
+    "slot.name": "product_option_slot",
+    "plugin.name": "pgoutput",
+    "snapshot.mode": "initial",
+    "table.include.list": "public.product_options,public.product_images",
+
+    "transforms": "RouteByTable",
+    "transforms.RouteByTable.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.RouteByTable.regex": "product-option.public.(.*)",
+    "transforms.RouteByTable.replacement": "product-option-events",
+
+    "message.key.columns": "public.product_options:option_group_id;public.product_images:option_id",
+
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
+  }
+}

@@ -76,6 +76,8 @@ services:
       - postgres-db
     ports:
       - "8083:8083"
+    volumes:
+      - ./debezium-libs:/kafka/connect/debezium-libs
     environment:
       GROUP_ID: 1
       CONFIG_STORAGE_TOPIC: connect_configs

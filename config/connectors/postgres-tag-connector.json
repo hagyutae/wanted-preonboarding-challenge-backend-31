@@ -1,0 +1,24 @@
+{
+  "name": "tag-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "postgres-db",
+    "database.port": "5432",
+    "database.user": "challenge_user",
+    "database.password": "challenge1234",
+    "database.dbname": "challenge",
+    "topic.prefix": "tag",
+    "slot.name": "tag_slot",
+    "plugin.name": "pgoutput",
+    "snapshot.mode": "initial",
+    "table.include.list": "public.tags",
+    "transforms": "RouteByTable",
+    "transforms.RouteByTable.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.RouteByTable.regex": "tag.public.(.*)",
+    "transforms.RouteByTable.replacement": "tag-events",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
+  }
+}

@@ -8,3 +8,5 @@ dist/
 *.egg-info/
 
 .gradle
+
+debezium-libs/debezium-scripting-2.7.3.Final.jar

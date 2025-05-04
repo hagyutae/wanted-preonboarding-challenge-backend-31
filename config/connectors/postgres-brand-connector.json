@@ -1,0 +1,24 @@
+{
+  "name": "brand-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "postgres-db",
+    "database.port": "5432",
+    "database.user": "challenge_user",
+    "database.password": "challenge1234",
+    "database.dbname": "challenge",
+    "topic.prefix": "brand",
+    "slot.name": "brand_slot",
+    "plugin.name": "pgoutput",
+    "snapshot.mode": "initial",
+    "table.include.list": "public.brands",
+    "transforms": "RouteByTable",
+    "transforms.RouteByTable.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.RouteByTable.regex": "brand.public.(.*)",
+    "transforms.RouteByTable.replacement": "brand-events",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false"
+  }
+}
