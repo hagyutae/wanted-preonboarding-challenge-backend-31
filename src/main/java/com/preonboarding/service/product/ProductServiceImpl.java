@@ -203,7 +203,17 @@ public class ProductServiceImpl implements ProductService {
         review.updateProduct(product);
 
         UserResponse userResponse = UserResponse.of(user);
-        ProductReviewResponse reviewResponse = ProductReviewResponse.from(review,userResponse);
+        ProductReviewResponse reviewResponse = ProductReviewResponse.builder()
+                .id(review.getId())
+                .user(userResponse)
+                .rating(review.getRating())
+                .title(review.getTitle())
+                .content(review.getContent())
+                .createdAt(review.getCreatedAt())
+                .updatedAt(review.getUpdatedAt())
+                .verifiedPurchase(review.getVerifiedPurchase())
+                .helpfulVotes(review.getHelpfulVotes())
+                .build();
 
         return BaseResponse.<ProductReviewResponse>builder()
                 .success(true)

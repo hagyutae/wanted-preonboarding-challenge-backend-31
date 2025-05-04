@@ -1,6 +1,9 @@
 package com.preonboarding.domain;
 
 import com.preonboarding.dto.request.product.ProductReviewRequestDto;
+import com.preonboarding.global.code.ErrorCode;
+import com.preonboarding.global.response.BaseException;
+import com.preonboarding.global.response.ErrorResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -80,6 +83,18 @@ public class Review {
 
         this.product = product;
         product.getReviewList().add(this);
+    }
+
+    public void updateReview(ProductReviewRequestDto dto) {
+        this.rating = dto.getRating();
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+    }
+
+    public void validateUser(User user) {
+        if (this.user==null || !this.user.equals(user)) {
+            throw new BaseException(false, ErrorResponseDto.of(ErrorCode.REVIEW_FORBIDDEN));
+        }
     }
 
     @Override

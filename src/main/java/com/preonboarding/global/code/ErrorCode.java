@@ -9,6 +9,8 @@ public enum ErrorCode {//400
     INVALID_STOCK_INPUT("INVALID_INPUT","잘못된 재고 입력"),
     INVALID_TOKEN_INPUT("INVALID_INPUT","잘못된 토큰 입력"),
 
+    REVIEW_FORBIDDEN("FORBIDDEN","리뷰 작업을 수행할 권한이 없습니다."),
+
     PRODUCT_NOT_FOUND("RESOURCE_NOT_FOUND","상품을 찾을 수 없습니다."),
     SELLER_NOT_FOUND("RESOURCE_NOT_FOUND","판매자를 찾을 수 없습니다."),
     BRAND_NOT_FOUND("RESOURCE_NOT_FOUND","브랜드를 찾을 수 없습니다."),
@@ -17,6 +19,7 @@ public enum ErrorCode {//400
     OPTION_NOT_FOUND("RESOURCE_NOT_FOUND","상품 옵션을 찾을 수 없습니다."),
     OPTION_GROUP_NOT_FOUND("RESOURCE_NOT_FOUND","옵션 그룹을 찾을 수 없습니다."),
     USER_NOT_FOUND("RESOURCE_NOT_FOUND","유저를 찾을 수 없습니다."),
+    REVIEW_NOT_FOUND("RESOURCE_NOT_FOUND","리뷰를 찾을 수 없습니다."),
 
     UNAUTHORIZED("UNAUTHORIZED","인증되지 않은 요청"), // 401
 

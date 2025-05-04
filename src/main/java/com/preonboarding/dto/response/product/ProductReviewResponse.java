@@ -25,18 +25,4 @@ public class ProductReviewResponse {
     private LocalDateTime updatedAt;
     private boolean verifiedPurchase;
     private Integer helpfulVotes;
-
-    public static ProductReviewResponse from(Review review,UserResponse userResponse) {
-        return ProductReviewResponse.builder()
-                .id(review.getId())
-                .user(userResponse)
-                .rating(review.getRating())
-                .title(review.getTitle())
-                .content(review.getContent())
-                .createdAt(review.getCreatedAt())
-                .updatedAt(review.getUpdatedAt())
-                .verifiedPurchase(review.getVerifiedPurchase())
-                .helpfulVotes(review.getHelpfulVotes())
-                .build();
-    }
 }
