@@ -20,7 +20,10 @@ import java.util.Properties;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "investLee.platform.ecommerce.domain",
+        basePackages = {
+                "investLee.platform.ecommerce.repository",     // ← 추가!
+                "investLee.platform.ecommerce.domain"          // (기존 포함 가능)
+        },
         entityManagerFactoryRef = "wantedEntityManagerFactory",
         transactionManagerRef = "wantedTransactionManager"
 )
@@ -36,7 +39,15 @@ public class JpaConfig {
     @Bean("wantedJpaProperties")
     @ConfigurationProperties(prefix = "spring.jpa.wanted-db.properties")
     public Properties jpaProperties() {
-        return new Properties();
+        Properties properties = new Properties();
+
+        // 💡 필수 설정 추가!
+        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.format_sql", "true");
+
+        return properties;
     }
 
     @Bean("wantedEntityManagerFactory")
@@ -44,10 +55,13 @@ public class JpaConfig {
             EntityManagerFactoryBuilder builder,
             @Qualifier("wantedDataSource") DataSource dataSource,
             @Qualifier("wantedJpaProperties") Properties jpaProperties) {
+
         LocalContainerEntityManagerFactoryBean factoryBean = builder
                 .dataSource(dataSource)
                 .packages("investLee.platform.ecommerce.domain")
+                .persistenceUnit("wanted")
                 .build();
+
         factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         factoryBean.setJpaProperties(jpaProperties);
         return factoryBean;
@@ -59,4 +73,3 @@ public class JpaConfig {
         return new JpaTransactionManager(entityManagerFactory);
     }
 }
-

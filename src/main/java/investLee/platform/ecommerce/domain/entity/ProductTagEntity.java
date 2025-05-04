@@ -7,23 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "product_tag")
+@Table(name = "product_tags")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ProductTagEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private ProductEntity product;
 
-    @ManyToOne
-    @JoinColumn(name = "tag_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private TagEntity tag;
 }
-

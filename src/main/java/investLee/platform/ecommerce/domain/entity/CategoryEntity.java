@@ -6,31 +6,33 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "category")
+@Table(name = "categories")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CategoryEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String slug;
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private CategoryEntity parent;
 
-    private Integer level;
+    private int level;
+
     private String imageUrl;
 
     @OneToMany(mappedBy = "category")
-    private List<ProductCategoryEntity> products;
+    @Builder.Default
+    private List<ProductCategoryEntity> productCategories = new ArrayList<>();
 }

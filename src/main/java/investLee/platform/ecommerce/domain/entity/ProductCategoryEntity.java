@@ -7,24 +7,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "product_category")
+@Table(name = "product_categories")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ProductCategoryEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private ProductEntity product;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private CategoryEntity category;
 
-    private Boolean isPrimary;
+    private boolean isPrimary;
 }

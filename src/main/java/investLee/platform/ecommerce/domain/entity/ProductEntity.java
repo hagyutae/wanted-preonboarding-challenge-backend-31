@@ -1,89 +1,72 @@
 package investLee.platform.ecommerce.domain.entity;
 
+import investLee.platform.ecommerce.domain.BaseEntity;
+import investLee.platform.ecommerce.domain.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "product")
+@Table(name = "products")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductEntity {
+public class ProductEntity extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+
     private String slug;
+
     private String shortDescription;
 
-    @Lob
     private String fullDescription;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private SellerEntity seller;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     private BrandEntity brand;
 
-    private String status;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ProductCategoryEntity> productCategories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductDetailEntity> details;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ProductImageEntity> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductPriceEntity> prices;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ProductOptionGroupEntity> optionGroups = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
-    private List<ProductCategoryEntity> categories;
-
-    @OneToMany(mappedBy = "product")
-    private List<ProductOptionGroupEntity> optionGroups;
-
-    @OneToMany(mappedBy = "product")
-    private List<ProductImageEntity> images;
-
-    @OneToMany(mappedBy = "product")
-    private List<ProductTagEntity> tags;
-
-    @OneToMany(mappedBy = "product")
-    private List<ReviewEntity> reviews;
-
-    public void updateBasicInfo(
-            String name,
-            String slug,
-            String shortDescription,
-            String fullDescription,
-            String status,
-            LocalDateTime updatedAt
-    ) {
+    public void updateBasicInfo(String name, String slug, String shortDesc,
+                                String fullDesc, ProductStatus status,
+                                SellerEntity seller, BrandEntity brand) {
         this.name = name;
         this.slug = slug;
-        this.shortDescription = shortDescription;
-        this.fullDescription = fullDescription;
+        this.shortDescription = shortDesc;
+        this.fullDescription = fullDesc;
         this.status = status;
-        this.updatedAt = updatedAt;
+        this.seller = seller;
+        this.brand = brand;
     }
 
-    public void delete(
-            String status,
-            LocalDateTime updatedAt
-    ) {
+    public void changeStatus(ProductStatus status) {
         this.status = status;
-        this.updatedAt = updatedAt;
     }
 }
 

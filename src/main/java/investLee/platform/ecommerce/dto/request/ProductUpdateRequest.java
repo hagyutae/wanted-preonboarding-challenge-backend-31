@@ -1,18 +1,42 @@
 package investLee.platform.ecommerce.dto.request;
 
-import lombok.Getter;
+import investLee.platform.ecommerce.domain.ProductStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductUpdateRequest {
-    private String name;
-    private String slug;
+
+    @NotBlank private String name;
+    @NotBlank private String slug;
     private String shortDescription;
     private String fullDescription;
-    private String status;
-    private ProductCreateRequest.ProductDetailDto detail;
-    private ProductCreateRequest.ProductPriceDto price;
-    private List<ProductCreateRequest.OptionGroupDto> optionGroups;
-    private List<ProductCreateRequest.ProductImageDto> images;
+
+    @NotNull private ProductStatus status;
+
+    @NotNull private Long sellerId;
+    @NotNull private Long brandId;
+
+    @NotNull private ProductPriceDTO price;
+
+    private List<Long> categoryIds;
+    private Long primaryCategoryId;
+
+    @Data
+    public static class ProductPriceDTO {
+        private BigDecimal basePrice;
+        private BigDecimal salePrice;
+        private BigDecimal costPrice;
+        private String currency;
+        private BigDecimal taxRate;
+    }
 }

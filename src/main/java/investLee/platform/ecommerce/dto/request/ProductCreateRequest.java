@@ -1,38 +1,43 @@
 package investLee.platform.ecommerce.dto.request;
 
-import lombok.Getter;
+import investLee.platform.ecommerce.domain.ProductStatus;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductCreateRequest {
-    private String name;
-    private String slug;
+
+    @NotBlank private String name;
+    @NotBlank private String slug;
     private String shortDescription;
     private String fullDescription;
-    private Long sellerId;
-    private Long brandId;
-    private String status;
 
-    private ProductDetailDto detail;
-    private ProductPriceDto price;
-    private List<OptionGroupDto> optionGroups;
-    private List<ProductImageDto> images;
+    @NotNull
+    private ProductStatus status;
 
-    @Getter
-    public static class ProductDetailDto {
-        private BigDecimal weight;
-        private String dimensions;
-        private String materials;
-        private String countryOfOrigin;
-        private String warrantyInfo;
-        private String careInstructions;
-        private String additionalInfo;
-    }
+    @NotNull private Long sellerId;
+    @NotNull private Long brandId;
 
-    @Getter
-    public static class ProductPriceDto {
+    @NotNull private ProductPriceDTO price;
+    private List<Long> categoryIds;
+    private Long primaryCategoryId;
+
+    private List<ProductOptionGroupDTO> optionGroups;
+    private List<ProductImageDTO> images;
+
+    @Data
+    @Builder
+    public static class ProductPriceDTO {
         private BigDecimal basePrice;
         private BigDecimal salePrice;
         private BigDecimal costPrice;
@@ -40,27 +45,28 @@ public class ProductCreateRequest {
         private BigDecimal taxRate;
     }
 
-    @Getter
-    public static class OptionGroupDto {
+    @Data
+    public static class ProductOptionGroupDTO {
         private String name;
-        private Integer displayOrder;
-        private List<ProductOptionDto> options;
+        private int displayOrder;
+        private List<ProductOptionDTO> options;
 
-        @Getter
-        public static class ProductOptionDto {
+        @Data
+        public static class ProductOptionDTO {
             private String name;
             private BigDecimal additionalPrice;
             private String sku;
-            private Integer stock;
-            private Integer displayOrder;
+            private int stock;
+            private int displayOrder;
         }
     }
 
-    @Getter
-    public static class ProductImageDto {
+    @Data
+    public static class ProductImageDTO {
         private String url;
         private String altText;
-        private Boolean isPrimary;
-        private Integer displayOrder;
+        private boolean isPrimary;
+        private int displayOrder;
+        private Long optionId;  // null 허용
     }
 }

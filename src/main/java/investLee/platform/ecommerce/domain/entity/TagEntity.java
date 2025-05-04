@@ -6,23 +6,25 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "tag")
+@Table(name = "tags")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class TagEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+
     private String slug;
 
-    @OneToMany(mappedBy = "tag")
-    private List<ProductTagEntity> productTags;
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ProductTagEntity> productTags = new ArrayList<>();
 }

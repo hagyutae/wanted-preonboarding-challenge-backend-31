@@ -5,53 +5,39 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import org.hibernate.annotations.Type;
 
 @Entity
-@Table(name = "product_detail")
+@Table(name = "product_details")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ProductDetailEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private ProductEntity product;
 
-    private BigDecimal weight;
+    private Double weight;
 
-    @Column(columnDefinition = "json")
+    @Type(JsonBinaryType.class)
+    @Column(columnDefinition = "jsonb")
     private String dimensions;
 
     private String materials;
+
     private String countryOfOrigin;
+
     private String warrantyInfo;
+
     private String careInstructions;
 
+    @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb")
     private String additionalInfo;
-
-    public void update(
-            BigDecimal weight,
-            String dimensions,
-            String materials,
-            String countryOfOrigin,
-            String warrantyInfo,
-            String careInstructions,
-            String additionalInfo
-    ) {
-        this.weight = weight;
-        this.dimensions = dimensions;
-        this.materials = materials;
-        this.countryOfOrigin = countryOfOrigin;
-        this.warrantyInfo = warrantyInfo;
-        this.careInstructions = careInstructions;
-        this.additionalInfo = additionalInfo;
-    }
 }

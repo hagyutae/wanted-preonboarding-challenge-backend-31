@@ -6,21 +6,31 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name = "brand")
+@Table(name = "brands")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class BrandEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+
     private String slug;
+
     private String description;
+
     private String logoUrl;
+
     private String website;
+
+    @OneToMany(mappedBy = "brand")
+    @Builder.Default
+    private List<ProductEntity> products = new ArrayList<>();
 }

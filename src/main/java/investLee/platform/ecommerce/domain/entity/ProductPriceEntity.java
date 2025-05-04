@@ -1,5 +1,6 @@
 package investLee.platform.ecommerce.domain.entity;
 
+import investLee.platform.ecommerce.dto.request.ProductUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,18 +10,17 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "product_price")
+@Table(name = "product_prices")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ProductPriceEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private ProductEntity product;
 
@@ -29,19 +29,14 @@ public class ProductPriceEntity {
     private BigDecimal costPrice;
 
     private String currency;
+
     private BigDecimal taxRate;
 
-    public void update(
-            BigDecimal basePrice,
-            BigDecimal salePrice,
-            BigDecimal costPrice,
-            String currency,
-            BigDecimal taxRate
-    ) {
-        this.basePrice = basePrice;
-        this.salePrice = salePrice;
-        this.costPrice = costPrice;
-        this.currency = currency;
-        this.taxRate = taxRate;
+    public void updatePrice(ProductUpdateRequest.ProductPriceDTO dto) {
+        this.basePrice = dto.getBasePrice();
+        this.salePrice = dto.getSalePrice();
+        this.costPrice = dto.getCostPrice();
+        this.currency = dto.getCurrency();
+        this.taxRate = dto.getTaxRate();
     }
 }

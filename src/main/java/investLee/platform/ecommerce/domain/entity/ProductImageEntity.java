@@ -1,5 +1,6 @@
 package investLee.platform.ecommerce.domain.entity;
 
+import investLee.platform.ecommerce.dto.request.ProductImageUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,42 +8,37 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "product_image")
+@Table(name = "product_images")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ProductImageEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    private String url;
+
+    private String altText;
+
+    private boolean isPrimary;
+
+    private int displayOrder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private ProductEntity product;
 
-    private String url;
-    private String altText;
-    private Boolean isPrimary;
-    private Integer displayOrder;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_id")
+    private ProductOptionEntity option;  // nullable
 
-    @ManyToOne
-    @JoinColumn(name = "option_id", nullable = true)
-    private ProductOptionEntity option;
-
-    public void update(
-            String url,
-            String altText,
-            Boolean isPrimary,
-            Integer displayOrder,
-            ProductOptionEntity option)
-    {
-        this.url = url;
-        this.altText = altText;
-        this.isPrimary = isPrimary;
-        this.displayOrder = displayOrder;
+    public void update(ProductImageUpdateRequest dto, ProductOptionEntity option) {
+        this.url = dto.getUrl();
+        this.altText = dto.getAltText();
+        this.isPrimary = dto.isPrimary();
+        this.displayOrder = dto.getDisplayOrder();
         this.option = option;
     }
 }
-
