@@ -1,0 +1,31 @@
+spring:
+  jpa:
+    wanted-db:
+      hikari:
+        jdbc-url: jdbc:postgresql://localhost:5437/postgres
+        username: postgres
+        password: ${POSTGRES_PW}
+      properties:
+        hibernate:
+          hbm2ddl.auto: update
+          show_sql: false
+          physical_naming_strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+          jdbc.batch_size: 300
+          order_inserts: true
+          order_updates: true
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:ddl.sql
+      data-locations:
+        - classpath:tags.sql
+        - classpath:sellers.sql
+        - classpath:users.sql
+        - classpath:brands.sql
+        - classpath:categories.sql
+        - classpath:products.sql
+        - classpath:product_extended.sql
+        - classpath:product_options.sql
+        - classpath:reviews.sql
+server:
+  port: 8082
