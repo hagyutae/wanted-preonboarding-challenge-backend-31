@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: products-server
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=products_db
+    username: postgres
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    #        default_batch_fetch_size: 100
+    open-in-view: false
+
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
