@@ -14,7 +14,16 @@ spring:
         format_sql: true
     #        default_batch_fetch_size: 100
     open-in-view: false
-
+  kafka:
+    bootstrap-servers: localhost:29092
+    consumer:
+      group-id: product-query-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  elasticsearch:
+    host: localhost
+    port: 9200
 
 logging:
   level:

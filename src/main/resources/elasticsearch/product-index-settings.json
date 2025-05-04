@@ -1,0 +1,41 @@
+{
+  "index" : {
+    "number_of_replicas" : 0
+  },
+  "analysis": {
+    "analyzer": {
+      "nori_analyzer": {
+        "type": "custom",
+        "tokenizer": "nori_tokenizer",
+        "filter": [
+          "nori_readingform",
+          "lowercase",
+          "nori_part_of_speech",
+          "trim"
+        ]
+      }
+    },
+    "filter": {
+      "nori_part_of_speech": {
+        "type": "nori_part_of_speech",
+        "stoptags": [
+          "E",
+          "IC",
+          "J",
+          "MAG",
+          "MAJ",
+          "SC",
+          "SE",
+          "SF",
+          "SP",
+          "SSC",
+          "SSO",
+          "SY",
+          "VCP",
+          "VCN",
+          "VSV"
+        ]
+      }
+    }
+  }
+}
