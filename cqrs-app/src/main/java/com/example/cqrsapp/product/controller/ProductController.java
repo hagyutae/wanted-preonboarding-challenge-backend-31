@@ -4,8 +4,10 @@ import com.example.cqrsapp.common.dto.ProductSummaryItem;
 import com.example.cqrsapp.common.response.APIDataResponse;
 import com.example.cqrsapp.common.response.PageResponseDto;
 import com.example.cqrsapp.product.dto.requset.RegisterProductDto;
+import com.example.cqrsapp.product.dto.requset.UpdateProductDto;
 import com.example.cqrsapp.product.dto.response.ProductResponse;
 import com.example.cqrsapp.product.dto.response.RegisterProductResponseDto;
+import com.example.cqrsapp.product.dto.response.UpdateProductResponse;
 import com.example.cqrsapp.product.repository.SearchParm;
 import com.example.cqrsapp.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -38,5 +40,10 @@ public class ProductController {
     APIDataResponse<RegisterProductResponseDto> createProduct(@RequestBody RegisterProductDto dto) {
         RegisterProductResponseDto result = productService.createProduct(dto);
         return APIDataResponse.success(result, "상품이 성공적으로 등록되었습니다.");
+    }
+
+    @PutMapping("/{productId}")
+    APIDataResponse<UpdateProductResponse> updateProduct(@PathVariable("productId") Long productId, @RequestBody UpdateProductDto dto) {
+        return APIDataResponse.success(productService.updateProduct(productId, dto), "상품이 성공적으로 수정되었습니다.");
     }
 }

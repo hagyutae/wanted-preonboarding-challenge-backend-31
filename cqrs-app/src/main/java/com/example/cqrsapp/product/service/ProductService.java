@@ -8,8 +8,10 @@ import com.example.cqrsapp.common.exception.ResourceNotFoundException;
 import com.example.cqrsapp.common.response.PageResponseDto;
 import com.example.cqrsapp.product.domain.*;
 import com.example.cqrsapp.product.dto.requset.RegisterProductDto;
+import com.example.cqrsapp.product.dto.requset.UpdateProductDto;
 import com.example.cqrsapp.product.dto.response.ProductResponse;
 import com.example.cqrsapp.product.dto.response.RegisterProductResponseDto;
+import com.example.cqrsapp.product.dto.response.UpdateProductResponse;
 import com.example.cqrsapp.product.repository.*;
 import com.example.cqrsapp.review.repository.ReviewRepository;
 import com.example.cqrsapp.seller.domain.Seller;
@@ -70,6 +72,29 @@ public class ProductService {
         return RegisterProductResponseDto.fromEntity(product);
     }
 
+    @HandleDuplicateKey
+    @Transactional
+    public UpdateProductResponse updateProduct(Long productId, UpdateProductDto dto) {
+        Product product = findProduct(productId);
+        Seller seller = findSeller(dto.getSellerId());
+        Brand brand = findBrand(dto.getSellerId(), dto.getBrandId());
+
+        product.changeProduct(
+                productId,
+                dto.getName(),
+                dto.getSlug(),
+                dto.getShortDescription(),
+                dto.getFullDescription(),
+                seller,
+                brand,
+                dto.getStatus(),
+                mapper.toProductDetail(dto.getDetail()),
+                mapper.toProductPrice(dto.getPrice()));
+
+        updateProductSeries(product, dto);
+        return UpdateProductResponse.fromEntity(product);
+    }
+
      private Map<String, Long> getDistributionMap(Product product) {
         List<DistributionDto> distribution = reviewRepository.findReviewDistributionByProductId(product.getId());
         return distribution.stream()
@@ -106,8 +131,21 @@ public class ProductService {
         product.addProductCategories(productCategories);
     }
 
+    private void updateProductSeries(Product product, UpdateProductDto dto) {
+        product.clearProductSeries();
+        product.addProductOptionGroups(dto.getOptionGroups().stream().map(mapper::toProductOptionGroup).toList());
+        product.addProductImages(dto.getImages().stream().map(mapper::toProductImage).toList());
+        saveProductCategories(product, dto.getCategories());
+        saveProductTags(product, dto.getTags());
+    }
+
     private Product findEntityGraphById(Long productId) {
         return productRepository.findEntityGraphById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", String.valueOf(productId)));
+    }
+
+    private Product findProduct(Long productId) {
+        return productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", String.valueOf(productId)));
     }
 
