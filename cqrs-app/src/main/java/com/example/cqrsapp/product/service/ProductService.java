@@ -95,7 +95,13 @@ public class ProductService {
         return UpdateProductResponse.fromEntity(product);
     }
 
-     private Map<String, Long> getDistributionMap(Product product) {
+    @Transactional
+    public void deleteProduct(Long productId) {
+        Product product = findProduct(productId);
+        productRepository.deleteById(productId);
+    }
+
+    private Map<String, Long> getDistributionMap(Product product) {
         List<DistributionDto> distribution = reviewRepository.findReviewDistributionByProductId(product.getId());
         return distribution.stream()
                 .collect(Collectors.toMap(DistributionDto::getRating,

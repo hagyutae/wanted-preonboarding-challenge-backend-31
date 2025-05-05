@@ -46,4 +46,10 @@ public class ProductController {
     APIDataResponse<UpdateProductResponse> updateProduct(@PathVariable("productId") Long productId, @RequestBody UpdateProductDto dto) {
         return APIDataResponse.success(productService.updateProduct(productId, dto), "상품이 성공적으로 수정되었습니다.");
     }
+
+    @DeleteMapping("/{productId}")
+    APIDataResponse<Void> deleteProduct(@PathVariable("productId") Long productId) {
+        productService.deleteProduct(productId);
+        return APIDataResponse.success("상품이 성공적으로 삭제되었습니다.");
+    }
 }
