@@ -2,19 +2,19 @@ package com.june.ecommerce.domain.product;
 
 import com.june.ecommerce.domain.seller.Seller;
 import com.june.ecommerce.domain.brand.Brand;
+import com.june.ecommerce.dto.product.ProductRequestDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@Getter
 public class Product {
 
     @Id
@@ -38,5 +38,12 @@ public class Product {
     private Brand brand;
 
     private String status;
+
+    public void updateProduct(ProductRequestDto requestDto) {
+        Optional.ofNullable(requestDto.getName()).ifPresent(name -> this.name = name);
+        Optional.ofNullable(requestDto.getSlug()).ifPresent(slug -> this.slug = slug);
+        Optional.ofNullable(requestDto.getShortDescription()).ifPresent(shortDescription -> this.shortDescription = shortDescription);
+        Optional.ofNullable(requestDto.getFullDescription()).ifPresent(fullDescription -> this.fullDescription = fullDescription);
+    }
 
 }

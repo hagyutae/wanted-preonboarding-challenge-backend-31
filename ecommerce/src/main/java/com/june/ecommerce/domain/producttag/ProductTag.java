@@ -3,7 +3,9 @@ package com.june.ecommerce.domain.producttag;
 import com.june.ecommerce.domain.product.Product;
 import com.june.ecommerce.domain.tag.Tag;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class ProductTag {
 

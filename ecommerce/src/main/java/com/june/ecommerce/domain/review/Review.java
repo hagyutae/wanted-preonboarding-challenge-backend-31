@@ -3,9 +3,11 @@ package com.june.ecommerce.domain.review;
 import com.june.ecommerce.domain.product.Product;
 import com.june.ecommerce.domain.user.User;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 public class Review {
 

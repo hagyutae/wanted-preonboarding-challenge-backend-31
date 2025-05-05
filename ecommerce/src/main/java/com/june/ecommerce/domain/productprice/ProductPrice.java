@@ -2,10 +2,12 @@ package com.june.ecommerce.domain.productprice;
 
 import com.june.ecommerce.domain.product.Product;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Entity
+@Getter
 public class ProductPrice {
 
     @Id

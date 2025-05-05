@@ -2,7 +2,9 @@ package com.june.ecommerce.domain.productoptiongroup;
 
 import com.june.ecommerce.domain.product.Product;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class ProductOptionGroup {
 
