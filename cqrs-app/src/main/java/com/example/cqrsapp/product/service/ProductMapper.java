@@ -2,6 +2,7 @@ package com.example.cqrsapp.product.service;
 
 import com.example.cqrsapp.product.domain.*;
 import com.example.cqrsapp.product.dto.requset.RegisterProductDto;
+import com.example.cqrsapp.product.dto.requset.RegisterProductImageDto;
 import com.example.cqrsapp.product.dto.requset.RegisterProductOptionDto;
 import com.example.cqrsapp.seller.domain.Seller;
 import lombok.RequiredArgsConstructor;
@@ -89,6 +90,17 @@ public class ProductMapper {
                 .sku(optionDto.getSku())
                 .stock(optionDto.getStock())
                 .displayOrder(optionDto.getDisplayOrder())
+                .build();
+    }
+
+    public ProductImage mapProductImageFromDto(Product product, RegisterProductImageDto dto) {
+        return ProductImage.builder()
+                .product(product)
+                .url(dto.getUrl())
+                .altText(dto.getAltText())
+                .isPrimary(dto.getIsPrimary())
+                .displayOrder(dto.getDisplayOrder())
+                .optionId(dto.getOptionId())
                 .build();
     }
 

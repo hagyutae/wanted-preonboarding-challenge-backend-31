@@ -7,13 +7,8 @@ import com.example.cqrsapp.common.dto.ReviewRatingDto.DistributionDto;
 import com.example.cqrsapp.common.exception.ResourceNotFoundException;
 import com.example.cqrsapp.common.response.PageResponseDto;
 import com.example.cqrsapp.product.domain.*;
-import com.example.cqrsapp.product.dto.requset.RegisterProductDto;
-import com.example.cqrsapp.product.dto.requset.RegisterProductOptionDto;
-import com.example.cqrsapp.product.dto.requset.UpdateProductDto;
-import com.example.cqrsapp.product.dto.response.ProductResponse;
-import com.example.cqrsapp.product.dto.response.RegisterProductOptionResponseDto;
-import com.example.cqrsapp.product.dto.response.RegisterProductResponseDto;
-import com.example.cqrsapp.product.dto.response.UpdateProductResponse;
+import com.example.cqrsapp.product.dto.requset.*;
+import com.example.cqrsapp.product.dto.response.*;
 import com.example.cqrsapp.product.repository.*;
 import com.example.cqrsapp.review.repository.ReviewRepository;
 import com.example.cqrsapp.seller.domain.Seller;
@@ -47,6 +42,7 @@ public class ProductService {
     private final BrandRepository brandRepository;
     private final ProductOptionGroupJapRepository productOptionGroupJapRepository;
     private final ProductOptionRepository productOptionRepository;
+    private final ProductImageRepository productImageRepository;
     private final ProductMapper mapper;
 
     @Transactional(readOnly = true)
@@ -107,6 +103,15 @@ public class ProductService {
 
         productOptionRepository.save(productOption);
         return RegisterProductOptionResponseDto.fromEntity(productOption);
+    }
+
+    @Transactional
+    public RegisterProductImageResponseDto addProductImage(Long productId, RegisterProductImageDto dto) {
+        Product product = findProduct(productId);
+        ProductImage productImage = mapper.mapProductImageFromDto(product, dto);
+        productImageRepository.save(productImage);
+
+        return RegisterProductImageResponseDto.fromEntity(productImage);
     }
 
     @Transactional

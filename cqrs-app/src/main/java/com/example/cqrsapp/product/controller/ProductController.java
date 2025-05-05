@@ -3,13 +3,8 @@ package com.example.cqrsapp.product.controller;
 import com.example.cqrsapp.common.dto.ProductSummaryItem;
 import com.example.cqrsapp.common.response.APIDataResponse;
 import com.example.cqrsapp.common.response.PageResponseDto;
-import com.example.cqrsapp.product.dto.requset.RegisterProductDto;
-import com.example.cqrsapp.product.dto.requset.RegisterProductOptionDto;
-import com.example.cqrsapp.product.dto.requset.UpdateProductDto;
-import com.example.cqrsapp.product.dto.response.ProductResponse;
-import com.example.cqrsapp.product.dto.response.RegisterProductOptionResponseDto;
-import com.example.cqrsapp.product.dto.response.RegisterProductResponseDto;
-import com.example.cqrsapp.product.dto.response.UpdateProductResponse;
+import com.example.cqrsapp.product.dto.requset.*;
+import com.example.cqrsapp.product.dto.response.*;
 import com.example.cqrsapp.product.repository.SearchParm;
 import com.example.cqrsapp.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +49,13 @@ public class ProductController {
         RegisterProductOptionResponseDto result = productService.addProductOption(productId, dto);
         return APIDataResponse.success(result, "상품 옵션이 성공적으로 추가되었습니다.");
     }
+
+    @PostMapping("/{productId}/images")
+    APIDataResponse<RegisterProductImageResponseDto> addProductOption(@PathVariable("productId") Long productId, @RequestBody RegisterProductImageDto dto) {
+        RegisterProductImageResponseDto result = productService.addProductImage(productId, dto);
+        return APIDataResponse.success(result, "상품 이미지가 성공적으로 추가되었습니다.");
+    }
+
 
     @DeleteMapping("/{productId}")
     APIDataResponse<Void> deleteProduct(@PathVariable("productId") Long productId) {
