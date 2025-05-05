@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wanted.common.entity.BaseCreateUpdateEntity;
 import wanted.domain.brand.entity.Brand;
-import wanted.domain.product.dto.request.ProductCreateRequest;
+import wanted.domain.product.dto.request.ProductRequest;
 import wanted.domain.review.entity.Review;
 import wanted.domain.seller.entity.Seller;
 
@@ -101,7 +101,7 @@ public class Product extends BaseCreateUpdateEntity {
         this.brand = brand;
     }
 
-    public static Product from(ProductCreateRequest dto, Seller seller, Brand brand) {
+    public static Product from(ProductRequest dto, Seller seller, Brand brand) {
         return Product.builder()
                 .name(dto.name())
                 .slug(dto.slug())
@@ -111,5 +111,15 @@ public class Product extends BaseCreateUpdateEntity {
                 .seller(seller)
                 .brand(brand)
                 .build();
+    }
+
+    public void updateFrom(ProductRequest dto, Seller seller, Brand brand) {
+        this.name = dto.name();
+        this.slug = dto.slug();
+        this.shortDescription = dto.shortDescription();
+        this.fullDescription = dto.fullDescription();
+        this.status = Status.valueOf(dto.status());
+        this.seller = seller;
+        this.brand = brand;
     }
 }

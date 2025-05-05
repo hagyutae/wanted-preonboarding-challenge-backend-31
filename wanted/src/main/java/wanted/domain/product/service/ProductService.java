@@ -15,7 +15,7 @@ import wanted.domain.category.entity.Category;
 import wanted.domain.category.repository.CategoryRepository;
 import wanted.domain.product.dto.response.Pagination;
 import wanted.domain.product.dto.request.ProductCategoryRequest;
-import wanted.domain.product.dto.request.ProductCreateRequest;
+import wanted.domain.product.dto.request.ProductRequest;
 import wanted.domain.product.dto.response.ProductCreateResponse;
 import wanted.domain.product.dto.request.ProductImageRequest;
 import wanted.domain.product.dto.response.ProductDetailResponse;
@@ -71,44 +71,64 @@ public class ProductService {
     private final ProductQueryRepository productQueryRepository;
     private final ReviewService reviewService;
 
-
-    /*
-1. Product                (먼저 저장 → 기본 ID 생성됨)
-2. ProductDetail          (1:1)
-3. ProductPrice           (1:1)
-4. ProductCategory        (1:N)
-5. ProductOptionGroup     (1:N)
-6. ProductOption          (N:1)
-7. ProductImage           (1:N, option FK nullable)
-8. ProductTag             (1:N)
- */
     @Transactional
-    public ProductCreateResponse createProduct(ProductCreateRequest productCreateRequest){
-        Seller seller = sellerRepository.findById(productCreateRequest.sellerId())
-                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Seller", productCreateRequest.sellerId())));
+    public ProductCreateResponse createProduct(ProductRequest productRequest){
+        Seller seller = sellerRepository.findById(productRequest.sellerId())
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Seller", productRequest.sellerId())));
 
-        Brand brand = brandRepository.findById(productCreateRequest.brandId())
-                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Brand", productCreateRequest.brandId())));
+        Brand brand = brandRepository.findById(productRequest.brandId())
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Brand", productRequest.brandId())));
 
-        Product product = Product.from(productCreateRequest, seller, brand);
+        Product product = Product.from(productRequest, seller, brand);
         productRepository.save(product);
 
-        ProductDetail productDetail = ProductDetail.from(productCreateRequest.detail(), product);
+        ProductDetail productDetail = ProductDetail.from(productRequest.detail(), product);
         productDetailRepository.save(productDetail);
 
-        ProductPrice productPrice = ProductPrice.from(productCreateRequest.price(), product);
+        ProductPrice productPrice = ProductPrice.from(productRequest.price(), product);
         productPriceRepository.save(productPrice);
 
-        saveProductCategory(productCreateRequest, product);
-        saveProductOption(productCreateRequest, product);
-        saveProductImage(productCreateRequest, product);
-        saveProductTag(productCreateRequest, product);
+        saveProductCategory(productRequest, product);
+        saveProductOption(productRequest, product);
+        saveProductImage(productRequest, product);
+        saveProductTag(productRequest, product);
 
         return ProductCreateResponse.of(product);
     }
 
-    private void saveProductCategory(ProductCreateRequest productCreateRequest, Product product) {
-        for (ProductCategoryRequest productCategoryRequest : productCreateRequest.categories()) {
+    @Transactional
+    public ProductCreateResponse updateProduct(Long productId, ProductRequest request) {
+        Seller seller = sellerRepository.findById(request.sellerId())
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Seller", request.sellerId())));
+
+        Brand brand = brandRepository.findById(request.brandId())
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Brand", request.brandId())));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Product", productId)));
+
+        productDetailRepository.deleteByProductId(productId);
+        productPriceRepository.deleteByProductId(productId);
+        productCategoryRepository.deleteByProductId(productId);
+        productOptionGroupRepository.deleteByProductId(productId);
+        productImageRepository.deleteByProductId(productId);
+        productTagRepository.deleteByProductId(productId);
+
+        product.updateFrom(request, seller, brand);
+
+        productDetailRepository.save(ProductDetail.from(request.detail(), product));
+        productPriceRepository.save(ProductPrice.from(request.price(), product));
+
+        saveProductCategory(request, product);
+        saveProductOption(request, product);
+        saveProductImage(request, product);
+        saveProductTag(request, product);
+
+        return ProductCreateResponse.of(product);
+    }
+
+    private void saveProductCategory(ProductRequest productRequest, Product product) {
+        for (ProductCategoryRequest productCategoryRequest : productRequest.categories()) {
             Category category = categoryRepository.findById(productCategoryRequest.categoryId())
                     .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Category", productCategoryRequest.categoryId())));
             ProductCategory productCategory = ProductCategory.from(productCategoryRequest, product, category);
@@ -116,8 +136,8 @@ public class ProductService {
         }
     }
 
-    private void saveProductOption(ProductCreateRequest productCreateRequest, Product product) {
-        for (ProductOptionGroupRequest productOptionGroupRequest : productCreateRequest.optionGroups()) {
+    private void saveProductOption(ProductRequest productRequest, Product product) {
+        for (ProductOptionGroupRequest productOptionGroupRequest : productRequest.optionGroups()) {
             ProductOptionGroup productOptionGroup = ProductOptionGroup.from(productOptionGroupRequest, product);
             productOptionGroupRepository.save(productOptionGroup);
 
@@ -128,9 +148,9 @@ public class ProductService {
         }
     }
 
-    private void saveProductImage(ProductCreateRequest productCreateRequest, Product product) {
-        if (productCreateRequest.images() == null) return;
-        for (ProductImageRequest productImageRequest : productCreateRequest.images()) {
+    private void saveProductImage(ProductRequest productRequest, Product product) {
+        if (productRequest.images() == null) return;
+        for (ProductImageRequest productImageRequest : productRequest.images()) {
             ProductOption productOption = null;
 
             if (productImageRequest.optionId() != null) {
@@ -142,9 +162,9 @@ public class ProductService {
         }
     }
 
-    private void saveProductTag(ProductCreateRequest productCreateRequest, Product product) {
-        if (productCreateRequest.tags() == null) return;
-        for (Long tagId : productCreateRequest.tags()) {
+    private void saveProductTag(ProductRequest productRequest, Product product) {
+        if (productRequest.tags() == null) return;
+        for (Long tagId : productRequest.tags()) {
             Tag tag = tagRepository.findById(tagId)
                     .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Tag", tagId)));
 

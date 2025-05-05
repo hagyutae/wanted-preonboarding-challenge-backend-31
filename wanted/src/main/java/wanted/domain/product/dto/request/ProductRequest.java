@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
-public record ProductCreateRequest(
+public record ProductRequest(
         @NotNull(message = "상품명은 필수 항목입니다.")
         @Size(max = 255, message = "상품명은 255자 이하로 입력해주세요.")
         String name,
