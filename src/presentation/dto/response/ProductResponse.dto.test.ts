@@ -9,48 +9,57 @@ describe("ProductResponseDTO", () => {
 
     const errors = await validate(instance);
 
-    return errors.map((error) => error.constraints);
+    return errors.map((error) => error.property);
   };
 
-  it("유효한 DTO는 검증을 통과", async () => {
-    const dto: Partial<ProductResponseDTO> = {
-      id: 1,
-      name: "소파",
-      slug: "super-comfortable-sofa",
-      created_at: new Date("2025-04-14T09:30:00Z"),
-      updated_at: new Date("2025-04-14T09:30:00Z"),
-    };
+  const validData: Partial<ProductResponseDTO> = {
+    id: 123,
+    name: "슈퍼 편안한 소파",
+    slug: "super-comfortable-sofa",
+    created_at: new Date("2025-04-10T09:30:00Z"),
+    updated_at: new Date("2025-04-14T10:15:00Z"),
+  };
 
-    const errors = await validateDTO(dto);
+  it("유효한 데이터로 유효성 검증을 통과", async () => {
+    const errors = await validateDTO(validData);
 
     expect(errors).toHaveLength(0);
   });
 
-  it("created_at이 잘못된 날짜 형식인 경우 검증 실패", async () => {
-    const dto: Partial<ProductResponseDTO> = {
-      id: 1,
-      name: "소파",
-      slug: "super-comfortable-sofa",
-      created_at: "invalid-date" as any,
-      updated_at: new Date("2025-04-14T09:30:00Z"),
-    };
+  it("필수 필드가 누락된 경우 검증 실패", async () => {
+    const invalidData = {};
 
-    const errors = await validateDTO(dto);
+    const errors = await validateDTO(invalidData);
 
-    expect(errors.length).toBeGreaterThan(0);
+    expect(errors).toHaveLength(5);
+    expect(errors).toContain("id");
+    expect(errors).toContain("name");
+    expect(errors).toContain("slug");
+    expect(errors).toContain("created_at");
+    expect(errors).toContain("updated_at");
   });
 
-  it("updated_at이 잘못된 날짜 형식인 경우 검증 실패", async () => {
-    const dto: Partial<ProductResponseDTO> = {
-      id: 1,
-      name: "소파",
-      slug: "super-comfortable-sofa",
-      created_at: new Date("2025-04-14T09:30:00Z"),
-      updated_at: "invalid-date" as any,
-    };
+  it("created_at 필드가 날짜 형식이 아닌 경우 검증 실패", async () => {
+    const invalidData = { ...validData, created_at: "not_a_date" as unknown as Date };
 
-    const errors = await validateDTO(dto);
+    const errors = await validateDTO(invalidData);
 
-    expect(errors.length).toBeGreaterThan(0);
+    expect(errors).toContain("created_at");
+  });
+
+  it("updated_at 필드가 날짜 형식이 아닌 경우 검증 실패", async () => {
+    const invalidData = { ...validData, updated_at: "not_a_date" as unknown as Date };
+
+    const errors = await validateDTO(invalidData);
+
+    expect(errors).toContain("updated_at");
+  });
+
+  it("id 필드가 숫자가 아닌 경우 검증 실패", async () => {
+    const invalidData = { ...validData, id: "not_a_number" as unknown as number };
+
+    const errors = await validateDTO(invalidData);
+
+    expect(errors).toContain("id");
   });
 });

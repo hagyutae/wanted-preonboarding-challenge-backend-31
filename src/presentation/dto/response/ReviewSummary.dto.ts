@@ -10,6 +10,7 @@ export default class ReviewSummaryDTO {
 
   @ApiProperty({ description: "리뷰 개수", example: 100 })
   @IsInt()
+  @Min(0)
   total_count: number;
 
   @ApiProperty({

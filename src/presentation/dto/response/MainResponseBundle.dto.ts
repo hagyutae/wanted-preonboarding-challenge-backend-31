@@ -5,7 +5,7 @@ import { IsArray, IsInt, Min, ValidateNested } from "class-validator";
 import CategoryDTO from "../model/Category.dto";
 import ProductSummaryDTO from "../response/ProductSummary.dto";
 
-class FeaturedCategoryDTO extends PickType(CategoryDTO, [
+export class FeaturedCategoryDTO extends PickType(CategoryDTO, [
   "id",
   "name",
   "slug",

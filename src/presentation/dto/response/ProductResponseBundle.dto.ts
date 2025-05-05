@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, ValidateNested } from "class-validator";
+import { IsArray, IsDefined, ValidateNested } from "class-validator";
 
 import PaginationSummaryDTO from "./PaginationSummary.dto";
 import ProductSummaryDTO from "./ProductSummary.dto";
@@ -13,6 +13,7 @@ export default class ProductResponseBundleDTO {
   items: ProductSummaryDTO[];
 
   @ApiProperty({ description: "페이지네이션 정보", type: PaginationSummaryDTO })
+  @IsDefined()
   @ValidateNested()
   @Type(() => PaginationSummaryDTO)
   pagination: PaginationSummaryDTO;

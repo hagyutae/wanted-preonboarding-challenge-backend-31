@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, Min, IsInt } from "class-validator";
+import { IsDefined, IsInt, IsNumber, Min } from "class-validator";
 
 export default class RatingDTO {
   @ApiProperty({ description: "평균 평점", example: 4.5 })
@@ -22,6 +22,7 @@ export default class RatingDTO {
       "1": 2,
     },
   })
+  @IsDefined()
   distribution: {
     [key: string]: number;
   };

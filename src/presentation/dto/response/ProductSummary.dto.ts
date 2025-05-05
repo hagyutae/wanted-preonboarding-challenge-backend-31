@@ -1,11 +1,20 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsBoolean, IsInt, IsNumber, Matches, Max, Min, ValidateNested } from "class-validator";
+import {
+  IsBoolean,
+  IsDefined,
+  IsInt,
+  IsNumber,
+  Matches,
+  Max,
+  Min,
+  ValidateNested,
+} from "class-validator";
 
 import BrandDTO from "../model/Brand.dto";
 import ImageDTO from "../model/Image.dto";
-import ProductCatalogDTO from "./ProductCatalog.dto";
 import SellerDTO from "../model/Seller.dto";
+import ProductCatalogDTO from "./ProductCatalog.dto";
 
 class ProductSummaryOfBrandDTO extends PickType(BrandDTO, ["id", "name"] as const) {}
 class ProductSummaryOfSellerDTO extends PickType(SellerDTO, ["id", "name"] as const) {}
@@ -34,16 +43,19 @@ export default class ProductSummaryDTO extends PickType(ProductCatalogDTO, [
   currency: string;
 
   @ApiProperty({ description: "주 이미지", type: ProductSummaryOfImageDTO })
+  @IsDefined()
   @ValidateNested()
   @Type(() => ProductSummaryOfImageDTO)
   primary_image: ProductSummaryOfImageDTO;
 
   @ApiProperty({ description: "브랜드", type: ProductSummaryOfBrandDTO })
+  @IsDefined()
   @ValidateNested()
   @Type(() => ProductSummaryOfBrandDTO)
   brand: ProductSummaryOfBrandDTO;
 
   @ApiProperty({ description: "판매자", type: ProductSummaryOfSellerDTO })
+  @IsDefined()
   @ValidateNested()
   @Type(() => ProductSummaryOfSellerDTO)
   seller: ProductSummaryOfSellerDTO;
