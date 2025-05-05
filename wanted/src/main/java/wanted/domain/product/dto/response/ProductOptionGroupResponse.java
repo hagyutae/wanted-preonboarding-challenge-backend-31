@@ -16,7 +16,7 @@ public record ProductOptionGroupResponse(
                 group.getName(),
                 group.getDisplayOrder(),
                 group.getOptions().stream()
-                        .map(ProductOptionResponse::of)
+                        .map(option -> ProductOptionResponse.of(option, false))
                         .toList()
         );
     }

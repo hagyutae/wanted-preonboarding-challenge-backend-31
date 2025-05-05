@@ -23,6 +23,7 @@ import wanted.domain.product.dto.response.ProductListResponse;
 import wanted.domain.product.dto.request.ProductOptionGroupRequest;
 import wanted.domain.product.dto.request.ProductOptionRequest;
 import wanted.domain.product.dto.ProductSearchCondition;
+import wanted.domain.product.dto.response.ProductOptionResponse;
 import wanted.domain.product.dto.response.ProductRatingResponse;
 import wanted.domain.product.dto.response.SimpleProductResponse;
 import wanted.domain.product.entity.Product;
@@ -96,6 +97,34 @@ public class ProductService {
         return ProductCreateResponse.of(product);
     }
 
+    @Transactional(readOnly = true)
+    public ProductListResponse getFilteredProducts(ProductSearchCondition condition) {
+        int page = Optional.ofNullable(condition.page()).orElse(1) - 1;
+        int perPage = Optional.ofNullable(condition.perPage()).orElse(10);
+        Pageable pageable = PageRequest.of(page, perPage, parseSort(condition.sort()));
+
+        Page<Product> result = productQueryRepository.search(condition, pageable);
+        List<SimpleProductResponse> items = result.getContent().stream()
+                .map(SimpleProductResponse::from)
+                .toList();
+
+        return new ProductListResponse(
+                items,
+                new Pagination(result.getTotalElements(), result.getTotalPages(), result.getNumber() + 1, result.getSize())
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public ProductDetailResponse getProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Product", productId)));
+
+        ProductRatingResponse rating = reviewService.getProductRating(productId);
+        List<Product> relatedProducts = productRepository.findRelatedProducts(productId);
+
+        return ProductDetailResponse.of(product, rating, relatedProducts);
+    }
+
     @Transactional
     public ProductCreateResponse updateProduct(Long productId, ProductRequest request) {
         Seller seller = sellerRepository.findById(request.sellerId())
@@ -133,6 +162,21 @@ public class ProductService {
                 .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Product", productId)));
 
         product.deleteProduct();
+    }
+
+    @Transactional
+    public ProductOptionResponse createProductOption(Long productId, ProductOptionRequest productOptionRequest) {
+        ProductOptionGroup optionGroup = productOptionGroupRepository.findById(productOptionRequest.optionGroupId())
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("optionGroup", productOptionRequest.optionGroupId())));
+
+        if (!optionGroup.getProduct().getId().equals(productId)) {
+            throw new CustomException(GlobalExceptionCode.INVALID_INPUT, null);
+        }
+
+        ProductOption productOption = ProductOption.from(productOptionRequest, optionGroup);
+        productOptionRepository.save(productOption);
+
+        return ProductOptionResponse.of(productOption, true);
     }
 
     private void saveProductCategory(ProductRequest productRequest, Product product) {
@@ -179,34 +223,6 @@ public class ProductService {
             ProductTag productTag = ProductTag.from(product, tag);
             productTagRepository.save(productTag);
         }
-    }
-
-    @Transactional(readOnly = true)
-    public ProductListResponse getFilteredProducts(ProductSearchCondition condition) {
-        int page = Optional.ofNullable(condition.page()).orElse(1) - 1;
-        int perPage = Optional.ofNullable(condition.perPage()).orElse(10);
-        Pageable pageable = PageRequest.of(page, perPage, parseSort(condition.sort()));
-
-        Page<Product> result = productQueryRepository.search(condition, pageable);
-        List<SimpleProductResponse> items = result.getContent().stream()
-                .map(SimpleProductResponse::from)
-                .toList();
-
-        return new ProductListResponse(
-                items,
-                new Pagination(result.getTotalElements(), result.getTotalPages(), result.getNumber() + 1, result.getSize())
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public ProductDetailResponse getProduct(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Product", productId)));
-
-        ProductRatingResponse rating = reviewService.getProductRating(productId);
-        List<Product> relatedProducts = productRepository.findRelatedProducts(productId);
-
-        return ProductDetailResponse.of(product, rating, relatedProducts);
     }
 
     private Sort parseSort(String sortString) {

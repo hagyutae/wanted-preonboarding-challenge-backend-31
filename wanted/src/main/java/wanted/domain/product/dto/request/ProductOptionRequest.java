@@ -25,5 +25,7 @@ public record ProductOptionRequest(
 
         @NotNull(message = "표시 순서는 필수입니다.")
         @Min(value = 0, message = "표시 순서는 0 이상이어야 합니다.")
-        Integer displayOrder
+        Integer displayOrder,
+
+        Long optionGroupId
 ) {}
