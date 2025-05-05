@@ -1,4 +1,4 @@
-import { pgTable, bigint, varchar, text, integer } from "drizzle-orm/pg-core";
+import { pgTable, bigint, varchar, text, integer, AnyPgColumn } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { productCategories } from "./product-category.schema";
 
@@ -7,7 +7,7 @@ export const categories = pgTable('categories', {
     name: varchar('name', { length: 100 }).notNull(),
     slug: varchar('slug', { length: 100 }).notNull().unique(),
     description: text('description'),
-    parentId: bigint('parent_id', { mode: 'number' }).references(() => categories.id),
+    parentId: bigint('parent_id', { mode: 'number' }).references((): AnyPgColumn => categories.id),
     level: integer('level').notNull(),
     imageUrl: varchar('image_url', { length: 255 })
 });
