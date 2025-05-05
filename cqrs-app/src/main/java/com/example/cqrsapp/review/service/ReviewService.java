@@ -52,6 +52,7 @@ public class ReviewService {
         return RegisterReviewResponseDto.fromEntity(review);
     }
 
+    @Transactional
     public UpdateReviewResponseDto updateReview(Long reviewId, UpdateReviewDto dto) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review", String.valueOf(reviewId)));
@@ -60,4 +61,8 @@ public class ReviewService {
         return UpdateReviewResponseDto.fromEntity(review);
     }
 
+    @Transactional
+    public void deleteReview(Long reviewId) {
+        reviewRepository.deleteById(reviewId);
+    }
 }
