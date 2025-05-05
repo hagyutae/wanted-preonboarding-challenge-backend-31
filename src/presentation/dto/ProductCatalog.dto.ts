@@ -1,15 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsDate, IsIn, IsInt } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsDate, IsIn, IsInt, ValidateNested } from "class-validator";
 
-import {
-  Brand,
-  Product_Detail,
-  Product_Image,
-  Product_Price,
-  Seller,
-  Tag,
-} from "src/domain/entities";
-import { ProductCategoryDTO, ProductOptionGroupDTO } from "src/application/dto";
+import { Product_Image } from "src/domain/entities";
+import BrandDTO from "./Brand.dto";
+import CategoryDTO from "./Category.dto";
+import ProductDetailDTO from "./ProductDetail.dto";
+import ProductOptionGroupDTO from "./ProductOptionGroup.dto";
+import ProductPriceDTO from "./ProductPrice.dto";
+import RatingDTO from "./Rating.dto";
+import SellerDTO from "./Seller.dto";
+import TagDTO from "./Tag.dto";
 
 export default class ProductCatalogDTO {
   @ApiProperty({ description: "상품 ID", example: 123 })
@@ -45,210 +46,52 @@ export default class ProductCatalogDTO {
   @IsDate()
   public updated_at: Date;
 
-  @ApiProperty({
-    example: {
-      id: 1,
-      name: "홈퍼니처",
-      description: "최고의 가구 전문 판매점",
-      logo_url: "https://example.com/sellers/homefurniture.png",
-      rating: 4.8,
-      contact_email: "contact@homefurniture.com",
-      contact_phone: "02-1234-5678",
-    },
-  })
-  public seller: Seller;
+  @ApiProperty({ description: "판매자 정보", type: SellerDTO })
+  @ValidateNested()
+  @Type(() => SellerDTO)
+  public seller: SellerDTO;
 
-  @ApiProperty({
-    example: {
-      id: 2,
-      name: "편안가구",
-      description: "편안함에 집중한 프리미엄 가구 브랜드",
-      logo_url: "https://example.com/brands/comfortfurniture.png",
-      website: "https://comfortfurniture.com",
-    },
-  })
-  public brand: Brand;
+  @ApiProperty({ description: "브랜드 정보", type: BrandDTO })
+  @ValidateNested()
+  @Type(() => BrandDTO)
+  public brand: BrandDTO;
 
-  @ApiProperty({
-    example: {
-      weight: 25.5,
-      dimensions: {
-        width: 200,
-        height: 85,
-        depth: 90,
-      },
-      materials: "가죽, 목재, 폼",
-      country_of_origin: "대한민국",
-      warranty_info: "2년 품질 보증",
-      care_instructions: "마른 천으로 표면을 닦아주세요",
-      additional_info: {
-        assembly_required: true,
-        assembly_time: "30분",
-      },
-    },
-  })
-  public detail: Product_Detail;
+  @ApiProperty({ description: "상세 정보", type: ProductDetailDTO })
+  @ValidateNested()
+  @Type(() => ProductDetailDTO)
+  public detail: ProductDetailDTO;
 
-  @ApiProperty({
-    example: {
-      base_price: 599000,
-      sale_price: 499000,
-      currency: "KRW",
-      tax_rate: 10,
-      discount_percentage: 17,
-    },
-  })
-  public price: Product_Price & { discount_percentage: number };
+  @ApiProperty({ description: "가격 정보", type: ProductPriceDTO })
+  @ValidateNested()
+  @Type(() => ProductPriceDTO)
+  public price: ProductPriceDTO;
 
-  @ApiProperty({
-    example: [
-      {
-        id: 5,
-        name: "소파",
-        slug: "sofa",
-        is_primary: true,
-        parent: {
-          id: 2,
-          name: "거실 가구",
-          slug: "living-room",
-        },
-      },
-      {
-        id: 8,
-        name: "3인용 소파",
-        slug: "3-seater-sofa",
-        is_primary: false,
-        parent: {
-          id: 5,
-          name: "소파",
-          slug: "sofa",
-        },
-      },
-    ],
-  })
+  @ApiProperty({ description: "카테고리 목록", type: [CategoryDTO] })
   @IsArray()
-  public categories: ProductCategoryDTO[];
+  @ValidateNested({ each: true })
+  @Type(() => CategoryDTO)
+  public categories: CategoryDTO[];
 
-  @ApiProperty({
-    example: [
-      {
-        id: 15,
-        name: "색상",
-        display_order: 1,
-        options: [
-          {
-            id: 31,
-            name: "브라운",
-            additional_price: 0,
-            sku: "SOFA-BRN",
-            stock: 10,
-            display_order: 1,
-          },
-          {
-            id: 32,
-            name: "블랙",
-            additional_price: 0,
-            sku: "SOFA-BLK",
-            stock: 15,
-            display_order: 2,
-          },
-        ],
-      },
-      {
-        id: 16,
-        name: "소재",
-        display_order: 2,
-        options: [
-          {
-            id: 33,
-            name: "천연 가죽",
-            additional_price: 100000,
-            sku: "SOFA-LTHR",
-            stock: 5,
-            display_order: 1,
-          },
-          {
-            id: 34,
-            name: "인조 가죽",
-            additional_price: 0,
-            sku: "SOFA-FAKE",
-            stock: 20,
-            display_order: 2,
-          },
-        ],
-      },
-    ],
-  })
+  @ApiProperty({ description: "상품 옵션 그룹", type: [ProductOptionGroupDTO] })
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductOptionGroupDTO)
   public option_groups: ProductOptionGroupDTO[];
 
-  @ApiProperty({
-    example: [
-      {
-        id: 150,
-        url: "https://example.com/images/sofa1.jpg",
-        alt_text: "브라운 소파 정면",
-        is_primary: true,
-        display_order: 1,
-        option_id: null,
-      },
-      {
-        id: 151,
-        url: "https://example.com/images/sofa2.jpg",
-        alt_text: "브라운 소파 측면",
-        is_primary: false,
-        display_order: 2,
-        option_id: null,
-      },
-    ],
-  })
+  @ApiProperty({ description: "상품 이미지", type: [Product_Image] })
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => Product_Image)
   public images: Product_Image[];
 
-  @ApiProperty({
-    example: [
-      {
-        id: 1,
-        name: "편안함",
-        slug: "comfort",
-      },
-      {
-        id: 4,
-        name: "프리미엄",
-        slug: "premium",
-      },
-      {
-        id: 7,
-        name: "거실 가구",
-        slug: "living-room-furniture",
-      },
-    ],
-  })
+  @ApiProperty({ description: "상품 태그", type: [TagDTO] })
   @IsArray()
-  public tags: Tag[];
+  @ValidateNested({ each: true })
+  @Type(() => TagDTO)
+  public tags: TagDTO[];
 
-  @ApiProperty({
-    example: {
-      average: 4.7,
-      count: 128,
-      distribution: {
-        "5": 95,
-        "4": 20,
-        "3": 10,
-        "2": 2,
-        "1": 1,
-      },
-    },
-  })
-  public rating: {
-    average: number;
-    count: number;
-    distribution: {
-      "5": number;
-      "4": number;
-      "3": number;
-      "2": number;
-      "1": number;
-    };
-  };
+  @ApiProperty({ description: "상품 평점", type: RatingDTO })
+  @ValidateNested()
+  @Type(() => RatingDTO)
+  public rating: RatingDTO;
 }

@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { Product_Image, Product_Option } from "src/domain/entities";
 import { ProductOptionsService } from "src/application/services";
-import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO, ResponseDTO } from "../dto";
+import { ImageDTO, OptionBodyDTO, OptionParamDTO, ResponseDTO } from "../dto";
 import ProductOptionsController from "./Product_Options.controller";
 
 describe("ProductOptionsController", () => {
@@ -95,7 +95,7 @@ describe("ProductOptionsController", () => {
   describe("addImages", () => {
     it("상품 이미지 추가 성공", async () => {
       const param = { id: 1 } as OptionParamDTO;
-      const body = { option_id: 2, url: "http://example.com/image.jpg" } as ImageBodyDTO;
+      const body = { option_id: 2, url: "http://example.com/image.jpg" } as ImageDTO;
       const data = { id: param.id, url: body.url } as Product_Image;
       mockService.register_images = jest.fn().mockResolvedValue(data);
 

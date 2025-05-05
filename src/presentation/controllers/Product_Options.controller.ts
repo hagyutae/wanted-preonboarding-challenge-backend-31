@@ -9,7 +9,7 @@ import {
   ApiErrorResponse,
   ApiStandardResponse,
 } from "../decorators";
-import { ImageBodyDTO, OptionBodyDTO, OptionParamDTO, ParamDTO, ResponseDTO } from "../dto";
+import { ImageDTO, OptionBodyDTO, OptionParamDTO, ParamDTO, ResponseDTO } from "../dto";
 
 @ApiTags("상품 옵션 관리")
 @ApiBearerAuth()
@@ -78,9 +78,9 @@ export default class ProductOptionsController {
   @Post(":id/images")
   async create_image(
     @Param() { id }: OptionParamDTO,
-    @Body() body: ImageBodyDTO,
+    @Body() body: ImageDTO,
   ): Promise<ResponseDTO<Product_Image>> {
-    const data = await this.service.register_images(id, body.option_id, body);
+    const data = await this.service.register_images(id, body.option_id!, body);
 
     return {
       success: true,

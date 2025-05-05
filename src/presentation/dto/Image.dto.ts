@@ -1,9 +1,14 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsInt, IsUrl, Min } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsBoolean, IsInt, IsOptional, IsUrl, Min } from "class-validator";
 
-export default class ImageBodyDTO {
+export default class ImageDTO {
+  @ApiPropertyOptional({ description: "이미지 ID", example: 1 })
+  @IsInt()
+  @IsOptional()
+  id?: number;
+
   @ApiProperty({ description: "이미지 URL", example: "https://example.com/images/sofa3.jpg" })
-  @IsUrl({}, { message: "유효한 URL 형식이 아닙니다." })
+  @IsUrl()
   url: string;
 
   @ApiProperty({ description: "이미지 대체 텍스트", example: "네이비 소파 측면" })
@@ -18,7 +23,7 @@ export default class ImageBodyDTO {
   @Min(1)
   display_order: number;
 
-  @ApiProperty({ description: "옵션 ID", example: 35 })
+  @ApiProperty({ description: "옵션 ID", example: 35, nullable: true })
   @IsInt()
-  option_id: number;
+  option_id: number | null;
 }

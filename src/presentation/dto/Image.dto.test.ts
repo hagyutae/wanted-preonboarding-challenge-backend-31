@@ -1,11 +1,11 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
-import ImageBodyDTO from "./ImageBody.dto";
+import ImageDTO from "./Image.dto";
 
-describe("ImageBodyDTO", () => {
-  const validateDTO = async (dto: Partial<ImageBodyDTO>) => {
-    const instance = plainToInstance(ImageBodyDTO, dto);
+describe("ImageDTO", () => {
+  const validateDTO = async (dto: Partial<ImageDTO>) => {
+    const instance = plainToInstance(ImageDTO, dto);
 
     const errors = await validate(instance);
 
@@ -13,7 +13,7 @@ describe("ImageBodyDTO", () => {
   };
 
   it("유효한 DTO는 검증을 통과", async () => {
-    const dto: Partial<ImageBodyDTO> = {
+    const dto: Partial<ImageDTO> = {
       url: "https://example.com/images/sofa3.jpg",
       alt_text: "네이비 소파 측면",
       is_primary: false,
@@ -27,7 +27,7 @@ describe("ImageBodyDTO", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const dto: Partial<ImageBodyDTO> = {
+    const dto: Partial<ImageDTO> = {
       alt_text: "네이비 소파 측면",
       is_primary: false,
     };
@@ -38,7 +38,7 @@ describe("ImageBodyDTO", () => {
   });
 
   it("is_primary 필드가 boolean이 아닌 경우 검증 실패", async () => {
-    const dto: Partial<ImageBodyDTO> = {
+    const dto: Partial<ImageDTO> = {
       url: "https://example.com/images/sofa3.jpg",
       alt_text: "네이비 소파 측면",
       is_primary: "true" as unknown as boolean,
@@ -53,7 +53,7 @@ describe("ImageBodyDTO", () => {
   });
 
   it("display_order 필드가 정수가 아닌 경우 검증 실패", async () => {
-    const dto: Partial<ImageBodyDTO> = {
+    const dto: Partial<ImageDTO> = {
       url: "https://example.com/images/sofa3.jpg",
       alt_text: "네이비 소파 측면",
       is_primary: false,
@@ -68,7 +68,7 @@ describe("ImageBodyDTO", () => {
   });
 
   it("option_id 필드가 정수가 아닌 경우 검증 실패", async () => {
-    const dto: Partial<ImageBodyDTO> = {
+    const dto: Partial<ImageDTO> = {
       url: "https://example.com/images/sofa3.jpg",
       alt_text: "네이비 소파 측면",
       is_primary: false,

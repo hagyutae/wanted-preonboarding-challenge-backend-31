@@ -1,6 +1,6 @@
 export { default as CategoryQueryDTO } from "./CategoryQuery.dto";
 export { default as ErrorDTO, HttpStatusToErrorCodeMap } from "./Error.dto";
-export { default as ImageBodyDTO } from "./ImageBody.dto";
+export { default as ImageDTO } from "./Image.dto";
 export { default as NestedCategoryDTO } from "./NestedCategory.dto";
 export { default as OptionBodyDTO } from "./OptionsBody.dto";
 export { default as PaginationSummaryDTO } from "./PaginationSummary.dto";
