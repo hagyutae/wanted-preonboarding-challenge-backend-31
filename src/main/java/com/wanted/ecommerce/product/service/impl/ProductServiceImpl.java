@@ -226,6 +226,7 @@ public class ProductServiceImpl implements ProductService {
                 product.getSlug())).toList();
     }
 
+    @Transactional
     private List<RelatedProductResponse> createRelatedProductResponse(
         List<ProductCategory> categories) {
         ProductCategory primaryCategory = categories.stream()
