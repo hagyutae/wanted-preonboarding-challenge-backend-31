@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsBoolean, IsInt, IsOptional, IsUrl, Min } from "class-validator";
+import { IsBoolean, IsInt, IsOptional, IsString, IsUrl, Min } from "class-validator";
 
 export default class ImageDTO {
   @ApiPropertyOptional({ description: "이미지 ID", example: 1 })
@@ -12,6 +12,7 @@ export default class ImageDTO {
   url: string;
 
   @ApiProperty({ description: "이미지 대체 텍스트", example: "네이비 소파 측면" })
+  @IsString()
   alt_text: string;
 
   @ApiProperty({ description: "대표 이미지 여부", example: false })

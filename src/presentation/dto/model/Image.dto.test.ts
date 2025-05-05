@@ -9,7 +9,7 @@ describe("ImageDTO", () => {
 
     const errors = await validate(instance);
 
-    return errors.map((error) => error.constraints);
+    return errors.map((error) => error.property);
   };
 
   const validData: Partial<ImageDTO> = {
@@ -33,7 +33,9 @@ describe("ImageDTO", () => {
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).not.toHaveLength(0);
+    expect(errors).toHaveLength(2);
+    expect(errors).toContain("url");
+    expect(errors).toContain("alt_text");
   });
 
   it("is_primary 필드가 boolean이 아닌 경우 검증 실패", async () => {
@@ -44,8 +46,8 @@ describe("ImageDTO", () => {
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).not.toHaveLength(0);
-    expect(Object.keys(errors[0]!)).toContain("isBoolean");
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("is_primary");
   });
 
   it("display_order 필드가 정수가 아닌 경우 검증 실패", async () => {
@@ -56,8 +58,8 @@ describe("ImageDTO", () => {
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).not.toHaveLength(0);
-    expect(Object.keys(errors[0]!)).toContain("isInt");
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("display_order");
   });
 
   it("option_id 필드가 정수가 아닌 경우 검증 실패", async () => {
@@ -68,7 +70,7 @@ describe("ImageDTO", () => {
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).not.toHaveLength(0);
-    expect(Object.keys(errors[0]!)).toContain("isInt");
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("option_id");
   });
 });

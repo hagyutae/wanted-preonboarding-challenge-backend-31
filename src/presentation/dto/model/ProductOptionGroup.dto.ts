@@ -1,6 +1,6 @@
 import { ApiPropertyOptional, ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt, IsOptional, Min, IsArray, ValidateNested } from "class-validator";
+import { IsInt, IsOptional, Min, IsArray, ValidateNested, IsString } from "class-validator";
 
 import ProductOptionDTO from "./ProductOption.dto";
 
@@ -11,6 +11,7 @@ export default class ProductOptionGroupDTO {
   id?: number;
 
   @ApiProperty({ description: "옵션 그룹 이름", example: "색상" })
+  @IsString()
   name: string;
 
   @ApiProperty({ description: "표시 순서", example: 1 })

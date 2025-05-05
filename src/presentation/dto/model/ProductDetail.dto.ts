@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsNumber, Min, IsBoolean, Matches, ValidateNested } from "class-validator";
+import { IsBoolean, IsNumber, IsString, Matches, Min, ValidateNested } from "class-validator";
 
 export class DimensionsDTO {
   @ApiProperty({ description: "가로 길이", example: 200 })
@@ -43,15 +43,19 @@ export default class ProductDetailDTO {
   dimensions: DimensionsDTO;
 
   @ApiProperty({ description: "재료", example: "가죽, 목재, 폼" })
+  @IsString()
   materials: string;
 
   @ApiProperty({ description: "원산지", example: "대한민국" })
+  @IsString()
   country_of_origin: string;
 
   @ApiProperty({ description: "보증 정보", example: "2년 품질 보증" })
+  @IsString()
   warranty_info: string;
 
   @ApiProperty({ description: "관리 지침", example: "마른 천으로 표면을 닦아주세요" })
+  @IsString()
   care_instructions: string;
 
   @ApiProperty({ description: "추가 정보", type: AdditionalInfoDTO })
