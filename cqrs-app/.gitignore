@@ -51,6 +51,5 @@ out/
 .env
 
 postgres-data/
-.gitattributes
 
 
