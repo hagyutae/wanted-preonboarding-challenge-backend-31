@@ -5,16 +5,19 @@ import { EntityManager } from "typeorm";
 import {
   Product,
   Product_Catalog,
-  Product_Category,
   Product_Detail,
   Product_Image,
-  Product_Option_Group,
   Product_Price,
   Product_Summary,
-  Product_Tag,
 } from "src/domain/entities";
 import { IRepository } from "src/domain/repositories";
-import { FilterDTO, ProductInputDTO } from "../dto";
+import {
+  FilterDTO,
+  ProductCategoryDTO,
+  ProductInputDTO,
+  ProductOptionGroupDTO,
+  ProductTagDTO,
+} from "../dto";
 
 @Injectable()
 export default class ProductService {
@@ -27,13 +30,13 @@ export default class ProductService {
     @Inject("IProductPriceRepository")
     private readonly product_price_repository: IRepository<Product_Price>,
     @Inject("IProductCategoryRepository")
-    private readonly product_category_repository: IRepository<Product_Category>,
+    private readonly product_category_repository: IRepository<ProductCategoryDTO>,
     @Inject("IProductOptionGroupRepository")
-    private readonly product_option_group_repository: IRepository<Product_Option_Group>,
+    private readonly product_option_group_repository: IRepository<ProductOptionGroupDTO>,
     @Inject("IProductImageRepository")
     private readonly product_image_repository: IRepository<Product_Image>,
     @Inject("IProductTagRepository")
-    private readonly product_tag_repository: IRepository<Product_Tag>,
+    private readonly product_tag_repository: IRepository<ProductTagDTO>,
   ) {}
 
   async register({

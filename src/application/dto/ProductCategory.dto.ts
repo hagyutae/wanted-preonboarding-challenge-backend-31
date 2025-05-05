@@ -1,4 +1,4 @@
-export default class Product_Category {
+export default class ProductCategoryDTO {
   constructor(
     public is_primary: boolean,
     public category_id?: number,

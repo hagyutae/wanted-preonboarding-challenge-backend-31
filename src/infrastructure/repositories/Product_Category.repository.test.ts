@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager, UpdateResult } from "typeorm";
 
-import { Product_Category } from "src/domain/entities";
+import { ProductCategoryDTO } from "src/application/dto";
 import ProductCategoryRepository from "./Product_Category.repository";
 
 describe("ProductCategoryRepository", () => {
@@ -24,7 +24,7 @@ describe("ProductCategoryRepository", () => {
 
   describe("saves", () => {
     it("카테고리 저장", async () => {
-      const categories: Product_Category[] = [
+      const categories: ProductCategoryDTO[] = [
         { product_id: 1, category_id: 2, is_primary: true },
         { product_id: 1, category_id: 3, is_primary: false },
       ];
@@ -42,7 +42,7 @@ describe("ProductCategoryRepository", () => {
 
   describe("update", () => {
     it("카테고리 업데이트 성공", async () => {
-      const category: Product_Category = {
+      const category: ProductCategoryDTO = {
         product_id: 1,
         category_id: 2,
         is_primary: true,
@@ -55,7 +55,7 @@ describe("ProductCategoryRepository", () => {
     });
 
     it("카테고리 업데이트 실패", async () => {
-      const category: Product_Category = {
+      const category: ProductCategoryDTO = {
         product_id: 1,
         category_id: 2,
         is_primary: true,

@@ -1,8 +1,8 @@
 import Brand from "./Brand";
-import Product_Category from "./Product_Category";
+import ProductCategoryDTO from "../../application/dto/ProductCategory.dto";
 import Product_Detail from "./Product_Detail";
 import Product_Image from "./Product_Image";
-import Product_Option_Group from "./Product_Option_Group";
+import ProductOptionGroupDTO from "../../application/dto/ProductOptionGroup.dto";
 import Product_Price from "./Product_Price";
 import Seller from "./Seller";
 import Tag from "./Tag";
@@ -26,9 +26,9 @@ export default class Product_Catalog {
 
     public price: Product_Price & { discount_percentage: number },
 
-    public categories: Product_Category[],
+    public categories: ProductCategoryDTO[],
 
-    public option_groups: Product_Option_Group[],
+    public option_groups: ProductOptionGroupDTO[],
 
     public images: Product_Image[],
 
