@@ -24,14 +24,13 @@ describe("TagDTO", () => {
     expect(errors).toHaveLength(0);
   });
 
-  it("필수 필드가 누락된 경우 검증 실패 (name)", async () => {
-    const invalidData = { ...validData };
-    delete invalidData.name;
-    delete invalidData.slug;
+  it("필수 필드가 누락된 경우 검증 실패", async () => {
+    const invalidData = {};
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(3);
+    expect(errors).toContain("id");
     expect(errors).toContain("name");
     expect(errors).toContain("slug");
   });

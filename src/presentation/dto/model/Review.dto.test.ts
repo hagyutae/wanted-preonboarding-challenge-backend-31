@@ -35,13 +35,19 @@ describe("ReviewDTO", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const invalidData = { ...validData };
-    delete invalidData.rating;
+    const invalidData = {};
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).toHaveLength(1);
+    expect(errors).toHaveLength(8);
+    expect(errors).toContain("id");
     expect(errors).toContain("rating");
+    expect(errors).toContain("title");
+    expect(errors).toContain("content");
+    expect(errors).toContain("created_at");
+    expect(errors).toContain("updated_at");
+    expect(errors).toContain("verified_purchase");
+    expect(errors).toContain("helpful_votes");
   });
 
   it("rating 필드가 음수인 경우 검증 실패", async () => {

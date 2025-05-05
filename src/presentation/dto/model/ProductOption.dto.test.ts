@@ -28,15 +28,16 @@ describe("ProductOption", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const invalidData = { ...validData };
-    delete invalidData.name;
-    delete invalidData.sku;
+    const invalidData = {};
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(5);
     expect(errors).toContain("name");
+    expect(errors).toContain("additional_price");
     expect(errors).toContain("sku");
+    expect(errors).toContain("stock");
+    expect(errors).toContain("display_order");
   });
 
   it("추가 가격이 음수인 경우 검증 실패", async () => {

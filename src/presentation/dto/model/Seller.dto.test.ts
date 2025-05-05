@@ -29,15 +29,17 @@ describe("SellerDTO", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const invalidData = { ...validData };
-    delete invalidData.name;
-    delete invalidData.description;
+    const invalidData = {};
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(6);
     expect(errors).toContain("name");
     expect(errors).toContain("description");
+    expect(errors).toContain("logo_url");
+    expect(errors).toContain("rating");
+    expect(errors).toContain("contact_email");
+    expect(errors).toContain("contact_phone");
   });
 
   it("logo_url 필드가 url이 아닌 경우 검증 실패", async () => {

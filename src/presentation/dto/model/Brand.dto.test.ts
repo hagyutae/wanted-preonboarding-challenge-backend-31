@@ -27,13 +27,15 @@ describe("BrandDTO", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const invalidData = { ...validData };
-    delete invalidData.name;
+    const invalidData = {};
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).toHaveLength(1);
+    expect(errors).toHaveLength(4);
     expect(errors).toContain("name");
+    expect(errors).toContain("description");
+    expect(errors).toContain("logo_url");
+    expect(errors).toContain("website");
   });
 
   it("logo_url 필드가 url이 아닌 경우 검증 실패", async () => {

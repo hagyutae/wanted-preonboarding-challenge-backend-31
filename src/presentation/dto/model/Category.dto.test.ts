@@ -34,14 +34,17 @@ describe("CategoryDTO", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const invalidData = { ...validData };
-    delete invalidData.is_primary;
-    delete invalidData.image_url;
+    const invalidData = {};
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(7);
+    expect(errors).toContain("id");
+    expect(errors).toContain("name");
+    expect(errors).toContain("slug");
     expect(errors).toContain("is_primary");
+    expect(errors).toContain("description");
+    expect(errors).toContain("level");
     expect(errors).toContain("image_url");
   });
 

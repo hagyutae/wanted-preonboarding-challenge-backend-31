@@ -36,13 +36,14 @@ describe("ProductOptionGroupDTO", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const invalidData = { ...validData };
-    delete invalidData.name;
+    const invalidData = {};
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).toHaveLength(1);
+    expect(errors).toHaveLength(3);
     expect(errors).toContain("name");
+    expect(errors).toContain("display_order");
+    expect(errors).toContain("options");
   });
 
   it("display_order 필드가 1보다 작은 경우 검증 실패", async () => {

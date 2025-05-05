@@ -28,13 +28,15 @@ describe("ProductPriceDTO", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const invalidData = { ...validData };
-    delete invalidData.base_price;
+    const invalidData = {};
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).toHaveLength(1);
+    expect(errors).toHaveLength(4);
     expect(errors).toContain("base_price");
+    expect(errors).toContain("sale_price");
+    expect(errors).toContain("currency");
+    expect(errors).toContain("tax_rate");
   });
 
   it("currency 필드가 3자리 대문자가 아닌 경우 검증 실패", async () => {

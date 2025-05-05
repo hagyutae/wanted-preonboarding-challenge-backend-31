@@ -1,6 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsBoolean, IsNumber, IsString, Matches, Min, ValidateNested } from "class-validator";
+import {
+  IsBoolean,
+  IsDefined,
+  IsNumber,
+  IsString,
+  Matches,
+  Min,
+  ValidateNested,
+} from "class-validator";
 
 export class DimensionsDTO {
   @ApiProperty({ description: "가로 길이", example: 200 })
@@ -38,6 +46,7 @@ export default class ProductDetailDTO {
   weight: number;
 
   @ApiProperty({ description: "크기 정보", type: DimensionsDTO })
+  @IsDefined()
   @ValidateNested()
   @Type(() => DimensionsDTO)
   dimensions: DimensionsDTO;
@@ -59,6 +68,7 @@ export default class ProductDetailDTO {
   care_instructions: string;
 
   @ApiProperty({ description: "추가 정보", type: AdditionalInfoDTO })
+  @IsDefined()
   @ValidateNested()
   @Type(() => AdditionalInfoDTO)
   additional_info: AdditionalInfoDTO;

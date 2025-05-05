@@ -8,7 +8,7 @@ describe("ProductDetailDTO", () => {
 
     const errors = await validate(instance);
 
-    return errors.map((error) => error.constraints);
+    return errors.map((error) => error.property);
   };
 
   const validData: Partial<ProductDetailDTO> = {
@@ -35,13 +35,18 @@ describe("ProductDetailDTO", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const invalidData = { ...validData };
-    delete invalidData.materials;
-    delete invalidData.country_of_origin;
+    const invalidData = {};
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(7);
+    expect(errors).toContain("weight");
+    expect(errors).toContain("dimensions");
+    expect(errors).toContain("materials");
+    expect(errors).toContain("country_of_origin");
+    expect(errors).toContain("warranty_info");
+    expect(errors).toContain("care_instructions");
+    expect(errors).toContain("additional_info");
   });
 
   describe("DimensionsDTO", () => {
@@ -50,7 +55,7 @@ describe("ProductDetailDTO", () => {
 
       const errors = await validate(instance);
 
-      return errors.map((error) => error.constraints);
+      return errors.map((error) => error.property);
     };
 
     it("유효한 DimensionsDTO 데이터로 유효성 검증을 통과", async () => {
@@ -73,7 +78,8 @@ describe("ProductDetailDTO", () => {
 
       const errors = await validateDTO(invalidDimensions);
 
-      expect(errors).not.toHaveLength(0);
+      expect(errors).toHaveLength(1);
+      expect(errors).toContain("width");
     });
 
     it("depth가 음수인 경우 검증 실패", async () => {
@@ -85,7 +91,8 @@ describe("ProductDetailDTO", () => {
 
       const errors = await validateDTO(invalidDimensions);
 
-      expect(errors).not.toHaveLength(0);
+      expect(errors).toHaveLength(1);
+      expect(errors).toContain("depth");
     });
   });
 
@@ -95,7 +102,7 @@ describe("ProductDetailDTO", () => {
 
       const errors = await validate(instance);
 
-      return errors.map((error) => error.constraints);
+      return errors.map((error) => error.property);
     };
 
     it("유효한 AdditionalInfoDTO 데이터로 유효성 검증을 통과", async () => {
@@ -116,7 +123,8 @@ describe("ProductDetailDTO", () => {
 
       const errors = await validateDTO(invalidAdditionalInfo);
 
-      expect(errors).not.toHaveLength(0);
+      expect(errors).toHaveLength(1);
+      expect(errors).toContain("assembly_required");
     });
 
     it("assembly_time이 Matches 조건에 맞지 않는 경우 검증 실패", async () => {
@@ -127,7 +135,8 @@ describe("ProductDetailDTO", () => {
 
       const errors = await validateDTO(invalidAdditionalInfo);
 
-      expect(errors).not.toHaveLength(0);
+      expect(errors).toHaveLength(1);
+      expect(errors).toContain("assembly_time");
     });
   });
 });

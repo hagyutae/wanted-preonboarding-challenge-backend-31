@@ -1,6 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsBoolean, IsInt, IsOptional, IsString, IsUrl, ValidateNested } from "class-validator";
+import {
+  IsBoolean,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Min,
+  ValidateNested,
+} from "class-validator";
 
 class ParentCategoryDTO {
   @ApiProperty({ description: "카테고리 ID", example: 2 })
@@ -39,6 +47,7 @@ export default class CategoryDTO {
 
   @ApiProperty({ description: "카테고리 레벨", example: 3 })
   @IsInt()
+  @Min(1)
   level?: number;
 
   @ApiProperty({

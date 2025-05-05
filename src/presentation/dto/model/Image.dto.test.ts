@@ -27,15 +27,15 @@ describe("ImageDTO", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const invalidData = { ...validData };
-    delete invalidData.url;
-    delete invalidData.alt_text;
+    const invalidData = {};
 
     const errors = await validateDTO(invalidData);
 
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(4);
     expect(errors).toContain("url");
     expect(errors).toContain("alt_text");
+    expect(errors).toContain("is_primary");
+    expect(errors).toContain("display_order");
   });
 
   it("is_primary 필드가 boolean이 아닌 경우 검증 실패", async () => {
