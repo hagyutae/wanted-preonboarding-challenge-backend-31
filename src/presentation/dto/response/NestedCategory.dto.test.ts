@@ -106,7 +106,7 @@ describe("NestedCategoryDTO", () => {
   });
 
   it("children 필드는 선택적", async () => {
-    const dataWithoutChildren = { ...validate, children: undefined };
+    const dataWithoutChildren = { ...validData, children: undefined };
 
     const dto = plainToInstance(NestedCategoryDTO, dataWithoutChildren);
     const errors = await validate(dto);

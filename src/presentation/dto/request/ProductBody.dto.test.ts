@@ -78,14 +78,6 @@ describe("ProductBodyDTO", () => {
     expect(errors[0].property).toBe("seller_id");
   });
 
-  it("중첩된 객체의 유효성 검사가 성공", async () => {
-    const dto = plainToInstance(ProductBodyDTO, validData);
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBe(0);
-  });
-
   it("중첩된 객체의 유효성 검사가 실패", async () => {
     const invalidData = {
       ...validData,
@@ -97,14 +89,6 @@ describe("ProductBodyDTO", () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(errors[0].property).toBe("detail");
-  });
-
-  it("배열 필드의 유효성 검사가 성공", async () => {
-    const dto = plainToInstance(ProductBodyDTO, validData);
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBe(0);
   });
 
   it("배열 필드의 유효성 검사가 실패", async () => {

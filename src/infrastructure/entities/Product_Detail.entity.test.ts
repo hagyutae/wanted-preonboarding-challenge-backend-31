@@ -72,12 +72,12 @@ describe("ProductDetailEntity", () => {
       expect(result).toEqual(productDetail);
       expect(result.product).toEqual(product);
       expect(result.weight).toBe(1.5);
-      expect(result.dimensions).toEqual({ length: 10, width: 5, height: 2 });
+      expect(result.dimensions).toEqual({ depth: 10, width: 5, height: 2 });
       expect(result.materials).toBe("Steel");
       expect(result.country_of_origin).toBe("USA");
       expect(result.warranty_info).toBe("2 years");
       expect(result.care_instructions).toBe("Wipe with a dry cloth");
-      expect(result.additional_info).toEqual({ color: "red" });
+      expect(result.additional_info).toEqual({ assembly_required: false, assembly_time: "30분" });
     });
 
     it("ProductDetailEntity를 삭제", async () => {
