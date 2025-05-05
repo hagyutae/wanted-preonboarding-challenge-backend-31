@@ -1,7 +1,9 @@
 package wanted.domain.category.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import wanted.domain.category.entity.Category;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record CategoryResponse(
         Long id,
         String name,

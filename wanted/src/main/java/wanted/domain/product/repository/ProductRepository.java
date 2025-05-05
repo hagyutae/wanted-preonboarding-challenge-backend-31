@@ -1,8 +1,11 @@
 package wanted.domain.product.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import wanted.domain.category.entity.Category;
 import wanted.domain.product.entity.Product;
 
 import java.util.List;
@@ -39,4 +42,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         ORDER BY p.createdAt DESC
     """)
     List<Product> findRelatedProducts(@Param("productId") Long productId);
+
+    Page<Product> findByProductCategories_Category_IdIn(List<Long> categoryIds, Pageable pageable);
 }

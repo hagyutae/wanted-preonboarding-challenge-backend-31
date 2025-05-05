@@ -252,7 +252,7 @@ public class ProductService {
         }
     }
 
-    private Sort parseSort(String sortString) {
+    public Sort parseSort(String sortString) {
         if (sortString == null || sortString.isBlank()) {
             return Sort.by(Sort.Direction.DESC, "createdAt");
         }
