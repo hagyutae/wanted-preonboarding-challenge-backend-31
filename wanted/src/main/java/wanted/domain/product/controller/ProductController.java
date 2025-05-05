@@ -3,6 +3,8 @@ package wanted.domain.product.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wanted.common.response.SuccessResponse;
 import wanted.domain.product.dto.ProductCreateRequest;
 import wanted.domain.product.dto.ProductCreateResponse;
+import wanted.domain.product.dto.ProductSearchCondition;
 import wanted.domain.product.service.ProductService;
 
 @RestController
@@ -26,4 +29,8 @@ public class ProductController {
         return ResponseEntity.ok(SuccessResponse.ok(productCreateResponse));
     }
 
+    @GetMapping()
+    public ResponseEntity<?> getProducts(@ModelAttribute ProductSearchCondition productSearchCondition) {
+        return ResponseEntity.ok(SuccessResponse.ok(productService.getFilteredProducts(productSearchCondition)));
+    }
 }

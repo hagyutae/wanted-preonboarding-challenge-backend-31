@@ -1,6 +1,10 @@
 package wanted.domain.product.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wanted.common.exception.CustomException;
@@ -9,12 +13,16 @@ import wanted.domain.brand.entity.Brand;
 import wanted.domain.brand.repository.BrandRepository;
 import wanted.domain.category.entity.Category;
 import wanted.domain.category.repository.CategoryRepository;
+import wanted.domain.product.dto.Pagination;
 import wanted.domain.product.dto.ProductCategoryRequest;
 import wanted.domain.product.dto.ProductCreateRequest;
 import wanted.domain.product.dto.ProductCreateResponse;
 import wanted.domain.product.dto.ProductImageRequest;
+import wanted.domain.product.dto.ProductListResponse;
 import wanted.domain.product.dto.ProductOptionGroupRequest;
 import wanted.domain.product.dto.ProductOptionRequest;
+import wanted.domain.product.dto.ProductSearchCondition;
+import wanted.domain.product.dto.SimpleProductResponse;
 import wanted.domain.product.entity.Product;
 import wanted.domain.product.entity.ProductCategory;
 import wanted.domain.product.entity.ProductDetail;
@@ -29,6 +37,7 @@ import wanted.domain.product.repository.ProductImageRepository;
 import wanted.domain.product.repository.ProductOptionGroupRepository;
 import wanted.domain.product.repository.ProductOptionRepository;
 import wanted.domain.product.repository.ProductPriceRepository;
+import wanted.domain.product.repository.ProductQueryRepository;
 import wanted.domain.product.repository.ProductRepository;
 import wanted.domain.product.repository.ProductTagRepository;
 import wanted.domain.seller.entity.Seller;
@@ -36,7 +45,10 @@ import wanted.domain.seller.repository.SellerRepository;
 import wanted.domain.tag.entity.Tag;
 import wanted.domain.tag.repository.TagRepository;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +65,7 @@ public class ProductService {
     private final ProductImageRepository productImageRepository;
     private final TagRepository tagRepository;
     private final ProductTagRepository productTagRepository;
+    private final ProductQueryRepository productQueryRepository;
 
 
     /*
@@ -135,6 +148,41 @@ public class ProductService {
             productTagRepository.save(productTag);
         }
     }
+
+    @Transactional(readOnly = true)
+    public ProductListResponse getFilteredProducts(ProductSearchCondition condition) {
+        int page = Optional.ofNullable(condition.page()).orElse(1) - 1;
+        int perPage = Optional.ofNullable(condition.perPage()).orElse(10);
+        Pageable pageable = PageRequest.of(page, perPage, parseSort(condition.sort()));
+
+        Page<Product> result = productQueryRepository.search(condition, pageable);
+        List<SimpleProductResponse> items = result.getContent().stream()
+                .map(SimpleProductResponse::from)
+                .toList();
+
+        return new ProductListResponse(
+                items,
+                new Pagination(result.getTotalElements(), result.getTotalPages(), result.getNumber() + 1, result.getSize())
+        );
+    }
+
+    private Sort parseSort(String sortString) {
+        if (sortString == null || sortString.isBlank()) {
+            return Sort.by(Sort.Direction.DESC, "createdAt");
+        }
+
+        return Sort.by(
+                Arrays.stream(sortString.split(","))
+                        .map(s -> {
+                            String[] parts = s.split(":");
+                            String field = parts[0];
+                            Sort.Direction direction = (parts.length > 1 && parts[1].equalsIgnoreCase("asc"))
+                                    ? Sort.Direction.ASC : Sort.Direction.DESC;
+                            return new Sort.Order(direction, field);
+                        }).toList()
+        );
+    }
+
 
     private Map<String, Object> resourceNotFoundDetails(String type, Object id) {
         return Map.of("resourceType", type, "resourceId", id);
