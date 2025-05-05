@@ -1,6 +1,7 @@
 import { applyDecorators, Type } from "@nestjs/common";
 import { ApiExtraModels, ApiResponse, getSchemaPath } from "@nestjs/swagger";
 
+import extractDTOExample from "src/utility/extractDTOExample";
 import { ResponseDTO } from "../dto";
 
 export function ApiStandardResponse<TModel extends Type<any>>(
@@ -19,6 +20,8 @@ export function ApiStandardResponse<TModel extends Type<any>>(
     );
   }
 
+  const example = extractDTOExample(model);
+
   return applyDecorators(
     ApiExtraModels(ResponseDTO, model),
     ApiResponse({
@@ -29,7 +32,16 @@ export function ApiStandardResponse<TModel extends Type<any>>(
           { $ref: getSchemaPath(ResponseDTO) },
           {
             properties: {
-              data: { $ref: getSchemaPath(model) },
+              data: {
+                allOf: [
+                  {
+                    $ref: getSchemaPath(model),
+                  },
+                  {
+                    example,
+                  },
+                ],
+              },
             },
           },
         ],
