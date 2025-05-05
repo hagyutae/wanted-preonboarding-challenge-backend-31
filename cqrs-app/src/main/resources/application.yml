@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 1111
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.format_sql: true
+      hibernate.show_sql: true
+      hibernate.default_fetch_size: ${chunkSize:100}
+      hibernate.jdbc.batch_size: ${chunkSize:100}
+      hibernate.order_inserts: true
+      hibernate.order_updates: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    com.example: info
+    org.hibernate.orm.jdbc.bind: trace
+    jakarta.persistence: info
