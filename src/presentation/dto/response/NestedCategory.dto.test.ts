@@ -1,16 +1,9 @@
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
 
 import NestedCategoryDTO from "./NestedCategory.dto";
 
 describe("NestedCategoryDTO", () => {
-  const validateDTO = async (dto: Partial<NestedCategoryDTO>) => {
-    const instance = plainToInstance(NestedCategoryDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(NestedCategoryDTO);
 
   const validData: Partial<NestedCategoryDTO> = {
     id: 1,

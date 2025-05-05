@@ -1,18 +1,11 @@
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
 
 import PaginationSummaryDTO from "./PaginationSummary.dto";
 import ProductResponseBundleDTO from "./ProductResponseBundle.dto";
 import ProductSummaryDTO from "./ProductSummary.dto";
 
 describe("ProductResponseBundleDTO", () => {
-  const validateDTO = async (dto: Partial<ProductResponseBundleDTO>) => {
-    const instance = plainToInstance(ProductResponseBundleDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(ProductResponseBundleDTO);
 
   const validData: Partial<ProductResponseBundleDTO> = {
     items: [{ name: "상품 요약" }] as ProductSummaryDTO[],

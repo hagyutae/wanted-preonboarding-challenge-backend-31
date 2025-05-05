@@ -1,16 +1,9 @@
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
 
 import ImageDTO from "./Image.dto";
 
 describe("ImageDTO", () => {
-  const validateDTO = async (dto: Partial<ImageDTO>) => {
-    const instance = plainToInstance(ImageDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(ImageDTO);
 
   const validData: Partial<ImageDTO> = {
     url: "https://example.com/images/sofa3.jpg",

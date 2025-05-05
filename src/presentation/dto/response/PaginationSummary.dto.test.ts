@@ -1,16 +1,9 @@
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
 
 import PaginationSummaryDTO from "./PaginationSummary.dto";
 
 describe("PaginationSummaryDTO", () => {
-  const validateDTO = async (dto: Partial<PaginationSummaryDTO>) => {
-    const instance = plainToInstance(PaginationSummaryDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(PaginationSummaryDTO);
 
   const validData: Partial<PaginationSummaryDTO> = {
     total_items: 50,

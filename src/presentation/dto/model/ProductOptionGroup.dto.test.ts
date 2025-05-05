@@ -1,17 +1,10 @@
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
 
 import ProductOptionDTO from "./ProductOption.dto";
 import ProductOptionGroupDTO from "./ProductOptionGroup.dto";
 
 describe("ProductOptionGroupDTO", () => {
-  const validateDTO = async (dto: Partial<ProductOptionGroupDTO>) => {
-    const instance = plainToInstance(ProductOptionGroupDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(ProductOptionGroupDTO);
 
   const validOption: ProductOptionDTO = {
     option_group_id: 35,

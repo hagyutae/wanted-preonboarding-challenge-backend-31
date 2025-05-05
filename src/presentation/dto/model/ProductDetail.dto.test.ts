@@ -1,15 +1,9 @@
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
-import ProductDetailDTO, { DimensionsDTO, AdditionalInfoDTO } from "./ProductDetail.dto";
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
+
+import ProductDetailDTO, { AdditionalInfoDTO, DimensionsDTO } from "./ProductDetail.dto";
 
 describe("ProductDetailDTO", () => {
-  const validateDTO = async (dto: Partial<ProductDetailDTO>) => {
-    const instance = plainToInstance(ProductDetailDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(ProductDetailDTO);
 
   const validData: Partial<ProductDetailDTO> = {
     weight: 25.5,
@@ -50,13 +44,7 @@ describe("ProductDetailDTO", () => {
   });
 
   describe("DimensionsDTO", () => {
-    const validateDTO = async (dto: Partial<DimensionsDTO>) => {
-      const instance = plainToInstance(DimensionsDTO, dto);
-
-      const errors = await validate(instance);
-
-      return errors.map((error) => error.property);
-    };
+    const validateDTO = getValidateDTO(DimensionsDTO);
 
     it("유효한 DimensionsDTO 데이터로 유효성 검증을 통과", async () => {
       const validDimensions: Partial<DimensionsDTO> = {
@@ -97,13 +85,7 @@ describe("ProductDetailDTO", () => {
   });
 
   describe("AdditionalInfoDTO", () => {
-    const validateDTO = async (dto: Partial<AdditionalInfoDTO>) => {
-      const instance = plainToInstance(AdditionalInfoDTO, dto);
-
-      const errors = await validate(instance);
-
-      return errors.map((error) => error.property);
-    };
+    const validateDTO = getValidateDTO(AdditionalInfoDTO);
 
     it("유효한 AdditionalInfoDTO 데이터로 유효성 검증을 통과", async () => {
       const validAdditionalInfo: Partial<AdditionalInfoDTO> = {

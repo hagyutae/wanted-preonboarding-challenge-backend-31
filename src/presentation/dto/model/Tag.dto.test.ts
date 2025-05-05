@@ -1,16 +1,9 @@
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
 
 import TagDTO from "./Tag.dto";
 
 describe("TagDTO", () => {
-  const validateDTO = async (dto: Partial<TagDTO>) => {
-    const instance = plainToInstance(TagDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(TagDTO);
 
   const validData: Partial<TagDTO> = {
     id: 1,

@@ -1,5 +1,4 @@
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
 
 import BrandDTO from "../model/Brand.dto";
 import CategoryDTO from "../model/Category.dto";
@@ -13,13 +12,7 @@ import ProductCatalogDTO from "./ProductCatalog.dto";
 import RatingDTO from "./Rating.dto";
 
 describe("ProductCatalogDTO", () => {
-  const validateDTO = async (dto: Partial<ProductCatalogDTO>) => {
-    const instance = plainToInstance(ProductCatalogDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(ProductCatalogDTO);
 
   const validData: Partial<ProductCatalogDTO> = {
     id: 123,

@@ -1,16 +1,9 @@
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
 
 import ProductPriceDTO from "./ProductPrice.dto";
 
 describe("ProductPriceDTO", () => {
-  const validateDTO = async (dto: Partial<ProductPriceDTO>) => {
-    const instance = plainToInstance(ProductPriceDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(ProductPriceDTO);
 
   const validData: Partial<ProductPriceDTO> = {
     base_price: 599000,

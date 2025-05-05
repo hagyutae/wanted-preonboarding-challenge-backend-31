@@ -1,16 +1,9 @@
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
 
-import { ParamDTO, OptionParamDTO } from "./Param.dto";
+import { OptionParamDTO, ParamDTO } from "./Param.dto";
 
 describe("ParamDTO", () => {
-  const validateDTO = async (dto: Partial<ParamDTO>) => {
-    const instance = plainToInstance(ParamDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(ParamDTO);
 
   it("유효한 데이터로 유효성 검증을 통과", async () => {
     const dto: Partial<ParamDTO> = {
@@ -43,13 +36,7 @@ describe("ParamDTO", () => {
 });
 
 describe("OptionParamDTO", () => {
-  const validateDTO = async (dto: Partial<OptionParamDTO>) => {
-    const instance = plainToInstance(OptionParamDTO, dto);
-
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
+  const validateDTO = getValidateDTO(OptionParamDTO);
 
   it("유효한 DTO는 검증을 통과", async () => {
     const dto: Partial<OptionParamDTO> = {

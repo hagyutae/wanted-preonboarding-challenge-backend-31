@@ -1,18 +1,14 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
+
 import ReviewQueryDTO from "./ReviewQuery.dto";
 
 describe("ReviewQueryDTO", () => {
-  const validateDTO = async (dto: Partial<ReviewQueryDTO>) => {
-    const instance = plainToInstance(ReviewQueryDTO, dto);
+  const validateDTO = getValidateDTO(ReviewQueryDTO);
 
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
-
-  const validData = {
+  const validData: ReviewQueryDTO = {
     page: 1,
     perPage: 10,
     sort: "created_at:desc",

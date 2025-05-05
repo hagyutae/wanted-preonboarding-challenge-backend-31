@@ -1,18 +1,14 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
+import getValidateDTO from "src/__test-utils__/getValidateDTO";
+
 import ProductQueryDTO from "./ProductQuery.dto";
 
 describe("ProductQueryDTO", () => {
-  const validateDTO = async (dto: Partial<ProductQueryDTO>) => {
-    const instance = plainToInstance(ProductQueryDTO, dto);
+  const validateDTO = getValidateDTO(ProductQueryDTO);
 
-    const errors = await validate(instance);
-
-    return errors.map((error) => error.property);
-  };
-
-  const validData = {
+  const validData: ProductQueryDTO = {
     page: 1,
     perPage: 10,
     sort: "created_at:desc",
