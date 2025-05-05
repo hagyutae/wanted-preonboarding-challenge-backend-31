@@ -5,7 +5,7 @@ import com.wanted.ecommerce.common.exception.ResourceNotFoundException;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.product.dto.request.ProductPriceRequest;
-import com.wanted.ecommerce.product.dto.response.ProductPriceResponse;
+import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.ProductPriceResponse;
 import com.wanted.ecommerce.product.repository.ProductPriceRepository;
 import com.wanted.ecommerce.product.service.ProductPriceService;
 import lombok.RequiredArgsConstructor;

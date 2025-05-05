@@ -3,7 +3,7 @@ package com.wanted.ecommerce.product.service;
 import com.wanted.ecommerce.category.dto.response.CategoryResponse;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductCategory;
-import com.wanted.ecommerce.product.dto.request.ProductCategoryRequest;
+import com.wanted.ecommerce.product.dto.request.ProductCreateRequest.ProductCategoryRequest;
 import java.util.List;
 
 public interface ProductCategoryService {

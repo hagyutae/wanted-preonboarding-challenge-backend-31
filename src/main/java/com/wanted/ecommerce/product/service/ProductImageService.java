@@ -2,8 +2,8 @@ package com.wanted.ecommerce.product.service;
 
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductImage;
-import com.wanted.ecommerce.product.dto.request.ProductImageRequest;
-import com.wanted.ecommerce.product.dto.response.ProductImageCreateResponse;
+import com.wanted.ecommerce.product.dto.request.ProductCreateRequest.ProductImageRequest;
+import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import java.util.List;
 

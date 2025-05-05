@@ -26,4 +26,33 @@ public class ProductCreateRequest {
     private List<ProductOptionGroupRequest> optionGroups;
     private List<ProductImageRequest> images;
     private List<Long> tags;
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ProductImageRequest {
+        @NotBlank
+        private String url;
+        private String altText;
+        private Boolean isPrimary;
+        private Integer displayOrder;
+        private Long optionId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ProductOptionGroupRequest {
+        private String name;
+        private Integer displayOrder;
+        private List<ProductOptionRequest> options;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ProductCategoryRequest {
+        private Long categoryId;
+        private Boolean isPrimary;
+    }
 }

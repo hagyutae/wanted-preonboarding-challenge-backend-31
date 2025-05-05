@@ -2,8 +2,8 @@ package com.wanted.ecommerce.product.service;
 
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductOptionGroup;
-import com.wanted.ecommerce.product.dto.request.ProductOptionGroupRequest;
-import com.wanted.ecommerce.product.dto.response.ProductOptionGroupResponse;
+import com.wanted.ecommerce.product.dto.request.ProductCreateRequest.ProductOptionGroupRequest;
+import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.ProductOptionGroupResponse;
 import java.util.List;
 
 public interface ProductOptionGroupService {

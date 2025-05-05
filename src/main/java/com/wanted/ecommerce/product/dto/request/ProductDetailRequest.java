@@ -21,6 +21,16 @@ public class ProductDetailRequest {
     private String warrantyInfo;
     private String careInstructions;
     private HashMap<String, Object> additionalInfo;
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DimensionsRequest {
+
+        private Integer width;
+        private Integer height;
+        private Integer depth;
+    }
 }
 
 

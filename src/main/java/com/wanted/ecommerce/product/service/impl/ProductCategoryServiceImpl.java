@@ -6,7 +6,7 @@ import com.wanted.ecommerce.category.dto.response.ParentCategoryResponse;
 import com.wanted.ecommerce.category.service.CategoryService;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductCategory;
-import com.wanted.ecommerce.product.dto.request.ProductCategoryRequest;
+import com.wanted.ecommerce.product.dto.request.ProductCreateRequest.ProductCategoryRequest;
 import com.wanted.ecommerce.product.repository.ProductCategoryRepository;
 import com.wanted.ecommerce.product.service.ProductCategoryService;
 import java.util.List;
