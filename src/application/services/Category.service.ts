@@ -1,8 +1,8 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
-import { Category, Product, Product_Catalog, Product_Summary } from "src/domain/entities";
+import { Category, Product } from "src/domain/entities";
 import { IRepository } from "src/domain/repositories";
-import { FilterDTO } from "../dto";
+import { FilterDTO, ProductCatalogDTO, ProductSummaryDTO } from "../dto";
 
 @Injectable()
 export default class CategoryService {
@@ -10,7 +10,9 @@ export default class CategoryService {
     @Inject("ICategoryRepository")
     private readonly repository: IRepository<Category>,
     @Inject("IProductRepository")
-    private readonly product_repository: IRepository<Product | Product_Summary | Product_Catalog>,
+    private readonly product_repository: IRepository<
+      Product | ProductSummaryDTO | ProductCatalogDTO
+    >,
   ) {}
 
   async find_all_as_tree(level: number = 1) {
@@ -68,7 +70,7 @@ export default class CategoryService {
       sort_field,
       sort_order,
       category: [category_id],
-    })) as Product_Summary[];
+    })) as ProductSummaryDTO[];
 
     // 페이지네이션 요약 정보
     const pagination = {

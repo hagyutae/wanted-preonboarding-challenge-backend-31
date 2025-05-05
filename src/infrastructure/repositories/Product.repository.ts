@@ -1,14 +1,15 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { Product, Product_Catalog, Product_Summary } from "src/domain/entities";
+import { Product } from "src/domain/entities";
+import { ProductCatalogDTO, ProductSummaryDTO } from "src/application/dto";
 import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "../entities";
 import { ProductCatalogView, ProductSummaryView } from "../views";
 import BaseRepository from "./BaseRepository";
 
 @Injectable()
 export default class ProductRepository extends BaseRepository<
-  Product | Product_Summary | Product_Catalog
+  Product | ProductSummaryDTO | ProductCatalogDTO
 > {
   constructor(protected readonly entity_manager: EntityManager) {
     super(entity_manager);
@@ -46,7 +47,7 @@ export default class ProductRepository extends BaseRepository<
     seller?: number;
     brand?: number;
     search?: string;
-  }): Promise<Product_Summary[]> {
+  }): Promise<ProductSummaryDTO[]> {
     // 카테고리 조인
     const inner_query = this.entity_manager
       .createQueryBuilder()
@@ -77,7 +78,7 @@ export default class ProductRepository extends BaseRepository<
     return await query.getMany();
   }
 
-  async find_by_id(id: number): Promise<Product_Catalog | null> {
+  async find_by_id(id: number): Promise<ProductCatalogDTO | null> {
     return this.entity_manager.findOne(ProductCatalogView, { where: { id } });
   }
 

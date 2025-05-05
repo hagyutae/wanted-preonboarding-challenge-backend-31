@@ -2,20 +2,15 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import {
-  Product,
-  Product_Catalog,
-  Product_Detail,
-  Product_Image,
-  Product_Price,
-  Product_Summary,
-} from "src/domain/entities";
+import { Product, Product_Detail, Product_Image, Product_Price } from "src/domain/entities";
 import { IRepository } from "src/domain/repositories";
 import {
   FilterDTO,
+  ProductCatalogDTO,
   ProductCategoryDTO,
   ProductInputDTO,
   ProductOptionGroupDTO,
+  ProductSummaryDTO,
   ProductTagDTO,
 } from "../dto";
 
@@ -24,7 +19,7 @@ export default class ProductService {
   constructor(
     private readonly entity_manager: EntityManager,
     @Inject("IProductRepository")
-    private readonly repository: IRepository<Product | Product_Summary | Product_Catalog>,
+    private readonly repository: IRepository<Product | ProductSummaryDTO | ProductCatalogDTO>,
     @Inject("IProductDetailRepository")
     private readonly product_detail_repository: IRepository<Product_Detail>,
     @Inject("IProductPriceRepository")
@@ -113,7 +108,7 @@ export default class ProductService {
       sort_field,
       sort_order,
       ...rest,
-    })) as Product_Summary[];
+    })) as ProductSummaryDTO[];
 
     // 페이지네이션 요약 정보
     const pagination = {
@@ -135,7 +130,7 @@ export default class ProductService {
         details: { resourceType: "Product", resourceId: id },
       });
     }
-    return product as Product_Catalog;
+    return product as ProductCatalogDTO;
   }
 
   async edit(

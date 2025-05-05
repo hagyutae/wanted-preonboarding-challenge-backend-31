@@ -1,7 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsArray, IsBoolean, IsOptional, ValidateNested } from "class-validator";
 
-import { Category, Product_Summary, Review } from "src/domain/entities";
+import { Category, Review } from "src/domain/entities";
+import { ProductSummaryDTO } from "src/application/dto";
 import PaginationSummaryDTO from "./PaginationSummary.dto";
 import ReviewSummaryDTO from "./ReviewSummary.dto";
 
@@ -23,10 +24,10 @@ export default class ResponseDTO<T> {
 }
 
 export class ProductResponseBundle {
-  @ApiProperty({ type: () => Product_Summary, description: "상품 정보" })
+  @ApiProperty({ description: "상품 정보" })
   @IsArray()
   @ValidateNested()
-  items: Product_Summary[];
+  items: ProductSummaryDTO[];
 
   @ApiProperty({ description: "페이지네이션 정보" })
   pagination: PaginationSummaryDTO;
@@ -37,17 +38,17 @@ export class CategoryResponseBundle {
   @ValidateNested()
   category: Category;
 
-  @ApiProperty({ type: () => [Product_Summary], description: "상품 요약 목록" })
+  @ApiProperty({ description: "상품 요약 목록" })
   @IsArray()
   @ValidateNested()
-  items: Product_Summary[];
+  items: ProductSummaryDTO[];
 
   @ApiProperty({ description: "페이지네이션 정보" })
   pagination: PaginationSummaryDTO;
 }
 
 export class ReviewResponseBundle {
-  @ApiProperty({ type: () => [Product_Summary], description: "리뷰 목록" })
+  @ApiProperty({ description: "리뷰 목록" })
   @IsArray()
   @ValidateNested()
   items: Review[];
@@ -62,13 +63,13 @@ export class ReviewResponseBundle {
 }
 
 export class MainResponseBundle {
-  @ApiProperty({ type: () => [Product_Summary], description: "신상품 목록" })
+  @ApiProperty({ description: "신상품 목록" })
   @IsArray()
-  new_products: Product_Summary[];
+  new_products: ProductSummaryDTO[];
 
-  @ApiProperty({ type: () => [Product_Summary], description: "인기 상품 목록" })
+  @ApiProperty({ description: "인기 상품 목록" })
   @IsArray()
-  popular_products: Product_Summary[];
+  popular_products: ProductSummaryDTO[];
 
   @ApiProperty({ type: () => [Category], description: "추천 카테고리 목록" })
   @IsArray()

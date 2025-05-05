@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { Category, Product_Summary } from "src/domain/entities";
-import { FilterDTO } from "../dto";
+import { Category } from "src/domain/entities";
+import { FilterDTO, ProductSummaryDTO } from "../dto";
 import CategoryService from "./Category.service";
 
 describe("CategoryService", () => {
@@ -65,7 +65,7 @@ describe("CategoryService", () => {
     const items = [
       { id: 1, name: "상품1", created_at: new Date() },
       { id: 2, name: "상품2", created_at: new Date() },
-    ] as Product_Summary[];
+    ] as ProductSummaryDTO[];
 
     beforeEach(() => {
       mockCategoryRepository.find_by_id = jest.fn().mockResolvedValue(category);

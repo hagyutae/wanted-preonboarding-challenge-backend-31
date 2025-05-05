@@ -1,7 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager, UpdateResult } from "typeorm";
 
-import { Product, Product_Catalog, Product_Summary } from "src/domain/entities";
+import { ProductCatalogDTO, ProductSummaryDTO } from "src/application/dto";
+import { Product } from "src/domain/entities";
 import ProductRepository from "./Product.repository";
 
 describe("ProductRepository", () => {
@@ -56,7 +57,7 @@ describe("ProductRepository", () => {
         search: "Test",
       };
 
-      const mockProducts = [{ id: 1, name: "Test Product" }] as Product_Summary[];
+      const mockProducts = [{ id: 1, name: "Test Product" }] as ProductSummaryDTO[];
       mockEntityManager.getRepository().createQueryBuilder().getMany = jest
         .fn()
         .mockResolvedValue(mockProducts);
@@ -69,7 +70,7 @@ describe("ProductRepository", () => {
 
   describe("find_by_id", () => {
     it("ID로 상품 검색 성공", async () => {
-      const mockProduct = { id: 1, name: "Test Product" } as Product_Catalog;
+      const mockProduct = { id: 1, name: "Test Product" } as ProductCatalogDTO;
       mockEntityManager.findOne.mockResolvedValue(mockProduct);
 
       const result = await repository.find_by_id(1);
