@@ -45,7 +45,7 @@ public class ProductController {
 
     @Operation(summary = "상품 수정", description = "상품 ID를 기반으로 상품 정보 수정")
     @PutMapping("/products/{id}")
-    public ApiResponse<UpdateProductResponse> updateProduct(@PathVariable Integer id,
+    public ApiResponse<UpdateProductResponse> updateProduct(@PathVariable Long id,
                                                             @RequestBody UpdateProductRequest updateProductRequest) {
         UpdateProductResponse responseData = productService.updateProduct(id, updateProductRequest);
 
@@ -56,9 +56,9 @@ public class ProductController {
                 .build();
     }
 
-    @Operation(summary = "상품 삭제", description = "상품 ID를 기반으로 상품 삭제")
+    @Operation(summary = "상품 삭제", description = "특정 상품을 삭제합니다 (소프트 삭제).")
     @DeleteMapping("/products/{id}")
-    public ApiResponse<Void> deleteProduct(@PathVariable Integer id) {
+    public ApiResponse<Void> deleteProduct(@PathVariable Long id) {
 
         productService.deleteProduct(id);
         return ApiResponse.<Void>builder()

@@ -11,6 +11,7 @@ import com.dino.cqrs_challenge.domain.repository.ProductPriceRepository;
 import com.dino.cqrs_challenge.domain.repository.ProductRepository;
 import com.dino.cqrs_challenge.domain.repository.ReviewRepository;
 import com.dino.cqrs_challenge.global.response.PaginatedApiResponse;
+import com.dino.cqrs_challenge.presentation.exception.ProductDetailNotFoundException;
 import com.dino.cqrs_challenge.presentation.exception.ProductNotFoundException;
 import com.dino.cqrs_challenge.presentation.model.dto.FindProductDTO;
 import com.dino.cqrs_challenge.presentation.model.dto.FindProductSearchDTO;
@@ -88,8 +89,10 @@ public class FindProductService {
 
     public FindProductDTO findProductById(Long id) {
         Product product = findProductByIdThrowIfNull(id);
-        ProductDetail productDetail = productDetailRepository.findByProductId(id);
-        ProductPrice productPrice = productPriceRepository.findByProductId(id);
+        ProductDetail productDetail = productDetailRepository.findByProductId(id)
+                .orElse(new ProductDetail());
+        ProductPrice productPrice = productPriceRepository.findByProductId(id)
+                .orElse(new ProductPrice());
         return FindProductDTO.of(product, productDetail, productPrice);
     }
 

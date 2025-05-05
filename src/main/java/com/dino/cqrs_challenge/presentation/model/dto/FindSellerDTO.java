@@ -2,9 +2,11 @@ package com.dino.cqrs_challenge.presentation.model.dto;
 
 import com.dino.cqrs_challenge.domain.entity.Seller;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
+@Getter
 @Schema(description = "판매자 정보 DTO")
 public class FindSellerDTO {
 
