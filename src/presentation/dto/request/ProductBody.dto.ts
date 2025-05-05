@@ -2,10 +2,10 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsBoolean, IsIn, IsInt, ValidateNested } from "class-validator";
 
-import ImageDTO from "./Image.dto";
-import ProductDetailDTO from "./ProductDetail.dto";
-import ProductOptionGroupDTO from "./ProductOptionGroup.dto";
-import ProductPriceDTO from "./ProductPrice.dto";
+import ImageDTO from "../model/Image.dto";
+import ProductDetailDTO from "../model/ProductDetail.dto";
+import ProductOptionGroupDTO from "../model/ProductOptionGroup.dto";
+import ProductPriceDTO from "../model/ProductPrice.dto";
 
 class CategoryOfProductBodyDTO {
   @ApiProperty({ description: "카테고리 ID", example: 5 })

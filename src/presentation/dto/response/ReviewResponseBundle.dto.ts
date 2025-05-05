@@ -2,15 +2,21 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, ValidateNested } from "class-validator";
 
+import ReviewDTO from "../model/Review.dto";
 import PaginationSummaryDTO from "./PaginationSummary.dto";
-import ProductSummaryDTO from "./ProductSummary.dto";
+import ReviewSummaryDTO from "./ReviewSummary.dto";
 
-export default class ProductResponseBundle {
-  @ApiProperty({ description: "상품 정보", type: [ProductSummaryDTO] })
+export default class ReviewResponseBundleDTO {
+  @ApiProperty({ description: "리뷰 목록", type: [ReviewDTO] })
   @IsArray()
   @ValidateNested()
-  @Type(() => ProductSummaryDTO)
-  items: ProductSummaryDTO[];
+  @Type(() => ReviewDTO)
+  items: ReviewDTO[];
+
+  @ApiProperty({ description: "리뷰 요약 정보", type: ReviewSummaryDTO })
+  @ValidateNested()
+  @Type(() => ReviewSummaryDTO)
+  summary: ReviewSummaryDTO;
 
   @ApiProperty({ description: "페이지네이션 정보", type: PaginationSummaryDTO })
   @ValidateNested()

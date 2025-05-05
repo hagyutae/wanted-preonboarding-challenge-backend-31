@@ -2,7 +2,7 @@ import { ApiPropertyOptional, PickType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsOptional, ValidateNested } from "class-validator";
 
-import CategoryDTO from "./Category.dto";
+import CategoryDTO from "../model/Category.dto";
 
 export default class NestedCategoryDTO extends PickType(CategoryDTO, [
   "id",

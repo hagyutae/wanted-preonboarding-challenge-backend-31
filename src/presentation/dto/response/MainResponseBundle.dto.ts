@@ -2,8 +2,8 @@ import { ApiProperty, PickType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, Min, ValidateNested } from "class-validator";
 
-import CategoryDTO from "./Category.dto";
-import ProductSummaryDTO from "./ProductSummary.dto";
+import CategoryDTO from "../model/Category.dto";
+import ProductSummaryDTO from "../response/ProductSummary.dto";
 
 class FeaturedCategoryDTO extends PickType(CategoryDTO, [
   "id",
@@ -17,7 +17,7 @@ class FeaturedCategoryDTO extends PickType(CategoryDTO, [
   product_count: number;
 }
 
-export default class MainResponseBundle {
+export default class MainResponseBundleDTO {
   @ApiProperty({ description: "신상품 목록", type: [ProductSummaryDTO] })
   @IsArray()
   @ValidateNested()

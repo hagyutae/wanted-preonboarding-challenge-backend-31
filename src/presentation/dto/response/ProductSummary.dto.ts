@@ -2,10 +2,10 @@ import { ApiProperty, PickType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsBoolean, IsInt, IsNumber, Matches, Max, Min, ValidateNested } from "class-validator";
 
-import BrandDTO from "./Brand.dto";
-import ImageDTO from "./Image.dto";
+import BrandDTO from "../model/Brand.dto";
+import ImageDTO from "../model/Image.dto";
 import ProductCatalogDTO from "./ProductCatalog.dto";
-import SellerDTO from "./Seller.dto";
+import SellerDTO from "../model/Seller.dto";
 
 class ProductSummaryOfBrandDTO extends PickType(BrandDTO, ["id", "name"] as const) {}
 class ProductSummaryOfSellerDTO extends PickType(SellerDTO, ["id", "name"] as const) {}

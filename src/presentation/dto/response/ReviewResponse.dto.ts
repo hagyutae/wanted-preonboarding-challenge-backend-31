@@ -1,6 +1,6 @@
 import { PickType } from "@nestjs/swagger";
 
-import ReviewDTO from "./Review.dto";
+import ReviewDTO from "../model/Review.dto";
 
 export default class ReviewResponseDTO extends PickType(ReviewDTO, [
   "id",

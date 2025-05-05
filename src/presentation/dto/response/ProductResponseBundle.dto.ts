@@ -3,20 +3,14 @@ import { Type } from "class-transformer";
 import { IsArray, ValidateNested } from "class-validator";
 
 import PaginationSummaryDTO from "./PaginationSummary.dto";
-import ReviewDTO from "./Review.dto";
-import ReviewSummaryDTO from "./ReviewSummary.dto";
+import ProductSummaryDTO from "./ProductSummary.dto";
 
-export default class ReviewResponseBundle {
-  @ApiProperty({ description: "리뷰 목록", type: [ReviewDTO] })
+export default class ProductResponseBundleDTO {
+  @ApiProperty({ description: "상품 정보", type: [ProductSummaryDTO] })
   @IsArray()
   @ValidateNested()
-  @Type(() => ReviewDTO)
-  items: ReviewDTO[];
-
-  @ApiProperty({ description: "리뷰 요약 정보", type: ReviewSummaryDTO })
-  @ValidateNested()
-  @Type(() => ReviewSummaryDTO)
-  summary: ReviewSummaryDTO;
+  @Type(() => ProductSummaryDTO)
+  items: ProductSummaryDTO[];
 
   @ApiProperty({ description: "페이지네이션 정보", type: PaginationSummaryDTO })
   @ValidateNested()

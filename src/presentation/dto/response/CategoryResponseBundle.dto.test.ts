@@ -1,16 +1,16 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
-import ReviewResponseBundle from "./ReviewResponseBundle.dto";
+import CategoryResponseBundleDTO from "./CategoryResponseBundle.dto";
 
-describe("ReviewResponseBundle", () => {
+describe("CategoryResponseBundle", () => {
   it("유효한 데이터로 유효성 검사가 성공", async () => {
     const validData = {
+      category: {},
       items: [],
-      summary: {},
       pagination: {},
     };
-    const dto = plainToInstance(ReviewResponseBundle, validData);
+    const dto = plainToInstance(CategoryResponseBundleDTO, validData);
 
     const errors = await validate(dto);
 
