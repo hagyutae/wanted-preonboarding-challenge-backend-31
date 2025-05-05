@@ -1,25 +1,18 @@
 package com.preonboarding.challenge.service.product;
 
-import com.preonboarding.challenge.controller.dto.ProductListResponse;
 import com.preonboarding.challenge.exception.ResourceNotFoundException;
-import com.preonboarding.challenge.service.dto.PaginationDto;
 import com.preonboarding.challenge.service.entity.*;
 import com.preonboarding.challenge.service.mapper.ProductMapper;
-import com.preonboarding.challenge.service.query.ProductQuery;
-import com.preonboarding.challenge.service.query.ProductQueryHandler;
 import com.preonboarding.challenge.service.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService implements ProductCommandHandler, ProductQueryHandler {
+public class ProductService implements ProductCommandHandler {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -296,101 +289,5 @@ public class ProductService implements ProductCommandHandler, ProductQueryHandle
         image = imageRepository.save(image);
 
         return productMapper.toImageDto(image);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ProductDto.Product getProduct(ProductQuery.GetProduct query) {
-        var productId = query.getProductId();
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", productId));
-
-        return productMapper.toProductDto(product);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ProductListResponse getProducts(ProductQuery.ListProducts command) {
-        // Specification 생성 및 조합
-        Specification<Product> spec = Specification.where(null);
-
-        // 상태 필터
-        if (command.getStatus() != null) {
-            spec = spec.and(ProductSpecification.withStatus(command.getStatus()));
-        }
-
-        // 가격 범위 필터
-        if (command.getMinPrice() != null) {
-            spec = spec.and(ProductSpecification.withMinPrice(command.getMinPrice()));
-        }
-
-        if (command.getMaxPrice() != null) {
-            spec = spec.and(ProductSpecification.withMaxPrice(command.getMaxPrice()));
-        }
-
-        // 카테고리 필터
-        if (command.getCategory() != null && !command.getCategory().isEmpty()) {
-            spec = spec.and(ProductSpecification.withCategoryId(command.getCategory()));
-        }
-
-        // 판매자 필터
-        if (command.getSeller() != null) {
-            spec = spec.and(ProductSpecification.withSellerId(command.getSeller()));
-        }
-
-        // 브랜드 필터
-        if (command.getBrand() != null) {
-            spec = spec.and(ProductSpecification.withBrandId(command.getBrand()));
-        }
-
-        // 태그 필터
-        if (command.getTag() != null && !command.getTag().isEmpty()) {
-            spec = spec.and(ProductSpecification.withTagIds(command.getTag()));
-        }
-
-        // 재고 여부 필터
-        if (command.getInStock() != null) {
-            spec = spec.and(ProductSpecification.inStock(command.getInStock()));
-        }
-
-        // 검색어 필터
-        if (command.getSearch() != null && !command.getSearch().isEmpty()) {
-            spec = spec.and(ProductSpecification.withSearch(command.getSearch()));
-        }
-
-        // 등록일 범위 필터
-        if (command.getCreatedFrom() != null) {
-            LocalDateTime fromDate = command.getCreatedFrom().atStartOfDay();
-            spec = spec.and(ProductSpecification.withCreatedDateAfter(fromDate));
-        }
-
-        if (command.getCreatedTo() != null) {
-            // 날짜의 끝(23:59:59)으로 설정
-            LocalDateTime toDate = command.getCreatedTo().plusDays(1).atStartOfDay().minusSeconds(1);
-            spec = spec.and(ProductSpecification.withCreatedDateBefore(toDate));
-        }
-
-        // 조회 실행
-        Page<Product> productPage = productRepository.findAll(spec, command.getPagination().toPageable());
-
-        // 결과 변환
-        List<ProductDto.ProductSummary> productSummaries = productPage.stream()
-                .map(productMapper::toProductSummaryDto)
-                .toList();
-
-        // 페이지네이션 정보 생성
-        PaginationDto.PaginationInfo paginationInfo = PaginationDto.PaginationInfo.builder()
-                .totalItems((int) productPage.getTotalElements())
-                .totalPages(productPage.getTotalPages())
-                .currentPage(command.getPagination().getPage())
-                .perPage(command.getPagination().getSize())
-                .build();
-
-        // 응답 생성
-        return ProductListResponse.builder()
-                .items(productSummaries)
-                .pagination(paginationInfo)
-                .build();
     }
 }
