@@ -3,7 +3,6 @@ package com.challenge.onboarding.review.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -26,5 +25,6 @@ public class User {
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    protected User() {}
+    protected User() {
+    }
 }
