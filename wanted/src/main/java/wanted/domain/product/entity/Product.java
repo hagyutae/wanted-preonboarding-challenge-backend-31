@@ -122,4 +122,8 @@ public class Product extends BaseCreateUpdateEntity {
         this.seller = seller;
         this.brand = brand;
     }
+
+    public void deleteProduct(){
+        this.status = Status.DELETED;
+    }
 }

@@ -127,6 +127,14 @@ public class ProductService {
         return ProductCreateResponse.of(product);
     }
 
+    @Transactional
+    public void deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Product", productId)));
+
+        product.deleteProduct();
+    }
+
     private void saveProductCategory(ProductRequest productRequest, Product product) {
         for (ProductCategoryRequest productCategoryRequest : productRequest.categories()) {
             Category category = categoryRepository.findById(productCategoryRequest.categoryId())

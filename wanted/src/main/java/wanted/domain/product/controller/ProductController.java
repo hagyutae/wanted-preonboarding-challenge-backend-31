@@ -3,6 +3,7 @@ package wanted.domain.product.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,5 +45,11 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable(value = "id") Long productId, @Valid @RequestBody ProductRequest productRequest) {
         return ResponseEntity.ok(SuccessResponse.ok(productService.updateProduct(productId, productRequest)));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable(value = "id") Long productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok(SuccessResponse.ok(null));
     }
 }
