@@ -1,6 +1,14 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, PickType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsBoolean, IsIn, IsInt, ValidateNested } from "class-validator";
+import {
+  IsArray,
+  IsBoolean,
+  IsDefined,
+  IsIn,
+  IsInt,
+  IsString,
+  ValidateNested,
+} from "class-validator";
 
 import ImageDTO from "../model/Image.dto";
 import ProductDetailDTO from "../model/ProductDetail.dto";
@@ -19,20 +27,32 @@ class CategoryOfProductBodyDTO {
 
 type TagId = number;
 
+class PriceForProductBodyDTO extends PickType(ProductPriceDTO, [
+  "base_price",
+  "sale_price",
+  "cost_price",
+  "currency",
+  "tax_rate",
+] as const) {}
+
 export default class ProductBodyDTO {
   @ApiProperty({ description: "상품 이름", example: "슈퍼 편안한 소파" })
+  @IsString()
   name: string;
 
   @ApiProperty({ description: "슬러그", example: "super-comfortable-sofa" })
+  @IsString()
   slug: string;
 
   @ApiProperty({ description: "짧은 설명", example: "최고급 소재로 만든 편안한 소파" })
+  @IsString()
   short_description: string;
 
   @ApiProperty({
     description: "상세 설명",
     example: "<p>이 소파는 최고급 소재로 제작되었으며...</p>",
   })
+  @IsString()
   full_description: string;
 
   @ApiProperty({ description: "판매자 ID", example: 1 })
@@ -50,14 +70,16 @@ export default class ProductBodyDTO {
   status: string;
 
   @ApiProperty({ description: "상세 정보", type: ProductDetailDTO })
+  @IsDefined()
   @ValidateNested()
   @Type(() => ProductDetailDTO)
   detail: ProductDetailDTO;
 
-  @ApiProperty({ description: "가격 정보", type: ProductPriceDTO })
+  @ApiProperty({ description: "가격 정보", type: PriceForProductBodyDTO })
+  @IsDefined()
   @ValidateNested()
-  @Type(() => ProductPriceDTO)
-  price: ProductPriceDTO;
+  @Type(() => PriceForProductBodyDTO)
+  price: PriceForProductBodyDTO;
 
   @ApiProperty({ description: "카테고리 목록", type: [CategoryOfProductBodyDTO] })
   @ValidateNested({ each: true })

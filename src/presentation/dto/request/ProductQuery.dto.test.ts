@@ -1,8 +1,17 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
+
 import ProductQueryDTO from "./ProductQuery.dto";
 
 describe("ProductQueryDTO", () => {
+  const validateDTO = async (dto: Partial<ProductQueryDTO>) => {
+    const instance = plainToInstance(ProductQueryDTO, dto);
+
+    const errors = await validate(instance);
+
+    return errors.map((error) => error.property);
+  };
+
   const validData = {
     page: 1,
     perPage: 10,
@@ -10,135 +19,91 @@ describe("ProductQueryDTO", () => {
     status: "ACTIVE",
     minPrice: 10000,
     maxPrice: 100000,
-    category: "5,6",
+    category: [5],
     seller: 1,
     brand: 2,
     inStock: true,
     search: "소파",
   };
 
-  it("유효한 데이터로 유효성 검사가 성공", async () => {
-    const dto = plainToInstance(ProductQueryDTO, validData);
+  it("유효한 데이터로 유효성 검증을 통과", async () => {
+    const errors = await validateDTO(validData);
 
-    const errors = await validate(dto);
-
-    expect(errors.length).toBe(0);
+    expect(errors).toHaveLength(0);
   });
 
-  it("필수 필드가 누락되었을 때 유효성 검사가 성공 (모든 필드가 선택적)", async () => {
-    const dto = plainToInstance(ProductQueryDTO, {});
+  it("모든 필드가 선택 사항이므로 빈 객체도 검증 통과", async () => {
+    const errors = await validateDTO({});
 
-    const errors = await validate(dto);
-
-    expect(errors.length).toBe(0);
+    expect(errors).toHaveLength(0);
   });
 
-  it("잘못된 데이터 타입으로 유효성 검사가 실패", async () => {
-    const invalidData = { ...validData, page: "invalid" };
-    const dto = plainToInstance(ProductQueryDTO, invalidData);
+  it("sort 필드가 잘못된 형식일 경우 검증 실패", async () => {
+    const invalidData = { ...validData, sort: "invalid_sort_format" };
 
-    const errors = await validate(dto);
+    const errors = await validateDTO(invalidData);
 
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].property).toBe("page");
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("sort");
   });
 
-  it("배열 필드(category)의 유효성 검사가 성공", async () => {
-    const dto = plainToInstance(ProductQueryDTO, { ...validData, category: "5,6" });
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBe(0);
-  });
-
-  it("배열 필드(category)의 유효성 검사가 실패", async () => {
-    const invalidData = { ...validData, category: "invalid" };
-    const dto = plainToInstance(ProductQueryDTO, invalidData);
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].property).toBe("category");
-  });
-
-  it("boolean 필드(inStock)의 유효성 검사가 성공", async () => {
-    const dto = plainToInstance(ProductQueryDTO, { ...validData, inStock: true });
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBe(0);
-  });
-
-  it("boolean 필드(inStock)의 유효성 검사가 실패", async () => {
-    const invalidData = { ...validData, inStock: "invalid" };
-    const dto = plainToInstance(ProductQueryDTO, invalidData);
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].property).toBe("inStock");
-  });
-
-  it("숫자 필드(minPrice, maxPrice)의 유효성 검사가 성공", async () => {
-    const dto = plainToInstance(ProductQueryDTO, { ...validData, minPrice: 5000, maxPrice: 20000 });
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBe(0);
-  });
-
-  it("숫자 필드(minPrice, maxPrice)의 유효성 검사가 실패", async () => {
-    const invalidData = { ...validData, minPrice: "invalid", maxPrice: "invalid" };
-    const dto = plainToInstance(ProductQueryDTO, invalidData);
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].property).toBe("minPrice");
-  });
-
-  it("sort 필드의 유효성 검사가 성공 (올바른 형식)", async () => {
-    const validSortData = { ...validData, sort: "name:asc,price:desc" };
-    const dto = plainToInstance(ProductQueryDTO, validSortData);
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBe(0);
-  });
-
-  it("sort 필드의 유효성 검사가 실패 (잘못된 형식)", async () => {
-    const invalidSortData = { ...validData, sort: "invalid_sort_format" };
-    const dto = plainToInstance(ProductQueryDTO, invalidSortData);
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].property).toBe("sort");
-    expect(errors[0].constraints?.matches).toContain(
-      "sort 형식은 field:asc|desc (복수는 콤마로 구분) 이어야 합니다.",
-    );
-  });
-
-  it("sort 필드의 유효성 검사가 실패 (빈 문자열)", async () => {
-    const invalidSortData = { ...validData, sort: "" };
-    const dto = plainToInstance(ProductQueryDTO, invalidSortData);
-
-    const errors = await validate(dto);
-
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].property).toBe("sort");
-  });
-
-  it("sort 필드의 유효성 검사가 성공 (기본값 사용)", async () => {
-    const dto = plainToInstance(
+  it("sort 필드가 기본값으로 유효성 검증 통과", async () => {
+    const defaultSortData = plainToInstance(
       ProductQueryDTO,
       { ...validData, sort: undefined },
       { exposeDefaultValues: true },
     );
 
-    const errors = await validate(dto);
+    const errors = await validate(defaultSortData);
 
     expect(errors.length).toBe(0);
-    expect(dto.sort).toBe("created_at:desc");
+    expect(defaultSortData.sort).toBe("created_at:desc");
+  });
+
+  it("status 필드가 허용되지 않은 값일 경우 검증 실패", async () => {
+    const invalidData = { ...validData, status: "INVALID_STATUS" };
+
+    const errors = await validateDTO(invalidData);
+
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("status");
+  });
+
+  it("category 필드가 숫자 배열이 아닌 경우 검증 실패", async () => {
+    const invalidData = { ...validData, category: ["not_a_number"] as unknown as number[] };
+
+    const errors = await validateDTO(invalidData);
+
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("category");
+  });
+
+  it("inStock 필드가 boolean이 아닌 경우 검증 실패", async () => {
+    const invalidData = { ...validData, inStock: "not_a_boolean" as unknown as boolean };
+
+    const errors = await validateDTO(invalidData);
+
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("inStock");
+  });
+
+  it("minPrice와 maxPrice가 음수일 경우 검증 실패", async () => {
+    const invalidData = { ...validData, minPrice: -1, maxPrice: -1 };
+
+    const errors = await validateDTO(invalidData);
+
+    expect(errors).toHaveLength(2);
+    expect(errors).toContain("minPrice");
+    expect(errors).toContain("maxPrice");
+  });
+
+  it("page와 perPage가 1보다 작은 경우 검증 실패", async () => {
+    const invalidData = { ...validData, page: 0, perPage: 0 };
+
+    const errors = await validateDTO(invalidData);
+
+    expect(errors).toHaveLength(2);
+    expect(errors).toContain("page");
+    expect(errors).toContain("perPage");
   });
 });

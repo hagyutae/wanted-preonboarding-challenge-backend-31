@@ -1,10 +1,17 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
-
 import ProductBodyDTO from "./ProductBody.dto";
 
 describe("ProductBodyDTO", () => {
-  const validData = {
+  const validateDTO = async (dto: Partial<ProductBodyDTO>) => {
+    const instance = plainToInstance(ProductBodyDTO, dto);
+
+    const errors = await validate(instance);
+
+    return errors.map((error) => error.property);
+  };
+
+  const validData: Partial<ProductBodyDTO> = {
     name: "슈퍼 편안한 소파",
     slug: "super-comfortable-sofa",
     short_description: "최고급 소재로 만든 편안한 소파",
@@ -60,44 +67,60 @@ describe("ProductBodyDTO", () => {
     tags: [1, 4, 7],
   };
 
-  it("유효한 데이터로 유효성 검사가 성공", async () => {
-    const dto = plainToInstance(ProductBodyDTO, validData);
+  it("유효한 데이터로 유효성 검증을 통과", async () => {
+    const errors = await validateDTO(validData);
 
-    const errors = await validate(dto);
-
-    expect(errors.length).toBe(0);
+    expect(errors).toHaveLength(0);
   });
 
-  it("잘못된 데이터 타입으로 유효성 검사가 실패", async () => {
-    const invalidData = { ...validData, seller_id: "invalid" };
-    const dto = plainToInstance(ProductBodyDTO, invalidData);
+  it("필수 필드가 누락된 경우 검증 실패", async () => {
+    const invalidData = {};
 
-    const errors = await validate(dto);
+    const errors = await validateDTO(invalidData);
 
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].property).toBe("seller_id");
+    expect(errors).toHaveLength(13);
+    expect(errors).toContain("name");
+    expect(errors).toContain("slug");
+    expect(errors).toContain("short_description");
+    expect(errors).toContain("full_description");
+    expect(errors).toContain("seller_id");
+    expect(errors).toContain("brand_id");
+    expect(errors).toContain("status");
+    expect(errors).toContain("detail");
+    expect(errors).toContain("price");
+    expect(errors).toContain("categories");
+    expect(errors).toContain("option_groups");
+    expect(errors).toContain("images");
+    expect(errors).toContain("tags");
   });
 
-  it("중첩된 객체의 유효성 검사가 실패", async () => {
+  it("status 필드가 허용되지 않은 값일 경우 검증 실패", async () => {
+    const invalidData = { ...validData, status: "INVALID_STATUS" };
+
+    const errors = await validateDTO(invalidData);
+
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("status");
+  });
+
+  it("categories 필드가 잘못된 형식일 경우 검증 실패", async () => {
     const invalidData = {
       ...validData,
-      detail: { ...validData.detail, dimensions: { width: "invalid", height: 85, depth: 90 } },
+      categories: [{ category_id: "not_a_number" as unknown as number, is_primary: true }],
     };
-    const dto = plainToInstance(ProductBodyDTO, invalidData);
 
-    const errors = await validate(dto);
+    const errors = await validateDTO(invalidData);
 
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].property).toBe("detail");
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("categories");
   });
 
-  it("배열 필드의 유효성 검사가 실패", async () => {
-    const invalidData = { ...validData, tags: ["invalid"] };
-    const dto = plainToInstance(ProductBodyDTO, invalidData);
+  it("tags 필드가 숫자가 아닌 값이 포함된 경우 검증 실패", async () => {
+    const invalidData = { ...validData, tags: [1, "not_a_number", 7] as unknown as number[] };
 
-    const errors = await validate(dto);
+    const errors = await validateDTO(invalidData);
 
-    expect(errors.length).toBeGreaterThan(0);
-    expect(errors[0].property).toBe("tags");
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("tags");
   });
 });

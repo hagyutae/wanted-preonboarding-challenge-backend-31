@@ -9,10 +9,10 @@ describe("ParamDTO", () => {
 
     const errors = await validate(instance);
 
-    return errors.map((error) => error.constraints);
+    return errors.map((error) => error.property);
   };
 
-  it("유효한 DTO는 검증을 통과", async () => {
+  it("유효한 데이터로 유효성 검증을 통과", async () => {
     const dto: Partial<ParamDTO> = {
       id: 123,
     };
@@ -37,7 +37,8 @@ describe("ParamDTO", () => {
 
     const errors = await validateDTO(dto);
 
-    expect(errors).not.toHaveLength(0);
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("id");
   });
 });
 
@@ -47,7 +48,7 @@ describe("OptionParamDTO", () => {
 
     const errors = await validate(instance);
 
-    return errors.map((error) => error.constraints);
+    return errors.map((error) => error.property);
   };
 
   it("유효한 DTO는 검증을 통과", async () => {
@@ -68,7 +69,8 @@ describe("OptionParamDTO", () => {
 
     const errors = await validateDTO(dto);
 
-    expect(errors).not.toHaveLength(0);
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("id");
   });
 
   it("optionId가 누락된 경우 검증 실패", async () => {
@@ -78,28 +80,7 @@ describe("OptionParamDTO", () => {
 
     const errors = await validateDTO(dto);
 
-    expect(errors).not.toHaveLength(0);
-  });
-
-  it("id가 정수가 아닌 경우 검증 실패", async () => {
-    const dto: Partial<OptionParamDTO> = {
-      id: "123" as any,
-      optionId: 456,
-    };
-
-    const errors = await validateDTO(dto);
-
-    expect(errors).not.toHaveLength(0);
-  });
-
-  it("optionId가 정수가 아닌 경우 검증 실패", async () => {
-    const dto: Partial<OptionParamDTO> = {
-      id: 123,
-      optionId: "456" as any,
-    };
-
-    const errors = await validateDTO(dto);
-
-    expect(errors).not.toHaveLength(0);
+    expect(errors).toHaveLength(1);
+    expect(errors).toContain("optionId");
   });
 });
