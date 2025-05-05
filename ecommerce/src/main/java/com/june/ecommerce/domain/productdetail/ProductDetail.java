@@ -2,8 +2,10 @@ package com.june.ecommerce.domain.productdetail;
 
 import com.june.ecommerce.domain.product.Product;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class ProductDetail {
 
     @Id

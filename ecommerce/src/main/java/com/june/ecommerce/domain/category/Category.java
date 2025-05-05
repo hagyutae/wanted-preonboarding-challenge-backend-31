@@ -1,7 +1,12 @@
 package com.june.ecommerce.domain.category;
 
+import com.june.ecommerce.domain.productcategory.ProductCategory;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+import java.util.List;
+
+@Getter
 @Entity
 public class Category {
 

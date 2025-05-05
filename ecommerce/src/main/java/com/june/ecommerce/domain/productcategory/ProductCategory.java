@@ -3,7 +3,9 @@ package com.june.ecommerce.domain.productcategory;
 import com.june.ecommerce.domain.category.Category;
 import com.june.ecommerce.domain.product.Product;
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 public class ProductCategory {
 
