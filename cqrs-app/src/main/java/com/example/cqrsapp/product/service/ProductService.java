@@ -2,12 +2,16 @@ package com.example.cqrsapp.product.service;
 
 import com.example.cqrsapp.aop.HandleDuplicateKey;
 import com.example.cqrsapp.common.dto.ProductSummaryItem;
+import com.example.cqrsapp.common.dto.ReviewRatingDto;
+import com.example.cqrsapp.common.dto.ReviewRatingDto.DistributionDto;
 import com.example.cqrsapp.common.exception.ResourceNotFoundException;
 import com.example.cqrsapp.common.response.PageResponseDto;
 import com.example.cqrsapp.product.domain.*;
 import com.example.cqrsapp.product.dto.requset.RegisterProductDto;
+import com.example.cqrsapp.product.dto.response.ProductResponse;
 import com.example.cqrsapp.product.dto.response.RegisterProductResponseDto;
 import com.example.cqrsapp.product.repository.*;
+import com.example.cqrsapp.review.repository.ReviewRepository;
 import com.example.cqrsapp.seller.domain.Seller;
 import com.example.cqrsapp.seller.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +22,11 @@ import org.springframework.data.domain.Pageable;
 
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.example.cqrsapp.product.dto.requset.RegisterProductDto.CategoryDto;
+import static com.example.cqrsapp.product.dto.response.ProductResponse.*;
 
 
 @Service
@@ -27,6 +34,7 @@ import static com.example.cqrsapp.product.dto.requset.RegisterProductDto.Categor
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
     private final ProductCategoryRepository productCategoryRepository;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
@@ -34,6 +42,21 @@ public class ProductService {
     private final SellerRepository sellerRepository;
     private final BrandRepository brandRepository;
     private final ProductMapper mapper;
+
+    @Transactional(readOnly = true)
+    public ProductResponse getProduct(Long productId) {
+        Product product = findEntityGraphById(productId);
+        ReviewRatingDto rating = reviewRepository.findReviewRatingByProductId(product.getId());
+        Map<String, Long> distributionMap = getDistributionMap(product);
+        List<Product> relatedProducts = getRelatedProducts(product);
+        return fromEntity(product, rating, distributionMap, relatedProducts);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDto<ProductSummaryItem> searchProduct(SearchParm searchParm, Pageable pageable) {
+        Page<ProductSummaryItem> products = productRepository.findAll(searchParm, pageable);
+        return PageResponseDto.from(products);
+    }
 
     @HandleDuplicateKey
     @Transactional
@@ -47,10 +70,16 @@ public class ProductService {
         return RegisterProductResponseDto.fromEntity(product);
     }
 
-    @Transactional(readOnly = true)
-    public PageResponseDto<ProductSummaryItem> searchProduct(SearchParm searchParm, Pageable pageable) {
-        Page<ProductSummaryItem> products = productRepository.findAll(searchParm, pageable);
-        return PageResponseDto.from(products);
+     private Map<String, Long> getDistributionMap(Product product) {
+        List<DistributionDto> distribution = reviewRepository.findReviewDistributionByProductId(product.getId());
+        return distribution.stream()
+                .collect(Collectors.toMap(DistributionDto::getRating,
+                        DistributionDto::getCount));
+    }
+
+    private List<Product> getRelatedProducts(Product product) {
+        List<Tag> tag = product.getProductTags().stream().map(ProductTag::getTag).toList();
+        return productRepository.findByTagIn(tag);
     }
 
     private void saveProductSeries(Product product, List<CategoryDto> categoryDto, List<Long> tagIds) {
@@ -75,6 +104,11 @@ public class ProductService {
 
         productCategoryRepository.saveAll(productCategories);
         product.addProductCategories(productCategories);
+    }
+
+    private Product findEntityGraphById(Long productId) {
+        return productRepository.findEntityGraphById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", String.valueOf(productId)));
     }
 
     private Brand findBrand(Long dto, Long dto1) {
