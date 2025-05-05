@@ -8,15 +8,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import wanted.domain.product.dto.ProductOptionRequest;
+import wanted.domain.product.dto.request.ProductOptionRequest;
 
 import java.math.BigDecimal;
 
-@Entity(name = "product_options")
+@Entity
+@Table(name = "product_options")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOption {

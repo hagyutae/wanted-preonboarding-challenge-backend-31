@@ -9,16 +9,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.type.SqlTypes;
-import wanted.domain.product.dto.ProductDetailRequest;
+import wanted.domain.product.dto.request.ProductDetailRequest;
 
-@Entity(name = "product_details")
+@Entity
+@Table(name = "product_details")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductDetail {
     @Id

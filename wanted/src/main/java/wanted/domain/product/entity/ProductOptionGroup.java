@@ -11,15 +11,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import wanted.domain.product.dto.ProductOptionGroupRequest;
+import wanted.domain.product.dto.request.ProductOptionGroupRequest;
 
 import java.util.List;
 
-@Entity(name = "product_option_groups")
+@Entity
+@Table(name = "product_option_groups")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOptionGroup {
@@ -38,7 +40,7 @@ public class ProductOptionGroup {
 
     @JsonIgnore
     @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.REMOVE)
-    private List<ProductOption> Options;
+    private List<ProductOption> options;
 
 
     @Builder

@@ -10,9 +10,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "categories")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
     @Id

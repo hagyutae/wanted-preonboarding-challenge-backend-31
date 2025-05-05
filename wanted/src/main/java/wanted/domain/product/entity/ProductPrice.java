@@ -7,15 +7,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import wanted.domain.product.dto.ProductPriceRequest;
+import wanted.domain.product.dto.request.ProductPriceRequest;
 
 import java.math.BigDecimal;
 
-@Entity(name = "product_prices")
+@Entity
+@Table(name = "product_prices")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductPrice {
@@ -62,5 +64,15 @@ public class ProductPrice {
                 .currency(dto.currency())
                 .taxRate(dto.taxRate())
                 .build();
+    }
+
+    public Integer calculateDiscountPercentage() {
+        if (basePrice == null || salePrice == null || basePrice.compareTo(BigDecimal.ZERO) == 0) {
+            return 0;
+        }
+        BigDecimal discount = basePrice.subtract(salePrice)
+                .divide(basePrice, 4, BigDecimal.ROUND_HALF_UP)
+                .multiply(BigDecimal.valueOf(100));
+        return discount.intValue();
     }
 }

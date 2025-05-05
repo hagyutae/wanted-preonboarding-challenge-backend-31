@@ -1,4 +1,4 @@
-package wanted.domain.product.dto;
+package wanted.domain.product.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 

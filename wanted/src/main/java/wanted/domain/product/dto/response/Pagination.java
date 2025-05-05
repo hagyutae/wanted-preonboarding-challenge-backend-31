@@ -1,4 +1,4 @@
-package wanted.domain.product.dto;
+package wanted.domain.product.dto.response;
 
 public record Pagination(
         long totalItems,

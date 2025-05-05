@@ -13,16 +13,18 @@ import wanted.domain.brand.entity.Brand;
 import wanted.domain.brand.repository.BrandRepository;
 import wanted.domain.category.entity.Category;
 import wanted.domain.category.repository.CategoryRepository;
-import wanted.domain.product.dto.Pagination;
-import wanted.domain.product.dto.ProductCategoryRequest;
-import wanted.domain.product.dto.ProductCreateRequest;
-import wanted.domain.product.dto.ProductCreateResponse;
-import wanted.domain.product.dto.ProductImageRequest;
-import wanted.domain.product.dto.ProductListResponse;
-import wanted.domain.product.dto.ProductOptionGroupRequest;
-import wanted.domain.product.dto.ProductOptionRequest;
+import wanted.domain.product.dto.response.Pagination;
+import wanted.domain.product.dto.request.ProductCategoryRequest;
+import wanted.domain.product.dto.request.ProductCreateRequest;
+import wanted.domain.product.dto.response.ProductCreateResponse;
+import wanted.domain.product.dto.request.ProductImageRequest;
+import wanted.domain.product.dto.response.ProductDetailResponse;
+import wanted.domain.product.dto.response.ProductListResponse;
+import wanted.domain.product.dto.request.ProductOptionGroupRequest;
+import wanted.domain.product.dto.request.ProductOptionRequest;
 import wanted.domain.product.dto.ProductSearchCondition;
-import wanted.domain.product.dto.SimpleProductResponse;
+import wanted.domain.product.dto.response.ProductRatingResponse;
+import wanted.domain.product.dto.response.SimpleProductResponse;
 import wanted.domain.product.entity.Product;
 import wanted.domain.product.entity.ProductCategory;
 import wanted.domain.product.entity.ProductDetail;
@@ -40,6 +42,7 @@ import wanted.domain.product.repository.ProductPriceRepository;
 import wanted.domain.product.repository.ProductQueryRepository;
 import wanted.domain.product.repository.ProductRepository;
 import wanted.domain.product.repository.ProductTagRepository;
+import wanted.domain.review.service.ReviewService;
 import wanted.domain.seller.entity.Seller;
 import wanted.domain.seller.repository.SellerRepository;
 import wanted.domain.tag.entity.Tag;
@@ -66,6 +69,7 @@ public class ProductService {
     private final TagRepository tagRepository;
     private final ProductTagRepository productTagRepository;
     private final ProductQueryRepository productQueryRepository;
+    private final ReviewService reviewService;
 
 
     /*
@@ -164,6 +168,17 @@ public class ProductService {
                 items,
                 new Pagination(result.getTotalElements(), result.getTotalPages(), result.getNumber() + 1, result.getSize())
         );
+    }
+
+    @Transactional(readOnly = true)
+    public ProductDetailResponse getProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Product", productId)));
+
+        ProductRatingResponse rating = reviewService.getProductRating(productId);
+        List<Product> relatedProducts = productRepository.findRelatedProducts(productId);
+
+        return ProductDetailResponse.of(product, rating, relatedProducts);
     }
 
     private Sort parseSort(String sortString) {

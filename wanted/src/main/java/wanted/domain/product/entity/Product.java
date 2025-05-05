@@ -11,24 +11,25 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wanted.common.entity.BaseCreateUpdateEntity;
 import wanted.domain.brand.entity.Brand;
-import wanted.domain.product.dto.ProductCreateRequest;
+import wanted.domain.product.dto.request.ProductCreateRequest;
 import wanted.domain.review.entity.Review;
 import wanted.domain.seller.entity.Seller;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "products")
+@Entity
+@Table(name = "products")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseCreateUpdateEntity {
