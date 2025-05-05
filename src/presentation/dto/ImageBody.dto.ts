@@ -1,5 +1,4 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
 import { IsBoolean, IsInt, IsUrl, Min } from "class-validator";
 
 export default class ImageBodyDTO {
@@ -15,13 +14,11 @@ export default class ImageBodyDTO {
   is_primary: boolean;
 
   @ApiProperty({ description: "이미지 표시 순서", example: 3 })
-  @Type(() => Number)
   @IsInt()
   @Min(1)
   display_order: number;
 
   @ApiProperty({ description: "옵션 ID", example: 35 })
-  @Type(() => Number)
   @IsInt()
   option_id: number;
 }

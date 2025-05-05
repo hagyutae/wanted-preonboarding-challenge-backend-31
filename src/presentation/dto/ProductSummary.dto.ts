@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-import { IsBoolean, IsIn, IsInt, IsNumber, Matches, Max, Min } from "class-validator";
+import { IsBoolean, IsDate, IsIn, IsInt, IsNumber, Matches, Max, Min } from "class-validator";
 
 export default class ProductSummaryDTO {
   @ApiProperty({ description: "상품 ID", example: 123 })
@@ -64,8 +64,6 @@ export default class ProductSummaryDTO {
   review_count: number;
 
   @ApiProperty({ description: "생성 일시", example: "2025-04-10T09:30:00Z" })
+  @IsDate()
   created_at: Date;
-
-  @ApiProperty({ description: "수정 일시", example: null, required: false })
-  updated_at?: Date;
 }

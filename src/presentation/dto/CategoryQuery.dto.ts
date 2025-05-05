@@ -1,6 +1,5 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
-import { Type } from "class-transformer";
-import { IsBoolean, IsInt, IsOptional, Matches, Min } from "class-validator";
+import { IsBoolean, IsInt, IsNumber, IsOptional, Matches, Min } from "class-validator";
 
 export default class CategoryQueryDTO {
   @ApiPropertyOptional({ description: "페이지 번호", example: 1, required: false })
@@ -11,8 +10,7 @@ export default class CategoryQueryDTO {
 
   @ApiPropertyOptional({ description: "페이지당 아이템 수", example: 10, required: false })
   @IsOptional()
-  @Type(() => Number)
-  @IsInt()
+  @IsNumber()
   @Min(1)
   perPage?: number;
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsIn, IsInt } from "class-validator";
+import { IsArray, IsDate, IsIn, IsInt } from "class-validator";
 
 import {
   Brand,
@@ -126,6 +126,7 @@ export default class ProductCatalogDTO {
       },
     ],
   })
+  @IsArray()
   public categories: ProductCategoryDTO[];
 
   @ApiProperty({
@@ -178,6 +179,7 @@ export default class ProductCatalogDTO {
       },
     ],
   })
+  @IsArray()
   public option_groups: ProductOptionGroupDTO[];
 
   @ApiProperty({
@@ -200,6 +202,7 @@ export default class ProductCatalogDTO {
       },
     ],
   })
+  @IsArray()
   public images: Product_Image[];
 
   @ApiProperty({
@@ -221,6 +224,7 @@ export default class ProductCatalogDTO {
       },
     ],
   })
+  @IsArray()
   public tags: Tag[];
 
   @ApiProperty({

@@ -1,11 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "class-transformer";
 import { IsInt, IsOptional, Min } from "class-validator";
 
 export default class OptionsBodyDTO {
   @ApiProperty({ description: "옵션 그룹 ID", example: 35, required: false })
   @IsOptional()
-  @Type(() => Number)
   @IsInt()
   public option_group_id?: number;
 
@@ -13,21 +11,19 @@ export default class OptionsBodyDTO {
   public name: string;
 
   @ApiProperty({ description: "추가 가격", example: 25000 })
-  @Type(() => Number)
   @IsInt()
+  @Min(0)
   public additional_price: number;
 
   @ApiProperty({ description: "SKU(재고 관리 코드)", example: "SOFA-NVBL" })
   public sku: string;
 
   @ApiProperty({ description: "재고 수량", example: 10 })
-  @Type(() => Number)
   @IsInt()
   @Min(1)
   public stock: number;
 
   @ApiProperty({ description: "표시 순서", example: 3 })
-  @Type(() => Number)
   @IsInt()
   @Min(1)
   public display_order: number;

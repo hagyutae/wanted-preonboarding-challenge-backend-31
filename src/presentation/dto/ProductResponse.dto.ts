@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsDate, IsInt } from "class-validator";
 
 export default class ProductResponseDTO {
@@ -12,7 +12,7 @@ export default class ProductResponseDTO {
   @ApiProperty({ description: "슬러그", example: "super-comfortable-sofa" })
   slug: string;
 
-  @ApiProperty({ description: "생성 일시", example: "2025-04-14T09:30:00Z" })
+  @ApiPropertyOptional({ description: "생성 일시", example: "2025-04-14T09:30:00Z" })
   @IsDate()
   created_at?: Date;
 

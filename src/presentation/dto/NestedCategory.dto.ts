@@ -1,36 +1,34 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsOptional, IsUrl, ValidateNested } from "class-validator";
 
 export default class NestedCategoryDTO {
-  @ApiPropertyOptional({ description: "카테고리 ID" })
-  @IsOptional()
+  @ApiProperty({ description: "카테고리 ID" })
   @IsInt()
   id: number;
 
-  @ApiPropertyOptional({ description: "카테고리 이름" })
-  @IsOptional()
+  @ApiProperty({ description: "카테고리 이름" })
   name: string;
 
-  @ApiPropertyOptional({ description: "카테고리 슬러그" })
-  @IsOptional()
+  @ApiProperty({ description: "카테고리 슬러그" })
   slug: string;
 
-  @ApiPropertyOptional({ description: "카테고리 설명" })
-  @IsOptional()
+  @ApiProperty({ description: "카테고리 설명" })
   description: string;
 
-  @ApiPropertyOptional({ description: "카테고리 레벨" })
-  @IsOptional()
+  @ApiProperty({ description: "카테고리 레벨" })
   @IsInt()
   level: number;
 
-  @ApiPropertyOptional({ description: "카테고리 이미지 URL" })
-  @IsOptional()
+  @ApiProperty({ description: "카테고리 이미지 URL" })
   @IsUrl({}, { message: "유효한 URL 형식이 아닙니다." })
   image_url: string;
 
-  @ApiPropertyOptional({ type: () => [NestedCategoryDTO], description: "중첩 카테고리 목록" })
+  @ApiProperty({
+    type: "array",
+    items: { $ref: getSchemaPath(NestedCategoryDTO) },
+    description: "중첩 카테고리 목록",
+  })
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })

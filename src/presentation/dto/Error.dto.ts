@@ -1,9 +1,9 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsEnum, IsOptional, ValidateNested } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
+import { IsBoolean, IsEnum, IsOptional, ValidateNested } from "class-validator";
 
 export class ErrorDetails {
-  [key: string]: any;
+  [key: string]: string;
 }
 
 export enum ErrorCode {
@@ -27,8 +27,8 @@ export const HttpStatusToErrorCodeMap: Record<number, ErrorCode> = {
 
 class ErrorObject {
   @ApiProperty({
-    enum: ErrorCode,
     description: "에러 발생 시 응답은 다음 형식을 따릅니다",
+    enum: ErrorCode,
   })
   @IsEnum(ErrorCode)
   code: ErrorCode;
@@ -36,10 +36,9 @@ class ErrorObject {
   @ApiProperty({ description: "에러 메시지", example: "에러가 발생했습니다." })
   message: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: "추가적인 에러 세부 정보 (선택 사항)",
-    required: false,
-    type: Object,
+    type: () => ErrorDetails,
   })
   @IsOptional()
   @ValidateNested()

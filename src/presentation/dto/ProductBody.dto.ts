@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import {
+  IsArray,
   IsBoolean,
   IsIn,
   IsInt,
   IsNumber,
-  IsOptional,
   IsUrl,
   Matches,
   Min,
@@ -120,7 +120,7 @@ export class Option {
 
   @ApiProperty({ description: "재고", example: 10 })
   @IsInt()
-  @Min(1)
+  @Min(0)
   stock: number;
 
   @ApiProperty({ description: "표시 순서", example: 1 })
@@ -139,32 +139,30 @@ export class OptionGroup {
   display_order: number;
 
   @ApiProperty({ description: "옵션 목록", type: [Option] })
+  @IsArray()
   @ValidateNested({ each: true })
+  @Type(() => Option)
   options: Option[];
 }
 
 class Image {
-  @ApiProperty({
-    description: "이미지 URL",
-    example: "https://example.com/images/sofa1.jpg",
-  })
+  @ApiProperty({ description: "이미지 URL", example: "https://example.com/images/sofa1.jpg" })
   @IsUrl({}, { message: "유효한 URL 형식이 아닙니다." })
   url: string;
 
-  @ApiProperty({ description: "대체 텍스트", example: "브라운 소파 정면" })
+  @ApiProperty({ description: "이미지 대체 텍스트", example: "브라운 소파 정면" })
   alt_text: string;
 
-  @ApiProperty({ description: "주요 이미지 여부", example: true })
+  @ApiProperty({ description: "대표 이미지 여부", example: true })
   @IsBoolean()
   is_primary: boolean;
 
-  @ApiProperty({ description: "표시 순서", example: 1 })
+  @ApiProperty({ description: "표시 순서", example: 3 })
   @IsInt()
   @Min(1)
   display_order: number;
 
-  @ApiProperty({ description: "옵션 ID", example: null, nullable: true })
-  @IsOptional()
+  @ApiProperty({ description: "옵션 ID", example: 35, nullable: true })
   @IsInt()
   option_id: number | null;
 }
@@ -213,20 +211,24 @@ export default class ProductBodyDTO {
 
   @ApiProperty({ description: "카테고리 목록", type: [Category] })
   @ValidateNested({ each: true })
+  @IsArray()
   @Type(() => Category)
   categories: Category[];
 
   @ApiProperty({ description: "옵션 그룹 목록", type: [OptionGroup] })
   @ValidateNested({ each: true })
+  @IsArray()
   @Type(() => OptionGroup)
   option_groups: OptionGroup[];
 
   @ApiProperty({ description: "이미지 목록", type: [Image] })
   @ValidateNested({ each: true })
+  @IsArray()
   @Type(() => Image)
   images: Image[];
 
   @ApiProperty({ description: "태그 목록", example: [1, 4, 7] })
+  @IsArray()
   @IsInt({ each: true })
   tags: TagId[];
 }
