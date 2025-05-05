@@ -46,8 +46,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductPageBaseResponse<ProductPageResponse> getProduct(ProductSearchRequestDto dto) {
-        int pageNum = dto.getPage()!=null ? Math.max(0,dto.getPage()-1):0;
-        int elementNum = dto.getPerPage()!=null ? dto.getPerPage():10;
+        int pageNum = PagingUtil.getPageNumber(dto.getPage());
+        int elementNum = PagingUtil.getPerPageCount(dto.getPerPage());
 
         Sort sortValue = PagingUtil.getProductPagingSort(dto.getSort());
         Pageable pageable = PageRequest.of(pageNum,elementNum,sortValue);
@@ -75,8 +75,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public ReviewPageBaseResponse<ProductReviewPageResponse, ReviewSummaryResponse> getProductReviews(Long id, Integer page, Integer perPage, String sort, Integer rating) {
-        int pageNum = page!=null ? Math.max(0,page-1):0;
-        int elementNum = perPage!=null ? perPage:10;
+        int pageNum = PagingUtil.getPageNumber(page);
+        int elementNum = PagingUtil.getPerPageCount(perPage);
 
         Sort sortValue = PagingUtil.getReviewPagingSort(sort);
         Pageable pageRequest = PageRequest.of(pageNum,elementNum,sortValue);

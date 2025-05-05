@@ -5,6 +5,14 @@ import org.springframework.data.domain.Sort;
 
 @UtilityClass
 public class PagingUtil {
+    public int getPageNumber(Integer page) {
+        return page!=null ? Math.max(0,page-1):0;
+    }
+
+    public int getPerPageCount(Integer perPage) {
+        return perPage!=null ? perPage:10;
+    }
+
     public Sort getReviewPagingSort(String sort) {
         if (sort == null || sort.isEmpty()) {
             return Sort.by(Sort.Order.desc("createdAt"));
