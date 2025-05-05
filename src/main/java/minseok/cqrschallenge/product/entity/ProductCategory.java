@@ -1,6 +1,5 @@
 package minseok.cqrschallenge.product.entity;
 
-import com.ecommerce.category.entity.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import jakarta.persistence.*;
 import minseok.cqrschallenge.category.entity.Category;
 
 @Entity
-@Table(name = "product_category")
+@Table(name = "product_categories")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
