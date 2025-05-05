@@ -25,5 +25,5 @@ export default class ImageDTO {
 
   @ApiProperty({ description: "옵션 ID", example: 35, nullable: true })
   @IsInt()
-  option_id: number | null;
+  option_id?: number | null;
 }

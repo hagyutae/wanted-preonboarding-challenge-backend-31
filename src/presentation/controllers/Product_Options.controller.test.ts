@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { Product_Image, Product_Option } from "src/domain/entities";
 import { ProductOptionsService } from "src/application/services";
-import { ImageDTO, OptionBodyDTO, OptionParamDTO, ResponseDTO } from "../dto";
+import { ImageDTO, OptionParamDTO, ProductOptionDTO, ResponseDTO } from "../dto";
 import ProductOptionsController from "./Product_Options.controller";
 
 describe("ProductOptionsController", () => {
@@ -32,7 +32,7 @@ describe("ProductOptionsController", () => {
   describe("addOptions", () => {
     it("상품 옵션 추가 성공", async () => {
       const param = { id: 1 };
-      const body = { name: "Option 1" } as OptionBodyDTO;
+      const body = { name: "Option 1" } as ProductOptionDTO;
       const data = {
         id: param.id,
         ...body,
@@ -53,7 +53,7 @@ describe("ProductOptionsController", () => {
   describe("updateOptions", () => {
     it("상품 옵션 수정 성공", async () => {
       const param = { id: 1, optionId: 2 };
-      const body = { name: "Updated Option" } as OptionBodyDTO;
+      const body = { name: "Updated Option" } as ProductOptionDTO;
       const data = {
         id: param.id,
         option_group_id: param.optionId,

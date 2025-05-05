@@ -2,14 +2,13 @@ import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 
 import { ProductOptionsService } from "src/application/services";
-import { Product_Image, Product_Option } from "src/domain/entities";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiErrorResponse,
   ApiStandardResponse,
 } from "../decorators";
-import { ImageDTO, OptionBodyDTO, OptionParamDTO, ParamDTO, ResponseDTO } from "../dto";
+import { ImageDTO, OptionParamDTO, ParamDTO, ProductOptionDTO, ResponseDTO } from "../dto";
 
 @ApiTags("상품 옵션 관리")
 @ApiBearerAuth()
@@ -20,13 +19,13 @@ export default class ProductOptionsController {
 
   @ApiOperation({ summary: "상품 옵션 추가" })
   @ApiParam({ name: "id", description: "상품 ID" })
-  @ApiCreatedResponse("상품 옵션이 성공적으로 추가되었습니다.", Product_Option)
+  @ApiCreatedResponse("상품 옵션이 성공적으로 추가되었습니다.", ProductOptionDTO)
   @ApiBadRequestResponse("상품 옵션 추가에 실패했습니다.")
   @Post(":id/options")
   async create_option(
     @Param() { id }: ParamDTO,
-    @Body() { option_group_id, ...body }: OptionBodyDTO,
-  ): Promise<ResponseDTO<Product_Option>> {
+    @Body() { option_group_id, ...body }: ProductOptionDTO,
+  ): Promise<ResponseDTO<ProductOptionDTO>> {
     const data = await this.service.register(id, option_group_id!, body);
 
     return {
@@ -39,13 +38,13 @@ export default class ProductOptionsController {
   @ApiOperation({ summary: "상품 옵션 수정" })
   @ApiParam({ name: "id", description: "상품 ID" })
   @ApiParam({ name: "optionId", description: "옵션 ID" })
-  @ApiStandardResponse("상품 옵션이 성공적으로 수정되었습니다.", Product_Option)
+  @ApiStandardResponse("상품 옵션이 성공적으로 수정되었습니다.", ProductOptionDTO)
   @ApiBadRequestResponse("상품 옵션 수정에 실패했습니다.")
   @Put(":id/options/:optionId")
   async update_option(
     @Param() { id, optionId }: OptionParamDTO,
-    @Body() body: OptionBodyDTO,
-  ): Promise<ResponseDTO<Product_Option>> {
+    @Body() body: ProductOptionDTO,
+  ): Promise<ResponseDTO<ProductOptionDTO>> {
     const data = await this.service.update(id, optionId, body);
 
     return {
@@ -73,13 +72,13 @@ export default class ProductOptionsController {
 
   @ApiOperation({ summary: "상품 이미지 추가" })
   @ApiParam({ name: "id", description: "상품 ID" })
-  @ApiCreatedResponse("상품 이미지가 성공적으로 추가되었습니다.", Product_Image)
+  @ApiCreatedResponse("상품 이미지가 성공적으로 추가되었습니다.", ImageDTO)
   @ApiBadRequestResponse("상품 이미지 추가에 실패했습니다.")
   @Post(":id/images")
   async create_image(
     @Param() { id }: OptionParamDTO,
     @Body() body: ImageDTO,
-  ): Promise<ResponseDTO<Product_Image>> {
+  ): Promise<ResponseDTO<ImageDTO>> {
     const data = await this.service.register_images(id, body.option_id!, body);
 
     return {

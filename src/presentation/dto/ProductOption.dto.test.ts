@@ -1,11 +1,11 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
-import OptionsBodyDTO from "./OptionsBody.dto";
+import ProductOptionDTO from "./ProductOption.dto";
 
-describe("OptionsBodyDTO", () => {
-  const validateDTO = async (dto: Partial<OptionsBodyDTO>) => {
-    const instance = plainToInstance(OptionsBodyDTO, dto);
+describe("ProductOption", () => {
+  const validateDTO = async (dto: Partial<ProductOptionDTO>) => {
+    const instance = plainToInstance(ProductOptionDTO, dto);
 
     const errors = await validate(instance);
 
@@ -13,7 +13,7 @@ describe("OptionsBodyDTO", () => {
   };
 
   it("유효한 DTO는 검증을 통과", async () => {
-    const dto: Partial<OptionsBodyDTO> = {
+    const dto: Partial<ProductOptionDTO> = {
       option_group_id: 35,
       name: "네이비 블루",
       additional_price: 25000,
@@ -28,7 +28,7 @@ describe("OptionsBodyDTO", () => {
   });
 
   it("필수 필드가 누락된 경우 검증 실패", async () => {
-    const dto: Partial<OptionsBodyDTO> = {
+    const dto: Partial<ProductOptionDTO> = {
       additional_price: 25000,
       sku: "SOFA-NVBL",
       stock: 10,

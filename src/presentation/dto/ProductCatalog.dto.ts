@@ -2,9 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsDate, IsIn, IsInt, ValidateNested } from "class-validator";
 
-import { Product_Image } from "src/domain/entities";
 import BrandDTO from "./Brand.dto";
 import CategoryDTO from "./Category.dto";
+import ImageDTO from "./Image.dto";
 import ProductDetailDTO from "./ProductDetail.dto";
 import ProductOptionGroupDTO from "./ProductOptionGroup.dto";
 import ProductPriceDTO from "./ProductPrice.dto";
@@ -40,11 +40,11 @@ export default class ProductCatalogDTO {
 
   @ApiProperty({ description: "생성 일시", example: "2025-04-10T09:30:00Z" })
   @IsDate()
-  public created_at: Date;
+  public created_at?: Date;
 
   @ApiProperty({ description: "수정 일시", example: "2025-04-14T10:15:00Z" })
   @IsDate()
-  public updated_at: Date;
+  public updated_at?: Date;
 
   @ApiProperty({ description: "판매자 정보", type: SellerDTO })
   @ValidateNested()
@@ -78,11 +78,11 @@ export default class ProductCatalogDTO {
   @Type(() => ProductOptionGroupDTO)
   public option_groups: ProductOptionGroupDTO[];
 
-  @ApiProperty({ description: "상품 이미지", type: [Product_Image] })
+  @ApiProperty({ description: "상품 이미지", type: [ImageDTO] })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => Product_Image)
-  public images: Product_Image[];
+  @Type(() => ImageDTO)
+  public images: ImageDTO[];
 
   @ApiProperty({ description: "상품 태그", type: [TagDTO] })
   @IsArray()

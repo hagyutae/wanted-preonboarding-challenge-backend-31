@@ -27,7 +27,7 @@ export default class ProductPriceDTO {
   @Min(0)
   tax_rate: number;
 
-  @ApiPropertyOptional({ description: "할인율", example: 17 })
+  @ApiProperty({ description: "할인율", example: 17 })
   @IsOptional()
   @IsNumber()
   @Min(0)

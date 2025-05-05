@@ -7,12 +7,12 @@ import ProductDetailDTO from "./ProductDetail.dto";
 import ProductOptionGroupDTO from "./ProductOptionGroup.dto";
 import ProductPriceDTO from "./ProductPrice.dto";
 
-class Category {
+class CategoryOfProductBodyDTO {
   @ApiProperty({ description: "카테고리 ID", example: 5 })
   @IsInt()
   category_id: number;
 
-  @ApiProperty({ description: "주요 카테고리 여부", example: true })
+  @ApiProperty({ description: "대표 카테고리 여부", example: true })
   @IsBoolean()
   is_primary: boolean;
 }
@@ -59,11 +59,11 @@ export default class ProductBodyDTO {
   @Type(() => ProductPriceDTO)
   price: ProductPriceDTO;
 
-  @ApiProperty({ description: "카테고리 목록", type: [Category] })
+  @ApiProperty({ description: "카테고리 목록", type: [CategoryOfProductBodyDTO] })
   @ValidateNested({ each: true })
   @IsArray()
-  @Type(() => Category)
-  categories: Category[];
+  @Type(() => CategoryOfProductBodyDTO)
+  categories: CategoryOfProductBodyDTO[];
 
   @ApiProperty({ description: "옵션 그룹 목록", type: [ProductOptionGroupDTO] })
   @ValidateNested({ each: true })

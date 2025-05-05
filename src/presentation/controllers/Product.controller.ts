@@ -9,7 +9,7 @@ import {
   ApiStandardResponse,
 } from "../decorators";
 import {
-  BodyDTO,
+  ProductBodyDTO,
   ParamDTO,
   ProductCatalogDTO,
   ProductQueryDTO,
@@ -30,7 +30,7 @@ export default class ProductController {
   @ApiCreatedResponse("상품이 성공적으로 등록되었습니다.", ProductResponseDTO)
   @ApiBadRequestResponse("상품 등록에 실패했습니다.")
   @Post()
-  async create(@Body() body: BodyDTO): Promise<ResponseDTO<ProductResponseDTO>> {
+  async create(@Body() body: ProductBodyDTO): Promise<ResponseDTO<ProductResponseDTO>> {
     const data = await this.service.register(body);
 
     return {
@@ -74,7 +74,7 @@ export default class ProductController {
   @Put(":id")
   async update(
     @Param() { id }: ParamDTO,
-    @Body() body: BodyDTO,
+    @Body() body: ProductBodyDTO,
   ): Promise<ResponseDTO<ProductResponseDTO>> {
     const data = await this.service.edit(id, body);
 

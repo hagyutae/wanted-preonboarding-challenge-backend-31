@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { ReviewService } from "src/application/services";
-import { Review } from "src/domain/entities";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -10,7 +9,15 @@ import {
   ApiForbiddenResponse,
   ApiStandardResponse,
 } from "../decorators";
-import { ParamDTO, ResponseDTO, ReviewBodyDTO, ReviewQueryDTO, ReviewResponseBundle } from "../dto";
+import {
+  ParamDTO,
+  ResponseDTO,
+  ReviewBodyDTO,
+  ReviewDTO,
+  ReviewQueryDTO,
+  ReviewResponseBundle,
+  ReviewResponseDTO,
+} from "../dto";
 import { to_FilterDTO } from "../mappers";
 
 @ApiTags("리뷰")
@@ -38,13 +45,13 @@ export default class ReviewController {
   }
 
   @ApiOperation({ summary: "리뷰 작성" })
-  @ApiCreatedResponse("리뷰가 성공적으로 작성되었습니다.", Review)
+  @ApiCreatedResponse("리뷰가 성공적으로 작성되었습니다.", ReviewDTO)
   @ApiBadRequestResponse("리뷰 작성에 실패했습니다.")
   @Post("products/:id/reviews")
   async create(
     @Param() { id }: ParamDTO,
     @Body() body: ReviewBodyDTO,
-  ): Promise<ResponseDTO<Review>> {
+  ): Promise<ResponseDTO<ReviewDTO>> {
     const data = await this.service.register(id, body);
 
     return {
@@ -55,13 +62,13 @@ export default class ReviewController {
   }
 
   @ApiOperation({ summary: "리뷰 수정" })
-  @ApiStandardResponse("리뷰가 성공적으로 수정되었습니다.", Review)
+  @ApiStandardResponse("리뷰가 성공적으로 수정되었습니다.", ReviewResponseDTO)
   @ApiForbiddenResponse("다른 사용자의 리뷰를 수정할 권한이 없습니다.")
   @Put("reviews/:id")
   async update(
     @Param() { id }: ParamDTO,
     @Body() body: ReviewBodyDTO,
-  ): Promise<ResponseDTO<Review>> {
+  ): Promise<ResponseDTO<ReviewResponseDTO>> {
     const data = await this.service.edit(id, body);
 
     return {

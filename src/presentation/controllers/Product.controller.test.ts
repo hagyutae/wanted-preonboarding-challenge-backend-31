@@ -3,7 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { ProductService } from "src/application/services";
 import { ProductEntity } from "src/infrastructure/entities";
 import { ProductCatalogView, ProductSummaryView } from "src/infrastructure/views";
-import { BodyDTO, ParamDTO, ProductQueryDTO, ResponseDTO } from "../dto";
+import { ProductBodyDTO, ParamDTO, ProductQueryDTO, ResponseDTO } from "../dto";
 import ProductController from "./Product.controller";
 
 describe("ProductController", () => {
@@ -32,7 +32,7 @@ describe("ProductController", () => {
   });
 
   it("상품 생성", async () => {
-    const body = { name: "상품1" } as BodyDTO;
+    const body = { name: "상품1" } as ProductBodyDTO;
     const response: ResponseDTO<any> = {
       success: true,
       data: { id: 1, ...body },
@@ -96,7 +96,7 @@ describe("ProductController", () => {
 
   it("상품을 수정", async () => {
     const param: ParamDTO = { id: 1 };
-    const body = { name: "상품1 수정" } as BodyDTO;
+    const body = { name: "상품1 수정" } as ProductBodyDTO;
     const data = {
       id: 1,
       name: "상품1",

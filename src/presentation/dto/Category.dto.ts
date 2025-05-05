@@ -1,6 +1,18 @@
-import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsInt, IsOptional, ValidateNested } from "class-validator";
+import { IsBoolean, IsInt, IsOptional, IsUrl, ValidateNested } from "class-validator";
+
+class ParentCategoryDTO {
+  @ApiProperty({ description: "카테고리 ID", example: 2 })
+  @IsInt()
+  id?: number;
+
+  @ApiProperty({ description: "카테고리 이름", example: "거실 가구" })
+  name?: string;
+
+  @ApiProperty({ description: "카테고리 슬러그", example: "living-room" })
+  slug?: string;
+}
 
 export default class CategoryDTO {
   @ApiProperty({ description: "카테고리 ID", example: 5 })
@@ -14,21 +26,30 @@ export default class CategoryDTO {
   slug?: string;
 
   @ApiProperty({ description: "대표 카테고리 여부", example: true })
+  @IsBoolean()
   is_primary: boolean;
+
+  @ApiProperty({ description: "카테고리 설명", example: "다양한 스타일의 소파" })
+  description?: string;
+
+  @ApiProperty({ description: "카테고리 레벨", example: 3 })
+  @IsInt()
+  level?: number;
+
+  @ApiProperty({
+    description: "카테고리 이미지 URL",
+    example: "https://example.com/categories/sofa.jpg",
+  })
+  @IsUrl()
+  image_url?: string;
 
   @ApiPropertyOptional({
     description: "부모 카테고리",
-    example: {
-      id: 2,
-      name: "거실 가구",
-      slug: "living-room",
-    },
+    type: ParentCategoryDTO,
     nullable: true,
   })
   @IsOptional()
   @ValidateNested()
   @Type(() => ParentCategoryDTO)
-  parent?: () => ParentCategoryDTO;
+  parent?: ParentCategoryDTO | null;
 }
-
-export class ParentCategoryDTO extends PickType(CategoryDTO, ["id", "name", "slug"] as const) {}
