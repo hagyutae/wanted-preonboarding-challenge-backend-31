@@ -19,7 +19,6 @@ import com.wanted.ecommerce.product.repository.ProductOptionRepository;
 import com.wanted.ecommerce.product.service.ProductOptionGroupService;
 import com.wanted.ecommerce.product.service.ProductService;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -81,18 +80,8 @@ class ProductOptionServiceImplTest {
         when(optionGroupService.updateOptionGroup(any(), anyLong())).thenReturn(group);
         when(optionRepository.save(any())).thenReturn(option);
 
-        ProductOptionResponse response = productOptionService.addProductOption(1L, request);
+        ProductOptionResponse response = productOptionService.addProductOption(product, request);
         assertNotNull(response);
-    }
-
-    @Test
-    void test_saveAllProductOption_success() {
-        List<ProductOptionRequest> requests = List.of(mock(ProductOptionRequest.class));
-        when(optionRepository.saveAll(any())).thenReturn(List.of(option));
-        List<ProductOption> result = productOptionService.saveAllProductOption(requests,
-            optionGroup);
-        assertNotNull(result);
-        assertEquals(1, result.size());
     }
 
     @Test

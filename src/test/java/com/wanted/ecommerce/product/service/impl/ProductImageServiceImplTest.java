@@ -98,7 +98,8 @@ class ProductImageServiceImplTest {
         when(productService.getProductById(anyLong())).thenReturn(product);
         when(optionService.getOptionById(anyLong())).thenReturn(option);
         when(imageRepository.saveAll(any())).thenReturn(List.of(image));
-        ProductImageCreateResponse response = imageService.createProductImage(1L, request);
+        ProductImageCreateResponse response = imageService.createProductImages(product,
+            List.of(request)).get(0);
         assertNotNull(response);
         assertEquals(1L, response.id());
     }
@@ -119,7 +120,8 @@ class ProductImageServiceImplTest {
 
     @Test
     void test_createImageResponse_success() {
-        List<ProductImageCreateResponse> responses = imageService.createImageResponse(List.of(image));
+        List<ProductImageCreateResponse> responses = imageService.createImageResponse(
+            List.of(image));
         assertFalse(responses.isEmpty());
         assertEquals(image.getId(), responses.get(0).id());
 

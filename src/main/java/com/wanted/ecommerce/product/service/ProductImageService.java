@@ -11,8 +11,6 @@ public interface ProductImageService {
 
     ProductImageResponse createPrimaryProductImageResponse(Long productId);
 
-    ProductImageCreateResponse createProductImage(long productId, ProductImageRequest imageRequest);
-
     List<ProductImageCreateResponse> createProductImages(Product product, List<ProductImageRequest> imageRequestList);
 
     void deleteProductImageByProductId(Long productId);

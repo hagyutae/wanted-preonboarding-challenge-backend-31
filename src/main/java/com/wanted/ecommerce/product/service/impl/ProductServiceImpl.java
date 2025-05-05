@@ -27,7 +27,7 @@ import com.wanted.ecommerce.product.dto.response.RelatedProductResponse;
 import com.wanted.ecommerce.product.repository.ProductRepository;
 import com.wanted.ecommerce.product.service.ProductCategoryService;
 import com.wanted.ecommerce.product.service.ProductDetailService;
-import com.wanted.ecommerce.product.service.ProductImageService;
+import com.wanted.ecommerce.product.service.ProductImageServiceFacade;
 import com.wanted.ecommerce.product.service.ProductOptionGroupService;
 import com.wanted.ecommerce.product.service.ProductOptionService;
 import com.wanted.ecommerce.product.service.ProductPriceService;
@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductCategoryService productCategoryService;
     private final ProductDetailService productDetailService;
-    private final ProductImageService productImageService;
+    private final ProductImageServiceFacade productImageServiceFacade;
     private final ProductOptionGroupService productOptionGroupService;
     private final ProductOptionService productOptionService;
     private final ProductPriceService productPriceService;
@@ -88,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
         productCategoryService.saveProductCategories(saved, request.getCategories());
         productDetailService.saveDetail(saved, request.getDetail());
         productOptionGroupService.saveProductOptionsAndGroup(saved, request.getOptionGroups());
-        productImageService.createProductImages(saved, request.getImages());
+        productImageServiceFacade.getProductImages(saved, request.getImages());
         productPriceService.saveProductPrice(saved, request.getPrice());
         createProductTags(saved, request.getTags());
         return ProductResponse.of(saved.getId(), saved.getName(), saved.getSlug(),
@@ -104,7 +104,7 @@ public class ProductServiceImpl implements ProductService {
         return products.map(product -> {
 
             ProductPrice price = productPriceService.findProductPriceByProductId(product.getId());
-            ProductImageResponse primaryImageResponse = productImageService.createPrimaryProductImageResponse(
+            ProductImageResponse primaryImageResponse = productImageServiceFacade.getPrimaryProductImageResponse(
                 product.getId());
 
             double avgRating = reviewService.getAvgRatingByProductId(product.getId());
@@ -154,7 +154,7 @@ public class ProductServiceImpl implements ProductService {
         List<ProductOptionGroupResponse> optionGroupResponses = productOptionGroupService.createOptionGroupResponse(
             product.getOptionGroups());
         // images
-        List<ProductImageCreateResponse> imageResponses = productImageService.createImageResponse(
+        List<ProductImageCreateResponse> imageResponses = productImageServiceFacade.getImageResponse(
             product.getImages());
         // tags
         List<TagResponse> tagResponses = createTagResponse(product);
@@ -199,8 +199,8 @@ public class ProductServiceImpl implements ProductService {
         productOptionGroupService.saveProductOptionsAndGroup(target, request.getOptionGroups());
 
         // image
-        productImageService.deleteProductImageByProductId(target.getId());
-        productImageService.createProductImages(target, request.getImages());
+        productImageServiceFacade.deleteProductImageByProductId(target.getId());
+        productImageServiceFacade.getProductImages(target, request.getImages());
 
         return ProductUpdateResponse.of(target.getId(), target.getName(), target.getSlug(),
             target.getUpdatedAt());
@@ -239,7 +239,7 @@ public class ProductServiceImpl implements ProductService {
 
         return relatedProducts.stream()
             .map(relatedProduct -> {
-                ProductImageResponse imageResponse = productImageService.createPrimaryProductImageResponse(
+                ProductImageResponse imageResponse = productImageServiceFacade.getPrimaryProductImageResponse(
                     relatedProduct.getId());
 
                 ProductPrice productPrice = relatedProduct.getPrice();

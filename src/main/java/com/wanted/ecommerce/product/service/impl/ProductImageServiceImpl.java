@@ -9,7 +9,6 @@ import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.repository.ProductImageRepository;
 import com.wanted.ecommerce.product.service.ProductImageService;
 import com.wanted.ecommerce.product.service.ProductOptionService;
-import com.wanted.ecommerce.product.service.ProductService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ProductImageServiceImpl implements ProductImageService {
-
     private final ProductImageRepository productImageRepository;
-    private final ProductService productService;
     private final ProductOptionService optionService;
 
     @Transactional
@@ -34,16 +31,10 @@ public class ProductImageServiceImpl implements ProductImageService {
                 imageRequest.getIsPrimary(), imageRequest.getDisplayOrder(), option);
         }).toList();
 
-        return productImageRepository.saveAll(images).stream().map(image -> ProductImageCreateResponse.of(image.getId(), image.getUrl(), image.getAltText(),
-            image.isPrimary(), image.getDisplayOrder(), image.getOption().getId())).toList();
-    }
-
-    @Transactional
-    @Override
-    public ProductImageCreateResponse createProductImage(long productId,
-        ProductImageRequest imageRequest) {
-        Product product = productService.getProductById(productId);
-        return createProductImages(product, List.of(imageRequest)).get(0);
+        return productImageRepository.saveAll(images).stream().map(
+            image -> ProductImageCreateResponse.of(image.getId(), image.getUrl(),
+                image.getAltText(),
+                image.isPrimary(), image.getDisplayOrder(), image.getOption().getId())).toList();
     }
 
     @Transactional(readOnly = true)

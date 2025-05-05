@@ -2,9 +2,11 @@ package com.wanted.ecommerce.product.controller;
 
 import com.wanted.ecommerce.common.constants.MessageConstants;
 import com.wanted.ecommerce.common.response.ApiResponse;
+import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.service.ProductOptionService;
+import com.wanted.ecommerce.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products/{id}/options")
 @RequiredArgsConstructor
 public class ProductOptionController {
+    private final ProductService productService;
     private final ProductOptionService optionService;
 
     @PostMapping()
@@ -28,7 +31,8 @@ public class ProductOptionController {
         @PathVariable Long id,
         @Valid @RequestBody ProductOptionRequest optionRequest
     ) {
-        ProductOptionResponse response = optionService.addProductOption(id, optionRequest);
+        Product product = productService.getProductById(id);
+        ProductOptionResponse response = optionService.addProductOption(product, optionRequest);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ApiResponse.success(response, MessageConstants.CREATED_OPTION.getMessage()));
     }

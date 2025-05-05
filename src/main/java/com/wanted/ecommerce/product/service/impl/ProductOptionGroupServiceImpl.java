@@ -3,13 +3,14 @@ package com.wanted.ecommerce.product.service.impl;
 import com.wanted.ecommerce.common.exception.ErrorType;
 import com.wanted.ecommerce.common.exception.ResourceNotFoundException;
 import com.wanted.ecommerce.product.domain.Product;
+import com.wanted.ecommerce.product.domain.ProductOption;
 import com.wanted.ecommerce.product.domain.ProductOptionGroup;
 import com.wanted.ecommerce.product.dto.request.ProductOptionGroupRequest;
 import com.wanted.ecommerce.product.dto.response.ProductOptionGroupResponse;
 import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.repository.ProductOptionGroupRepository;
+import com.wanted.ecommerce.product.repository.ProductOptionRepository;
 import com.wanted.ecommerce.product.service.ProductOptionGroupService;
-import com.wanted.ecommerce.product.service.ProductOptionService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductOptionGroupServiceImpl implements ProductOptionGroupService {
 
     private final ProductOptionGroupRepository optionGroupRepository;
-    private final ProductOptionService productOptionService;
+    private final ProductOptionRepository optionRepository;
 
     @Transactional
     @Override
@@ -37,9 +38,20 @@ public class ProductOptionGroupServiceImpl implements ProductOptionGroupService 
         List<ProductOptionGroupRequest> optionGroups) {
         return optionGroups.stream()
             .map(groupRequest -> {
-                ProductOptionGroup optionGroup = saveOptionGroup(saved, groupRequest);
-                productOptionService.saveAllProductOption(groupRequest.getOptions(), optionGroup);
-                return optionGroup;
+                ProductOptionGroup savedOptionGroup = saveOptionGroup(saved, groupRequest);
+
+                List<ProductOption> options = groupRequest.getOptions().stream()
+                    .map(optionRequest -> ProductOption.of(
+                        savedOptionGroup,
+                        optionRequest.getName(),
+                        optionRequest.getAdditionalPrice(),
+                        optionRequest.getSku(),
+                        optionRequest.getStock(),
+                        optionRequest.getDisplayOrder()
+                    ))
+                    .toList();
+                optionRepository.saveAll(options);
+                return savedOptionGroup;
             })
             .toList();
     }

@@ -10,8 +10,6 @@ import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.repository.ProductOptionRepository;
 import com.wanted.ecommerce.product.service.ProductOptionGroupService;
 import com.wanted.ecommerce.product.service.ProductOptionService;
-import com.wanted.ecommerce.product.service.ProductService;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,15 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ProductOptionServiceImpl implements ProductOptionService {
-    private final ProductService productService;
     private final ProductOptionGroupService optionGroupService;
     private final ProductOptionRepository optionRepository;
 
-
     @Transactional
     @Override
-    public ProductOptionResponse addProductOption(long productId, ProductOptionRequest optionRequest) {
-       Product product = productService.getProductById(productId);
+    public ProductOptionResponse addProductOption(Product product, ProductOptionRequest optionRequest) {
 
         ProductOptionGroup optionGroup = optionGroupService.updateOptionGroup(product,
             optionRequest.getOptionGroupId());
@@ -42,23 +37,6 @@ public class ProductOptionServiceImpl implements ProductOptionService {
         return ProductOptionResponse.of(saved.getId(), saved.getOptionGroup().getId(),
             saved.getName(), saved.getAdditionalPrice().doubleValue(), saved.getSku(),
             saved.getStock(), saved.getDisplayOrder());
-    }
-
-    @Transactional
-    @Override
-    public List<ProductOption> saveAllProductOption(List<ProductOptionRequest> optionRequests,
-        ProductOptionGroup optionGroup) {
-        List<ProductOption> options = optionRequests.stream()
-            .map(optionRequest -> ProductOption.of(
-                optionGroup,
-                optionRequest.getName(),
-                optionRequest.getAdditionalPrice(),
-                optionRequest.getSku(),
-                optionRequest.getStock(),
-                optionRequest.getDisplayOrder()
-            ))
-            .toList();
-        return optionRepository.saveAll(options);
     }
 
     @Transactional
