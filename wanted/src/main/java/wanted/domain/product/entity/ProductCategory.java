@@ -8,8 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import wanted.domain.category.entity.Category;
+import wanted.domain.product.dto.ProductCategoryRequest;
 
 @Entity(name = "product_categories")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,4 +29,19 @@ public class ProductCategory {
     private Category category;
 
     private boolean isPrimary;
+
+    @Builder
+    public ProductCategory(Product product, Category category, boolean isPrimary) {
+        this.product = product;
+        this.category = category;
+        this.isPrimary = isPrimary;
+    }
+
+    public static ProductCategory from(ProductCategoryRequest dto, Product product, Category category) {
+        return ProductCategory.builder()
+                .product(product)
+                .category(category)
+                .isPrimary(dto.isPrimary())
+                .build();
+    }
 }

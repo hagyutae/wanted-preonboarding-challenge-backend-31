@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import wanted.domain.tag.entity.Tag;
 
@@ -25,4 +26,17 @@ public class ProductTag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    @Builder
+    public ProductTag(Product product, Tag tag) {
+        this.product = product;
+        this.tag = tag;
+    }
+
+    public static ProductTag from(Product product, Tag tag) {
+        return ProductTag.builder()
+                .product(product)
+                .tag(tag)
+                .build();
+    }
 }

@@ -8,7 +8,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
+import wanted.domain.product.dto.ProductPriceRequest;
 
 import java.math.BigDecimal;
 
@@ -37,4 +39,26 @@ public class ProductPrice {
 
     @Column(precision = 5, scale = 2)
     private BigDecimal taxRate;
+
+    @Builder
+    public ProductPrice(Product product, BigDecimal basePrice, BigDecimal salePrice, BigDecimal costPrice,
+                        String currency, BigDecimal taxRate) {
+        this.product = product;
+        this.basePrice = basePrice;
+        this.salePrice = salePrice;
+        this.costPrice = costPrice;
+        this.currency = currency;
+        this.taxRate = taxRate;
+    }
+
+    public static ProductPrice from(ProductPriceRequest dto, Product product) {
+        return ProductPrice.builder()
+                .product(product)
+                .basePrice(dto.basePrice())
+                .salePrice(dto.salePrice())
+                .costPrice(dto.costPrice())
+                .currency(dto.currency())
+                .taxRate(dto.taxRate())
+                .build();
+    }
 }

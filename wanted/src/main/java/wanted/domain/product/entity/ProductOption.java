@@ -9,9 +9,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import wanted.domain.product.dto.ProductOptionRequest;
 
 import java.math.BigDecimal;
 
@@ -38,4 +40,26 @@ public class ProductOption {
     private int stock;
 
     private int displayOrder;
+
+    @Builder
+    public ProductOption(ProductOptionGroup optionGroup, String name, BigDecimal additionalPrice,
+                         String sku, int stock, int displayOrder) {
+        this.optionGroup = optionGroup;
+        this.name = name;
+        this.additionalPrice = additionalPrice;
+        this.sku = sku;
+        this.stock = stock;
+        this.displayOrder = displayOrder;
+    }
+
+    public static ProductOption from(ProductOptionRequest dto, ProductOptionGroup optionGroup) {
+        return ProductOption.builder()
+                .optionGroup(optionGroup)
+                .name(dto.name())
+                .additionalPrice(dto.additionalPrice())
+                .sku(dto.sku())
+                .stock(dto.stock())
+                .displayOrder(dto.displayOrder())
+                .build();
+    }
 }

@@ -16,9 +16,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wanted.common.entity.BaseCreateUpdateEntity;
 import wanted.domain.brand.entity.Brand;
+import wanted.domain.product.dto.ProductCreateRequest;
 import wanted.domain.review.entity.Review;
 import wanted.domain.seller.entity.Seller;
 
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "products")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseCreateUpdateEntity {
     @Id
@@ -41,7 +45,7 @@ public class Product extends BaseCreateUpdateEntity {
     @Column(length = 500)
     private String shortDescription;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String fullDescription;
 
     @Enumerated(EnumType.STRING)
@@ -83,4 +87,28 @@ public class Product extends BaseCreateUpdateEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
+
+    @Builder
+    public Product(String name, String slug, String shortDescription, String fullDescription,
+                   Status status, Seller seller, Brand brand) {
+        this.name = name;
+        this.slug = slug;
+        this.shortDescription = shortDescription;
+        this.fullDescription = fullDescription;
+        this.status = status;
+        this.seller = seller;
+        this.brand = brand;
+    }
+
+    public static Product from(ProductCreateRequest dto, Seller seller, Brand brand) {
+        return Product.builder()
+                .name(dto.name())
+                .slug(dto.slug())
+                .shortDescription(dto.shortDescription())
+                .fullDescription(dto.fullDescription())
+                .status(Status.valueOf(dto.status()))
+                .seller(seller)
+                .brand(brand)
+                .build();
+    }
 }

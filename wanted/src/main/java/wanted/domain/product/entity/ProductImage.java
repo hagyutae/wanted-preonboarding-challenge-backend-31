@@ -10,7 +10,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
+import wanted.domain.product.dto.ProductImageRequest;
 
 @Entity(name = "product_images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,4 +38,25 @@ public class ProductImage {
     @JoinColumn(name = "option_id")
     private ProductOption option;
 
+    @Builder
+    public ProductImage(Product product, String url, String altText, boolean isPrimary,
+                        int displayOrder, ProductOption option) {
+        this.product = product;
+        this.url = url;
+        this.altText = altText;
+        this.isPrimary = isPrimary;
+        this.displayOrder = displayOrder;
+        this.option = option;
+    }
+
+    public static ProductImage from(ProductImageRequest dto, Product product, ProductOption option) {
+        return ProductImage.builder()
+                .product(product)
+                .url(dto.url())
+                .altText(dto.altText())
+                .isPrimary(Boolean.TRUE.equals(dto.isPrimary()))
+                .displayOrder(dto.displayOrder() != null ? dto.displayOrder() : 0)
+                .option(option)
+                .build();
+    }
 }
