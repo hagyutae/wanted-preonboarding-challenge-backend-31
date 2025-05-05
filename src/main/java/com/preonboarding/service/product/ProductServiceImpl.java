@@ -1,0 +1,342 @@
+package com.preonboarding.service.product;
+
+import com.preonboarding.domain.*;
+import com.preonboarding.dto.request.product.*;
+import com.preonboarding.dto.request.review.ProductReviewRequestDto;
+import com.preonboarding.dto.response.product.ProductPageResponse;
+import com.preonboarding.dto.response.review.ReviewSummaryResponse;
+import com.preonboarding.dto.response.product.ProductImageResponse;
+import com.preonboarding.dto.response.product.ProductOptionResponse;
+import com.preonboarding.dto.response.product.ProductResponse;
+import com.preonboarding.dto.response.review.ProductReviewPageResponse;
+import com.preonboarding.global.code.ErrorCode;
+import com.preonboarding.global.response.BaseException;
+import com.preonboarding.global.response.BaseResponse;
+import com.preonboarding.global.response.ErrorResponseDto;
+import com.preonboarding.global.response.paging.ProductPageBaseResponse;
+import com.preonboarding.global.response.paging.ReviewPageBaseResponse;
+import com.preonboarding.global.response.paging.PaginationDto;
+import com.preonboarding.global.response.paging.PagingDataDto;
+import com.preonboarding.repository.product.ProductOptionGroupRepository;
+import com.preonboarding.repository.product.ProductOptionRepository;
+import com.preonboarding.repository.product.ProductRepository;
+import com.preonboarding.repository.review.ReviewRepository;
+import com.preonboarding.repository.user.UserRepository;
+import com.preonboarding.util.JwtUtil;
+import com.preonboarding.util.PagingUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class ProductServiceImpl implements ProductService {
+    private final ProductRepository productRepository;
+    private final ProductOptionRepository productOptionRepository;
+    private final ProductOptionGroupRepository productOptionGroupRepository;
+    private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
+
+    @Override
+    @Transactional
+    public ProductPageBaseResponse<ProductPageResponse> getProduct(ProductSearchRequestDto dto) {
+        int pageNum = PagingUtil.getPageNumber(dto.getPage());
+        int elementNum = PagingUtil.getPerPageCount(dto.getPerPage());
+
+        Sort sortValue = PagingUtil.getProductPagingSort(dto.getSort());
+        Pageable pageable = PageRequest.of(pageNum,elementNum,sortValue);
+
+        Page<Product> productList = productRepository.findProductsBySearch(pageable,dto);
+        PaginationDto paginationDto = PaginationDto.from(productList,pageNum,elementNum);
+
+        List<ProductPageResponse> productPageResponseList = productList.getContent().stream()
+                .map(product -> {
+                    ReviewSummaryResponse reviewSummaryResponse = Review.createSummaryResponse(product.getReviewList());
+                    return ProductPageResponse.from(product,reviewSummaryResponse);
+                })
+                .toList();
+
+        PagingDataDto<ProductPageResponse> pagingDataDto = new PagingDataDto<>(productPageResponseList);
+
+        return ProductPageBaseResponse.<ProductPageResponse>builder()
+                .success(true)
+                .data(pagingDataDto)
+                .pagination(paginationDto)
+                .message("상품 목록을 성공적으로 조회했습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ReviewPageBaseResponse<ProductReviewPageResponse, ReviewSummaryResponse> getProductReviews(Long id, Integer page, Integer perPage, String sort, Integer rating) {
+        int pageNum = PagingUtil.getPageNumber(page);
+        int elementNum = PagingUtil.getPerPageCount(perPage);
+
+        Sort sortValue = PagingUtil.getReviewPagingSort(sort);
+        Pageable pageRequest = PageRequest.of(pageNum,elementNum,sortValue);
+
+        Page<Review> reviewList = reviewRepository.findReviewsWithPaging(id,pageRequest,rating);
+        ReviewSummaryResponse reviewSummaryResponse = Review.createSummaryResponse(reviewList.getContent());
+
+        PaginationDto paginationDto = PaginationDto.from(reviewList,pageNum,elementNum);
+
+        List<ProductReviewPageResponse> reviewResponseList = reviewList.stream()
+                .map(ProductReviewPageResponse::of)
+                .toList();
+        PagingDataDto<ProductReviewPageResponse> pagingDataDto = new PagingDataDto<>(reviewResponseList);
+
+        return ReviewPageBaseResponse.<ProductReviewPageResponse, ReviewSummaryResponse>builder()
+                .success(true)
+                .data(pagingDataDto)
+                .summary(reviewSummaryResponse)
+                .pagination(paginationDto)
+                .message("상품 리뷰를 성공적으로 조회했습니다.")
+                .build();
+
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductResponse> createProduct(ProductCreateRequestDto dto, List<ProductCategory> productCategoryList, List<ProductTag> productTagList
+            , Seller seller, Brand brand) {
+        Product product = Product.from(seller,brand,dto);
+
+        productCategoryList.forEach(productCategory -> productCategory.updateProduct(product));
+        productTagList.forEach(productTag -> productTag.updateProduct(product));
+
+        ProductDetail productDetail = ProductDetail.of(dto.getDetail());
+        productDetail.updateProduct(product);
+
+        ProductPrice productPrice = ProductPrice.of(dto.getPrice());
+        productPrice.updateProduct(product);
+
+        createProductOptionGroup(dto.getOptionGroups(),product);
+        createProductImageList(dto.getImages(),product);
+
+        productRepository.save(product);
+
+        return BaseResponse.<ProductResponse>builder()
+                .success(true)
+                .message("상품이 성공적으로 등록되었습니다.")
+                .data(ProductResponse.of(product))
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductResponse> editProduct(Long id, ProductEditRequestDto dto, List<ProductCategory> productCategoryList, List<ProductTag> productTagList
+                                                     , Seller seller, Brand brand) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+        product.updateProduct(dto);
+        product.updateSeller(seller);
+        product.updateBrand(brand);
+
+        productCategoryList.forEach(productCategory -> productCategory.updateProduct(product));
+        product.updateProductCategoryList(productCategoryList);
+        productTagList.forEach(productTag -> productTag.updateProduct(product));
+        product.updateProductTagList(productTagList);
+
+        ProductDetail productDetail = ProductDetail.of(dto.getDetail());
+        productDetail.updateProduct(product);
+
+        ProductPrice productPrice = ProductPrice.of(dto.getPrice());
+        productPrice.updateProduct(product);
+
+        List<ProductImage> productImageList = createProductImageList(dto.getImages(),product);
+        product.updateProductImageList(productImageList);
+
+        List<ProductOptionGroup> productOptionGroupList = createProductOptionGroup(dto.getOptionGroups(),product);
+        product.updateProductOptionGroup(productOptionGroupList);
+
+        ProductResponse response = ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .slug(product.getSlug())
+                .updatedAt(product.getUpdatedAt())
+                .build();
+
+        return BaseResponse.<ProductResponse>builder()
+                .success(true)
+                .data(response)
+                .message("상품이 성공적으로 수정되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductOptionResponse> addProductOption(Long id, ProductOptionAddRequestDto dto) {
+        productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+
+        ProductOptionGroup productOptionGroup = productOptionGroupRepository.findById(dto.getOptionGroupId())
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.OPTION_GROUP_NOT_FOUND)));
+
+        ProductOption productOption = ProductOption.of(dto);
+        productOption.updateProductOptionGroup(productOptionGroup);
+        productOptionGroupRepository.save(productOptionGroup);
+
+        ProductOptionResponse response = ProductOptionResponse.builder()
+                .id(productOption.getId())
+                .optionGroupId(productOptionGroup.getId())
+                .name(productOption.getName())
+                .additionalPrice(productOption.getAdditionalPrice())
+                .sku(productOption.getSku())
+                .stock(productOption.getStock())
+                .displayOrder(productOption.getDisplayOrder())
+                .build();
+
+        return BaseResponse.<ProductOptionResponse>builder()
+                .success(true)
+                .data(response)
+                .message("상품 옵션이 성공적으로 추가되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductOptionResponse> editProductOption(Long id, Long optionId, ProductOptionRequestDto dto) {
+        productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+
+        ProductOption productOption = productOptionRepository.findById(optionId)
+                .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.OPTION_NOT_FOUND)));
+        productOption.updateProductOptions(dto);
+
+        ProductOptionResponse response = ProductOptionResponse.builder()
+                .id(productOption.getId())
+                .optionGroupId(productOption.getProductOptionGroup().getId())
+                .name(productOption.getName())
+                .additionalPrice(productOption.getAdditionalPrice())
+                .sku(productOption.getSku())
+                .stock(productOption.getStock())
+                .displayOrder(productOption.getDisplayOrder())
+                .build();
+
+        return BaseResponse.<ProductOptionResponse>builder()
+                .success(true)
+                .data(response)
+                .message("상품 옵션이 성공적으로 수정되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductImageResponse> addProductImage(Long id, ProductImageRequestDto dto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+
+        ProductOption productOption = productOptionRepository.findById(dto.getOptionId())
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.OPTION_NOT_FOUND)));
+
+        ProductImage productImage = ProductImage.of(dto);
+        productImage.updateProduct(product);
+        productImage.updateProductOption(productOption);
+
+        ProductImageResponse response = ProductImageResponse.builder()
+                .id(productImage.getId())
+                .url(productImage.getUrl())
+                .altText(productImage.getAltText())
+                .isPrimary(productImage.getIsPrimary())
+                .displayOrder(productImage.getDisplayOrder())
+                .optionId(productOption.getId())
+                .build();
+
+        return BaseResponse.<ProductImageResponse>builder()
+                .success(true)
+                .data(response)
+                .message("상품 이미지가 성공적으로 추가되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductReviewPageResponse> addProductReview(Long id, ProductReviewRequestDto dto) {
+        Long userId = JwtUtil.getUserId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.USER_NOT_FOUND)));
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+
+        Review review = Review.of(dto);
+        review.updateUser(user);
+        review.updateProduct(product);
+
+        ProductReviewPageResponse reviewResponse = ProductReviewPageResponse.of(review);
+
+        return BaseResponse.<ProductReviewPageResponse>builder()
+                .success(true)
+                .data(reviewResponse)
+                .message("리뷰가 성공적으로 등록되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductOptionResponse> deleteProductOption(Long id, Long optionId) {
+        productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+
+        ProductOption productOption = productOptionRepository.findById(optionId)
+                        .orElseThrow(() -> new BaseException(false,ErrorResponseDto.of(ErrorCode.OPTION_NOT_FOUND)));
+        productOptionRepository.delete(productOption);
+
+        return BaseResponse.<ProductOptionResponse>builder()
+                .success(true)
+                .data(null)
+                .message("상품 옵션이 성공적으로 삭제되었습니다.")
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public BaseResponse<ProductResponse> deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new BaseException(false, ErrorResponseDto.of(ErrorCode.PRODUCT_NOT_FOUND)));
+        product.deleteProduct();
+
+        return BaseResponse.<ProductResponse>builder()
+                .success(true)
+                .data(null)
+                .message("상품이 성공적으로 삭제되었습니다.")
+                .build();
+    }
+
+    private List<ProductOptionGroup> createProductOptionGroup(List<ProductOptionGroupRequestDto> dtoList, Product product) {
+        List<ProductOptionGroup> productOptionGroupList = new ArrayList<>();
+
+        for (ProductOptionGroupRequestDto productOptionGroupRequestDto : dtoList) {
+            ProductOptionGroup productOptionGroup = ProductOptionGroup.from(product,productOptionGroupRequestDto);
+
+            for (ProductOptionRequestDto productOptionRequestDto : productOptionGroupRequestDto.getOptions()) {
+                ProductOption productOption = ProductOption.of(productOptionRequestDto);
+                productOption.updateProductOptionGroup(productOptionGroup);
+            }
+
+            productOptionGroup.updateProduct(product);
+            productOptionGroupList.add(productOptionGroup);
+        }
+
+        return productOptionGroupList;
+    }
+
+    private List<ProductImage> createProductImageList(List<ProductImageRequestDto> dtoList,Product product) {
+        List<ProductImage> productImageList = new ArrayList<>();
+
+        for (ProductImageRequestDto productImageRequestDto : dtoList) {
+            ProductImage productImage = ProductImage.of(productImageRequestDto);
+            productImage.updateProduct(product);
+            productImageList.add(productImage);
+        }
+
+        return productImageList;
+    }
+}
