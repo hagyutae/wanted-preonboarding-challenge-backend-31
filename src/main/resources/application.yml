@@ -24,6 +24,12 @@ spring:
   elasticsearch:
     host: localhost
     port: 9200
+  mongodb:
+    host: localhost
+    port: 27017
+    username: admin
+    password: admin123
+    database: challenge
 
 logging:
   level:
