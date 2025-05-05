@@ -1,7 +1,9 @@
 package com.example.cqrsapp.product.service;
 
 import com.example.cqrsapp.aop.HandleDuplicateKey;
+import com.example.cqrsapp.common.dto.ProductSummaryItem;
 import com.example.cqrsapp.common.exception.ResourceNotFoundException;
+import com.example.cqrsapp.common.response.PageResponseDto;
 import com.example.cqrsapp.product.domain.*;
 import com.example.cqrsapp.product.dto.requset.RegisterProductDto;
 import com.example.cqrsapp.product.dto.response.RegisterProductResponseDto;
@@ -9,8 +11,11 @@ import com.example.cqrsapp.product.repository.*;
 import com.example.cqrsapp.seller.domain.Seller;
 import com.example.cqrsapp.seller.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Pageable;
+
 
 import java.util.List;
 
@@ -40,6 +45,12 @@ public class ProductService {
         productRepository.save(product);
         saveProductSeries(product, dto.getCategories(), dto.getTags());
         return RegisterProductResponseDto.fromEntity(product);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDto<ProductSummaryItem> searchProduct(SearchParm searchParm, Pageable pageable) {
+        Page<ProductSummaryItem> products = productRepository.findAll(searchParm, pageable);
+        return PageResponseDto.from(products);
     }
 
     private void saveProductSeries(Product product, List<CategoryDto> categoryDto, List<Long> tagIds) {
