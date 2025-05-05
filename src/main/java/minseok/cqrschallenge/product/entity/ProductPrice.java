@@ -1,19 +1,25 @@
 package minseok.cqrschallenge.product.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import jakarta.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product_prices")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ProductPrice {
 
     @Id
@@ -38,4 +44,25 @@ public class ProductPrice {
 
     @Column(name = "tax_rate")
     private BigDecimal taxRate;
+
+    @Builder
+    public ProductPrice(Product product, BigDecimal basePrice, BigDecimal salePrice,
+                        BigDecimal costPrice, String currency, BigDecimal taxRate) {
+        this.product = product;
+        this.basePrice = basePrice;
+        this.salePrice = salePrice;
+        this.costPrice = costPrice;
+        this.currency = currency;
+        this.taxRate = taxRate;
+    }
+
+    public void update(Product product, BigDecimal basePrice, BigDecimal salePrice,
+                       BigDecimal costPrice, String currency, BigDecimal taxRate) {
+        this.product = product;
+        this.basePrice = basePrice;
+        this.salePrice = salePrice;
+        this.costPrice = costPrice;
+        this.currency = currency;
+        this.taxRate = taxRate;
+    }
 }

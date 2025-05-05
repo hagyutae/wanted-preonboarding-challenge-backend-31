@@ -1,18 +1,24 @@
 package minseok.cqrschallenge.product.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "product_images")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ProductImage {
 
     @Id
@@ -38,4 +44,26 @@ public class ProductImage {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_id")
     private ProductOption option;
+
+    @Builder
+    public ProductImage(Product product, String url, String altText, Boolean isPrimary,
+                        Integer displayOrder, ProductOption option) {
+        this.product = product;
+        this.url = url;
+        this.altText = altText;
+        this.isPrimary = isPrimary;
+        this.displayOrder = displayOrder;
+        this.option = option;
+    }
+
+    public void update(Product product, String url, String altText, Boolean isPrimary,
+                       Integer displayOrder, ProductOption option) {
+        this.product = product;
+        this.url = url;
+        this.altText = altText;
+        this.isPrimary = isPrimary;
+        this.displayOrder = displayOrder;
+        this.option = option;
+    }
+
 }

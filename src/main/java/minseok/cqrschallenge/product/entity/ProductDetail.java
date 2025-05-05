@@ -1,13 +1,19 @@
 package minseok.cqrschallenge.product.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.Type;
-
-import jakarta.persistence.*;
 import org.hibernate.type.SqlTypes;
 
 @Entity
@@ -45,4 +51,31 @@ public class ProductDetail {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "additional_info", columnDefinition = "jsonb")
     private String additionalInfo;
+
+    @Builder
+    public ProductDetail(Product product, Double weight, String dimensions, String materials,
+                         String countryOfOrigin, String warrantyInfo, String careInstructions,
+                         String additionalInfo) {
+        this.product = product;
+        this.weight = weight;
+        this.dimensions = dimensions;
+        this.materials = materials;
+        this.countryOfOrigin = countryOfOrigin;
+        this.warrantyInfo = warrantyInfo;
+        this.careInstructions = careInstructions;
+        this.additionalInfo = additionalInfo;
+    }
+
+    public void update(Product product, Double weight, String dimensions, String materials,
+                       String countryOfOrigin, String warrantyInfo, String careInstructions,
+                       String additionalInfo) {
+        this.product = product;
+        this.weight = weight;
+        this.dimensions = dimensions;
+        this.materials = materials;
+        this.countryOfOrigin = countryOfOrigin;
+        this.warrantyInfo = warrantyInfo;
+        this.careInstructions = careInstructions;
+        this.additionalInfo = additionalInfo;
+    }
 }

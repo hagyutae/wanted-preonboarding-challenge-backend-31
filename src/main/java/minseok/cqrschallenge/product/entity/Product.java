@@ -1,17 +1,27 @@
 package minseok.cqrschallenge.product.entity;
 
-import jakarta.persistence.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import minseok.cqrschallenge.brand.entity.Brand;
 import minseok.cqrschallenge.seller.entity.Seller;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -20,7 +30,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Product {
 
     @Id
@@ -75,6 +84,40 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<ProductOptionGroup> optionGroups = new ArrayList<>();
+
+    @Builder
+    public Product(String name, String slug, String shortDescription, String fullDescription,
+        ProductStatus status, Seller seller, Brand brand) {
+        this.name = name;
+        this.slug = slug;
+        this.shortDescription = shortDescription;
+        this.fullDescription = fullDescription;
+        this.status = status;
+        this.seller = seller;
+        this.brand = brand;
+    }
+
+    public void update(String name, String slug, String shortDescription, String fullDescription,
+        ProductStatus status) {
+        this.name = name;
+        this.slug = slug;
+        this.shortDescription = shortDescription;
+        this.fullDescription = fullDescription;
+        this.status = status;
+    }
+
+    public void delete() {
+        if (this.status == ProductStatus.DELETED) {
+            throw new IllegalStateException("이미 삭제된 상품입니다.");
+        }
+
+        this.status = ProductStatus.DELETED;
+    }
+
+    public boolean isDeleted() {
+        return this.status == ProductStatus.DELETED;
+    }
+
 
 
 }

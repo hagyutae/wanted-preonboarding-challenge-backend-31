@@ -1,13 +1,19 @@
 package minseok.cqrschallenge.product.entity;
 
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-
-import jakarta.persistence.*;
 import minseok.cqrschallenge.category.entity.Category;
 
 @Entity
@@ -32,4 +38,17 @@ public class ProductCategory {
 
     @Column(name = "is_primary")
     private Boolean isPrimary = false;
+
+    @Builder
+    public ProductCategory(Product product, Category category, Boolean isPrimary) {
+        this.product = product;
+        this.category = category;
+        this.isPrimary = isPrimary;
+    }
+
+    public void update(Product product, Category category, Boolean isPrimary) {
+        this.product = product;
+        this.category = category;
+        this.isPrimary = isPrimary;
+    }
 }
