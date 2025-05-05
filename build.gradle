@@ -34,6 +34,9 @@ dependencies {
     // Elasticsearch 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 
+    // MongoDB 의존성 추가
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
     // Kafka 의존성 추가
     implementation 'org.springframework.kafka:spring-kafka'
 
@@ -43,8 +46,6 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
