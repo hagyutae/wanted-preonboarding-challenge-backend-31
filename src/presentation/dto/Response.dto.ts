@@ -2,8 +2,8 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsArray, IsBoolean, IsOptional, ValidateNested } from "class-validator";
 
 import { Category, Review } from "src/domain/entities";
-import { ProductSummaryDTO } from "src/application/dto";
 import PaginationSummaryDTO from "./PaginationSummary.dto";
+import ProductSummaryDTO from "./ProductSummary.dto";
 import ReviewSummaryDTO from "./ReviewSummary.dto";
 
 export default class ResponseDTO<T> {
@@ -24,7 +24,7 @@ export default class ResponseDTO<T> {
 }
 
 export class ProductResponseBundle {
-  @ApiProperty({ description: "상품 정보" })
+  @ApiProperty({ type: () => ProductSummaryDTO, description: "상품 정보" })
   @IsArray()
   @ValidateNested()
   items: ProductSummaryDTO[];
@@ -38,7 +38,7 @@ export class CategoryResponseBundle {
   @ValidateNested()
   category: Category;
 
-  @ApiProperty({ description: "상품 요약 목록" })
+  @ApiProperty({ type: () => [ProductSummaryDTO], description: "상품 요약 목록" })
   @IsArray()
   @ValidateNested()
   items: ProductSummaryDTO[];
@@ -48,7 +48,7 @@ export class CategoryResponseBundle {
 }
 
 export class ReviewResponseBundle {
-  @ApiProperty({ description: "리뷰 목록" })
+  @ApiProperty({ type: () => [ProductSummaryDTO], description: "리뷰 목록" })
   @IsArray()
   @ValidateNested()
   items: Review[];
@@ -63,11 +63,11 @@ export class ReviewResponseBundle {
 }
 
 export class MainResponseBundle {
-  @ApiProperty({ description: "신상품 목록" })
+  @ApiProperty({ type: () => [ProductSummaryDTO], description: "신상품 목록" })
   @IsArray()
   new_products: ProductSummaryDTO[];
 
-  @ApiProperty({ description: "인기 상품 목록" })
+  @ApiProperty({ type: () => [ProductSummaryDTO], description: "인기 상품 목록" })
   @IsArray()
   popular_products: ProductSummaryDTO[];
 

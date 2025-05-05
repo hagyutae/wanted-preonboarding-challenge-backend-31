@@ -6,8 +6,10 @@ export { default as OptionBodyDTO } from "./OptionsBody.dto";
 export { default as PaginationSummaryDTO } from "./PaginationSummary.dto";
 export { OptionParamDTO, ParamDTO } from "./Param.dto";
 export { default as BodyDTO } from "./ProductBody.dto";
+export { default as ProductCatalogDTO } from "./ProductCatalog.dto";
 export { default as ProductQueryDTO } from "./ProductQuery.dto";
 export { default as ProductResponseDTO } from "./ProductResponse.dto";
+export { default as ProductSummaryDTO } from "./ProductSummary.dto";
 export {
   CategoryResponseBundle,
   MainResponseBundle,

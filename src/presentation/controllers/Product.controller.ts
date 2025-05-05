@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
-import { ProductCatalogDTO } from "src/application/dto";
 import { ProductService } from "src/application/services";
 import {
   ApiBadRequestResponse,
@@ -12,6 +11,7 @@ import {
 import {
   BodyDTO,
   ParamDTO,
+  ProductCatalogDTO,
   ProductQueryDTO,
   ProductResponseBundle,
   ProductResponseDTO,
@@ -55,7 +55,7 @@ export default class ProductController {
   }
 
   @ApiOperation({ summary: "상품 상세 조회" })
-  @ApiStandardResponse("상품 상세 정보를 성공적으로 조회했습니다.")
+  @ApiStandardResponse("상품 상세 정보를 성공적으로 조회했습니다.", ProductCatalogDTO)
   @ApiBadRequestResponse("요청한 상품을 찾을 수 없습니다.")
   @Get(":id")
   async read(@Param() { id }: ParamDTO): Promise<ResponseDTO<ProductCatalogDTO>> {
