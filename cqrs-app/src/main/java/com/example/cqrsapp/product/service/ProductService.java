@@ -1,5 +1,6 @@
 package com.example.cqrsapp.product.service;
 
+import com.example.cqrsapp.aop.HandleDuplicateKey;
 import com.example.cqrsapp.common.exception.ResourceNotFoundException;
 import com.example.cqrsapp.product.domain.*;
 import com.example.cqrsapp.product.dto.requset.RegisterProductDto;
@@ -29,6 +30,7 @@ public class ProductService {
     private final BrandRepository brandRepository;
     private final ProductMapper mapper;
 
+    @HandleDuplicateKey
     @Transactional
     public RegisterProductResponseDto createProduct(RegisterProductDto dto) {
         Seller seller = findSeller(dto.getSellerId());
