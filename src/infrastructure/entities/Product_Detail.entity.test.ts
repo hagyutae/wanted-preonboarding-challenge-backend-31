@@ -58,12 +58,12 @@ describe("ProductDetailEntity", () => {
       const productDetail = new ProductDetailEntity();
       productDetail.product = product;
       productDetail.weight = 1.5;
-      productDetail.dimensions = { length: 10, width: 5, height: 2 };
+      productDetail.dimensions = { depth: 10, width: 5, height: 2 };
       productDetail.materials = "Steel";
       productDetail.country_of_origin = "USA";
       productDetail.warranty_info = "2 years";
       productDetail.care_instructions = "Wipe with a dry cloth";
-      productDetail.additional_info = { color: "red" };
+      productDetail.additional_info = { assembly_required: false, assembly_time: "30분" };
 
       repository.save = jest.fn().mockResolvedValue(productDetail);
 

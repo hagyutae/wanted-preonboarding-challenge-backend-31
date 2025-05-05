@@ -1,10 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsInt, IsNumber, IsPhoneNumber, IsUrl, Min } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsEmail, IsInt, IsNumber, IsOptional, IsPhoneNumber, IsUrl, Min } from "class-validator";
 
 export default class SellerDTO {
-  @ApiProperty({ description: "판매자 ID", example: 1 })
+  @ApiPropertyOptional({ description: "판매자 ID", example: 1 })
+  @IsOptional()
   @IsInt()
-  public id: number;
+  public id?: number;
 
   @ApiProperty({ description: "판매자 이름", example: "홈퍼니처" })
   public name: string;

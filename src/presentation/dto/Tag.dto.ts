@@ -4,7 +4,7 @@ import { IsInt } from "class-validator";
 export default class TagDTO {
   @ApiProperty({ description: "태그 ID", example: 1 })
   @IsInt()
-  public id: number;
+  public id?: number;
 
   @ApiProperty({ description: "태그 이름", example: "편안함" })
   public name: string;

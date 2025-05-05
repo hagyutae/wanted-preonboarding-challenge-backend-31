@@ -5,13 +5,13 @@ import { IsInt, IsOptional, ValidateNested } from "class-validator";
 export default class CategoryDTO {
   @ApiProperty({ description: "카테고리 ID", example: 5 })
   @IsInt()
-  id: number;
+  id?: number;
 
   @ApiProperty({ description: "카테고리 이름", example: "소파" })
-  name: string;
+  name?: string;
 
   @ApiProperty({ description: "카테고리 슬러그", example: "sofa" })
-  slug: string;
+  slug?: string;
 
   @ApiProperty({ description: "대표 카테고리 여부", example: true })
   is_primary: boolean;
@@ -28,7 +28,7 @@ export default class CategoryDTO {
   @IsOptional()
   @ValidateNested()
   @Type(() => ParentCategoryDTO)
-  parent?: ParentCategoryDTO;
+  parent?: () => ParentCategoryDTO;
 }
 
 export class ParentCategoryDTO extends PickType(CategoryDTO, ["id", "name", "slug"] as const) {}

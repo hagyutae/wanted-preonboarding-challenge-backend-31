@@ -17,7 +17,11 @@ export default class ProductDetailEntity {
   weight: number;
 
   @Column("jsonb", { nullable: true })
-  dimensions: object;
+  dimensions: {
+    width: number;
+    height: number;
+    depth: number;
+  };
 
   @Column("text", { nullable: true })
   materials: string;
@@ -32,5 +36,8 @@ export default class ProductDetailEntity {
   care_instructions: string;
 
   @Column("jsonb", { nullable: true })
-  additional_info: object;
+  additional_info: {
+    assembly_required: boolean;
+    assembly_time: string;
+  };
 }

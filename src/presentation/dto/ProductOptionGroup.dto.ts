@@ -48,5 +48,5 @@ export default class ProductOptionGroupDTO {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ProductOptionDTO)
-  options: ProductOptionDTO[];
+  options?: ProductOptionDTO[];
 }

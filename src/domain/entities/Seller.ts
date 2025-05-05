@@ -6,6 +6,8 @@ export default class Seller extends User {
     public description: string,
     public logo_url: string,
     public rating: number,
+    public contact_email: string,
+    public contact_phone: string,
     public id?: number,
   ) {
     super(id);
