@@ -59,4 +59,10 @@ public class ProductController {
     public ResponseEntity<?> createProductOption(@PathVariable(value = "id") Long productId, @Valid @RequestBody ProductOptionRequest productOptionRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(SuccessResponse.ok(productService.createProductOption(productId, productOptionRequest)));
     }
+
+    @DeleteMapping("/{id}/options/{optionId}")
+    public ResponseEntity<?> deleteProductOption(@PathVariable(value = "id") Long productId, @PathVariable(value = "optionId") Long optionId) {
+        productService.deleteProductOption(productId, optionId);
+        return ResponseEntity.ok(SuccessResponse.ok(null));
+    }
 }

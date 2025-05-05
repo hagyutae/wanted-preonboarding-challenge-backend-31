@@ -179,6 +179,18 @@ public class ProductService {
         return ProductOptionResponse.of(productOption, true);
     }
 
+    @Transactional
+    public void deleteProductOption(Long productId, Long optionId) {
+        ProductOption productOption = productOptionRepository.findById(optionId)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("option", optionId)));
+
+        if (!productOption.getOptionGroup().getProduct().getId().equals(productId)) {
+            throw new CustomException(GlobalExceptionCode.INVALID_INPUT, null);
+        }
+
+        productOptionRepository.delete(productOption);
+    }
+
     private void saveProductCategory(ProductRequest productRequest, Product product) {
         for (ProductCategoryRequest productCategoryRequest : productRequest.categories()) {
             Category category = categoryRepository.findById(productCategoryRequest.categoryId())
