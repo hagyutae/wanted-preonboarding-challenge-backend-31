@@ -101,6 +101,7 @@ public class ProductService {
 
     @Transactional
     public RegisterProductOptionResponseDto addProductOption(Long productId, RegisterProductOptionDto dto) {
+        Product product = findProduct(productId);
         ProductOptionGroup productOptionGroup = findOptionGroup(dto.getOptionGroupId());
         ProductOption productOption = mapper.mapProductOptionFromDto(productOptionGroup, dto);
 
@@ -112,6 +113,15 @@ public class ProductService {
     public void deleteProduct(Long productId) {
         Product product = findProduct(productId);
         productRepository.deleteById(productId);
+    }
+
+    @Transactional
+    public void deleteOption(Long productId, Long optionId) {
+        Product product = findProduct(productId);
+        productOptionRepository.findById(optionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Option", String.valueOf(optionId)));
+
+        productOptionRepository.deleteById(optionId);
     }
 
     private Map<String, Long> getDistributionMap(Product product) {

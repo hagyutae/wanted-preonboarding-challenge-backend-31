@@ -60,4 +60,10 @@ public class ProductController {
         productService.deleteProduct(productId);
         return APIDataResponse.success("상품이 성공적으로 삭제되었습니다.");
     }
+
+    @DeleteMapping("/{productId}/options/{optionId}")
+    APIDataResponse<RegisterProductOptionResponseDto> addProductOption(@PathVariable("productId") Long productId, @PathVariable("optionId") Long optionId) {
+        productService.deleteOption(productId, optionId);
+        return APIDataResponse.success("상품 옵션이 성공적으로 삭제되었습니다.");
+    }
 }
