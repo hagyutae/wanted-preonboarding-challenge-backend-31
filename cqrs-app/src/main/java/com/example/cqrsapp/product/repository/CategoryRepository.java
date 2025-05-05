@@ -8,5 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+    List<Category> findByLevelGreaterThanEqual(int level);
+
     List<Category> findByIdIn(List<Long> ids);
 }
