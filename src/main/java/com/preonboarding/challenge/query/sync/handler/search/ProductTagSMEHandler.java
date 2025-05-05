@@ -15,12 +15,12 @@ import java.util.*;
 
 @Component
 @Slf4j
-public class ProductCategoryEventHandler extends ProductSearchCdcEventHandler {
+public class ProductTagSMEHandler extends ProductSearchModelEventHandler {
 
     private final ProductSearchRepository productSearchRepository;
     private final ElasticsearchOperations elasticsearchOperations;
 
-    public ProductCategoryEventHandler(
+    public ProductTagSMEHandler(
             ObjectMapper objectMapper,
             ProductSearchRepository productSearchRepository,
             ElasticsearchOperations elasticsearchOperations) {
@@ -31,7 +31,7 @@ public class ProductCategoryEventHandler extends ProductSearchCdcEventHandler {
 
     @Override
     protected String getSupportedTable() {
-        return "product_categories";
+        return "product_tags";
     }
 
     @Override
@@ -45,41 +45,41 @@ public class ProductCategoryEventHandler extends ProductSearchCdcEventHandler {
             data = event.getAfterData();
         }
 
-        if (data == null || !data.containsKey("product_id") || !data.containsKey("category_id")) {
+        if (data == null || !data.containsKey("product_id") || !data.containsKey("tag_id")) {
             return;
         }
 
         productId = getLongValue(data, "product_id");
-        Long categoryId = getLongValue(data, "category_id");
+        Long tagId = getLongValue(data, "tag_id");
 
-        // 카테고리 목록을 조회해야 함 - 기존 문서 필요
+        // 태그 목록을 조회해야 함 - 기존 문서 필요
         Optional<ProductSearchDocument> optionalDocument = productSearchRepository.findById(productId);
         if (optionalDocument.isEmpty()) {
-            log.warn("Product document not found for category update: {}", productId);
+            log.warn("Product document not found for tag update: {}", productId);
             return;
         }
 
         ProductSearchDocument document = optionalDocument.get();
 
-        // 기존 카테고리 목록 가져오기
-        List<Long> categoryIds = document.getCategoryIds();
-        if (categoryIds == null) {
-            categoryIds = new ArrayList<>();
+        // 기존 태그 목록 가져오기
+        List<Long> tagIds = document.getTagIds();
+        if (tagIds == null) {
+            tagIds = new ArrayList<>();
         }
 
-        // 카테고리 매핑 추가 또는 제거
+        // 태그 매핑 추가 또는 제거
         boolean updated = false;
         if (event.isDelete()) {
-            updated = categoryIds.remove(categoryId);
-        } else if (!categoryIds.contains(categoryId)) {
-            categoryIds.add(categoryId);
+            updated = tagIds.remove(tagId);
+        } else if (!tagIds.contains(tagId)) {
+            tagIds.add(tagId);
             updated = true;
         }
 
         // 변경된 경우에만 업데이트
         if (updated) {
             Map<String, Object> updates = new HashMap<>();
-            updates.put("categoryIds", categoryIds);
+            updates.put("tagIds", tagIds);
             updatePartialDocument(productId, updates);
         }
     }
@@ -103,9 +103,9 @@ public class ProductCategoryEventHandler extends ProductSearchCdcEventHandler {
                     .build();
 
             elasticsearchOperations.update(updateQuery, IndexCoordinates.of("products"));
-            log.debug("Partially updated product categories: {}", productId);
+            log.debug("Partially updated product tags: {}", productId);
         } catch (Exception e) {
-            log.error("Error updating product categories {}: {}", productId, e.getMessage());
+            log.error("Error updating product tags {}: {}", productId, e.getMessage());
         }
     }
 }

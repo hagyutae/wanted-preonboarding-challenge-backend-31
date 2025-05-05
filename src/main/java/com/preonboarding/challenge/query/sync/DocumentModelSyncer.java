@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.preonboarding.challenge.query.sync.handler.CdcEventHandler;
-import com.preonboarding.challenge.query.sync.handler.search.ProductSearchModelEventHandler;
+import com.preonboarding.challenge.query.sync.handler.document.ProductDocumentModelEventHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,19 +19,20 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProductSearchModelSyncer {
+public class DocumentModelSyncer {
 
     private final ObjectMapper objectMapper;
-    private final List<ProductSearchModelEventHandler> eventHandlers;
+    private final List<ProductDocumentModelEventHandler> documentEventHandlers;
 
-    @KafkaListener(topics = {"product-events"}, groupId = "product-search-group")
-    public void consumeProductEvents(
+    @KafkaListener(topics = {"product-events", "product-option-events", "seller-events", "brand-events", "tag-events", "category-events"},
+            groupId = "document-sync-group")
+    public void consumeDocumentEvents(
             @Payload String messageValue,
-            @Header(KafkaHeaders.RECEIVED_KEY) String messageKey) {
+            @Header(KafkaHeaders.RECEIVED_KEY) String messageKey,
+            @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 
         try {
-            // 디버깅을 위한 원본 메시지 로깅
-            log.debug("Received CDC event - Key: {}, Value: {}", messageKey, messageValue);
+            log.debug("Received document CDC event - Topic: {}, Key: {}, Value: {}", topic, messageKey, messageValue);
 
             // 값 데이터 파싱
             CdcEvent event = objectMapper.readValue(messageValue, CdcEvent.class);
@@ -51,7 +52,7 @@ public class ProductSearchModelSyncer {
 
             // 적절한 핸들러를 찾아 이벤트 처리 위임
             boolean handled = false;
-            for (CdcEventHandler handler : eventHandlers) {
+            for (CdcEventHandler handler : documentEventHandlers) {
                 if (handler.canHandle(event)) {
                     handler.handle(event);
                     handled = true;
@@ -60,13 +61,13 @@ public class ProductSearchModelSyncer {
             }
 
             if (!handled) {
-                log.debug("No handler found for table: {}", table);
+                log.debug("No document handler found for table: {}", table);
             }
 
         } catch (JsonProcessingException e) {
-            log.error("Error parsing CDC event: {}", messageValue, e);
+            log.error("Error parsing document CDC event: {}", messageValue, e);
         } catch (Exception e) {
-            log.error("Error processing CDC event: {}", messageValue, e);
+            log.error("Error processing document CDC event: {}", messageValue, e);
         }
     }
 }

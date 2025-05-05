@@ -11,18 +11,16 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.UpdateQuery;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @Slf4j
-public class ReviewEventHandler extends ProductSearchCdcEventHandler {
+public class ProductCategorySMEHandler extends ProductSearchModelEventHandler {
 
     private final ProductSearchRepository productSearchRepository;
     private final ElasticsearchOperations elasticsearchOperations;
 
-    public ReviewEventHandler(
+    public ProductCategorySMEHandler(
             ObjectMapper objectMapper,
             ProductSearchRepository productSearchRepository,
             ElasticsearchOperations elasticsearchOperations) {
@@ -33,7 +31,7 @@ public class ReviewEventHandler extends ProductSearchCdcEventHandler {
 
     @Override
     protected String getSupportedTable() {
-        return "reviews";
+        return "product_categories";
     }
 
     @Override
@@ -47,83 +45,41 @@ public class ReviewEventHandler extends ProductSearchCdcEventHandler {
             data = event.getAfterData();
         }
 
-        if (data == null || !data.containsKey("product_id")) {
+        if (data == null || !data.containsKey("product_id") || !data.containsKey("category_id")) {
             return;
         }
 
         productId = getLongValue(data, "product_id");
+        Long categoryId = getLongValue(data, "category_id");
 
-        // 평점 계산을 위해 기존 리뷰 정보 필요
+        // 카테고리 목록을 조회해야 함 - 기존 문서 필요
         Optional<ProductSearchDocument> optionalDocument = productSearchRepository.findById(productId);
         if (optionalDocument.isEmpty()) {
-            log.warn("Product document not found for review update: {}", productId);
+            log.warn("Product document not found for category update: {}", productId);
             return;
         }
 
         ProductSearchDocument document = optionalDocument.get();
 
-        // 현재 리뷰 정보 가져오기
-        Double averageRating = document.getAverageRating();
-        Integer reviewCount = document.getReviewCount();
+        // 기존 카테고리 목록 가져오기
+        List<Long> categoryIds = document.getCategoryIds();
+        if (categoryIds == null) {
+            categoryIds = new ArrayList<>();
+        }
 
-        if (averageRating == null) averageRating = 0.0;
-        if (reviewCount == null) reviewCount = 0;
-
-        // 리뷰 추가, 수정, 삭제에 따른 평점 정보 업데이트
+        // 카테고리 매핑 추가 또는 제거
         boolean updated = false;
         if (event.isDelete()) {
-            // 삭제된 리뷰의 평점
-            Integer rating = getIntegerValue(data, "rating");
-
-            // 리뷰 수 감소
-            if (reviewCount > 0) {
-                reviewCount--;
-                updated = true;
-            }
-
-            // 평균 평점 재계산 (삭제된 평점 반영)
-            if (rating != null && reviewCount > 0) {
-                double totalRating = averageRating * (reviewCount + 1) - rating;
-                averageRating = totalRating / reviewCount;
-                updated = true;
-            } else if (reviewCount == 0) {
-                averageRating = 0.0;
-                updated = true;
-            }
-
-        } else {
-            // 추가 또는 수정된 리뷰의 평점
-            Integer rating = getIntegerValue(data, "rating");
-
-            // 이전 데이터가 있는 경우 (수정)
-            if (event.isUpdate() && event.getBeforeData() != null) {
-                Integer oldRating = getIntegerValue(event.getBeforeData(), "rating");
-
-                // 평점이 실제로 변경된 경우에만 처리
-                if (oldRating != null && rating != null && !oldRating.equals(rating)) {
-                    double totalRating = averageRating * reviewCount - oldRating + rating;
-                    averageRating = totalRating / reviewCount;
-                    updated = true;
-                }
-            } else { // 새 리뷰
-                // 리뷰 수 증가
-                reviewCount++;
-                updated = true;
-
-                // 평균 평점 재계산 (새 평점 포함)
-                if (rating != null) {
-                    double totalRating = averageRating * (reviewCount - 1) + rating;
-                    averageRating = totalRating / reviewCount;
-                    updated = true;
-                }
-            }
+            updated = categoryIds.remove(categoryId);
+        } else if (!categoryIds.contains(categoryId)) {
+            categoryIds.add(categoryId);
+            updated = true;
         }
 
         // 변경된 경우에만 업데이트
         if (updated) {
             Map<String, Object> updates = new HashMap<>();
-            updates.put("averageRating", averageRating);
-            updates.put("reviewCount", reviewCount);
+            updates.put("categoryIds", categoryIds);
             updatePartialDocument(productId, updates);
         }
     }
@@ -147,9 +103,9 @@ public class ReviewEventHandler extends ProductSearchCdcEventHandler {
                     .build();
 
             elasticsearchOperations.update(updateQuery, IndexCoordinates.of("products"));
-            log.debug("Partially updated product review info: {}", productId);
+            log.debug("Partially updated product categories: {}", productId);
         } catch (Exception e) {
-            log.error("Error updating product review info {}: {}", productId, e.getMessage());
+            log.error("Error updating product categories {}: {}", productId, e.getMessage());
         }
     }
 }

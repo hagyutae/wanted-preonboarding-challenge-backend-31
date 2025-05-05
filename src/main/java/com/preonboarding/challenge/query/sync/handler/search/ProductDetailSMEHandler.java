@@ -14,11 +14,11 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class ProductDetailEventHandler extends ProductSearchCdcEventHandler {
+public class ProductDetailSMEHandler extends ProductSearchModelEventHandler {
 
     private final ElasticsearchOperations elasticsearchOperations;
 
-    public ProductDetailEventHandler(
+    public ProductDetailSMEHandler(
             ObjectMapper objectMapper,
             ElasticsearchOperations elasticsearchOperations) {
         super(objectMapper);

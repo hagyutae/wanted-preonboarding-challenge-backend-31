@@ -12,11 +12,11 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-public class ProductEventHandler extends ProductSearchCdcEventHandler {
+public class ProductSMEHandler extends ProductSearchModelEventHandler {
 
     private final ProductSearchRepository productSearchRepository;
 
-    public ProductEventHandler(ObjectMapper objectMapper, ProductSearchRepository productSearchRepository) {
+    public ProductSMEHandler(ObjectMapper objectMapper, ProductSearchRepository productSearchRepository) {
         super(objectMapper);
         this.productSearchRepository = productSearchRepository;
     }

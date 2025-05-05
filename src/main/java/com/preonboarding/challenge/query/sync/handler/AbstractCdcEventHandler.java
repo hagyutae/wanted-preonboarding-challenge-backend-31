@@ -3,16 +3,11 @@ package com.preonboarding.challenge.query.sync.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.preonboarding.challenge.query.sync.CdcEvent;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Slf4j
 public abstract class AbstractCdcEventHandler implements CdcEventHandler {
 
     protected final ObjectMapper objectMapper;
@@ -62,6 +57,22 @@ public abstract class AbstractCdcEventHandler implements CdcEventHandler {
         return null;
     }
 
+    protected Double getDoubleValue(Map<String, Object> data, String key) {
+        if (data.containsKey(key) && data.get(key) != null) {
+            Object value = data.get(key);
+            if (value instanceof Number) {
+                return ((Number) value).doubleValue();
+            } else {
+                try {
+                    return Double.valueOf(value.toString());
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
     protected BigDecimal getBigDecimalValue(Map<String, Object> data, String key) {
         if (data.containsKey(key) && data.get(key) != null) {
             Object value = data.get(key);
@@ -89,34 +100,6 @@ public abstract class AbstractCdcEventHandler implements CdcEventHandler {
                         "yes".equalsIgnoreCase(value.toString());
             }
         }
-        return null;
-    }
-
-    protected Instant parseTimestampToInstant(Object timestamp) {
-        if (timestamp == null) {
-            return null;
-        }
-
-        if (timestamp instanceof String) {
-            try {
-                return LocalDateTime.parse((String) timestamp).atZone(ZoneId.systemDefault()).toInstant();
-            } catch (Exception e) {
-                log.warn("Failed to parse timestamp string: {}", timestamp);
-                return null;
-            }
-        } else if (timestamp instanceof Number) {
-            try {
-                // 마이크로초 단위를 밀리초로 변환 (1/1000)
-                long microseconds = ((Number) timestamp).longValue();
-                long milliseconds = microseconds / 1000;
-
-                return Instant.ofEpochMilli(milliseconds);
-            } catch (Exception e) {
-                log.warn("Failed to parse timestamp number: {}", timestamp);
-                return null;
-            }
-        }
-
         return null;
     }
 }
