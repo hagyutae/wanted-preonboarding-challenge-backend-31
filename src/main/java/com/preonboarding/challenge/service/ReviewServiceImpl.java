@@ -1,13 +1,13 @@
 package com.preonboarding.challenge.service;
 
-import com.preonboarding.challenge.entity.Product;
-import com.preonboarding.challenge.entity.Review;
-import com.preonboarding.challenge.entity.User;
+import com.preonboarding.challenge.service.entity.Product;
+import com.preonboarding.challenge.service.entity.Review;
+import com.preonboarding.challenge.service.entity.User;
 import com.preonboarding.challenge.exception.AccessDeniedException;
 import com.preonboarding.challenge.exception.ResourceNotFoundException;
-import com.preonboarding.challenge.repository.ProductRepository;
-import com.preonboarding.challenge.repository.ReviewRepository;
-import com.preonboarding.challenge.repository.UserRepository;
+import com.preonboarding.challenge.service.repository.ProductRepository;
+import com.preonboarding.challenge.service.repository.ReviewRepository;
+import com.preonboarding.challenge.service.repository.UserRepository;
 import com.preonboarding.challenge.service.dto.PaginationDto;
 import com.preonboarding.challenge.service.dto.ReviewDto;
 import com.preonboarding.challenge.service.mapper.ReviewMapper;
@@ -88,7 +88,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId));
 
         // 리뷰 생성
-        Review review = com.preonboarding.challenge.entity.Review.builder()
+        Review review = Review.builder()
                 .product(product)
                 .user(user)
                 .rating(request.getRating())

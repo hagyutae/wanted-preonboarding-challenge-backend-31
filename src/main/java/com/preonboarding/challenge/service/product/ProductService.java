@@ -1,15 +1,13 @@
 package com.preonboarding.challenge.service.product;
 
 import com.preonboarding.challenge.controller.dto.ProductListResponse;
-import com.preonboarding.challenge.entity.*;
 import com.preonboarding.challenge.exception.ResourceNotFoundException;
-import com.preonboarding.challenge.repository.*;
 import com.preonboarding.challenge.service.dto.PaginationDto;
+import com.preonboarding.challenge.service.entity.*;
 import com.preonboarding.challenge.service.mapper.ProductMapper;
-import com.preonboarding.challenge.service.product.command.ProductCommand;
-import com.preonboarding.challenge.service.product.command.ProductCommandHandler;
-import com.preonboarding.challenge.service.product.query.ProductQuery;
-import com.preonboarding.challenge.service.product.query.ProductQueryHandler;
+import com.preonboarding.challenge.service.query.ProductQuery;
+import com.preonboarding.challenge.service.query.ProductQueryHandler;
+import com.preonboarding.challenge.service.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;

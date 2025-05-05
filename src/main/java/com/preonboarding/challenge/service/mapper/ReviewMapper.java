@@ -1,7 +1,7 @@
 package com.preonboarding.challenge.service.mapper;
 
-import com.preonboarding.challenge.entity.Review;
-import com.preonboarding.challenge.entity.User;
+import com.preonboarding.challenge.service.entity.Review;
+import com.preonboarding.challenge.service.entity.User;
 import com.preonboarding.challenge.service.dto.ReviewDto;
 import org.springframework.stereotype.Component;
 
@@ -45,14 +45,14 @@ public class ReviewMapper {
 
         // 평균 평점 계산
         double averageRating = reviews.stream()
-                .mapToInt(com.preonboarding.challenge.entity.Review::getRating)
+                .mapToInt(Review::getRating)
                 .average()
                 .orElse(0.0);
 
         // 평점별 분포 계산
         Map<Integer, Integer> distribution = reviews.stream()
                 .collect(Collectors.groupingBy(
-                        com.preonboarding.challenge.entity.Review::getRating,
+                        Review::getRating,
                         Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
                 ));
 

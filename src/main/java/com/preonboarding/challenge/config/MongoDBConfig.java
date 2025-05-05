@@ -10,7 +10,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
 @Configuration
-@EnableMongoRepositories(basePackages = "com.preonboarding.challenge.query.document")
+@EnableMongoRepositories(basePackages = "com.preonboarding.challenge.service.query.repository")
 public class MongoDBConfig {
 
     @Value("${spring.mongodb.host}")

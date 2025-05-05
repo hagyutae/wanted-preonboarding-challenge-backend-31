@@ -1,10 +1,10 @@
 package com.preonboarding.challenge.service;
 
-import com.preonboarding.challenge.entity.Category;
-import com.preonboarding.challenge.entity.Product;
+import com.preonboarding.challenge.service.entity.Category;
+import com.preonboarding.challenge.service.entity.Product;
 import com.preonboarding.challenge.exception.ResourceNotFoundException;
-import com.preonboarding.challenge.repository.CategoryRepository;
-import com.preonboarding.challenge.repository.ProductRepository;
+import com.preonboarding.challenge.service.repository.CategoryRepository;
+import com.preonboarding.challenge.service.repository.ProductRepository;
 import com.preonboarding.challenge.service.dto.CategoryDto;
 import com.preonboarding.challenge.service.dto.PaginationDto;
 import com.preonboarding.challenge.service.mapper.CategoryMapper;
@@ -67,7 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         // 2. 카테고리 ID -> 카테고리 맵 구성
         Map<Long, Category> categoryMap = allCategories.stream()
-                .collect(Collectors.toMap(com.preonboarding.challenge.entity.Category::getId, category -> category));
+                .collect(Collectors.toMap(Category::getId, category -> category));
 
         // 3. 자식 카테고리 맵 구성 (부모 ID -> 자식 카테고리 리스트)
         Map<Long, List<Category>> childrenMap = new HashMap<>();
@@ -154,7 +154,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         // 카테고리 ID -> 카테고리 매핑
         Map<Long, Category> categoryMap = allCategories.stream()
-                .collect(Collectors.toMap(com.preonboarding.challenge.entity.Category::getId, c -> c));
+                .collect(Collectors.toMap(Category::getId, c -> c));
 
         // 부모 ID -> 자식 카테고리 리스트 매핑
         Map<Long, List<Category>> childrenMap = new HashMap<>();

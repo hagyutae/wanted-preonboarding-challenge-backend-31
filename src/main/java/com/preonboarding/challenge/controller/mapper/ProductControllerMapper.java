@@ -3,8 +3,8 @@ package com.preonboarding.challenge.controller.mapper;
 import com.preonboarding.challenge.controller.dto.*;
 import com.preonboarding.challenge.service.dto.PaginationDto;
 import com.preonboarding.challenge.service.product.ProductDto;
-import com.preonboarding.challenge.service.product.command.ProductCommand;
-import com.preonboarding.challenge.service.product.query.ProductQuery;
+import com.preonboarding.challenge.service.product.ProductCommand;
+import com.preonboarding.challenge.service.query.ProductQuery;
 import org.springframework.stereotype.Component;
 
 @Component

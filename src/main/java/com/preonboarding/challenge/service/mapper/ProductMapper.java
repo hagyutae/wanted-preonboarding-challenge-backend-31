@@ -3,9 +3,9 @@ package com.preonboarding.challenge.service.mapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.preonboarding.challenge.entity.*;
+import com.preonboarding.challenge.service.entity.*;
 import com.preonboarding.challenge.service.product.ProductDto;
-import com.preonboarding.challenge.service.product.command.ProductCommand;
+import com.preonboarding.challenge.service.product.ProductCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

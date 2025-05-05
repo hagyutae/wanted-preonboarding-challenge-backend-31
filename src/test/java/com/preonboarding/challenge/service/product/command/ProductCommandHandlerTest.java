@@ -1,13 +1,15 @@
 package com.preonboarding.challenge.service.product.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.preonboarding.challenge.entity.Product;
-import com.preonboarding.challenge.entity.ProductStatus;
+import com.preonboarding.challenge.service.product.ProductCommand;
+import com.preonboarding.challenge.service.product.ProductCommandHandler;
+import com.preonboarding.challenge.service.entity.Product;
+import com.preonboarding.challenge.service.entity.ProductStatus;
 import com.preonboarding.challenge.exception.ResourceNotFoundException;
-import com.preonboarding.challenge.repository.*;
 import com.preonboarding.challenge.service.mapper.ProductMapper;
 import com.preonboarding.challenge.service.product.ProductDto;
 import com.preonboarding.challenge.service.product.ProductService;
+import com.preonboarding.challenge.service.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

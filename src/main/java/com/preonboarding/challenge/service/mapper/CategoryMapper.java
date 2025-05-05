@@ -1,6 +1,6 @@
 package com.preonboarding.challenge.service.mapper;
 
-import com.preonboarding.challenge.entity.Category;
+import com.preonboarding.challenge.service.entity.Category;
 import com.preonboarding.challenge.service.dto.CategoryDto;
 import com.preonboarding.challenge.service.dto.PaginationDto;
 import org.springframework.data.domain.Page;

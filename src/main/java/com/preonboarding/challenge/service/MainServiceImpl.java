@@ -1,10 +1,10 @@
 package com.preonboarding.challenge.service;
 
-import com.preonboarding.challenge.entity.Category;
-import com.preonboarding.challenge.entity.Product;
-import com.preonboarding.challenge.entity.ProductStatus;
-import com.preonboarding.challenge.repository.CategoryRepository;
-import com.preonboarding.challenge.repository.ProductRepository;
+import com.preonboarding.challenge.service.entity.Category;
+import com.preonboarding.challenge.service.entity.Product;
+import com.preonboarding.challenge.service.entity.ProductStatus;
+import com.preonboarding.challenge.service.repository.CategoryRepository;
+import com.preonboarding.challenge.service.repository.ProductRepository;
 import com.preonboarding.challenge.service.dto.MainPageDto;
 import com.preonboarding.challenge.service.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;

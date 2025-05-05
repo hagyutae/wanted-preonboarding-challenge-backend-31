@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfigurat
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "com.preonboarding.challenge.query.search")
+@EnableElasticsearchRepositories(basePackages = "com.preonboarding.challenge.service.query.repository")
 public class ElasticsearchConfig extends ElasticsearchConfiguration {
 
     @Value("${spring.elasticsearch.host:elasticsearch}")
