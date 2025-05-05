@@ -1,0 +1,24 @@
+{
+    "greeting": "Hello!",
+    "response": {
+      "success": "Your request has been processed successfully.",
+      "fail": "Failed to process your request."
+    },
+    "errors": {
+      "NOT_FOUND": "The requested resource could not be found.",
+      "UNAUTHORIZED": "Authentication is required.",
+      "FORBIDDEN": "You do not have permission to access this resource.",
+      "VALIDATION": "The input value is invalid.",
+      "INTERNAL_SERVER_ERROR": "A server error has occurred."
+    },
+    "product": {
+      "created": "The product has been registered successfully.",
+      "updated": "The product has been updated successfully.",
+      "deleted": "The product has been deleted successfully."
+    },
+    "review": {
+      "created": "The review has been submitted.",
+      "updated": "The review has been updated.",
+      "deleted": "The review has been deleted."
+    }
+  }

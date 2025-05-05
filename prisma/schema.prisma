@@ -1,0 +1,204 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model categories {
+  id          BigInt      @id @default(autoincrement())
+  name        String      @db.VarChar(100)
+  slug        String      @unique @db.VarChar(100)
+  description String?     @db.Text
+  parent_id   BigInt?     @map("parent_id")
+  level       Int
+  image_url   String?     @db.VarChar(255) @map("image_url")
+  parent      categories?   @relation("CategoryToCategory", fields: [parent_id], references: [id])
+  children    categories[]  @relation("CategoryToCategory")
+  products    product_categories[]
+
+  @@map("categories")
+}
+
+model sellers {
+  id            BigInt    @id @default(autoincrement())
+  name          String    @db.VarChar(100)
+  description   String?   @db.Text
+  logo_url      String?   @db.VarChar(255) @map("logo_url")
+  rating        Decimal?  @db.Decimal(3, 2)
+  contact_email String?   @db.VarChar(100) @map("contact_email")
+  contact_phone String?   @db.VarChar(20) @map("contact_phone")
+  created_at    DateTime  @default(now()) @map("created_at")
+  products      products[]
+
+  @@map("sellers")
+}
+
+model brands {
+  id          BigInt    @id @default(autoincrement())
+  name        String    @db.VarChar(100)
+  slug        String    @unique @db.VarChar(100)
+  description String?   @db.Text
+  logo_url    String?   @db.VarChar(255) @map("logo_url")
+  website     String?   @db.VarChar(255)
+  products    products[]
+
+  @@map("brands")
+}
+
+model products {
+  id                BigInt           @id @default(autoincrement())
+  name              String          @db.VarChar(255)
+  slug              String          @unique @db.VarChar(255)
+  short_description String?         @db.VarChar(500) @map("short_description")
+  full_description  String?         @db.Text @map("full_description")
+  created_at        DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  seller_id         BigInt          @map("seller_id")
+  brand_id          BigInt          @map("brand_id")
+  status            String          @db.VarChar(20)
+  seller            sellers          @relation(fields: [seller_id], references: [id])
+  brand             brands           @relation(fields: [brand_id], references: [id])
+  details           product_details?
+  prices            product_prices[]
+  categories        product_categories[]
+  option_groups     product_option_groups[]
+  images            product_images[]
+  tags              product_tags[]
+  reviews           reviews[]
+
+  @@map("products")
+}
+
+model product_details {
+  id                BigInt   @id @default(autoincrement())
+  product_id        BigInt   @unique @map("product_id")
+  weight            Decimal? @db.Decimal(10, 2)
+  dimensions        Json?
+  materials         String?  @db.Text
+  country_of_origin String?  @db.VarChar(100) @map("country_of_origin")
+  warranty_info     String?  @db.Text @map("warranty_info")
+  care_instructions String?  @db.Text @map("care_instructions")
+  additional_info   Json?    @map("additional_info")
+  product           products  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@map("product_details")
+}
+
+model product_prices {
+  id         BigInt   @id @default(autoincrement())
+  product_id BigInt   @map("product_id")
+  base_price Decimal  @db.Decimal(12, 2) @map("base_price")
+  sale_price Decimal? @db.Decimal(12, 2) @map("sale_price")
+  cost_price Decimal? @db.Decimal(12, 2) @map("cost_price")
+  currency   String   @default("KRW") @db.VarChar(3)
+  tax_rate   Decimal? @db.Decimal(5, 2) @map("tax_rate")
+  product    products  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+
+  @@map("product_prices")
+}
+
+model product_categories {
+  id          BigInt   @id @default(autoincrement())
+  product_id  BigInt   @map("product_id")
+  category_id BigInt   @map("category_id")
+  is_primary  Boolean  @default(false) @map("is_primary")
+  product     products  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  category    categories @relation(fields: [category_id], references: [id], onDelete: Cascade)
+
+  @@map("product_categories")
+}
+
+model product_option_groups {
+  id            BigInt          @id @default(autoincrement())
+  product_id    BigInt          @map("product_id")
+  name          String          @db.VarChar(100)
+  display_order Int             @default(0) @map("display_order")
+  product       products         @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  options       product_options[]
+
+  @@map("product_option_groups")
+}
+
+model product_options {
+  id              BigInt          @id @default(autoincrement())
+  option_group_id BigInt          @map("option_group_id")
+  name            String          @db.VarChar(100)
+  additional_price Decimal        @default(0) @db.Decimal(12, 2) @map("additional_price")
+  sku             String?         @db.VarChar(100)
+  stock           Int             @default(0)
+  display_order   Int             @default(0) @map("display_order")
+  option_group    product_option_groups @relation(fields: [option_group_id], references: [id], onDelete: Cascade)
+  images          product_images[]
+
+  @@map("product_options")
+}
+
+model product_images {
+  id            BigInt        @id @default(autoincrement())
+  product_id    BigInt        @map("product_id")
+  url           String        @db.VarChar(255)
+  alt_text      String?       @db.VarChar(255) @map("alt_text")
+  is_primary    Boolean       @default(false) @map("is_primary")
+  display_order Int           @default(0) @map("display_order")
+  option_id     BigInt?       @map("option_id")
+  product       products       @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  option        product_options? @relation(fields: [option_id], references: [id], onDelete: SetNull)
+
+  @@map("product_images")
+}
+
+model tags {
+  id        BigInt       @id @default(autoincrement())
+  name      String       @db.VarChar(100)
+  slug      String       @unique @db.VarChar(100)
+  products  product_tags[]
+
+  @@map("tags")
+}
+
+model product_tags {
+  id         BigInt  @id @default(autoincrement())
+  product_id BigInt  @map("product_id")
+  tag_id     BigInt  @map("tag_id")
+  product    products @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  tag        tags     @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@map("product_tags")
+}
+
+model users {
+  id         BigInt    @id @default(autoincrement())
+  name       String    @db.VarChar(100)
+  email      String    @unique @db.VarChar(100)
+  avatar_url String?   @db.VarChar(255) @map("avatar_url")
+  created_at DateTime  @default(now()) @map("created_at")
+  reviews    reviews[]
+
+  @@map("users")
+}
+
+model reviews {
+  id               BigInt    @id @default(autoincrement())
+  product_id       BigInt    @map("product_id")
+  user_id          BigInt    @map("user_id")
+  rating           Int
+  title            String?   @db.VarChar(255)
+  content          String?   @db.Text
+  created_at       DateTime  @default(now()) @map("created_at")
+  updated_at       DateTime  @updatedAt @map("updated_at")
+  verified_purchase Boolean  @default(false) @map("verified_purchase")
+  helpful_votes    Int       @default(0) @map("helpful_votes")
+  product          products   @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  user             users      @relation(fields: [user_id], references: [id], onDelete: Cascade) 
+
+  @@map("reviews")
+}

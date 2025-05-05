@@ -1,0 +1,24 @@
+{
+    "greeting": "안녕하세요!",
+    "response": {
+      "success": "요청이 성공적으로 처리되었습니다.",
+      "fail": "요청 처리에 실패했습니다."
+    },
+    "errors": {
+      "NOT_FOUND": "요청하신 리소스를 찾을 수 없습니다.",
+      "UNAUTHORIZED": "인증이 필요합니다.",
+      "FORBIDDEN": "접근 권한이 없습니다.",
+      "VALIDATION": "입력값이 올바르지 않습니다.",
+      "INTERNAL_SERVER_ERROR": "서버 오류가 발생했습니다."
+    },
+    "product": {
+      "created": "상품이 성공적으로 등록되었습니다.",
+      "updated": "상품이 성공적으로 수정되었습니다.",
+      "deleted": "상품이 성공적으로 삭제되었습니다."
+    },
+    "review": {
+      "created": "리뷰가 등록되었습니다.",
+      "updated": "리뷰가 수정되었습니다.",
+      "deleted": "리뷰가 삭제되었습니다."
+    }
+  }

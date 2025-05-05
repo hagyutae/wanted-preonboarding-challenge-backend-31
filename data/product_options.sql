@@ -585,4 +585,4 @@ INSERT INTO product_images (id, product_id, url, alt_text, is_primary, display_o
 (169, 30, 'http://example.com/images/default.png', '논슬립 그립 덤벨', false, 6, 169);
 
 -- 시퀀스 재설정
-SELECT setval('product_images_id_seq', (SELECT MAX(id) FROM product_images));
+SELECT setval('product_option_groups_id_seq', (SELECT COALESCE(MAX(id), 0) + 1 FROM product_option_groups));
