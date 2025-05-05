@@ -13,7 +13,7 @@ import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.domain.ProductTag;
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
-import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
+import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
 import com.wanted.ecommerce.product.dto.response.DetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageCreateResponse;
@@ -97,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<ProductListResponse> readAll(ProductReadAllRequest request) {
+    public Page<ProductListResponse> readAll(ProductSearchRequest request) {
         int pageNumber = Math.max(0, request.getPage() - 1);
         Pageable pageable = PageRequest.of(pageNumber, request.getPerPage());
         Page<Product> products = productRepository.findAllByRequest(request, pageable);

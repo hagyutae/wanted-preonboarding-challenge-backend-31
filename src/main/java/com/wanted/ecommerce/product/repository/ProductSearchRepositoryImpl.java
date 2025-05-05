@@ -10,7 +10,7 @@ import com.wanted.ecommerce.product.domain.QProduct;
 import com.wanted.ecommerce.product.domain.QProductCategory;
 import com.wanted.ecommerce.product.domain.QProductOption;
 import com.wanted.ecommerce.product.domain.QProductPrice;
-import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
+import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
 import com.wanted.ecommerce.review.domain.QReview;
 import com.wanted.ecommerce.seller.domain.QSeller;
 import java.math.BigDecimal;
@@ -34,7 +34,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository{
     private final QProductOption option = QProductOption.productOption;
 
     @Override
-    public PageImpl<Product> findAllByRequest(ProductReadAllRequest request, Pageable pageable) {
+    public PageImpl<Product> findAllByRequest(ProductSearchRequest request, Pageable pageable) {
         var query = queryFactory
             .selectFrom(product)
             .join(product.brand, brand).fetchJoin()

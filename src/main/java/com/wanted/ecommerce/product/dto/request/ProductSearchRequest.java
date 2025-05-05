@@ -9,15 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-
 @Getter
 @Builder
 @AllArgsConstructor
-public class ProductReadAllRequest {
+public class ProductSearchRequest {
 
     @Builder.Default
     @Min(value = 1, message = "페이지 입력값은 1 이상이어야 합니다.")

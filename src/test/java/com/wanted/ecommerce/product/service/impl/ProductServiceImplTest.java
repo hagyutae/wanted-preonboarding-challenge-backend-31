@@ -23,7 +23,7 @@ import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.domain.ProductTag;
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
-import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
+import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
 import com.wanted.ecommerce.product.dto.response.DetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
@@ -136,7 +136,7 @@ class ProductServiceImplTest {
 
     @Test
     void test_readAll_success() {
-        ProductReadAllRequest request = ProductReadAllRequest.builder()
+        ProductSearchRequest request = ProductSearchRequest.builder()
             .page(1)
             .perPage(10)
             .sort("created_at:desc")

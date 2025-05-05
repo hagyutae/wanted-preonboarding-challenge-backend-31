@@ -4,7 +4,7 @@ import com.wanted.ecommerce.common.constants.MessageConstants;
 import com.wanted.ecommerce.common.response.ApiResponse;
 import com.wanted.ecommerce.common.response.PaginationResponse;
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
-import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
+import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
@@ -45,7 +45,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<PaginationResponse<ProductListResponse>>> getAllProduct(
-        @Valid @ModelAttribute ProductReadAllRequest request) {
+        @Valid @ModelAttribute ProductSearchRequest request) {
         Page<ProductListResponse> results = productService.readAll(request);
         PaginationResponse<ProductListResponse> response = PaginationResponse.of(results);
         return ResponseEntity.ok(

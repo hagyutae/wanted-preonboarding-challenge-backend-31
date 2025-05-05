@@ -2,7 +2,7 @@ package com.wanted.ecommerce.product.service;
 
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
-import com.wanted.ecommerce.product.dto.request.ProductReadAllRequest;
+import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
 import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
@@ -13,7 +13,7 @@ public interface ProductService {
 
     ProductResponse create(ProductCreateRequest request);
 
-    Page<ProductListResponse> readAll(ProductReadAllRequest request);
+    Page<ProductListResponse> readAll(ProductSearchRequest request);
 
     ProductDetailResponse readDetail(long productId);
 
