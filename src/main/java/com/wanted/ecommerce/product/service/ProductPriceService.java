@@ -2,8 +2,8 @@ package com.wanted.ecommerce.product.service;
 
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductPrice;
-import com.wanted.ecommerce.product.dto.request.ProductPriceRequest;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.ProductPriceResponse;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductPriceRequest;
+import com.wanted.ecommerce.product.dto.response.ProductResponse.ProductPriceResponse;
 
 public interface ProductPriceService {
 

@@ -12,17 +12,17 @@ import com.wanted.ecommerce.product.domain.ProductCategory;
 import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.domain.ProductTag;
-import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest;
 import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.DetailResponse;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.ProductImageCreateResponse;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.ProductOptionGroupResponse;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.ProductPriceResponse;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.RelatedProductResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
+import com.wanted.ecommerce.product.dto.response.ProductRegisterResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
+import com.wanted.ecommerce.product.dto.response.ProductResponse.DetailResponse;
+import com.wanted.ecommerce.product.dto.response.ProductResponse.ProductImageCreateResponse;
+import com.wanted.ecommerce.product.dto.response.ProductResponse.ProductOptionGroupResponse;
+import com.wanted.ecommerce.product.dto.response.ProductResponse.ProductPriceResponse;
+import com.wanted.ecommerce.product.dto.response.ProductResponse.RelatedProductResponse;
 import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
 import com.wanted.ecommerce.product.repository.ProductRepository;
 import com.wanted.ecommerce.product.service.ProductCategoryService;
@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductResponse create(ProductCreateRequest request) {
+    public ProductRegisterResponse create(ProductRegisterRequest request) {
         Seller seller = sellerService.getSellerById(request.getSellerId());
         Brand brand = brandService.getBrandById(request.getBrandId());
 
@@ -91,7 +91,7 @@ public class ProductServiceImpl implements ProductService {
         productImageServiceFacade.getProductImages(saved, request.getImages());
         productPriceService.saveProductPrice(saved, request.getPrice());
         createProductTags(saved, request.getTags());
-        return ProductResponse.of(saved.getId(), saved.getName(), saved.getSlug(),
+        return ProductRegisterResponse.of(saved.getId(), saved.getName(), saved.getSlug(),
             saved.getCreatedAt(), saved.getUpdatedAt());
     }
 
@@ -103,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
         Page<Product> products = productRepository.findAllByRequest(request, pageable);
         return products.map(product -> {
 
-            ProductPrice price = productPriceService.findProductPriceByProductId(product.getId());
+            ProductPrice price =  product.getPrice();
             ProductImageResponse primaryImageResponse = productImageServiceFacade.getPrimaryProductImageResponse(
                 product.getId());
 
@@ -115,13 +115,9 @@ public class ProductServiceImpl implements ProductService {
 
             Boolean inStock = productOptionService.isExistStock(product.getId(), 0);
 
-            BrandResponse brandResponse = brandService.createBrandResponse(
-                product.getBrand().getId(),
-                product.getBrand().getName());
+            BrandResponse brandResponse = brandService.createBrandResponse(product.getBrand());
 
-            SellerResponse sellerResponse = sellerService.createSellerResponse(
-                product.getSeller().getId(),
-                product.getSeller().getName());
+            SellerResponse sellerResponse = sellerService.createSellerResponse(product.getSeller());
 
             return ProductListResponse.of(product.getId(), product.getName(),
                 product.getShortDescription(), price.getBasePrice(), price.getSalePrice(),
@@ -132,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
-    public ProductDetailResponse readDetail(long productId) {
+    public ProductResponse readDetail(long productId) {
         // product
         Product product = getProductById(productId);
         // brand
@@ -163,7 +159,7 @@ public class ProductServiceImpl implements ProductService {
         // related products
         List<RelatedProductResponse> relatedProductResponses = createRelatedProductResponse(
             product.getCategories());
-        return ProductDetailResponse.of(productId, product.getName(),
+        return ProductResponse.of(productId, product.getName(),
             product.getSlug(), product.getShortDescription(), product.getFullDescription(),
             sellerDetailResponse, brandDetailResponse, product.getStatus().getName(),
             product.getCreatedAt(), product.getUpdatedAt(), detailResponse, priceResponse,
@@ -173,7 +169,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductUpdateResponse update(long productId, ProductCreateRequest request) {
+    public ProductUpdateResponse update(long productId, ProductRegisterRequest request) {
         // seller
         Seller seller = sellerService.getSellerById(request.getSellerId());
         // brand
@@ -226,7 +222,7 @@ public class ProductServiceImpl implements ProductService {
                 product.getSlug())).toList();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     private List<RelatedProductResponse> createRelatedProductResponse(
         List<ProductCategory> categories) {
         ProductCategory primaryCategory = categories.stream()

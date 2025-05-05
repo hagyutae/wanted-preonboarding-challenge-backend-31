@@ -24,8 +24,8 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public BrandResponse createBrandResponse(Long brandId, String brandName) {
-        return BrandResponse.of(brandId, brandName);
+    public BrandResponse createBrandResponse(Brand brand) {
+        return BrandResponse.of(brand.getId(), brand.getName());
     }
 
     @Override

@@ -2,9 +2,9 @@ package com.wanted.ecommerce.product.service;
 
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductImage;
-import com.wanted.ecommerce.product.dto.request.ProductCreateRequest.ProductImageRequest;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.ProductImageCreateResponse;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductImageRequest;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
+import com.wanted.ecommerce.product.dto.response.ProductResponse.ProductImageCreateResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

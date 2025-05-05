@@ -8,6 +8,6 @@ public interface BrandService {
 
     Brand getBrandById(Long brandId);
 
-    BrandResponse createBrandResponse(Long brandId, String BrandName);
+    BrandResponse createBrandResponse(Brand brand);
     BrandDetailResponse createBrandDetailResponse(Brand brand);
 }

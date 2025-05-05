@@ -34,6 +34,11 @@ public class CategoryServiceImpl implements CategoryService {
             .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Category> getCategoryByIds(List<Long> ids) {
+        return categoryRepository.findAllById(ids);
+    }
+
     @Transactional(readOnly = true)
     private CategoriesResponse getChildrenCategories(Category category) {
         List<Category> childCategories = categoryRepository.findAllByParentId(category.getId());

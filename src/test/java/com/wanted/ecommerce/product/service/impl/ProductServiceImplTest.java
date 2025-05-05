@@ -22,19 +22,19 @@ import com.wanted.ecommerce.product.domain.ProductImage;
 import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.domain.ProductTag;
-import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest;
 import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.DetailResponse;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.ProductPriceResponse;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
+import com.wanted.ecommerce.product.dto.response.ProductRegisterResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
+import com.wanted.ecommerce.product.dto.response.ProductResponse.DetailResponse;
+import com.wanted.ecommerce.product.dto.response.ProductResponse.ProductPriceResponse;
 import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
 import com.wanted.ecommerce.product.repository.ProductRepository;
 import com.wanted.ecommerce.product.service.ProductCategoryService;
 import com.wanted.ecommerce.product.service.ProductDetailService;
-import com.wanted.ecommerce.product.service.ProductImageService;
+import com.wanted.ecommerce.product.service.ProductImageServiceFacade;
 import com.wanted.ecommerce.product.service.ProductOptionGroupService;
 import com.wanted.ecommerce.product.service.ProductOptionService;
 import com.wanted.ecommerce.product.service.ProductPriceService;
@@ -74,8 +74,6 @@ class ProductServiceImplTest {
     @Mock
     private ProductDetailService productDetailService;
     @Mock
-    private ProductImageService productImageService;
-    @Mock
     private ProductOptionGroupService productOptionGroupService;
     @Mock
     private ProductOptionService productOptionService;
@@ -91,6 +89,8 @@ class ProductServiceImplTest {
     private SellerService sellerService;
     @Mock
     private BrandService brandService;
+    @Mock
+    private ProductImageServiceFacade productImageServiceFacade;
 
     private Product product;
     private Seller seller;
@@ -115,7 +115,7 @@ class ProductServiceImplTest {
 
     @Test
     void test_create_success() {
-        ProductCreateRequest request = mock(ProductCreateRequest.class);
+        ProductRegisterRequest request = mock(ProductRegisterRequest.class);
         when(request.getSellerId()).thenReturn(1L);
         when(request.getBrandId()).thenReturn(1L);
         when(request.getName()).thenReturn("Product");
@@ -128,7 +128,7 @@ class ProductServiceImplTest {
         when(brandService.getBrandById(1L)).thenReturn(brand);
         when(productRepository.save(any())).thenReturn(product);
 
-        ProductResponse response = productService.create(request);
+        ProductRegisterResponse response = productService.create(request);
 
         assertNotNull(response);
         assertEquals("Product", response.name());
@@ -153,16 +153,14 @@ class ProductServiceImplTest {
 
         when(productRepository.findAllByRequest(any(), any())).thenReturn(
             productPage);
-        when(productPriceService.findProductPriceByProductId(anyLong())).thenReturn(price
-        );
-        when(productImageService.createPrimaryProductImageResponse(anyLong())).thenReturn(mock(
+        when(productImageServiceFacade.getPrimaryProductImageResponse(anyLong())).thenReturn(mock(
             ProductImageResponse.class));
         when(reviewService.getAvgRatingByProductId(anyLong())).thenReturn(4.123);
         when(reviewService.getReviewCountByProductId(anyLong())).thenReturn(10);
         when(productOptionService.isExistStock(anyLong(), anyInt())).thenReturn(true);
-        when(brandService.createBrandResponse(anyLong(), any())).thenReturn(
+        when(brandService.createBrandResponse(any())).thenReturn(
             mock(BrandResponse.class));
-        when(sellerService.createSellerResponse(anyLong(), any())).thenReturn(
+        when(sellerService.createSellerResponse(any())).thenReturn(
             mock(SellerResponse.class));
 
         Page<ProductListResponse> result = productService.readAll(request);
@@ -186,18 +184,18 @@ class ProductServiceImplTest {
             mock(ProductPriceResponse.class));
         when(productCategoryService.createCategoryResponse(any())).thenReturn(List.of());
         when(productOptionGroupService.createOptionGroupResponse(any())).thenReturn(List.of());
-        when(productImageService.createImageResponse(any())).thenReturn(List.of());
+        when(productImageServiceFacade.getImageResponse(any())).thenReturn(List.of());
         when(reviewService.createRatingResponse(anyLong())).thenReturn(mock(RatingResponse.class));
         when(productRepository.findRelatedProductsByCategoryId(any())).thenReturn(
             List.of(relateProduct));
 
-        ProductDetailResponse response = productService.readDetail(1L);
+        ProductResponse response = productService.readDetail(1L);
         assertNotNull(response);
     }
 
     @Test
     void test_update_success() {
-        ProductCreateRequest request = mock(ProductCreateRequest.class);
+        ProductRegisterRequest request = mock(ProductRegisterRequest.class);
 
         when(request.getSellerId()).thenReturn(1L);
         when(request.getBrandId()).thenReturn(1L);

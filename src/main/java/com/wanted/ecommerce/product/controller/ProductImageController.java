@@ -3,8 +3,8 @@ package com.wanted.ecommerce.product.controller;
 import com.wanted.ecommerce.common.constants.MessageConstants;
 import com.wanted.ecommerce.common.response.ApiResponse;
 import com.wanted.ecommerce.product.domain.Product;
-import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse.ProductImageCreateResponse;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest;
+import com.wanted.ecommerce.product.dto.response.ProductResponse.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.service.ProductImageService;
 import com.wanted.ecommerce.product.service.ProductService;
 import jakarta.validation.Valid;
@@ -29,7 +29,7 @@ public class ProductImageController {
     @PostMapping()
     public ResponseEntity<ApiResponse<ProductImageCreateResponse>> addProductImage(
         @PathVariable Long id,
-        @Valid @RequestBody ProductCreateRequest.ProductImageRequest imageRequest
+        @Valid @RequestBody ProductRegisterRequest.ProductImageRequest imageRequest
     ) {
         Product product = productService.getProductById(id);
         ProductImageCreateResponse response = imageService.createProductImages(product,

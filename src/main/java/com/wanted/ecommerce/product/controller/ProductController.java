@@ -3,10 +3,10 @@ package com.wanted.ecommerce.product.controller;
 import com.wanted.ecommerce.common.constants.MessageConstants;
 import com.wanted.ecommerce.common.response.ApiResponse;
 import com.wanted.ecommerce.common.response.PaginationResponse;
-import com.wanted.ecommerce.product.dto.request.ProductCreateRequest;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest;
 import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
-import com.wanted.ecommerce.product.dto.response.ProductDetailResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
+import com.wanted.ecommerce.product.dto.response.ProductRegisterResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
 import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
 import com.wanted.ecommerce.product.service.ProductService;
@@ -33,11 +33,11 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
-        @Valid @RequestBody ProductCreateRequest productCreateRequest
+    public ResponseEntity<ApiResponse<ProductRegisterResponse>> createProduct(
+        @Valid @RequestBody ProductRegisterRequest productRegisterRequest
     ) {
-        ApiResponse<ProductResponse> response = ApiResponse.success(
-            productService.create(productCreateRequest),
+        ApiResponse<ProductRegisterResponse> response = ApiResponse.success(
+            productService.create(productRegisterRequest),
             MessageConstants.CREATED_PRODUCTS.getMessage());
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(response);
@@ -53,10 +53,10 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductDetailResponse>> getProduct(
+    public ResponseEntity<ApiResponse<ProductResponse>> getProduct(
         @PathVariable Long id
     ) {
-        ProductDetailResponse response = productService.readDetail(id);
+        ProductResponse response = productService.readDetail(id);
         return ResponseEntity.ok(
             ApiResponse.success(response, MessageConstants.FUNDED_PRODUCT_DETAIL.getMessage()));
     }
@@ -65,9 +65,9 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductUpdateResponse>> updateProduct(
         @PathVariable Long id,
-        @Valid @RequestBody ProductCreateRequest productCreateRequest
+        @Valid @RequestBody ProductRegisterRequest productRegisterRequest
     ) {
-        ProductUpdateResponse response = productService.update(id, productCreateRequest);
+        ProductUpdateResponse response = productService.update(id, productRegisterRequest);
         return ResponseEntity.ok(
             ApiResponse.success(response, MessageConstants.UPDATED_PRODUCT.getMessage()));
     }

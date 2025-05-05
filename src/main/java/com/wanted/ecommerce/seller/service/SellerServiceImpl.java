@@ -25,8 +25,8 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public SellerResponse createSellerResponse(Long productId, String sellerName) {
-        return SellerResponse.of(productId, sellerName);
+    public SellerResponse createSellerResponse(Seller seller) {
+        return SellerResponse.of(seller.getId(), seller.getName());
     }
 
     @Override

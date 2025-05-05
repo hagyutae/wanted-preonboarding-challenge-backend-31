@@ -6,7 +6,7 @@ import com.wanted.ecommerce.category.dto.response.ParentCategoryResponse;
 import com.wanted.ecommerce.category.service.CategoryService;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductCategory;
-import com.wanted.ecommerce.product.dto.request.ProductCreateRequest.ProductCategoryRequest;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductCategoryRequest;
 import com.wanted.ecommerce.product.repository.ProductCategoryRepository;
 import com.wanted.ecommerce.product.service.ProductCategoryService;
 import java.util.List;
@@ -25,20 +25,18 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     @Override
     public List<ProductCategory> saveProductCategories(Product product,
-        List<ProductCategoryRequest> categoryRequestList) {
-        List<Long> categoryIds = categoryRequestList.stream()
+        List<ProductCategoryRequest> requests) {
+        List<Long> categoryIds = requests.stream()
             .map(ProductCategoryRequest::getCategoryId)
             .toList();
-        Map<Long, Category> categoryMap = productCategoryRepository.findAllById(categoryIds)
-            .stream()
-            .map(ProductCategory::getCategory)
+
+        Map<Long, Category> categoryMap = categoryService.getCategoryByIds(categoryIds).stream()
             .collect(Collectors.toMap(Category::getId, Function.identity()));
 
-        List<ProductCategory> productCategories = categoryRequestList.stream()
-            .map(categoryRequest -> {
-                Long categoryId = categoryRequest.getCategoryId();
-                Category category = categoryMap.get(categoryId);
-                return ProductCategory.of(product, category, categoryRequest.getIsPrimary());
+        List<ProductCategory> productCategories = requests.stream()
+            .map(request -> {
+                Category category = categoryMap.get(request.getCategoryId());
+                return ProductCategory.of(product, category, request.getIsPrimary());
             })
             .toList();
         return productCategoryRepository.saveAll(productCategories);
@@ -69,12 +67,12 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     @Override
     public void updateCategories(Product product, List<ProductCategoryRequest> requests) {
-        requests.forEach(productCategoryRequest -> {
+        requests.forEach(request -> {
             List<ProductCategory> categories = product.getCategories();
             Category category = categoryService.getCategoryById(
-                productCategoryRequest.getCategoryId());
+                request.getCategoryId());
             categories.forEach(productCategory -> productCategory.update(product, category,
-                productCategoryRequest.getIsPrimary()));
+                request.getIsPrimary()));
         });
     }
 }

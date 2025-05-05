@@ -8,7 +8,7 @@ public interface SellerService {
 
     Seller getSellerById(Long sellerId);
 
-    SellerResponse createSellerResponse(Long productId, String sellerName);
+    SellerResponse createSellerResponse(Seller seller);
 
     SellerDetailResponse createSellerDetailResponse(Seller seller);
 }
