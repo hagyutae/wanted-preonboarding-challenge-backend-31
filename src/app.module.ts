@@ -14,10 +14,14 @@ import { DrizzleModule } from '~/database/drizzle.module';
       envFilePath: '.env',
       validationSchema: z.object({
         DATABASE_URL: z.string(),
-      })
+      }),
     }),
-    ProductsModule, ReviewsModule, CategoriesModule, DrizzleModule],
+    ProductsModule,
+    ReviewsModule,
+    CategoriesModule,
+    DrizzleModule,
+  ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}
