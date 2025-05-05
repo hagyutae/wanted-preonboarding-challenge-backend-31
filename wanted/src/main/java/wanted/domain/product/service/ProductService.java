@@ -19,6 +19,7 @@ import wanted.domain.product.dto.request.ProductRequest;
 import wanted.domain.product.dto.response.ProductCreateResponse;
 import wanted.domain.product.dto.request.ProductImageRequest;
 import wanted.domain.product.dto.response.ProductDetailResponse;
+import wanted.domain.product.dto.response.ProductImageResponse;
 import wanted.domain.product.dto.response.ProductListResponse;
 import wanted.domain.product.dto.request.ProductOptionGroupRequest;
 import wanted.domain.product.dto.request.ProductOptionRequest;
@@ -189,6 +190,20 @@ public class ProductService {
         }
 
         productOptionRepository.delete(productOption);
+    }
+
+    @Transactional
+    public ProductImageResponse createProductImage(Long productId, ProductImageRequest productImageRequest) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Product", productId)));
+
+        ProductOption productOption = productOptionRepository.findById(productImageRequest.optionId())
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("option", productImageRequest.optionId())));
+
+        ProductImage productImage = ProductImage.from(productImageRequest, product, productOption);
+        productImageRepository.save(productImage);
+
+        return ProductImageResponse.of(productImage);
     }
 
     private void saveProductCategory(ProductRequest productRequest, Product product) {

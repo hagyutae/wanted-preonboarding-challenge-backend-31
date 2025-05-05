@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wanted.common.response.SuccessResponse;
+import wanted.domain.product.dto.request.ProductImageRequest;
 import wanted.domain.product.dto.request.ProductOptionRequest;
 import wanted.domain.product.dto.request.ProductRequest;
 import wanted.domain.product.dto.response.ProductCreateResponse;
@@ -64,5 +65,10 @@ public class ProductController {
     public ResponseEntity<?> deleteProductOption(@PathVariable(value = "id") Long productId, @PathVariable(value = "optionId") Long optionId) {
         productService.deleteProductOption(productId, optionId);
         return ResponseEntity.ok(SuccessResponse.ok(null));
+    }
+
+    @PostMapping("/{id}/images")
+    public ResponseEntity<?> createProductImage(@PathVariable(value = "id") Long productId, @Valid @RequestBody ProductImageRequest productImageRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(SuccessResponse.ok(productService.createProductImage(productId, productImageRequest)));
     }
 }
