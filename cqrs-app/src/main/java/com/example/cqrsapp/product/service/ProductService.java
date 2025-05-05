@@ -8,8 +8,10 @@ import com.example.cqrsapp.common.exception.ResourceNotFoundException;
 import com.example.cqrsapp.common.response.PageResponseDto;
 import com.example.cqrsapp.product.domain.*;
 import com.example.cqrsapp.product.dto.requset.RegisterProductDto;
+import com.example.cqrsapp.product.dto.requset.RegisterProductOptionDto;
 import com.example.cqrsapp.product.dto.requset.UpdateProductDto;
 import com.example.cqrsapp.product.dto.response.ProductResponse;
+import com.example.cqrsapp.product.dto.response.RegisterProductOptionResponseDto;
 import com.example.cqrsapp.product.dto.response.RegisterProductResponseDto;
 import com.example.cqrsapp.product.dto.response.UpdateProductResponse;
 import com.example.cqrsapp.product.repository.*;
@@ -43,6 +45,8 @@ public class ProductService {
     private final ProductTagRepository productTagRepository;
     private final SellerRepository sellerRepository;
     private final BrandRepository brandRepository;
+    private final ProductOptionGroupJapRepository productOptionGroupJapRepository;
+    private final ProductOptionRepository productOptionRepository;
     private final ProductMapper mapper;
 
     @Transactional(readOnly = true)
@@ -93,6 +97,15 @@ public class ProductService {
 
         updateProductSeries(product, dto);
         return UpdateProductResponse.fromEntity(product);
+    }
+
+    @Transactional
+    public RegisterProductOptionResponseDto addProductOption(Long productId, RegisterProductOptionDto dto) {
+        ProductOptionGroup productOptionGroup = findOptionGroup(dto.getOptionGroupId());
+        ProductOption productOption = mapper.mapProductOptionFromDto(productOptionGroup, dto);
+
+        productOptionRepository.save(productOption);
+        return RegisterProductOptionResponseDto.fromEntity(productOption);
     }
 
     @Transactional
@@ -165,4 +178,8 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Seller", String.valueOf(dto)));
     }
 
+    private ProductOptionGroup findOptionGroup(Long optionGroupID) {
+        return productOptionGroupJapRepository.findById(optionGroupID)
+                .orElseThrow(() -> new ResourceNotFoundException("OptionGroup", String.valueOf(optionGroupID)));
+    }
 }

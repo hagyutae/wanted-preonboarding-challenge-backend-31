@@ -2,6 +2,7 @@ package com.example.cqrsapp.product.service;
 
 import com.example.cqrsapp.product.domain.*;
 import com.example.cqrsapp.product.dto.requset.RegisterProductDto;
+import com.example.cqrsapp.product.dto.requset.RegisterProductOptionDto;
 import com.example.cqrsapp.seller.domain.Seller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,17 @@ public class ProductMapper {
                 .productPrice(toProductPrice(dto.getPrice()))
                 .productImages(dto.getImages().stream().map(this::toProductImage).toList())
                 .productOptionGroups(dto.getOptionGroups().stream().map(this::toProductOptionGroup).toList())
+                .build();
+    }
+
+    public ProductOption mapProductOptionFromDto(ProductOptionGroup productOptionGroup, RegisterProductOptionDto dto) {
+        return ProductOption.builder()
+                .optionGroup(productOptionGroup)
+                .name(dto.getName())
+                .additionalPrice(BigDecimal.valueOf(dto.getAdditionalPrice()))
+                .sku(dto.getSku())
+                .stock(dto.getStock())
+                .displayOrder(dto.getDisplayOrder())
                 .build();
     }
 
