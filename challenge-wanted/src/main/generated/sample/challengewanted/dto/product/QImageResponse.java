@@ -17,5 +17,9 @@ public class QImageResponse extends ConstructorExpression<ImageResponse> {
         super(ImageResponse.class, new Class<?>[]{String.class, String.class}, url, altText);
     }
 
+    public QImageResponse(com.querydsl.core.types.Expression<Long> id, com.querydsl.core.types.Expression<String> url, com.querydsl.core.types.Expression<String> altText, com.querydsl.core.types.Expression<Boolean> isPrimary, com.querydsl.core.types.Expression<Integer> displayOrder, com.querydsl.core.types.Expression<Long> optionId) {
+        super(ImageResponse.class, new Class<?>[]{long.class, String.class, String.class, boolean.class, int.class, long.class}, id, url, altText, isPrimary, displayOrder, optionId);
+    }
+
 }
 

@@ -17,5 +17,9 @@ public class QBrandResponse extends ConstructorExpression<BrandResponse> {
         super(BrandResponse.class, new Class<?>[]{long.class, String.class}, id, name);
     }
 
+    public QBrandResponse(com.querydsl.core.types.Expression<Long> id, com.querydsl.core.types.Expression<String> name, com.querydsl.core.types.Expression<String> description, com.querydsl.core.types.Expression<String> logoUrl, com.querydsl.core.types.Expression<String> website) {
+        super(BrandResponse.class, new Class<?>[]{long.class, String.class, String.class, String.class, String.class}, id, name, description, logoUrl, website);
+    }
+
 }
 

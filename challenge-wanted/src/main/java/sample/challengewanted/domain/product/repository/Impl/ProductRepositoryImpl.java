@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import static sample.challengewanted.domain.product.entity.QProductOptionGroup.*
 import static sample.challengewanted.domain.product.entity.QProductPrice.productPrice;
 import static sample.challengewanted.domain.seller.QSeller.seller;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
@@ -95,6 +97,67 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .fetchOne();
 
         return new PageImpl<>(content, pageable, total == null ? 0 : total);
+    }
+
+    @Override
+    public ProductResponseV1 findProductById(Long id) {
+
+        try {
+            return queryFactory.
+                    select(new QProductResponseV1(
+                            product.id,
+                            product.name,
+                            product.slug,
+                            product.shortDescription,
+                            product.fullDescription,
+                            product.status,
+                            product.createdAt,
+                            product.updatedAt,
+                            new QSellerResponse(
+                                    seller.id,
+                                    seller.name,
+                                    seller.description,
+                                    seller.logoUrl,
+                                    seller.rating,
+                                    seller.contactEmail,
+                                    seller.contactPhone
+                            ),
+                            new QBrandResponse(
+                                    brand.id,
+                                    brand.name,
+                                    brand.description,
+                                    brand.logoUrl,
+                                    brand.website
+                            ),
+                            new QProductDetailResponse(
+                                    productDetail.weight,
+                                    productDetail.dimensions,
+                                    productDetail.material,
+                                    productDetail.countryOfOrigin,
+                                    productDetail.warrantyInfo,
+                                    productDetail.careInstructions,
+                                    productDetail.additionalInfo
+                            ),
+                            new QProductPriceResponse(
+                                    productPrice.basePrice,
+                                    productPrice.salePrice,
+                                    productPrice.currency,
+                                    productPrice.taxRate
+                            )
+                    ))
+                    .from(product)
+                    .leftJoin(product.brand, brand)
+                    .leftJoin(product.seller, seller)
+                    .leftJoin(product.productDetail, productDetail)
+                    .leftJoin(product.price, productPrice)
+                    .where(product.id.eq(id))
+                    .fetchOne();
+        } catch(Exception e) {
+            e.printStackTrace();
+            log.error("check log = {}", e.getMessage());
+        }
+
+        return null;
     }
 
     // ====== 동적 where 조건 ======

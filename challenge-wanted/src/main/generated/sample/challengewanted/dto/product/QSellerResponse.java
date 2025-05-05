@@ -17,5 +17,9 @@ public class QSellerResponse extends ConstructorExpression<SellerResponse> {
         super(SellerResponse.class, new Class<?>[]{long.class, String.class}, id, name);
     }
 
+    public QSellerResponse(com.querydsl.core.types.Expression<Long> id, com.querydsl.core.types.Expression<String> name, com.querydsl.core.types.Expression<String> description, com.querydsl.core.types.Expression<String> logoUrl, com.querydsl.core.types.Expression<Double> rating, com.querydsl.core.types.Expression<String> contactEmail, com.querydsl.core.types.Expression<String> contactPhone) {
+        super(SellerResponse.class, new Class<?>[]{long.class, String.class, String.class, String.class, double.class, String.class, String.class}, id, name, description, logoUrl, rating, contactEmail, contactPhone);
+    }
+
 }
 

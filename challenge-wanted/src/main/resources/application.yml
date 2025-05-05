@@ -1,0 +1,40 @@
+server:
+  servlet:
+    context-path: /api
+
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: junghanso
+    password: tysiab43@@
+
+  jpa:
+    hibernate:
+      ddl-auto: none # 필요 시 create, create-drop, validate 등으로 변경
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: wanted
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  # 필요 시 로깅 수준 설정
+logging:
+  level:
+     com.p6spy: debug
+#    org.hibernate.SQL: debug
+#    org.hibernate.type.descriptor.sql: trace
+#    org.hibernate.type: trace
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+      multiline: true   # ✅ 줄바꿈
+      log-format: multiline  # ✅ logMessageFormat 대응값
+      logging: slf4j     # 콘솔에 찍히게

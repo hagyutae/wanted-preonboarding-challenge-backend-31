@@ -20,6 +20,7 @@ import sample.challengewanted.domain.product.repository.ProductDetailRepository;
 import sample.challengewanted.domain.product.repository.ProductPriceRepository;
 import sample.challengewanted.domain.product.repository.ProductRepository;
 import sample.challengewanted.domain.seller.Seller;
+import sample.challengewanted.dto.product.ProductResponseV1;
 import sample.challengewanted.dto.product.ProductSearchCondition;
 
 import java.util.List;
@@ -60,5 +61,9 @@ public class ProductService {
 
     public Page<?> selectProducts(ProductSearchCondition condition, Pageable pageable) {
         return productRepository.searchProducts(condition, pageable);
+    }
+
+    public ProductResponseV1 findProductById(Long productId) {
+        return productRepository.findProductById(productId);
     }
 }
