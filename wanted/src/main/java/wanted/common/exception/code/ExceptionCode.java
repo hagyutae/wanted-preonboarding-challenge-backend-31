@@ -6,5 +6,4 @@ public interface ExceptionCode {
     String getCode();
     HttpStatus getStatus();
     String getMessage();
-    String getDetails();
 }

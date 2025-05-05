@@ -8,4 +8,5 @@ import wanted.common.exception.code.ExceptionCode;
 @AllArgsConstructor
 public class CustomException extends RuntimeException{
     private final ExceptionCode exceptionCode;
+    private final Object details;
 }
