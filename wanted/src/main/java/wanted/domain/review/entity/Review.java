@@ -7,16 +7,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wanted.common.entity.BaseCreateUpdateEntity;
 import wanted.domain.product.entity.Product;
 import wanted.domain.user.entity.User;
 
 @Entity(name = "reviews")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review extends BaseCreateUpdateEntity {
     @Id

@@ -9,12 +9,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wanted.domain.product.dto.ProductPriceRequest;
 
 import java.math.BigDecimal;
 
 @Entity(name = "product_prices")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductPrice {
     @Id

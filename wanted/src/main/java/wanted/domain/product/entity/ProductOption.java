@@ -10,14 +10,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import wanted.domain.product.dto.ProductOptionRequest;
 
 import java.math.BigDecimal;
 
 @Entity(name = "product_options")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOption {
     @Id

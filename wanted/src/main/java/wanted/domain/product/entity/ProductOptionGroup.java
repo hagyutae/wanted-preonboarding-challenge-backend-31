@@ -1,5 +1,7 @@
 package wanted.domain.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,14 +10,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import wanted.domain.product.dto.ProductOptionGroupRequest;
 
+import java.util.List;
+
 @Entity(name = "product_option_groups")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOptionGroup {
     @Id
@@ -30,6 +35,11 @@ public class ProductOptionGroup {
     private String name;
 
     private int displayOrder;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.REMOVE)
+    private List<ProductOption> Options;
+
 
     @Builder
     public ProductOptionGroup(Product product, String name, int displayOrder) {
