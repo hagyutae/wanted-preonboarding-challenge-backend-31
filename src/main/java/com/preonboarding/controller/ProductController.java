@@ -5,11 +5,13 @@ import com.preonboarding.dto.request.product.*;
 import com.preonboarding.dto.request.review.ProductReviewRequestDto;
 import com.preonboarding.dto.response.product.ProductImageResponse;
 import com.preonboarding.dto.response.product.ProductOptionResponse;
+import com.preonboarding.dto.response.product.ProductPageResponse;
 import com.preonboarding.dto.response.product.ProductResponse;
-import com.preonboarding.dto.response.review.ProductReviewResponse;
-import com.preonboarding.dto.response.review.SummaryResponse;
+import com.preonboarding.dto.response.review.ProductReviewPageResponse;
+import com.preonboarding.dto.response.review.ReviewSummaryResponse;
 import com.preonboarding.global.response.BaseResponse;
-import com.preonboarding.global.response.paging.PageBaseResponse;
+import com.preonboarding.global.response.paging.ProductPageBaseResponse;
+import com.preonboarding.global.response.paging.ReviewPageBaseResponse;
 import com.preonboarding.service.brand.BrandService;
 import com.preonboarding.service.category.CategoryService;
 import com.preonboarding.service.product.ProductService;
@@ -32,12 +34,17 @@ public class ProductController {
     private final BrandService brandService;
     private final TagService tagService;
 
+    @GetMapping
+    public ResponseEntity<ProductPageBaseResponse<ProductPageResponse>> getProduct(@ModelAttribute ProductSearchRequestDto dto) {
+        return ResponseEntity.ok(productService.getProduct(dto));
+    }
+
     @GetMapping("/{id}/reviews")
-    public ResponseEntity<PageBaseResponse<ProductReviewResponse, SummaryResponse>> getProductReviews(@PathVariable("id") Long id,
-                                                                                                      @RequestParam(required = false) Integer page,
-                                                                                                      @RequestParam(required = false) Integer perPage,
-                                                                                                      @RequestParam(required = false) String sort,
-                                                                                                      @RequestParam(required = false) Integer rating) {
+    public ResponseEntity<ReviewPageBaseResponse<ProductReviewPageResponse, ReviewSummaryResponse>> getProductReviews(@PathVariable("id") Long id,
+                                                                                                                      @RequestParam(required = false) Integer page,
+                                                                                                                      @RequestParam(required = false) Integer perPage,
+                                                                                                                      @RequestParam(required = false) String sort,
+                                                                                                                      @RequestParam(required = false) Integer rating) {
         return ResponseEntity.ok(productService.getProductReviews(id,page,perPage,sort,rating));
     }
 
@@ -65,7 +72,7 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/reviews")
-    public ResponseEntity<BaseResponse<ProductReviewResponse>> addProductReview(@PathVariable("id") Long id,@RequestBody ProductReviewRequestDto dto) {
+    public ResponseEntity<BaseResponse<ProductReviewPageResponse>> addProductReview(@PathVariable("id") Long id, @RequestBody ProductReviewRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.addProductReview(id,dto));
     }
 

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SummaryResponse {
+public class ReviewSummaryResponse {
     private double averageRating;
     private long totalCount;
     private DistributionDto distribution;

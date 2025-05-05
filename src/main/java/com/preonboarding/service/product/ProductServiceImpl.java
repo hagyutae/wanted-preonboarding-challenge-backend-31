@@ -3,16 +3,18 @@ package com.preonboarding.service.product;
 import com.preonboarding.domain.*;
 import com.preonboarding.dto.request.product.*;
 import com.preonboarding.dto.request.review.ProductReviewRequestDto;
-import com.preonboarding.dto.response.review.SummaryResponse;
+import com.preonboarding.dto.response.product.ProductPageResponse;
+import com.preonboarding.dto.response.review.ReviewSummaryResponse;
 import com.preonboarding.dto.response.product.ProductImageResponse;
 import com.preonboarding.dto.response.product.ProductOptionResponse;
 import com.preonboarding.dto.response.product.ProductResponse;
-import com.preonboarding.dto.response.review.ProductReviewResponse;
+import com.preonboarding.dto.response.review.ProductReviewPageResponse;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
 import com.preonboarding.global.response.BaseResponse;
 import com.preonboarding.global.response.ErrorResponseDto;
-import com.preonboarding.global.response.paging.PageBaseResponse;
+import com.preonboarding.global.response.paging.ProductPageBaseResponse;
+import com.preonboarding.global.response.paging.ReviewPageBaseResponse;
 import com.preonboarding.global.response.paging.PaginationDto;
 import com.preonboarding.global.response.paging.PagingDataDto;
 import com.preonboarding.repository.product.ProductOptionGroupRepository;
@@ -42,28 +44,57 @@ public class ProductServiceImpl implements ProductService {
     private final ReviewRepository reviewRepository;
 
     @Override
+    @Transactional
+    public ProductPageBaseResponse<ProductPageResponse> getProduct(ProductSearchRequestDto dto) {
+        int pageNum = dto.getPage()!=null ? Math.max(0,dto.getPage()-1):0;
+        int elementNum = dto.getPerPage()!=null ? dto.getPerPage():10;
+
+        Sort sortValue = PagingUtil.getProductPagingSort(dto.getSort());
+        Pageable pageable = PageRequest.of(pageNum,elementNum,sortValue);
+
+        Page<Product> productList = productRepository.findProductsBySearch(pageable,dto);
+        PaginationDto paginationDto = PaginationDto.from(productList,pageNum,elementNum);
+
+        List<ProductPageResponse> productPageResponseList = productList.getContent().stream()
+                .map(product -> {
+                    ReviewSummaryResponse reviewSummaryResponse = Review.createSummaryResponse(product.getReviewList());
+                    return ProductPageResponse.from(product,reviewSummaryResponse);
+                })
+                .toList();
+
+        PagingDataDto<ProductPageResponse> pagingDataDto = new PagingDataDto<>(productPageResponseList);
+
+        return ProductPageBaseResponse.<ProductPageResponse>builder()
+                .success(true)
+                .data(pagingDataDto)
+                .pagination(paginationDto)
+                .message("상품 목록을 성공적으로 조회했습니다.")
+                .build();
+    }
+
+    @Override
     @Transactional(readOnly = true)
-    public PageBaseResponse<ProductReviewResponse, SummaryResponse> getProductReviews(Long id,Integer page, Integer perPage, String sort, Integer rating) {
+    public ReviewPageBaseResponse<ProductReviewPageResponse, ReviewSummaryResponse> getProductReviews(Long id, Integer page, Integer perPage, String sort, Integer rating) {
         int pageNum = page!=null ? Math.max(0,page-1):0;
         int elementNum = perPage!=null ? perPage:10;
 
-        Sort sortValue = PagingUtil.getPagingSort(sort);
+        Sort sortValue = PagingUtil.getReviewPagingSort(sort);
         Pageable pageRequest = PageRequest.of(pageNum,elementNum,sortValue);
 
         Page<Review> reviewList = reviewRepository.findReviewsWithPaging(id,pageRequest,rating);
-        SummaryResponse summaryResponse = Review.createSummaryResponse(reviewList);
+        ReviewSummaryResponse reviewSummaryResponse = Review.createSummaryResponse(reviewList.getContent());
 
         PaginationDto paginationDto = PaginationDto.from(reviewList,pageNum,elementNum);
 
-        List<ProductReviewResponse> reviewResponseList = reviewList.stream()
-                .map(ProductReviewResponse::of)
+        List<ProductReviewPageResponse> reviewResponseList = reviewList.stream()
+                .map(ProductReviewPageResponse::of)
                 .toList();
-        PagingDataDto<ProductReviewResponse> pagingDataDto = new PagingDataDto<>(reviewResponseList);
+        PagingDataDto<ProductReviewPageResponse> pagingDataDto = new PagingDataDto<>(reviewResponseList);
 
-        return PageBaseResponse.<ProductReviewResponse, SummaryResponse>builder()
+        return ReviewPageBaseResponse.<ProductReviewPageResponse, ReviewSummaryResponse>builder()
                 .success(true)
                 .data(pagingDataDto)
-                .summary(summaryResponse)
+                .summary(reviewSummaryResponse)
                 .pagination(paginationDto)
                 .message("상품 리뷰를 성공적으로 조회했습니다.")
                 .build();
@@ -226,7 +257,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public BaseResponse<ProductReviewResponse> addProductReview(Long id, ProductReviewRequestDto dto) {
+    public BaseResponse<ProductReviewPageResponse> addProductReview(Long id, ProductReviewRequestDto dto) {
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findById(userId)
@@ -239,9 +270,9 @@ public class ProductServiceImpl implements ProductService {
         review.updateUser(user);
         review.updateProduct(product);
 
-        ProductReviewResponse reviewResponse = ProductReviewResponse.of(review);
+        ProductReviewPageResponse reviewResponse = ProductReviewPageResponse.of(review);
 
-        return BaseResponse.<ProductReviewResponse>builder()
+        return BaseResponse.<ProductReviewPageResponse>builder()
                 .success(true)
                 .data(reviewResponse)
                 .message("리뷰가 성공적으로 등록되었습니다.")

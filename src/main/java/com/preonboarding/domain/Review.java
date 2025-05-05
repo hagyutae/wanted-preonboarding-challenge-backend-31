@@ -1,7 +1,7 @@
 package com.preonboarding.domain;
 
 import com.preonboarding.dto.request.review.ProductReviewRequestDto;
-import com.preonboarding.dto.response.review.SummaryResponse;
+import com.preonboarding.dto.response.review.ReviewSummaryResponse;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
 import com.preonboarding.global.response.ErrorResponseDto;
@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -101,20 +102,20 @@ public class Review {
         }
     }
 
-    public static SummaryResponse createSummaryResponse(Page<Review> fetchedReviewList) {
+    public static ReviewSummaryResponse createSummaryResponse(List<Review> fetchedReviewList) {
         double averageRating = calculateAverageRating(fetchedReviewList);
         int totalFetchedCount = getFetchedReviewCount(fetchedReviewList);
 
-        SummaryResponse.DistributionDto distributionDto = calculateRatingDistribution(fetchedReviewList);
+        ReviewSummaryResponse.DistributionDto distributionDto = calculateRatingDistribution(fetchedReviewList);
 
-        return SummaryResponse.builder()
+        return ReviewSummaryResponse.builder()
                 .averageRating(averageRating)
                 .totalCount(totalFetchedCount)
                 .distribution(distributionDto)
                 .build();
     }
 
-    private static double calculateAverageRating(Page<Review> fetchedReviewList) {
+    public static double calculateAverageRating(List<Review> fetchedReviewList) {
         if (fetchedReviewList.isEmpty()) return 0.0;
 
         double average = fetchedReviewList.stream()
@@ -127,11 +128,11 @@ public class Review {
                 .doubleValue();
     }
 
-    private static int getFetchedReviewCount(Page<Review> fetchedReviewList) {
-        return fetchedReviewList.getSize();
+    public static int getFetchedReviewCount(List<Review> fetchedReviewList) {
+        return fetchedReviewList.size();
     }
 
-    private static SummaryResponse.DistributionDto calculateRatingDistribution(Page<Review> fetchedReviewList) {
+    private static ReviewSummaryResponse.DistributionDto calculateRatingDistribution(List<Review> fetchedReviewList) {
         int[] ratingCounts = new int[6];
 
         fetchedReviewList.forEach(review -> {
@@ -139,7 +140,7 @@ public class Review {
             ratingCounts[rating] ++;
         });
 
-        return SummaryResponse.DistributionDto.builder()
+        return ReviewSummaryResponse.DistributionDto.builder()
                 .rating5(ratingCounts[5])
                 .rating4(ratingCounts[4])
                 .rating3(ratingCounts[3])

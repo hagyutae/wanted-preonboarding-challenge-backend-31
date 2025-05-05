@@ -22,7 +22,7 @@ public class PaginationDto {
         return PaginationDto.builder()
                 .totalItems(fetchedList.getTotalElements())
                 .totalPages(fetchedList.getTotalPages())
-                .currentPage(currentPage)
+                .currentPage(currentPage+1)
                 .perPage(perPage)
                 .build();
     }

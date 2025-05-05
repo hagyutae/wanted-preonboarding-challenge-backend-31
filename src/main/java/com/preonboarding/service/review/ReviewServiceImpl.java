@@ -3,7 +3,7 @@ package com.preonboarding.service.review;
 import com.preonboarding.domain.Review;
 import com.preonboarding.domain.User;
 import com.preonboarding.dto.request.review.ProductReviewRequestDto;
-import com.preonboarding.dto.response.review.ProductReviewResponse;
+import com.preonboarding.dto.response.review.ProductReviewPageResponse;
 import com.preonboarding.global.code.ErrorCode;
 import com.preonboarding.global.response.BaseException;
 import com.preonboarding.global.response.BaseResponse;
@@ -25,7 +25,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public BaseResponse<ProductReviewResponse> editReview(Long id,ProductReviewRequestDto dto) {
+    public BaseResponse<ProductReviewPageResponse> editReview(Long id, ProductReviewRequestDto dto) {
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findById(userId)
@@ -36,7 +36,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.validateUser(user);
         review.updateReview(dto);
 
-        ProductReviewResponse response = ProductReviewResponse.builder()
+        ProductReviewPageResponse response = ProductReviewPageResponse.builder()
                 .id(user.getId())
                 .rating(review.getRating())
                 .title(review.getTitle())
@@ -44,7 +44,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .updatedAt(review.getUpdatedAt())
                 .build();
 
-        return BaseResponse.<ProductReviewResponse>builder()
+        return BaseResponse.<ProductReviewPageResponse>builder()
                 .success(true)
                 .data(response)
                 .message("리뷰가 성공적으로 수정되었습니다.")
@@ -53,7 +53,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public BaseResponse<ProductReviewResponse> deleteReview(Long id) {
+    public BaseResponse<ProductReviewPageResponse> deleteReview(Long id) {
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findById(userId)
@@ -64,7 +64,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.validateUser(user);
         reviewRepository.delete(review);
 
-        return BaseResponse.<ProductReviewResponse>builder()
+        return BaseResponse.<ProductReviewPageResponse>builder()
                 .success(true)
                 .data(null)
                 .message("리뷰가 성공적으로 삭제되었습니다.")
