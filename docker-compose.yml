@@ -2,23 +2,23 @@ version: "3.8"
 
 services:
   database:
-    image: postgres:14
+    image: postgres:latest
     container_name: database
     networks:
       - network
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
     environment:
-      POSTGRES_DB: db
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pswd
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./data:/docker-entrypoint-initdb.d
 
   server:
     depends_on:
       - database
-    image: e-commerce-server
+    image: e-commerce-server:${VERSION}
     container_name: server
     build:
       context: .
@@ -31,6 +31,7 @@ services:
       - .env
     environment:
       - DB_HOST=database
+      - DB_PORT=5432
 
 networks:
   network:

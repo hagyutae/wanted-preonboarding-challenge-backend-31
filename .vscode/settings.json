@@ -4,7 +4,6 @@
     ".gitignore": ".gitattributes",
     "tsconfig.json": "tsconfig.*.json",
     "*.ts": "$(capture).spec.ts, $(capture).test.ts",
-    "index.ts": "*.ts",
     "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig, nest-cli.json",
     "jest.config.ts": "jest.setup.ts",
     "docker-compose.yml": "Dockerfile"
