@@ -1,5 +1,6 @@
 package com.shopping.mall.product.service;
 
+import com.shopping.mall.common.exception.ConflictException;
 import com.shopping.mall.common.exception.ResourceNotFoundException;
 import com.shopping.mall.product.dto.request.ProductOptionCreateRequest;
 import com.shopping.mall.product.dto.request.ProductOptionUpdateRequest;
@@ -62,5 +63,20 @@ public class ProductOptionService {
                 request.getStock(),
                 request.getDisplayOrder()
         );
+    }
+
+    @Transactional
+    public void deleteOption(Long productId, Long optionId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("상품을 찾을 수 없습니다."));
+
+        ProductOption option = productOptionRepository.findById(optionId)
+                .orElseThrow(() -> new ResourceNotFoundException("옵션을 찾을 수 없습니다."));
+
+        if (!option.getOptionGroup().getProduct().getId().equals(productId)) {
+            throw new ConflictException("해당 상품의 옵션이 아닙니다.");
+        }
+
+        productOptionRepository.delete(option);
     }
 }

@@ -33,4 +33,14 @@ public class ProductOptionController {
         productOptionService.updateOption(optionId, request);
         return ResponseEntity.ok(ApiResponse.success(null, "상품 옵션이 성공적으로 수정되었습니다."));
     }
+
+    @DeleteMapping("/{productId}/options/{optionId}")
+    public ResponseEntity<?> deleteOption(
+            @PathVariable Long productId,
+            @PathVariable Long optionId) {
+
+        productOptionService.deleteOption(productId, optionId);
+
+        return ResponseEntity.ok(ApiResponse.success(null, "상품 옵션이 성공적으로 삭제되었습니다."));
+    }
 }
