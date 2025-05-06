@@ -24,8 +24,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import minseok.cqrschallenge.brand.entity.Brand;
 import minseok.cqrschallenge.seller.entity.Seller;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -36,8 +34,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE products SET status = 'DELETED' WHERE id = ?")
-@SQLRestriction("status != 'DELETED'")
+//@SQLDelete(sql = "UPDATE products SET status = 'DELETED' WHERE id = ?")
+//@SQLRestriction("status != 'DELETED'")
 public class Product {
 
     @Id

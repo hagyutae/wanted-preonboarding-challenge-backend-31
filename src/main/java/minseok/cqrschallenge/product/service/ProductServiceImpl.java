@@ -93,16 +93,23 @@ public class ProductServiceImpl implements ProductService {
         
        product.delete();
     }
-    
+
     private Pageable createPageable(int page, int perPage, String sort) {
         String[] sortParts = sort.split(":");
-        String sortField = sortParts[0];
-        Sort.Direction direction = sortParts.length > 1 && sortParts[1].equalsIgnoreCase("asc") 
-                ? Sort.Direction.ASC : Sort.Direction.DESC;
-        
+        String sortField = convertSortField(sortParts[0]);
+        Sort.Direction direction = sortParts.length > 1 && sortParts[1].equalsIgnoreCase("asc")
+            ? Sort.Direction.ASC : Sort.Direction.DESC;
+
         return PageRequest.of(page - 1, perPage, Sort.by(direction, sortField));
     }
-    
+
+    private String convertSortField(String fieldName) {
+        return switch (fieldName) {
+            case "created_at" -> "createdAt";
+            case "updated_at" -> "updatedAt";
+            default -> fieldName;
+        };
+    }
     private Product convertToEntity(ProductCreateRequest request) {
         return Product.builder()
                 .name(request.getName())
@@ -119,12 +126,12 @@ public class ProductServiceImpl implements ProductService {
                 .id(product.getId())
                 .name(product.getName())
                 .slug(product.getSlug())
-                .shortDescription(product.getShortDescription())
-                .basePrice(product.getPrice().getBasePrice())
-                .salePrice(product.getPrice().getSalePrice())
+                .short_description(product.getShortDescription())
+                .base_price(product.getPrice().getBasePrice())
+                .sale_price(product.getPrice().getSalePrice())
                 .currency(product.getPrice().getCurrency())
                 .status(product.getStatus().name())
-                .createdAt(product.getCreatedAt())
+                .created_at(product.getCreatedAt())
                 .build();
     }
     
