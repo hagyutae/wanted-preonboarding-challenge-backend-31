@@ -102,7 +102,9 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
-        
+        if (product.isDeleted()) {
+            throw new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다.");
+        }
        product.delete();
     }
 
@@ -206,7 +208,6 @@ public class ProductServiceImpl implements ProductService {
                     .collect(Collectors.toList());
             }
 
-            // 다른 리스트 필드들도 처리
             List<ProductDetailResponse.OptionGroupInfo> optionGroups = null;
             if (product.getOptionGroups() != null && !product.getOptionGroups().isEmpty()) {
                 optionGroups = product.getOptionGroups().stream()
@@ -223,7 +224,8 @@ public class ProductServiceImpl implements ProductService {
                                 .stock(opt.getStock())
                                 .displayOrder(opt.getDisplayOrder())
                                 .build())
-                            .collect(Collectors.toList()))                        .build())
+                            .collect(Collectors.toList()))
+                        .build())
                     .collect(Collectors.toList());
             }
 
