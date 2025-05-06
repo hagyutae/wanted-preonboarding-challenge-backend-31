@@ -154,4 +154,9 @@ public class ProductService {
                 addOptionRequest.getStock(),
                 addOptionRequest.getDisplayOrder());
     }
+
+    @Transactional
+    public void deleteOption(Long productId, Long optionId) {
+        productOptionService.deleteOption(optionId);
+    }
 }

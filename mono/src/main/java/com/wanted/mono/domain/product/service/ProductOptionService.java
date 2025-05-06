@@ -4,6 +4,7 @@ import com.wanted.mono.domain.product.dto.request.ProductOptionRequest;
 import com.wanted.mono.domain.product.entity.ProductOption;
 import com.wanted.mono.domain.product.entity.ProductOptionGroup;
 import com.wanted.mono.domain.product.repository.ProductOptionRepository;
+import com.wanted.mono.global.exception.ProductOptionGroupEmptyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,13 @@ public class ProductOptionService {
         productOption.addOptionGroup(productOptionGroup);
         productOptionRepository.save(productOption);
         return productOption.getId();
+    }
+
+    @Transactional
+    public void deleteOption(Long optionId) {
+        if (!productOptionRepository.existsById(optionId)) {
+            throw new ProductOptionGroupEmptyException();
+        }
+        productOptionRepository.deleteProductOptionById(optionId);
     }
 }

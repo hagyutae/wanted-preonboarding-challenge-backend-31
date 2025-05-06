@@ -122,4 +122,19 @@ public class ProductController {
                 .body(CommonResponse.success(saveResponse, messageUtil.get(PRODUCT_OPTION_CREATE_SUCCESS)));
     }
 
+    /**
+     * DELETE /api/products/{id}/options/{optionId}
+     * 특정 상품의 옵션을 삭제합니다.
+     * @param productId
+     * @param optionId
+     * @return
+     */
+    @DeleteMapping("/{productId}/options/{optionId}")
+    public ResponseEntity<?> removeOption(@PathVariable Long productId, @PathVariable Long optionId) {
+        productService.deleteOption(productId, optionId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(CommonResponse.success(null, messageUtil.get(PRODUCT_OPTION_DELETE_SUCCESS)));
+    }
+
 }
