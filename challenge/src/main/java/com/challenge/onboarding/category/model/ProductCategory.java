@@ -1,6 +1,6 @@
 package com.challenge.onboarding.category.model;
 
-import com.challenge.onboarding.product.domain.Product;
+import com.challenge.onboarding.product.domain.model.Product;
 import com.challenge.onboarding.product.service.dto.request.CreateProductRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,9 @@
-package com.challenge.onboarding.product.domain;
+package com.challenge.onboarding.product.domain.model;
 
 import com.challenge.onboarding.product.service.dto.request.CreateProductRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "products")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Product {
 
     @Id
@@ -66,6 +68,13 @@ public class Product {
         this.updatedAt = LocalDateTime.now();
         this.seller = seller;
         this.brand = brand;
+    }
+
+    public boolean isAvailable(boolean isInStock) {
+        if (isInStock) {
+            return this.status == Status.AVAILABLE;
+        }
+        return true;
     }
 
 }

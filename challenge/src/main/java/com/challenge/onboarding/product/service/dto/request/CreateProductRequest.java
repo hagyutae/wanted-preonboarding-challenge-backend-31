@@ -1,7 +1,5 @@
 package com.challenge.onboarding.product.service.dto.request;
 
-import com.challenge.onboarding.product.domain.ProductDetail;
-
 import java.util.List;
 
 public record CreateProductRequest(

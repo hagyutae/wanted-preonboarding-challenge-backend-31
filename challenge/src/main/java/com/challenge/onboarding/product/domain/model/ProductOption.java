@@ -1,4 +1,4 @@
-package com.challenge.onboarding.product.domain;
+package com.challenge.onboarding.product.domain.model;
 
 import com.challenge.onboarding.product.service.dto.request.CreateProductRequest;
 import jakarta.persistence.*;

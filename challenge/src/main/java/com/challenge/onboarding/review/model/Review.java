@@ -1,5 +1,5 @@
 package com.challenge.onboarding.review.model;
-import com.challenge.onboarding.product.domain.Product;
+import com.challenge.onboarding.product.domain.model.Product;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

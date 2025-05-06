@@ -1,4 +1,4 @@
-package com.challenge.onboarding.product.domain;
+package com.challenge.onboarding.product.domain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
