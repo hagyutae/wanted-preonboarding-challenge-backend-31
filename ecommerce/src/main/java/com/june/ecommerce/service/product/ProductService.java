@@ -23,6 +23,8 @@ import com.june.ecommerce.dto.option.ProductOptionGroupDto;
 import com.june.ecommerce.dto.product.*;
 import com.june.ecommerce.dto.product.create.*;
 import com.june.ecommerce.dto.rating.RatingDto;
+import com.june.ecommerce.global.error.ErrorCode;
+import com.june.ecommerce.global.exception.BusinessException;
 import com.june.ecommerce.repository.brand.BrandRepository;
 import com.june.ecommerce.repository.category.CategoryRepository;
 import com.june.ecommerce.repository.category.ProductCategoryRepository;
@@ -37,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,14 +68,14 @@ public class ProductService {
      * @return
      */
     @Transactional
-    public Product createProduct(ProductCreateDto dto) throws JsonProcessingException {
+    public Product createProduct(ProductCreateDto dto) {
 
         // 상품 기본 정보 등록
         Seller seller = sellerRepository.findById(dto.getSellerId())
-                .orElseThrow(() -> new IllegalArgumentException("판매자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT, "상품 등록에 실패했습니다."));
 
         Brand brand = brandRepository.findById(dto.getBrandId())
-                .orElseThrow(() -> new IllegalArgumentException("브랜드를 찾을 수 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT, "상품 등록에 실패했습니다."));
 
         Product product = Product.builder()
                 .name(dto.getName())
@@ -86,18 +89,25 @@ public class ProductService {
 
         // 상품 상세 정보 등록
         ObjectMapper mapper = new ObjectMapper();
-        String dimessionsJson = mapper.writeValueAsString(dto.getDetail().getDimensions());
-        String addtionalInfoJson = mapper.writeValueAsString(dto.getDetail().getAdditionalInfo());
+        String dimensionsJson = "";
+        String additionalInfoJson = "";
+
+        try {
+            dimensionsJson = mapper.writeValueAsString(dto.getDetail().getDimensions());
+            additionalInfoJson = mapper.writeValueAsString(dto.getDetail().getAdditionalInfo());
+        } catch (JsonProcessingException e) {
+            new BusinessException(ErrorCode.INVALID_INPUT, "상품 등록에 실패했습니다.");
+        }
 
         ProductDetail detail = ProductDetail.builder()
                 .product(product)
                 .weight(dto.getDetail().getWeight())
-                .dimensions(dimessionsJson)
+                .dimensions(dimensionsJson)
                 .materials(dto.getDetail().getMaterials())
                 .countryOfOrigin(dto.getDetail().getCountryOfOrigin())
                 .warrantyInfo(dto.getDetail().getWarrantyInfo())
                 .careInstructions(dto.getDetail().getCareInstructions())
-                .additionalInfo(addtionalInfoJson)
+                .additionalInfo(additionalInfoJson)
                 .build();
         productDetailRepository.save(detail);
 
