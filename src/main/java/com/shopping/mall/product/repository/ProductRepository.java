@@ -73,4 +73,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     """)
     List<Product> findByCategory(@Param("categoryId") Long categoryId);
 
+    // 신규 상품 10개
+    List<Product> findTop10ByOrderByCreatedAtDesc();
+
+    // 카테고리별 인기 상품 (createdAt 기준으로 상위 5개)
+    @Query("""
+        SELECT p
+        FROM ProductCategory pc
+        JOIN pc.product p
+        WHERE pc.category.id = :categoryId
+          AND p.status = 'ACTIVE'
+        ORDER BY p.createdAt DESC
+    """)
+    List<Product> findTop5ByCategory(@Param("categoryId") Long categoryId);
+
 }
