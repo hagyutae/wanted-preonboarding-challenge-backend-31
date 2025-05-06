@@ -1,5 +1,6 @@
 package minseok.cqrschallenge.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,10 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
     private boolean success;
     private T data;
     private String message;
+    private ErrorResponse error;
 
     public static <T> ApiResponse<T> success(T data, String message) {
         return ApiResponse.<T>builder()
@@ -22,11 +25,10 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    public static <T> ApiResponse<T> error(T data, String message) {
+    public static <T> ApiResponse<T> error(ErrorResponse errorResponse, String message) {
         return ApiResponse.<T>builder()
                 .success(false)
-                .data(data)
-                .message(message)
+                .error(errorResponse)
                 .build();
     }
 }
