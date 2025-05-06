@@ -8,7 +8,9 @@ public enum MessageCode {
     PRODUCT_DELETE_FAIL("product.delete.fail"),
     PRODUCT_SEARCH_SUCCESS("product.search.success"),
     PRODUCT_DETAIL_SUCCESS("product.detail.success"),
-    PRODUCT_UPDATE_SUCCESS("product.update.success");
+    PRODUCT_UPDATE_SUCCESS("product.update.success"),
+    PRODUCT_DELETE_SUCCESS("product.delete.success");
+
     private final String code;
 
     MessageCode(String code) {
