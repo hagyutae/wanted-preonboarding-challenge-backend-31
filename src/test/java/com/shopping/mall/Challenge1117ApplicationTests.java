@@ -1,4 +1,4 @@
-package com.shopping.mall.challenge1117;
+package com.shopping.mall;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
