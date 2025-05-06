@@ -1,11 +1,9 @@
 package com.wanted.mono.domain.product.controller;
 
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
+import com.wanted.mono.domain.product.dto.model.ProductImageDto;
 import com.wanted.mono.domain.product.dto.model.ProductInfoDto;
-import com.wanted.mono.domain.product.dto.request.ProductAddOptionRequest;
-import com.wanted.mono.domain.product.dto.request.ProductOptionRequest;
-import com.wanted.mono.domain.product.dto.request.ProductRequest;
-import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
+import com.wanted.mono.domain.product.dto.request.*;
 import com.wanted.mono.domain.product.dto.response.ProductOptionSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSearchResponse;
@@ -137,4 +135,11 @@ public class ProductController {
                 .body(CommonResponse.success(null, messageUtil.get(PRODUCT_OPTION_DELETE_SUCCESS)));
     }
 
+    @PostMapping("/{productId}/images")
+    public ResponseEntity<?> addImage(@PathVariable Long productId, @Valid @RequestBody ProductImageRequest productImageRequest) {
+        ProductImageDto response = productService.addImage(productId, productImageRequest);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(CommonResponse.success(response, messageUtil.get(PRODUCT_IMAGE_CREATE_SUCCESS)));
+    }
 }
