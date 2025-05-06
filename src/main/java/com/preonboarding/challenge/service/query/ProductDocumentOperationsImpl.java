@@ -1,13 +1,20 @@
 package com.preonboarding.challenge.service.query;
 
+import com.preonboarding.challenge.service.dto.MainPageDto;
+import com.preonboarding.challenge.service.query.entity.CategoryDocument;
 import com.preonboarding.challenge.service.query.entity.ProductDocument;
+import com.preonboarding.challenge.service.query.repository.CategoryDocumentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -15,6 +22,7 @@ import java.util.*;
 public class ProductDocumentOperationsImpl implements ProductDocumentOperations {
 
     private final MongoTemplate mongoTemplate;
+    private final CategoryDocumentRepository categoryDocumentRepository;
 
     @Override
     public ProductDocument findProductDocumentWithReferences(Long productId) {
@@ -89,6 +97,69 @@ public class ProductDocumentOperationsImpl implements ProductDocumentOperations 
             log.error("Error finding product documents: {}", e.getMessage(), e);
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public List<ProductDocument> findNewProducts(int limit) {
+        Query query = new Query()
+                .addCriteria(Criteria.where("status").is("ACTIVE"))
+                .with(Sort.by(Sort.Direction.DESC, "createdAt"))
+                .limit(5);
+
+        query.fields().include("_id");
+
+        List<Long> foundIds = mongoTemplate.find(query, ProductDocument.class).stream()
+                .map(ProductDocument::getId)
+                .toList();
+
+        return findProductDocumentsWithReferences(foundIds);
+    }
+
+    @Override
+    public List<ProductDocument> findPopularProducts(int limit) {
+        Query query = new Query()
+                .addCriteria(Criteria.where("status").is("ACTIVE"))
+                .addCriteria(Criteria.where("rating.average").exists(true))
+                .with(Sort.by(Sort.Direction.DESC, "rating.average", "rating.count"))
+                .limit(5);
+
+        query.fields().include("_id");
+
+        List<Long> foundIds = mongoTemplate.find(query, ProductDocument.class).stream()
+                .map(ProductDocument::getId)
+                .toList();
+
+        return findProductDocumentsWithReferences(foundIds);
+    }
+
+    @Override
+    public List<MainPageDto.FeaturedCategory> findFeaturedCategories(int limit) {
+        // 1단계 카테고리 조회
+        List<CategoryDocument> categories = categoryDocumentRepository.findByLevel(1);
+
+        // 카테고리별 상품 수 계산을 위한 집계 쿼리
+        List<MainPageDto.FeaturedCategory> featuredCategories = categories.stream()
+                .map(category -> {
+                    // 이 카테고리에 속한 상품 수 집계
+                    Query query = new Query();
+                    query.addCriteria(Criteria.where("categories.id").is(category.getId()));
+                    query.addCriteria(Criteria.where("status").is("ACTIVE"));
+                    long productCount = mongoTemplate.count(query, ProductDocument.class);
+
+                    return MainPageDto.FeaturedCategory.builder()
+                            .id(category.getId())
+                            .name(category.getName())
+                            .slug(category.getSlug())
+                            .imageUrl(category.getImageUrl())
+                            .productCount((int) productCount)
+                            .build();
+                })
+                .filter(c -> c.getProductCount() > 0) // 상품이 있는 카테고리만 필터링
+                .sorted(Comparator.comparing(MainPageDto.FeaturedCategory::getProductCount).reversed())
+                .limit(5)
+                .collect(Collectors.toList());
+
+        return featuredCategories;
     }
 
     /**
