@@ -30,6 +30,12 @@ spring:
     username: admin
     password: admin123
     database: challenge
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 logging:
   level:

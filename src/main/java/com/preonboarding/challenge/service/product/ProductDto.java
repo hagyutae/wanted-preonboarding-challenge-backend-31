@@ -13,6 +13,8 @@ import java.util.Map;
 public class ProductDto {
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class Product {
         private Long id;
@@ -58,6 +60,8 @@ public class ProductDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class Seller {
         private Long id;
@@ -66,6 +70,8 @@ public class ProductDto {
 
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class Brand {
         private Long id;
@@ -73,6 +79,8 @@ public class ProductDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class Detail {
         private Double weight;
@@ -85,6 +93,8 @@ public class ProductDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class Price {
         private BigDecimal basePrice;
@@ -96,6 +106,8 @@ public class ProductDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class Category {
         private Long id;
@@ -105,6 +117,8 @@ public class ProductDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class ParentCategory {
         private Long id;
@@ -113,6 +127,8 @@ public class ProductDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class OptionGroup {
         private Long id;
@@ -122,6 +138,8 @@ public class ProductDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class Option {
         private Long id;
@@ -134,6 +152,8 @@ public class ProductDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class Image {
         private Long id;
@@ -145,6 +165,8 @@ public class ProductDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class Tag {
         private Long id;
@@ -153,6 +175,8 @@ public class ProductDto {
     }
 
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class RatingSummary {
         private Double average;
@@ -160,8 +184,9 @@ public class ProductDto {
         private Map<Integer, Integer> distribution; // Map rating -> count (e.g., {5: 95, 4: 20, ...})
     }
 
-
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Builder
     public static class ProductCategory {
         private Long categoryId;

@@ -3,6 +3,7 @@ package com.preonboarding.challenge.service.query;
 import com.preonboarding.challenge.service.dto.MainPageDto;
 import com.preonboarding.challenge.service.query.entity.ProductDocument;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class MainPageQueryService implements MainPageQueryHandler {
     private final ProductDocumentMapper productDocumentMapper;
 
     @Override
+    @Cacheable(value = "mainPage")
     public MainPageDto.MainPage getMainPageContents() {
         // 1. 신규 상품 조회 (최근 등록순 5개)
         List<ProductDocument> newProducts = productDocumentOperations.findNewProducts(5);

@@ -40,6 +40,10 @@ dependencies {
     // Kafka 의존성 추가
     implementation 'org.springframework.kafka:spring-kafka'
 
+    // Valkey Cache 의존성 추가
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     // JSON 처리
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
