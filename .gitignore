@@ -10,3 +10,4 @@ dist/
 *.lock
 *.bin
 *-checksums.*
+*.properties
