@@ -63,4 +63,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     """)
     Optional<Product> findByIdWithAll(@Param("productId") Long productId);
 
+    @Query("""
+        SELECT p FROM ProductCategory pc
+        JOIN pc.product p
+        WHERE pc.category.id = :categoryId
+        AND p.status <> 'DELETED'
+    """)
+    List<Product> findByCategory(@Param("categoryId") Long categoryId);
+
 }
