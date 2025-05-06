@@ -8,7 +8,6 @@ import java.util.Map;
 
 @Data
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponse<T> {
     private boolean success;
     private T data;

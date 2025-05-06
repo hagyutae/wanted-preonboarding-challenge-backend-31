@@ -35,6 +35,7 @@ public class ProductController {
     /**
      * POST /api/products
      * 새로운 상품을 등록합니다.
+     *
      * @param productRequest
      * @return
      */
@@ -51,6 +52,7 @@ public class ProductController {
     /**
      * GET /api/products
      * 상품 목록을 조회합니다.
+     *
      * @param productSearchRequest
      * @return
      */
@@ -65,6 +67,7 @@ public class ProductController {
     /**
      * GET /api/products/id
      * 상품 상세 정보를 조회합니다.
+     *
      * @param productId
      * @return
      */
@@ -80,6 +83,13 @@ public class ProductController {
         ProductUpdateResponse updateResponse = productService.updateProduct(productId, productRequest);
         return ResponseEntity.ok()
                 .body(CommonResponse.success(updateResponse, messageUtil.get(PRODUCT_DETAIL_SUCCESS)));
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<?> delete(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok()
+                .body(CommonResponse.success(null, messageUtil.get(PRODUCT_DELETE_SUCCESS)));
     }
 
 }

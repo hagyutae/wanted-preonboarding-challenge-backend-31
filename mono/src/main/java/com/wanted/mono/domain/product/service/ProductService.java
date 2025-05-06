@@ -116,6 +116,14 @@ public class ProductService {
         return new ProductUpdateResponse(productId, productRequest.getName(), productRequest.getSlug(), product.getUpdatedAt());
     }
 
+    @Transactional
+    public void deleteProduct(Long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new ProductEmptyException();
+        }
+
+        productRepository.deleteById(productId);
+    }
     public ProductInfoDto findById(Long productId) {
         return productInfoQueryRepository.getProductInfo(productId);
     }
