@@ -1,34 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
-import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import {
+  DeleteReviewResponseDto,
+  GetReviewResponseDto,
+  UpdateReviewRequestDto,
+  UpdateReviewResponseDto,
+} from './dto/review.dto';
+import { createSuccessResponse } from '~/common/utils/response.util';
 
-@Controller('reviews')
+@Controller('')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
-  @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
-    return this.reviewsService.create(createReviewDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.reviewsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reviewsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewsService.update(+id, updateReviewDto);
+  @Put(':id')
+  async updateReview(
+    @Param('id') id: number,
+    @Body() dto: UpdateReviewRequestDto,
+  ): Promise<UpdateReviewResponseDto> {
+    return createSuccessResponse(
+      await this.reviewsService.updateReview(id, dto),
+      '리뷰가 성공적으로 수정되었습니다.',
+    );
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reviewsService.remove(+id);
+  async deleteReview(
+    @Param('id') id: number,
+  ): Promise<DeleteReviewResponseDto> {
+    await this.reviewsService.deleteReview(id);
+    return createSuccessResponse(null, '리뷰가 성공적으로 삭제되었습니다.');
   }
 }

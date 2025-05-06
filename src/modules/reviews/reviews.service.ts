@@ -1,26 +1,58 @@
-import { Injectable } from '@nestjs/common';
-import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { ReviewsRepository } from './reviews.repository';
+import {
+  GetReviewsRequestDto,
+  CreateReviewRequestDto,
+  UpdateReviewRequestDto,
+} from './dto/review.dto';
 
 @Injectable()
 export class ReviewsService {
-  create(createReviewDto: CreateReviewDto) {
-    return 'This action adds a new review';
+  constructor(private readonly reviewsRepository: ReviewsRepository) {}
+
+  async getReviews(productId: number, query: GetReviewsRequestDto) {
+    const items = await this.reviewsRepository.getReviews(productId, query);
+    const summary = await this.reviewsRepository.getReviewsSummary(
+      productId,
+      query,
+    );
+
+    return {
+      items,
+      summary,
+    };
   }
 
-  findAll() {
-    return `This action returns all reviews`;
+  async createReview(productId: number, dto: CreateReviewRequestDto) {
+    return this.reviewsRepository.createReview(productId, dto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} review`;
+  async updateReview(id: number, dto: UpdateReviewRequestDto) {
+    const review = await this.reviewsRepository.getReview(id);
+    if (!review) {
+      throw new NotFoundException('리뷰를 찾을 수 없습니다.');
+    }
+
+    // TODO: 인증된 사용자의 리뷰인지 확인
+    // if (review.userId !== currentUserId) {
+    //   throw new ForbiddenException('다른 사용자의 리뷰를 수정할 권한이 없습니다.');
+    // }
+
+    const updatedReview = await this.reviewsRepository.updateReview(id, dto);
+    return updatedReview;
   }
 
-  update(id: number, updateReviewDto: UpdateReviewDto) {
-    return `This action updates a #${id} review`;
-  }
+  async deleteReview(id: number): Promise<void> {
+    const review = await this.reviewsRepository.getReview(id);
+    if (!review) {
+      throw new NotFoundException('리뷰를 찾을 수 없습니다.');
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} review`;
+    // TODO: 인증된 사용자의 리뷰인지 확인
+    // if (review.userId !== currentUserId) {
+    //   throw new ForbiddenException('다른 사용자의 리뷰를 삭제할 권한이 없습니다.');
+    // }
+
+    await this.reviewsRepository.deleteReview(id);
   }
 }
