@@ -33,6 +33,7 @@ public class ProductImage {
     @Column(name = "display_order")
     private Integer displayOrder;
 
-    @Column(name = "option_id")
-    private Long optionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_id")
+    private ProductOption option;
 }

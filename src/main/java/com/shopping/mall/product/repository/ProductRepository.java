@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
@@ -38,10 +39,25 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     );
 
     @Query("""
-    SELECT p FROM Product p
-    JOIN ProductTag pt ON pt.product = p
-    WHERE (:tagIds IS NULL OR pt.tag.id IN :tagIds)
-""")
+        SELECT p FROM Product p
+        JOIN ProductTag pt ON pt.product = p
+        WHERE (:tagIds IS NULL OR pt.tag.id IN :tagIds)
+    """)
     List<Product> findByTags(@Param("tagIds") List<Long> tagIds);
+
+    @Query("""
+        SELECT p FROM Product p
+        LEFT JOIN FETCH p.productDetail
+        LEFT JOIN FETCH p.productPrice
+        LEFT JOIN FETCH p.optionGroups og
+        LEFT JOIN FETCH og.options
+        LEFT JOIN FETCH p.productImages
+        LEFT JOIN FETCH p.productTags pt
+        LEFT JOIN FETCH pt.tag
+        LEFT JOIN FETCH p.productCategories pc
+        LEFT JOIN FETCH pc.category
+        WHERE p.id = :productId
+    """)
+    Optional<Product> findByIdWithAll(@Param("productId") Long productId);
 
 }
