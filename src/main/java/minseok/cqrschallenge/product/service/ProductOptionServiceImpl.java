@@ -30,10 +30,6 @@ public class ProductOptionServiceImpl implements ProductOptionService {
         ProductOptionGroup optionGroup = optionGroupRepository.findById(request.getOptionGroupId())
                 .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션 그룹을 찾을 수 없습니다."));
         
-        if (!optionGroup.getProduct().getId().equals(productId)) {
-            throw new ResourceNotFoundException("해당 상품에 속한 옵션 그룹이 아닙니다.");
-        }
-        
         ProductOption option = ProductOption.builder()
                 .optionGroup(optionGroup)
                 .name(request.getName())

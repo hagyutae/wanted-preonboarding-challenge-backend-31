@@ -32,9 +32,6 @@ public class ProductImageServiceImpl implements ProductImageService {
             option = optionRepository.findById(request.getOptionId())
                     .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션을 찾을 수 없습니다."));
 
-            if (!option.getOptionGroup().getProduct().getId().equals(productId)) {
-                throw new ResourceNotFoundException("해당 상품에 속한 옵션이 아닙니다.");
-            }
         }
 
         if (request.getIsPrimary() != null && request.getIsPrimary()) {
