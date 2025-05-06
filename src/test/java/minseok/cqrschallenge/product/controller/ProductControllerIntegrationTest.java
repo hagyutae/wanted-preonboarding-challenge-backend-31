@@ -57,7 +57,6 @@ public class ProductControllerIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        // 각 테스트 전에 기본 상품 생성
         ProductCreateRequest request = createSampleProductRequest();
 
         MvcResult result = mockMvc.perform(post(BASE_URL)
@@ -207,7 +206,6 @@ public class ProductControllerIntegrationTest {
     @DisplayName("상품 생성 - 유효성 검증 실패")
     public void createProduct_validationFailed() throws Exception {
         ProductCreateRequest request = new ProductCreateRequest();
-        // 필수 필드 누락
 
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -272,7 +270,6 @@ public class ProductControllerIntegrationTest {
             .andExpect(jsonPath("$.success", is(true)))
             .andExpect(jsonPath("$.message", is("상품이 성공적으로 삭제되었습니다.")));
 
-        // 삭제 후 조회 시 404 확인
         mockMvc.perform(get(BASE_URL + "/" + testProductId))
             .andExpect(status().isNotFound());
     }
@@ -292,7 +289,6 @@ public class ProductControllerIntegrationTest {
     @Test
     @DisplayName("상품 옵션 추가 - 성공")
     public void addProductOption_success() throws Exception {
-        // 옵션 추가 요청 객체 생성
         ProductOptionCreateRequest request = ProductOptionCreateRequest.builder()
             .optionGroupId(15L)
             .name("네이비")
@@ -317,7 +313,6 @@ public class ProductControllerIntegrationTest {
     @Test
     @DisplayName("상품 이미지 추가 - 성공")
     public void addProductImage_success() throws Exception {
-        // 이미지 추가 요청 객체 생성
         ProductImageCreateRequest request = ProductImageCreateRequest.builder()
             .url("https://example.com/images/sofa3.jpg")
             .altText("네이비 소파 측면")
@@ -421,7 +416,7 @@ public class ProductControllerIntegrationTest {
 
         return ProductCreateRequest.builder()
             .name("슈퍼 편안한 소파")
-            .slug("super-comfortable-sofa-" + System.currentTimeMillis()) // 고유한 slug 생성
+            .slug("super-comfortable-sofa-" + System.currentTimeMillis())
             .shortDescription("최고급 소재로 만든 편안한 소파")
             .fullDescription("<p>이 소파는 최고급 소재로 제작되었으며...</p>")
             .status(ProductStatus.ACTIVE.name())

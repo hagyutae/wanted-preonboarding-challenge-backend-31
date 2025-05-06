@@ -128,11 +128,14 @@ public class MainServiceImpl implements MainService {
     }
 
     private Double calculateAverageRating(Product product) {
-        return 0.0; // 임시
+        return product.getReviews().stream()
+            .mapToDouble(review -> review.getRating() != null ? review.getRating() : 0)
+            .average()
+            .orElse(0.0);
     }
 
     private Integer getReviewCount(Product product) {
-        return 0; // 임시
+        return product.getReviews().size();
     }
 
     private boolean isInStock(Product product) {

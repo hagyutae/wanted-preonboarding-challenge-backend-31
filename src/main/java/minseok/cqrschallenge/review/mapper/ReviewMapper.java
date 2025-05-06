@@ -71,12 +71,10 @@ public class ReviewMapper {
 
         Map<Integer, Integer> distribution = new HashMap<>();
 
-        // 1-5 평점 초기화
         for (int i = 1; i <= 5; i++) {
             distribution.put(i, 0);
         }
 
-        // 평점 분포 채우기
         for (Object[] result : ratingDistribution) {
             Integer rating = ((Number) result[0]).intValue();
             Integer count = ((Number) result[1]).intValue();

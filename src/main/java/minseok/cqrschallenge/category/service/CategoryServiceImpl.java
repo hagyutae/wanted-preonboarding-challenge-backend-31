@@ -19,6 +19,7 @@ import minseok.cqrschallenge.product.dto.response.ProductListResponse.SellerSumm
 import minseok.cqrschallenge.product.entity.Product;
 import minseok.cqrschallenge.product.entity.ProductImage;
 import minseok.cqrschallenge.product.repository.ProductRepository;
+import minseok.cqrschallenge.review.entity.Review;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -200,13 +201,15 @@ public class CategoryServiceImpl implements CategoryService {
             .build()
             : null;
     }
-
     private Double calculateAverageRating(Product product) {
-        return 0.0; // 임시
+        return product.getReviews().stream()
+            .mapToDouble(Review::getRating)
+            .average()
+            .orElse(0.0);
     }
 
     private Integer getReviewCount(Product product) {
-        return 0; // 임시
+        return product.getReviews().size();
     }
 
     private boolean isInStock(Product product) {
