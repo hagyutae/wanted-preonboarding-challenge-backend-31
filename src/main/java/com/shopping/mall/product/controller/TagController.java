@@ -1,5 +1,6 @@
 package com.shopping.mall.product.controller;
 
+import com.shopping.mall.common.response.ApiResponse;
 import com.shopping.mall.product.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,6 @@ public class TagController {
 
     @GetMapping
     public ResponseEntity<?> getTags() {
-        return ResponseEntity.ok(tagService.getAllTags());
+        return ResponseEntity.ok(ApiResponse.success(tagService.getAllTags(), "태그 목록을 성공적으로 조회했습니다."));
     }
 }

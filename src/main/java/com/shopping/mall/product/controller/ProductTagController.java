@@ -1,5 +1,6 @@
 package com.shopping.mall.product.controller;
 
+import com.shopping.mall.common.response.ApiResponse;
 import com.shopping.mall.product.dto.request.ProductTagCreateRequest;
 import com.shopping.mall.product.service.ProductTagService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,6 @@ public class ProductTagController {
             @RequestBody ProductTagCreateRequest request) {
 
         productTagService.addTags(productId, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ApiResponse.success(null, "상품 태그가 성공적으로 추가되었습니다."));
     }
 }

@@ -1,5 +1,6 @@
 package com.shopping.mall.product.controller;
 
+import com.shopping.mall.common.response.ApiResponse;
 import com.shopping.mall.product.dto.request.ProductImageCreateRequest;
 import com.shopping.mall.product.service.ProductImageService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,6 @@ public class ProductImageController {
             @RequestBody ProductImageCreateRequest request) {
 
         productImageService.addImage(productId, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(ApiResponse.success(null, "상품 이미지가 성공적으로 추가되었습니다."));
     }
 }

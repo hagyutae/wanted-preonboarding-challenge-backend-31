@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class ProductOptionGroupCreateRequest {
+public class ProductOptionCreateRequest {
 
     private String name;
     private Integer displayOrder;
