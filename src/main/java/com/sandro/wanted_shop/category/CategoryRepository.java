@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     @EntityGraph(attributePaths = {"children", "children.children"})
-    @Query("SELECT distinct c FROM Category c WHERE c.level = 1")
+    @Query("SELECT DISTINCT c FROM Category c WHERE c.level = 1")
     List<Category> findAllWithChildren();
 }
