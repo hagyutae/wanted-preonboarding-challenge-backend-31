@@ -6,3 +6,66 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+
+*.lock
+*.bin
+*-checksums.*
+*.properties
+
+# Java & Maven/Gradle Build
+/build/
+/target/
+/out/
+/*.iml
+.gradle/
+/.idea/
+/*.log
+
+# OS / Editor / IDE
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+
+# IntelliJ
+*.iws
+*.ipr
+*.iml
+.idea/
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
+
+# Spring Boot
+*.jar
+*.war
+
+# Temporary files
+*.tmp
+*.temp
+
+# Test result
+/test-output/
+/coverage/
+
+# Dependency directories
+/node_modules/
+
+# Application specific (환경변수 설정파일 등)
+.env
+*.local
+
+# Uploaded files (ex. 실제 서비스 업로드용 파일 경로)
+uploads/
+storage/
+
+# Database H2 (로컬 테스트용 DB 파일)
+*.mv.db
+*.h2.db
+
+# Mac 특화 (안 쓰면 삭제 가능)
+._*
