@@ -4,6 +4,8 @@ import com.shopping.mall.common.entity.BaseEntity;
 import com.shopping.mall.product.entity.Product;
 import com.shopping.mall.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "review")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Review extends BaseEntity {
 
     @Id
