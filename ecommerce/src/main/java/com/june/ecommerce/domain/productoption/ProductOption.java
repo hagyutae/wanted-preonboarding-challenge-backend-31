@@ -2,6 +2,7 @@ package com.june.ecommerce.domain.productoption;
 
 import com.june.ecommerce.domain.productoptiongroup.ProductOptionGroup;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -23,4 +24,15 @@ public class ProductOption {
     private String sku;
     private int stock = 0;
     private int displayOrder = 0;
+
+    @Builder
+    public ProductOption(int id, ProductOptionGroup group, String name, int additionalPrice, String sku, int stock, int displayOrder) {
+        this.id = id;
+        this.group = group;
+        this.name = name;
+        this.additionalPrice = additionalPrice;
+        this.sku = sku;
+        this.stock = stock;
+        this.displayOrder = displayOrder;
+    }
 }

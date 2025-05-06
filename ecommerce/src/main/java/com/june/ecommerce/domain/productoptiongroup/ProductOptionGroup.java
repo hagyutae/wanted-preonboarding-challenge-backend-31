@@ -2,6 +2,7 @@ package com.june.ecommerce.domain.productoptiongroup;
 
 import com.june.ecommerce.domain.product.Product;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -18,4 +19,12 @@ public class ProductOptionGroup {
 
     private String name;
     private int displayOrder = 0;
+
+    @Builder
+    public ProductOptionGroup(int id, Product product, String name, int displayOrder) {
+        this.id = id;
+        this.product = product;
+        this.name = name;
+        this.displayOrder = displayOrder;
+    }
 }

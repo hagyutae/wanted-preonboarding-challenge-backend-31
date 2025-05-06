@@ -2,6 +2,7 @@ package com.june.ecommerce.domain.productprice;
 
 import com.june.ecommerce.domain.product.Product;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -24,4 +25,14 @@ public class ProductPrice {
     private String currency = "KRW";
     private BigDecimal taxRate;
 
+    @Builder
+    public ProductPrice(int id, Product product, BigDecimal basePrice, BigDecimal salePrice, BigDecimal costPrice, String currency, BigDecimal taxRate) {
+        this.id = id;
+        this.product = product;
+        this.basePrice = basePrice;
+        this.salePrice = salePrice;
+        this.costPrice = costPrice;
+        this.currency = currency;
+        this.taxRate = BigDecimal.ZERO;
+    }
 }

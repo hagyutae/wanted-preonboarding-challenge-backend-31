@@ -9,6 +9,7 @@ import com.june.ecommerce.dto.brand.BrandDto;
 import com.june.ecommerce.dto.category.CategoryDto;
 import com.june.ecommerce.dto.category.ProductCategoryDto;
 import com.june.ecommerce.dto.image.ImageDto;
+import com.june.ecommerce.dto.image.ProductImageDto;
 import com.june.ecommerce.dto.option.ProductOptionGroupDto;
 import com.june.ecommerce.dto.rating.RatingDto;
 import com.june.ecommerce.dto.seller.SellerDto;
@@ -38,7 +39,7 @@ public class ProductDetailInfoDto {
     private ProductPriceDto price;
     private List<ProductCategoryDto> categories;
     private List<ProductOptionGroupDto> optionGroups;
-    private List<ImageDto> images;
+    private List<ProductImageDto> images;
     private List<ProductTagDto> tags;
     private RatingDto rating;
     private List<RelatedProductDto> relatedProducts;
@@ -52,7 +53,7 @@ public class ProductDetailInfoDto {
             Brand brand,
             List<ProductCategoryDto> categories,
             List<ProductOptionGroupDto> optionGroups,
-            List<ImageDto> images,
+            List<ProductImageDto> images,
             List<ProductTagDto> tags,
             RatingDto rating,
             List<RelatedProductDto> relatedProducts

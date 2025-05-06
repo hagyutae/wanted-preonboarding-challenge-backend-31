@@ -1,6 +1,7 @@
 package com.june.ecommerce.controller.product;
 
 import com.june.ecommerce.dto.product.*;
+import com.june.ecommerce.dto.product.create.ProductCreateDto;
 import com.june.ecommerce.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,21 +21,33 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // 상품 등록
+    /**
+     * 상품 등록
+     * @param requestDto
+     * @return
+     */
     @PostMapping
-    public ResponseEntity<?> createProduct(@RequestBody ProductRequestDto requestDto) {
+    public ResponseEntity<?> createProduct(@RequestBody ProductCreateDto requestDto) {
         productService.createProduct(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // 상품 목록 조회
+    /**
+     * 상품 목록 조회
+     * @param condition
+     * @return
+     */
     @GetMapping
     public ResponseEntity<?> getProducts(ProductSearchCondition condition) {
         List<ProductResponseDto> products = productService.getProducts(condition);
         return ResponseEntity.ok(products);
     }
 
-    // 상품 상세 조회
+    /**
+     * 상품 상세 조회
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable int id) {
         ProductDetailInfoDto product = productService.getProductById(id);
@@ -42,7 +55,12 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    // 상품 수정
+    /**
+     * 상품 수정
+     * @param id
+     * @param requestDto
+     * @return
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable int id,
                                            @RequestBody ProductRequestDto requestDto) {
@@ -50,7 +68,11 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    // 상품 삭제
+    /**
+     * 상품 삭제
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable int id) {
         productService.deleteProduct(id);

@@ -1,0 +1,17 @@
+package com.june.ecommerce.dto.product.create;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ProductImageCreateDto {
+    private String url;
+    private String altText;
+    private boolean isPrimary;
+    private int displayOrder;
+    private Integer optionId;
+}

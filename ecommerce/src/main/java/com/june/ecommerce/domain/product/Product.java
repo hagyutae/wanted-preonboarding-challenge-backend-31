@@ -2,7 +2,6 @@ package com.june.ecommerce.domain.product;
 
 import com.june.ecommerce.domain.seller.Seller;
 import com.june.ecommerce.domain.brand.Brand;
-import com.june.ecommerce.dto.product.ProductRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 

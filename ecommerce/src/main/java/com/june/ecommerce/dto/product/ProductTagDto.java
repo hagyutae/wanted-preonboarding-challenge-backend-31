@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class ProductTagDto {
     private int tagId;
 
-    public ProductTagDto fromEntity(ProductTag entity) {
+    public static ProductTagDto fromEntity(ProductTag entity) {
         return ProductTagDto.builder()
                 .tagId(entity.getTag().getId())
                 .build();
