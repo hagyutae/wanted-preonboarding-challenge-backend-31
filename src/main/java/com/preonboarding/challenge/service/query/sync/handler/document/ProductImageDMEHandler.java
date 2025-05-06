@@ -140,26 +140,24 @@ public class ProductImageDMEHandler extends ProductDocumentModelEventHandler {
                 if (imageAdded) break;
             }
         }
-        // 상품 이미지인 경우
-        else {
-            // 이미지 목록 초기화 확인
-            if (document.getImages() == null) {
-                document.setImages(new ArrayList<>());
-            }
 
-            // 기존 이미지 찾기
-            Optional<ProductDocument.Image> existingImage = document.getImages().stream()
-                    .filter(img -> img.getId().equals(imageId))
-                    .findFirst();
+        // 이미지 목록 초기화 확인
+        if (document.getImages() == null) {
+            document.setImages(new ArrayList<>());
+        }
 
-            if (existingImage.isPresent()) {
-                // 기존 이미지 업데이트
-                int index = document.getImages().indexOf(existingImage.get());
-                document.getImages().set(index, image);
-            } else {
-                // 새 이미지 추가
-                document.getImages().add(image);
-            }
+        // 기존 이미지 찾기
+        Optional<ProductDocument.Image> existingImage = document.getImages().stream()
+                .filter(img -> img.getId().equals(imageId))
+                .findFirst();
+
+        if (existingImage.isPresent()) {
+            // 기존 이미지 업데이트
+            int index = document.getImages().indexOf(existingImage.get());
+            document.getImages().set(index, image);
+        } else {
+            // 새 이미지 추가
+            document.getImages().add(image);
         }
 
         productDocumentRepository.save(document);
