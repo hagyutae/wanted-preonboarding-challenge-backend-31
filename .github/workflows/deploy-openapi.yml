@@ -37,7 +37,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2 # GitHub Release를 생성하는 액션
         with:
-          files: openapi.yaml # 릴리즈에 포함할 파일
+          files: dist/openapi.yaml # 릴리즈에 포함할 파일
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
