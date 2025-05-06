@@ -1,6 +1,7 @@
 package com.shopping.mall.product.service;
 
-import com.shopping.mall.product.dto.request.ProductOptionGroupCreateRequest;
+import com.shopping.mall.product.dto.request.ProductOptionCreateRequest;
+import com.shopping.mall.product.dto.request.ProductOptionUpdateRequest;
 import com.shopping.mall.product.entity.Product;
 import com.shopping.mall.product.entity.ProductOption;
 import com.shopping.mall.product.entity.ProductOptionGroup;
@@ -16,11 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductOptionService {
 
     private final ProductRepository productRepository;
-    private final ProductOptionGroupRepository optionGroupRepository;
-    private final ProductOptionRepository optionRepository;
+    private final ProductOptionGroupRepository productOptionGroupRepository;
+    private final ProductOptionRepository productOptionRepository;
 
     @Transactional
-    public void addOptionGroup(Long productId, ProductOptionGroupCreateRequest request) {
+    public void addOptionGroup(Long productId, ProductOptionCreateRequest request) {
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다"));
@@ -31,9 +32,9 @@ public class ProductOptionService {
                 .displayOrder(request.getDisplayOrder())
                 .build();
 
-        optionGroupRepository.save(optionGroup);
+        productOptionGroupRepository.save(optionGroup);
 
-        for (ProductOptionGroupCreateRequest.OptionRequest optionReq : request.getOptions()) {
+        for (ProductOptionCreateRequest.OptionRequest optionReq : request.getOptions()) {
             ProductOption option = ProductOption.builder()
                     .optionGroup(optionGroup)
                     .name(optionReq.getName())
@@ -43,7 +44,22 @@ public class ProductOptionService {
                     .displayOrder(optionReq.getDisplayOrder())
                     .build();
 
-            optionRepository.save(option);
+            productOptionRepository.save(option);
         }
+    }
+
+    @Transactional
+    public void updateOption(Long optionId, ProductOptionUpdateRequest request) {
+
+        ProductOption option = productOptionRepository.findById(optionId)
+                .orElseThrow(() -> new IllegalArgumentException("옵션이 존재하지 않습니다."));
+
+        option.update(
+                request.getName(),
+                request.getAdditionalPrice(),
+                request.getSku(),
+                request.getStock(),
+                request.getDisplayOrder()
+        );
     }
 }

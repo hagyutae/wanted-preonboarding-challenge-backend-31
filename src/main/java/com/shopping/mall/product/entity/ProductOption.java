@@ -33,4 +33,12 @@ public class ProductOption {
 
     @Column(name = "display_order")
     private Integer displayOrder;
+
+    public void update(String name, Integer additionalPrice, String sku, Integer stock, Integer displayOrder) {
+        this.name = name;
+        this.additionalPrice = additionalPrice;
+        this.sku = sku;
+        this.stock = stock;
+        this.displayOrder = displayOrder;
+    }
 }
