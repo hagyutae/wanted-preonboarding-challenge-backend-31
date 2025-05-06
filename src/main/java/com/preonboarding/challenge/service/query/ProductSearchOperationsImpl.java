@@ -4,7 +4,6 @@ import com.preonboarding.challenge.service.query.entity.ProductSearchDocument;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
@@ -72,10 +71,10 @@ public class ProductSearchOperationsImpl implements ProductSearchOperations {
 
         // 검색어 필터 (OR 조건으로 연결)
         if (command.getSearch() != null && !command.getSearch().isEmpty()) {
-            Criteria searchCriteria = new Criteria().or("name").contains(command.getSearch())
-                    .or("shortDescription").contains(command.getSearch())
-                    .or("fullDescription").contains(command.getSearch())
-                    .or("materials").contains(command.getSearch());
+            Criteria searchCriteria = new Criteria().or("name").matches(command.getSearch())
+                    .or("shortDescription").matches(command.getSearch())
+                    .or("fullDescription").matches(command.getSearch())
+                    .or("materials").matches(command.getSearch());
             criteriaList.add(searchCriteria);
         }
 
@@ -92,17 +91,6 @@ public class ProductSearchOperationsImpl implements ProductSearchOperations {
             criteriaList.add(new Criteria("createdAt").lessThanEqual(toTimestamp));
         }
 
-        // 정렬 설정 적용
-        String[] sortParams = command.getPagination().getSort().split(":");
-        String sortField = sortParams[0]; // 이미 camelCase로 변환되어 있다고 가정
-        String sortDirection = sortParams.length > 1 ? sortParams[1] : "desc";
-
-        // 정렬 필드 매핑 (필요한 경우 필드명 변환)
-        String esSortField = mapSortField(sortField);
-        Sort sort = "asc".equalsIgnoreCase(sortDirection) ?
-                Sort.by(Sort.Direction.ASC, esSortField) :
-                Sort.by(Sort.Direction.DESC, esSortField);
-
         // 모든 criteria를 조합하여 쿼리 생성
         CriteriaQuery query;
         if (!criteriaList.isEmpty()) {
@@ -110,29 +98,13 @@ public class ProductSearchOperationsImpl implements ProductSearchOperations {
             for (int i = 1; i < criteriaList.size(); i++) {
                 criteria = criteria.and(criteriaList.get(i));
             }
-            query = new CriteriaQuery(criteria, pageable).addSort(sort);
+            query = new CriteriaQuery(criteria, pageable);
         } else {
-            query = new CriteriaQuery(new Criteria(), pageable).addSort(sort);
+            query = new CriteriaQuery(new Criteria(), pageable);
         }
 
         log.debug("Elasticsearch query: {}", query);
 
         return elasticsearchOperations.search(query, ProductSearchDocument.class, IndexCoordinates.of("products"));
-    }
-
-    // 정렬 필드 매핑 (필요한 경우 필드명 변환)
-    private String mapSortField(String sortField) {
-        switch (sortField) {
-            case "createdAt":
-                return "createdAt";
-            case "price":
-                return "salePrice";
-            case "rating":
-                return "averageRating";
-            case "name":
-                return "name";
-            default:
-                return "createdAt";
-        }
     }
 }
