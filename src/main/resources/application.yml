@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: local
+
+  jpa:
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE

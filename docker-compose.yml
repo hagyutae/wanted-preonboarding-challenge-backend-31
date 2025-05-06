@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: wanted-lkdcode
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: "lkdcode@!#"
+      POSTGRES_DB: wanted
+      TZ: Asia/Seoul
+      LANG: C.UTF-8
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/main/resources/db/migration/V1.0.1__init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "root"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  postgres_data:

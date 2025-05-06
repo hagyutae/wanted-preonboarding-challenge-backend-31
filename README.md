@@ -114,7 +114,7 @@
 ## 데이터 모델 요구사항
 다음과 같이 복잡한 연관 관계를 가진 데이터 모델을 설계하세요:
 
-![ERD](./erd.png)
+![ERD](docs/erd.png)
 
 ### 상품(Product) 테이블
 - id: 상품 ID (PK)
@@ -227,7 +227,7 @@
 - verified_purchase: 구매 확인 여부
 - helpful_votes: 도움됨 투표 수
 
-데이터베이스 스키마 설계 결과 및 샘플 데이터는 [데이터베이스 데이터 가이드](./DB.md)에서 확인할 수 있습니다.
+데이터베이스 스키마 설계 결과 및 샘플 데이터는 [데이터베이스 데이터 가이드](docs/DB.md)에서 확인할 수 있습니다.
 
 ## API 구현
 다음과 같은 RESTful API를 구현하세요:
@@ -258,4 +258,4 @@
 - PUT /api/reviews/{id}: 리뷰 수정
 - DELETE /api/reviews/{id}: 리뷰 삭제
 
-자세한 내용은 [API 명세 문서](./API_SPEC.md)를 참고하세요.
+자세한 내용은 [API 명세 문서](docs/API_SPEC.md)를 참고하세요.

@@ -1,0 +1,31 @@
+dependencies {
+    implementation DataSet.FLYWAY_CORE
+    implementation DataSet.FLYWAY_PSQL
+
+    runtimeOnly DataSet.PSQL_CONNECTOR
+
+    implementation DataSet.QUERYDSL_JPA
+    annotationProcessor DataSet.QUERYDSL_APT
+    annotationProcessor DataSet.QUERYDSL_ANNOTATION_API
+    annotationProcessor DataSet.QUERYDSL_PERSISTENCE_API
+}
+
+def queryDslDir = 'src/main/generated/querydsl'
+
+sourceSets {
+    main {
+        java {
+            srcDir queryDslDir
+        }
+    }
+}
+
+tasks.named('compileJava').configure {
+    doFirst {
+        if (file(queryDslDir).exists()) {
+            options.annotationProcessorOptions.arguments = [
+                    'skipQuerydslProcessing': 'true'
+            ]
+        }
+    }
+}
