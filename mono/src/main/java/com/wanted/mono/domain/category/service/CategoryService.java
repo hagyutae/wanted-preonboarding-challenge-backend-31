@@ -4,6 +4,7 @@ import com.wanted.mono.domain.category.entity.Category;
 import com.wanted.mono.domain.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,5 +23,9 @@ public class CategoryService {
 
     public List<Category> findByIds(List<Long> categoryIds) {
         return categoryRepository.findAllById(categoryIds);
+    }
+
+    public List<Category> findAllByIdsWithProductCategory(List<Long> categoryIds) {
+        return categoryRepository.findAllByIdIn(categoryIds);
     }
 }

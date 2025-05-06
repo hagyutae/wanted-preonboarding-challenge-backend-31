@@ -29,4 +29,11 @@ public class ProductPriceService {
         log.info("ProductPrice 저장");
         return productPriceRepository.save(productPrice).getId();
     }
+
+    @Transactional
+    public void updateProductPrice(ProductPriceRequest productPriceRequest, Product product) {
+        ProductPrice productPrice = productPriceRepository.findAllByProduct(product);
+
+        productPrice.update(productPriceRequest);
+    }
 }

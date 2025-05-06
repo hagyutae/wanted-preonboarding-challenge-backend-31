@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -27,5 +29,12 @@ public class ProductDetailService {
         log.info("ProductDetail 저장");
         productDetailRepository.save(productDetail);
         return productDetail.getId();
+    }
+
+    @Transactional
+    public void updateProductDetail(ProductDetailRequest productDetailRequest, Product product) {
+        ProductDetail productDetail = productDetailRepository.findAllByProduct(product).get(0);
+
+        productDetail.update(productDetailRequest);
     }
 }

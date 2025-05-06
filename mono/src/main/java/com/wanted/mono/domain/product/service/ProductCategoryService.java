@@ -54,4 +54,28 @@ public class ProductCategoryService {
         log.info("ProductCategory 엔티티 리스트 저장");
         productCategoryRepository.saveAll(productCategories);
     }
+
+    public void updateProductCategory(List<ProductCategoryRequest> productCategoryRequests, Product product) {
+        log.info("카테고리 Id 리스트화");
+        List<Long> categoryIds = productCategoryRequests.stream()
+                .map(ProductCategoryRequest::getCategoryId)
+                .collect(Collectors.toList());
+
+        log.info("카테고리 벌크 조회 & Map 형태 변환");
+        Map<Long, Category> categoryMap = categoryService.findAllByIdsWithProductCategory(categoryIds).stream()
+                .collect(Collectors.toMap(Category::getId, category -> category));
+
+        // 새로 생성하여 다시 저장
+        List<ProductCategory> newRelations = productCategoryRequests.stream()
+                .map(req -> {
+                    Category category = categoryMap.get(req.getCategoryId());
+                    ProductCategory productCategory = ProductCategory.of(new ProductCategoryRequest(category.getId(), req.getIsPrimary()));
+                    productCategory.addProduct(product);
+                    productCategory.addCategory(category);
+                    return productCategory;
+                })
+                .toList();
+
+        productCategoryRepository.saveAll(newRelations);
+    }
 }

@@ -9,6 +9,7 @@ import com.wanted.mono.domain.product.dto.request.ProductRequest;
 import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSearchResponse;
+import com.wanted.mono.domain.product.dto.response.ProductUpdateResponse;
 import com.wanted.mono.domain.product.entity.Product;
 import com.wanted.mono.domain.product.repository.query.ProductInfoQueryRepository;
 import com.wanted.mono.domain.product.repository.query.ProductSearchQueryRepository;
@@ -96,7 +97,28 @@ public class ProductService {
         return new ProductSearchResponse(displayProducts, pagination);
     }
 
+    @Transactional
+    public ProductUpdateResponse updateProduct(Long productId, ProductRequest productRequest) {
+        Product product = productRepository.findById(productId).orElseThrow(ProductEmptyException::new);
+
+        log.info("ProductService 엔티티 기본 정보 업데이트");
+        product.updateFrom(productRequest);
+
+        log.info("ProductService ProductDetail 정보 업데이트");
+        productDetailService.updateProductDetail(productRequest.getDetail(), product);
+
+        log.info("ProductService ProductPrice 정보 업데이트");
+        productPriceService.updateProductPrice(productRequest.getPrice(), product);
+
+        log.info("ProductService ProductCategory 정보 업데이트");
+        productCategoryService.updateProductCategory(productRequest.getCategories(), product);
+
+        return new ProductUpdateResponse(productId, productRequest.getName(), productRequest.getSlug(), product.getUpdatedAt());
+    }
+
     public ProductInfoDto findById(Long productId) {
         return productInfoQueryRepository.getProductInfo(productId);
     }
+
+
 }
