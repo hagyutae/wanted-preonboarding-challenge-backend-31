@@ -2,7 +2,6 @@ import { z } from 'zod';
 import {
   createPaginatedResponseSchema,
   createSuccessResponseSchema,
-  paginationInfoSchema,
   paginationParamsSchema,
 } from '~/common/utils/response-schema.util';
 import { CategoryWithRelationsSchema } from '../entities/category.entity';

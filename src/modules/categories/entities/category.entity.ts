@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { categories } from '~/database/schema';
 import { ProductCategorySchema } from '~/modules/products/entities/product.entity';
 
 // 기본 카테고리 스키마
