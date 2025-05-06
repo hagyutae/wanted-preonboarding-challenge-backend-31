@@ -1,5 +1,9 @@
 package com.wanted.ecommerce.product.repository;
 
+import static com.wanted.ecommerce.review.domain.QReview.review;
+
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.wanted.ecommerce.brand.domain.QBrand;
@@ -11,7 +15,6 @@ import com.wanted.ecommerce.product.domain.QProductCategory;
 import com.wanted.ecommerce.product.domain.QProductOption;
 import com.wanted.ecommerce.product.domain.QProductPrice;
 import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
-import com.wanted.ecommerce.review.domain.QReview;
 import com.wanted.ecommerce.seller.domain.QSeller;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -19,11 +22,13 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class ProductSearchRepositoryImpl implements ProductSearchRepository{
+public class ProductSearchRepositoryImpl implements ProductSearchRepository {
+
     private final JPAQueryFactory queryFactory;
     private final QProduct product = QProduct.product;
     private final QProductPrice price = QProductPrice.productPrice;
@@ -99,27 +104,24 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository{
         query.where(conditions.toArray(new Predicate[0]));
 
         // sort
-        if (request.getSort() != null) {
-            String[] sortParts = request.getSort().split(":");
-            String field = sortParts[0];
-            boolean isAsc = sortParts.length < 2 || "asc".equalsIgnoreCase(sortParts[1]);
+        List<OrderSpecifier<?>> orders = new ArrayList<>();
+        if (!pageable.getSort().isEmpty()) {
+            for (Sort.Order order : pageable.getSort()) {
+                Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
 
-            switch (field) {
-                case "created_at" -> query.orderBy(isAsc ? product.createdAt.asc() : product.createdAt.desc());
-                case "price" -> {
-                    if(request.getMaxPrice() == null & request.getMaxPrice() == null) query.leftJoin(product.price, price);
-                    query.orderBy(isAsc ? price.basePrice.asc() : price.basePrice.desc());
+                switch (order.getProperty()) {
+                    case "price":
+                        orders.add(new OrderSpecifier<>(direction, price.basePrice));
+                        break;
+                    case "rating":
+                        orders.add(new OrderSpecifier<>(direction, review.rating.avg()));
+                        break;
+                    default:
+                        orders.add(new OrderSpecifier<>(direction, product.createdAt));
+                        break;
                 }
-                case "rating" -> {
-                    QReview review = QReview.review;
-                    query.leftJoin(review).on(review.product.eq(product));
-                    query.groupBy(product.id);
-                    query.orderBy(isAsc ? review.rating.avg().asc() : review.rating.avg().desc());
-                }
-                default -> query.orderBy(product.createdAt.desc());
             }
-        } else {
-            query.orderBy(product.createdAt.desc());
+            query.orderBy(orders.toArray(OrderSpecifier[]::new));
         }
 
         // paging
@@ -135,7 +137,7 @@ public class ProductSearchRepositoryImpl implements ProductSearchRepository{
     }
 
     @Override
-    public List<Product> findRelatedProductsByCategoryId(Long categoryId){
+    public List<Product> findRelatedProductsByCategoryId(Long categoryId) {
         var query = queryFactory
             .selectFrom(product)
             .join(product.categories, productCategory).fetchJoin()

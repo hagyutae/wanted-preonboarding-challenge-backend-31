@@ -2,6 +2,8 @@ package com.wanted.ecommerce.product.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wanted.ecommerce.brand.dto.response.BrandResponse;
+import com.wanted.ecommerce.product.domain.Product;
+import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.seller.dto.response.SellerResponse;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,26 +29,24 @@ public record ProductListResponse(
     LocalDateTime createdAt
 ) {
 
-    public static ProductListResponse of(Long id, String name, String shortDescription,
-        BigDecimal basePrice, BigDecimal salePrice, String currency,
-        ProductImageResponse primaryImageResponse, BrandResponse brandResponse,
-        SellerResponse sellerResponse, Double rating, Integer reviewCount, Boolean inStock,
-        String status, LocalDateTime createdAt) {
+    public static ProductListResponse of(Product product, ProductPrice price,
+        ProductImageResponse image, BrandResponse brand, SellerResponse seller, double rating,
+        int reviewCount, boolean inStock) {
         return ProductListResponse.builder()
-            .id(id)
-            .name(name)
-            .shortDescription(shortDescription)
-            .basePrice(basePrice)
-            .salePrice(salePrice)
-            .currency(currency)
-            .primaryImage(primaryImageResponse)
-            .brand(brandResponse)
-            .seller(sellerResponse)
+            .id(product.getId())
+            .name(product.getName())
+            .shortDescription(product.getShortDescription())
+            .basePrice(price.getBasePrice())
+            .salePrice(price.getSalePrice())
+            .currency(price.getCurrency())
+            .primaryImage(image)
+            .brand(brand)
+            .seller(seller)
             .rating(rating)
             .reviewCount(reviewCount)
             .inStock(inStock)
-            .status(status)
-            .createdAt(createdAt)
+            .status(product.getStatus().getName())
+            .createdAt(product.getCreatedAt())
             .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.wanted.ecommerce.product.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wanted.ecommerce.product.domain.Product;
 import java.time.LocalDateTime;
 import lombok.Builder;
 
@@ -13,13 +14,12 @@ public record ProductUpdateResponse(
     LocalDateTime updatedAt
 ) {
 
-    public static ProductUpdateResponse of(long id, String name, String slug,
-        LocalDateTime updatedAt) {
+    public static ProductUpdateResponse of(Product product) {
         return ProductUpdateResponse.builder()
-            .id(id)
-            .name(name)
-            .slug(slug)
-            .updatedAt(updatedAt)
+            .id(product.getId())
+            .name(product.getName())
+            .slug(product.getSlug())
+            .updatedAt(product.getUpdatedAt())
             .build();
     }
 }

@@ -13,6 +13,9 @@ import com.wanted.ecommerce.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +40,7 @@ public class ProductController {
         @Valid @RequestBody ProductRegisterRequest productRegisterRequest
     ) {
         ApiResponse<ProductRegisterResponse> response = ApiResponse.success(
-            productService.create(productRegisterRequest),
+            productService.registProduct(productRegisterRequest),
             MessageConstants.CREATED_PRODUCTS.getMessage());
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(response);
@@ -45,8 +48,9 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<PaginationResponse<ProductListResponse>>> getAllProduct(
-        @Valid @ModelAttribute ProductSearchRequest request) {
-        Page<ProductListResponse> results = productService.readAll(request);
+        @Valid @ModelAttribute ProductSearchRequest request,
+        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ProductListResponse> results = productService.readAll(request, pageable);
         PaginationResponse<ProductListResponse> response = PaginationResponse.of(results);
         return ResponseEntity.ok(
             ApiResponse.success(response, MessageConstants.FUNDED_ALL_PRODUCTS.getMessage()));
@@ -67,7 +71,7 @@ public class ProductController {
         @PathVariable Long id,
         @Valid @RequestBody ProductRegisterRequest productRegisterRequest
     ) {
-        ProductUpdateResponse response = productService.update(id, productRegisterRequest);
+        ProductUpdateResponse response = productService.updateProduct(id, productRegisterRequest);
         return ResponseEntity.ok(
             ApiResponse.success(response, MessageConstants.UPDATED_PRODUCT.getMessage()));
     }
@@ -76,7 +80,7 @@ public class ProductController {
     public ResponseEntity<Object> DeleteProduct(
         @PathVariable Long id
     ) {
-        productService.delete(id);
+        productService.deleteProduct(id);
         return ResponseEntity.ok(
             ApiResponse.success(null, MessageConstants.DELETED_PRODUCT.getMessage()));
     }

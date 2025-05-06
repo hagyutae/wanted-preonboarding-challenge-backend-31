@@ -1,5 +1,6 @@
 package com.wanted.ecommerce.product.domain;
 
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductPriceRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -45,24 +46,22 @@ public class ProductPrice {
     @Column(precision = 5, scale = 2)
     private BigDecimal taxRate;
 
-    public static ProductPrice of(Product product, BigDecimal basePrice, BigDecimal salePrice,
-        BigDecimal costPrice, String currency, BigDecimal taxRate) {
+    public static ProductPrice of(Product product, ProductPriceRequest request) {
         return ProductPrice.builder()
             .product(product)
-            .basePrice(basePrice)
-            .salePrice(salePrice)
-            .costPrice(costPrice)
-            .currency(currency)
-            .taxRate(taxRate)
+            .basePrice(request.getBasePrice())
+            .salePrice(request.getSalePrice())
+            .costPrice(request.getCostPrice())
+            .currency(request.getCurrency())
+            .taxRate(request.getTaxRate())
             .build();
     }
 
-    public void update(BigDecimal basePrice, BigDecimal salePrice,
-        BigDecimal costPrice, String currency, BigDecimal taxRate){
-        this.basePrice = basePrice;
-        this.salePrice = salePrice;
-        this.costPrice = costPrice;
-        this.currency = currency;
-        this.taxRate = taxRate;
+    public void update(ProductPriceRequest request){
+        this.basePrice = request.getBasePrice();
+        this.salePrice = request.getSalePrice();
+        this.costPrice = request.getCostPrice();
+        this.currency = request.getCurrency();
+        this.taxRate = request.getTaxRate();
     }
 }

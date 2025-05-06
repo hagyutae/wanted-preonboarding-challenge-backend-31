@@ -20,9 +20,7 @@ public class ProductPriceServiceImpl implements ProductPriceService {
     @Transactional
     @Override
     public Long saveProductPrice(Product product, ProductPriceRequest priceRequest) {
-        ProductPrice productPrice = ProductPrice.of(product, priceRequest.getBasePrice(),
-            priceRequest.getSalePrice(), priceRequest.getCostPrice(), priceRequest.getCurrency(),
-            priceRequest.getTaxRate());
+        ProductPrice productPrice = ProductPrice.of(product, priceRequest);
         ProductPrice savedPrice = priceRepository.save(productPrice);
         return savedPrice.getId();
     }
@@ -37,18 +35,11 @@ public class ProductPriceServiceImpl implements ProductPriceService {
     @Transactional
     @Override
     public void updatePrice(ProductPrice price, ProductPriceRequest request) {
-        price.update(request.getBasePrice(), request.getSalePrice(), price.getCostPrice(),
-            request.getCurrency(), request.getTaxRate());
+        price.update(request);
     }
 
     @Override
     public ProductPriceResponse createPriceResponse(ProductPrice price) {
-        double basePrice = Double.parseDouble(String.format("%.2f", price.getBasePrice()));
-        double salePrice = Double.parseDouble(String.format("%.2f", price.getSalePrice()));
-        double discount = basePrice - salePrice;
-        double discountPercentage = Double.parseDouble(
-            String.format("%.2f", (discount / basePrice) * 100));
-        return ProductPriceResponse.of(basePrice,
-            salePrice, price.getCurrency(), price.getTaxRate().doubleValue(), discountPercentage);
+        return ProductPriceResponse.of(price);
     }
 }

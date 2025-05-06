@@ -14,11 +14,13 @@ import com.wanted.ecommerce.product.domain.ProductOption;
 import com.wanted.ecommerce.product.domain.ProductOptionGroup;
 import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductOptionGroupRequest;
 import com.wanted.ecommerce.product.dto.response.ProductOptionResponse;
 import com.wanted.ecommerce.product.repository.ProductOptionRepository;
 import com.wanted.ecommerce.product.service.ProductOptionGroupService;
 import com.wanted.ecommerce.product.service.ProductService;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,8 +58,9 @@ class ProductOptionServiceImplTest {
     }
 
     private ProductOption createOption() {
-        return ProductOption.of(optionGroup, "option", new BigDecimal(10), "sku",
-            10, 1);
+        ProductOptionRequest request = new ProductOptionRequest(1L, "option", new BigDecimal(10),
+            "sku", 10, 1);
+        return ProductOption.of(optionGroup, request);
     }
 
     private Product createProduct() {
@@ -74,9 +77,10 @@ class ProductOptionServiceImplTest {
     @Test
     void test_addProductOption_success() {
         ProductOptionRequest request = mock(ProductOptionRequest.class);
-        ProductOptionGroup group = ProductOptionGroup.of(product, "optionGroup", 1);
+        ProductOptionGroupRequest groupRequest = new ProductOptionGroupRequest("optionGroup", 1,
+            List.of(request));
+        ProductOptionGroup group = ProductOptionGroup.of(product, groupRequest);
 
-        when(productService.getProductById(anyLong())).thenReturn(product);
         when(optionGroupService.updateOptionGroup(any(), anyLong())).thenReturn(group);
         when(optionRepository.save(any())).thenReturn(option);
 
@@ -105,9 +109,9 @@ class ProductOptionServiceImplTest {
         when(optionRepository.existsByOptionGroupProductIdAndStockGreaterThan(
             anyLong(), anyInt())).thenReturn(Boolean.TRUE);
 
-       Boolean result =  productOptionService.isExistStock(1L, 0);
-       assertNotNull(result);
-       assertEquals(true, result);
+        Boolean result = productOptionService.isExistStock(1L, 0);
+        assertNotNull(result);
+        assertEquals(true, result);
     }
 
     @Test
@@ -115,6 +119,6 @@ class ProductOptionServiceImplTest {
         when(optionRepository.findById(anyLong())).thenReturn(Optional.ofNullable(option));
         ProductOption result = productOptionService.getOptionById(1L);
         assertNotNull(result);
-        assertEquals(option,result);
+        assertEquals(option, result);
     }
 }

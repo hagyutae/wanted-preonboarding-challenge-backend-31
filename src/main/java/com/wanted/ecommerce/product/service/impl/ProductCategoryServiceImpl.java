@@ -49,20 +49,12 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
             Category category = productCategory.getCategory();
             Category parent = category.getParent();
             if (parent == null) {
-                return CategoryResponse.of(category.getId(), category.getName(), category.getSlug(),
-                    productCategory.isPrimary());
+                return CategoryResponse.of(category, productCategory, null);
             }
             ParentCategoryResponse parentResponse = ParentCategoryResponse.of(parent.getId(),
                 parent.getName(), parent.getSlug());
-            return CategoryResponse.of(category.getId(), category.getName(), category.getSlug(),
-                productCategory.isPrimary(), parentResponse);
+            return CategoryResponse.of(category, productCategory, parentResponse);
         }).toList();
-    }
-
-    @Override
-    public List<ProductCategory> getCategoriesByCategoryIdAndProductId(Long categoryId,
-        Long productId) {
-        return productCategoryRepository.findByCategoryIdAndProductId(categoryId, productId);
     }
 
     @Override

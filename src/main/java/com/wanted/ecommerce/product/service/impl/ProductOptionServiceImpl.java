@@ -24,19 +24,12 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Transactional
     @Override
     public ProductOptionResponse addProductOption(Product product, ProductOptionRequest optionRequest) {
-
         ProductOptionGroup optionGroup = optionGroupService.updateOptionGroup(product,
             optionRequest.getOptionGroupId());
 
-        ProductOption option = ProductOption.of(optionGroup, optionRequest.getName(),
-            optionRequest.getAdditionalPrice(), optionRequest.getSku(), optionRequest.getStock(),
-            optionRequest.getDisplayOrder());
-
-        ProductOption saved = optionRepository.save(option);
-
-        return ProductOptionResponse.of(saved.getId(), saved.getOptionGroup().getId(),
-            saved.getName(), saved.getAdditionalPrice().doubleValue(), saved.getSku(),
-            saved.getStock(), saved.getDisplayOrder());
+        ProductOption option = ProductOption.of(optionGroup, optionRequest);
+        ProductOption savedOption = optionRepository.save(option);
+        return ProductOptionResponse.of(savedOption);
     }
 
     @Transactional
@@ -49,12 +42,9 @@ public class ProductOptionServiceImpl implements ProductOptionService {
 
         checkSameProductId(option.getOptionGroup().getProduct(), productId);
 
-        option.update(optionRequest.getName(), optionRequest.getAdditionalPrice(),
-            optionRequest.getSku(), optionRequest.getStock(), optionRequest.getDisplayOrder());
+        option.update(optionRequest);
 
-        return ProductOptionResponse.of(option.getId(), option.getOptionGroup().getId(),
-            option.getName(), option.getAdditionalPrice().doubleValue(), option.getSku(),
-            option.getStock(), option.getDisplayOrder());
+        return ProductOptionResponse.of(option);
     }
 
     @Transactional

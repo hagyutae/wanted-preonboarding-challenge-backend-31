@@ -45,7 +45,6 @@ import com.wanted.ecommerce.tag.service.TagService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductRegisterResponse create(ProductRegisterRequest request) {
+    public ProductRegisterResponse registProduct(ProductRegisterRequest request) {
         Seller seller = sellerService.getSellerById(request.getSellerId());
         Brand brand = brandService.getBrandById(request.getBrandId());
 
@@ -91,19 +90,16 @@ public class ProductServiceImpl implements ProductService {
         productImageServiceFacade.getProductImages(saved, request.getImages());
         productPriceService.saveProductPrice(saved, request.getPrice());
         createProductTags(saved, request.getTags());
-        return ProductRegisterResponse.of(saved.getId(), saved.getName(), saved.getSlug(),
-            saved.getCreatedAt(), saved.getUpdatedAt());
+        return ProductRegisterResponse.of(saved);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Page<ProductListResponse> readAll(ProductSearchRequest request) {
-        int pageNumber = Math.max(0, request.getPage() - 1);
-        Pageable pageable = PageRequest.of(pageNumber, request.getPerPage());
+    public Page<ProductListResponse> readAll(ProductSearchRequest request, Pageable pageable) {
         Page<Product> products = productRepository.findAllByRequest(request, pageable);
         return products.map(product -> {
 
-            ProductPrice price =  product.getPrice();
+            ProductPrice price = product.getPrice();
             ProductImageResponse primaryImageResponse = productImageServiceFacade.getPrimaryProductImageResponse(
                 product.getId());
 
@@ -119,10 +115,8 @@ public class ProductServiceImpl implements ProductService {
 
             SellerResponse sellerResponse = sellerService.createSellerResponse(product.getSeller());
 
-            return ProductListResponse.of(product.getId(), product.getName(),
-                product.getShortDescription(), price.getBasePrice(), price.getSalePrice(),
-                price.getCurrency(), primaryImageResponse, brandResponse, sellerResponse, rating,
-                reviewCount, inStock, product.getStatus().getName(), product.getCreatedAt());
+            return ProductListResponse.of(product, price, primaryImageResponse, brandResponse,
+                sellerResponse, rating, reviewCount, inStock);
         });
     }
 
@@ -159,17 +153,14 @@ public class ProductServiceImpl implements ProductService {
         // related products
         List<RelatedProductResponse> relatedProductResponses = createRelatedProductResponse(
             product.getCategories());
-        return ProductResponse.of(productId, product.getName(),
-            product.getSlug(), product.getShortDescription(), product.getFullDescription(),
-            sellerDetailResponse, brandDetailResponse, product.getStatus().getName(),
-            product.getCreatedAt(), product.getUpdatedAt(), detailResponse, priceResponse,
-            categoryResponses, optionGroupResponses, imageResponses, tagResponses, ratingResponse,
-            relatedProductResponses);
+        return ProductResponse.of(product, sellerDetailResponse, brandDetailResponse,
+            detailResponse, priceResponse, categoryResponses, optionGroupResponses, imageResponses,
+            tagResponses, ratingResponse, relatedProductResponses);
     }
 
     @Transactional
     @Override
-    public ProductUpdateResponse update(long productId, ProductRegisterRequest request) {
+    public ProductUpdateResponse updateProduct(long productId, ProductRegisterRequest request) {
         // seller
         Seller seller = sellerService.getSellerById(request.getSellerId());
         // brand
@@ -198,28 +189,14 @@ public class ProductServiceImpl implements ProductService {
         productImageServiceFacade.deleteProductImageByProductId(target.getId());
         productImageServiceFacade.getProductImages(target, request.getImages());
 
-        return ProductUpdateResponse.of(target.getId(), target.getName(), target.getSlug(),
-            target.getUpdatedAt());
+        return ProductUpdateResponse.of(target);
     }
 
     @Transactional
     @Override
-    public void delete(long productId) {
+    public void deleteProduct(long productId) {
         Product product = getProductById(productId);
         productRepository.delete(product);
-    }
-
-    private List<Long> createProductTags(Product saved, List<Long> tagIds) {
-        List<Tag> tags = tagIds.stream().map(tagService::getTagByTagId)
-            .toList();
-        List<ProductTag> savedTagList = productTagService.saveAllProductTags(saved, tags);
-        return savedTagList.stream().map(ProductTag::getId).toList();
-    }
-
-    private List<TagResponse> createTagResponse(Product product) {
-        return product.getTags().stream().map(productTag ->
-            TagResponse.of(productTag.getId(), productTag.getTag().getName(),
-                product.getSlug())).toList();
     }
 
     @Transactional(readOnly = true)
@@ -232,23 +209,33 @@ public class ProductServiceImpl implements ProductService {
 
         List<Product> relatedProducts = productRepository.findRelatedProductsByCategoryId(
             primaryCategory.getCategory().getId());
-
         return relatedProducts.stream()
-            .map(relatedProduct -> {
-                ProductImageResponse imageResponse = productImageServiceFacade.getPrimaryProductImageResponse(
-                    relatedProduct.getId());
-
-                ProductPrice productPrice = relatedProduct.getPrice();
-                return RelatedProductResponse.of(relatedProduct.getId(), relatedProduct.getName(),
-                    relatedProduct.getSlug(), relatedProduct.getShortDescription(), imageResponse,
-                    productPrice.getBasePrice(), productPrice.getSalePrice(),
-                    productPrice.getCurrency());
-            }).toList();
+            .map(this::mapRelatedProductResponse).toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Product getProductById(long id) {
         return productRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(ErrorType.RESOURCE_NOT_FOUND));
+    }
+
+    private List<TagResponse> createTagResponse(Product product) {
+        return product.getTags().stream().map(productTag ->
+            TagResponse.of(productTag.getTag())).toList();
+    }
+
+    private List<Long> createProductTags(Product saved, List<Long> tagIds) {
+        List<Tag> tags = tagIds.stream().map(tagService::getTagByTagId).toList();
+        List<ProductTag> savedTagList = productTagService.saveAllProductTags(saved, tags);
+        return savedTagList.stream().map(ProductTag::getId).toList();
+    }
+
+    @Transactional(readOnly = true)
+    private RelatedProductResponse mapRelatedProductResponse(Product relatedProduct){
+        ProductImageResponse imageResponse = productImageServiceFacade.getPrimaryProductImageResponse(
+            relatedProduct.getId());
+        ProductPrice productPrice = relatedProduct.getPrice();
+        return RelatedProductResponse.of(relatedProduct, productPrice, imageResponse);
     }
 }

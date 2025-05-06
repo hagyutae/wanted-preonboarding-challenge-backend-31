@@ -1,5 +1,6 @@
 package com.wanted.ecommerce.product.domain;
 
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductDetailRequest;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -71,15 +72,13 @@ public class ProductDetail {
             .build();
     }
 
-    public void update(BigDecimal weight,
-        Dimensions dimensions, String materials, String countryOfOrigin,
-        String warrantyInfo, String careInstructions, Map<String, Object> additionalInfo){
-        this.weight = weight;
+    public void update(ProductDetailRequest request, Dimensions dimensions){
+        this.weight = request.getWeight();
         this.dimensions = dimensions;
-        this.materials = materials;
-        this.countryOfOrigin = countryOfOrigin;
-        this.warrantyInfo = warrantyInfo;
-        this.careInstructions = careInstructions;
-        this.additionalInfo = additionalInfo;
+        this.materials = request.getMaterials();
+        this.countryOfOrigin = request.getCountryOfOrigin();
+        this.warrantyInfo = request.getWarrantyInfo();
+        this.careInstructions = request.getCareInstructions();
+        this.additionalInfo = request.getAdditionalInfo();
     }
 }

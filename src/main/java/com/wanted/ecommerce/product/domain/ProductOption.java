@@ -1,5 +1,6 @@
 package com.wanted.ecommerce.product.domain;
 
+import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -40,24 +41,22 @@ public class ProductOption {
     @Column(name = "display_order")
     private Integer displayOrder;
 
-    public static ProductOption of(ProductOptionGroup optionGroup, String name,
-        BigDecimal additionalPrice, String sku, int stock, int displayOrder) {
+    public static ProductOption of(ProductOptionGroup optionGroup, ProductOptionRequest request) {
         return ProductOption.builder()
             .optionGroup(optionGroup)
-            .name(name)
-            .additionalPrice(additionalPrice)
-            .sku(sku)
-            .stock(stock)
-            .displayOrder(displayOrder)
+            .name(request.getName())
+            .additionalPrice(request.getAdditionalPrice())
+            .sku(request.getSku())
+            .stock(request.getStock())
+            .displayOrder(request.getDisplayOrder())
             .build();
     }
 
-    public void update(String name, BigDecimal additionalPrice, String sku, int stock,
-        int displayOrder) {
-        this.name = name;
-        this.additionalPrice = additionalPrice;
-        this.sku = sku;
-        this.stock = stock;
-        this.displayOrder = displayOrder;
+    public void update(ProductOptionRequest request) {
+        this.name = request.getName();
+        this.additionalPrice = request.getAdditionalPrice();
+        this.sku = request.getSku();
+        this.stock = request.getStock();
+        this.displayOrder = request.getDisplayOrder();
     }
 }

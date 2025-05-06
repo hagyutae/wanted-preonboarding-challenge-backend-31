@@ -1,5 +1,6 @@
 package com.wanted.ecommerce.product.domain;
 
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductOptionGroupRequest;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,11 +41,11 @@ public class ProductOptionGroup {
     @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOption> options;
 
-    public static ProductOptionGroup of(Product product, String name, Integer displayOrder) {
+    public static ProductOptionGroup of(Product product, ProductOptionGroupRequest request) {
         return ProductOptionGroup.builder()
             .product(product)
-            .name(name)
-            .displayOrder(displayOrder)
+            .name(request.getName())
+            .displayOrder(request.getDisplayOrder())
             .build();
     }
 

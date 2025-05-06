@@ -1,5 +1,6 @@
 package com.wanted.ecommerce.product.domain;
 
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductImageRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -45,14 +46,13 @@ public class ProductImage {
     @JoinColumn(name = "option_id")
     private ProductOption option;
 
-    public static ProductImage of(Product product, String url, String altText, boolean isPrimary,
-        int displayOrder, ProductOption option) {
+    public static ProductImage of(Product product, ProductImageRequest request, ProductOption option) {
         return ProductImage.builder()
             .product(product)
-            .url(url)
-            .altText(altText)
-            .primary(isPrimary)
-            .displayOrder(displayOrder)
+            .url(request.getUrl())
+            .altText(request.getAltText())
+            .primary(request.getIsPrimary())
+            .displayOrder(request.getDisplayOrder())
             .option(option)
             .build();
     }

@@ -27,8 +27,7 @@ public class ProductOptionGroupServiceImpl implements ProductOptionGroupService 
     @Override
     public ProductOptionGroup saveOptionGroup(Product product,
         ProductOptionGroupRequest groupRequest) {
-        ProductOptionGroup optionGroup = ProductOptionGroup.of(product,
-            groupRequest.getName(), groupRequest.getDisplayOrder());
+        ProductOptionGroup optionGroup = ProductOptionGroup.of(product, groupRequest);
         return optionGroupRepository.save(optionGroup);
     }
 
@@ -42,12 +41,7 @@ public class ProductOptionGroupServiceImpl implements ProductOptionGroupService 
 
                 List<ProductOption> options = groupRequest.getOptions().stream()
                     .map(optionRequest -> ProductOption.of(
-                        savedOptionGroup,
-                        optionRequest.getName(),
-                        optionRequest.getAdditionalPrice(),
-                        optionRequest.getSku(),
-                        optionRequest.getStock(),
-                        optionRequest.getDisplayOrder()
+                        savedOptionGroup, optionRequest
                     ))
                     .toList();
                 optionRepository.saveAll(options);
@@ -68,14 +62,10 @@ public class ProductOptionGroupServiceImpl implements ProductOptionGroupService 
         return optionGroups.stream()
             .map(optionGroup -> {
                 List<ProductOptionResponse> options = optionGroup.getOptions().stream()
-                    .map(option -> ProductOptionResponse.of(
-                        option.getId(), option.getName(), option.getAdditionalPrice().doubleValue(),
-                        option.getSku(), option.getStock(), option.getDisplayOrder()
-                    ))
+                    .map(ProductOptionResponse::of)
                     .toList();
 
-                return ProductOptionGroupResponse.of(optionGroup.getId(), optionGroup.getName(),
-                    optionGroup.getDisplayOrder(), options);
+                return ProductOptionGroupResponse.of(optionGroup, options);
             })
             .toList();
     }

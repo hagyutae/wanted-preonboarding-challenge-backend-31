@@ -3,10 +3,16 @@ package com.wanted.ecommerce.product.dto.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.wanted.ecommerce.brand.dto.response.BrandDetailResponse;
 import com.wanted.ecommerce.category.dto.response.CategoryResponse;
+import com.wanted.ecommerce.product.domain.Dimensions;
+import com.wanted.ecommerce.product.domain.Product;
+import com.wanted.ecommerce.product.domain.ProductDetail;
+import com.wanted.ecommerce.product.domain.ProductImage;
+import com.wanted.ecommerce.product.domain.ProductOption;
+import com.wanted.ecommerce.product.domain.ProductOptionGroup;
+import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.review.dto.response.RatingResponse;
 import com.wanted.ecommerce.seller.dto.response.SellerDetailResponse;
 import com.wanted.ecommerce.tag.dto.response.TagResponse;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -36,24 +42,22 @@ public record ProductResponse(
 
 ) {
 
-    public static ProductResponse of(Long id, String name, String slug,
-        String shortDescription, String fullDescription, SellerDetailResponse seller,
-        BrandDetailResponse brand, String status, LocalDateTime createdAt, LocalDateTime updatedAt,
-        DetailResponse detail, ProductPriceResponse price, List<CategoryResponse> categories,
-        List<ProductOptionGroupResponse> optionGroups, List<ProductImageCreateResponse> images,
-        List<TagResponse> tags, RatingResponse rating,
+    public static ProductResponse of(Product product, SellerDetailResponse seller,
+        BrandDetailResponse brand, DetailResponse detail, ProductPriceResponse price,
+        List<CategoryResponse> categories, List<ProductOptionGroupResponse> optionGroups,
+        List<ProductImageCreateResponse> images, List<TagResponse> tags, RatingResponse rating,
         List<RelatedProductResponse> relatedProducts) {
         return ProductResponse.builder()
-            .id(id)
-            .name(name)
-            .slug(slug)
-            .shortDescription(shortDescription)
-            .fullDescription(fullDescription)
+            .id(product.getId())
+            .name(product.getName())
+            .slug(product.getSlug())
+            .shortDescription(product.getShortDescription())
+            .fullDescription(product.getFullDescription())
             .seller(seller)
             .brand(brand)
-            .status(status)
-            .createdAt(createdAt)
-            .updatedAt(updatedAt)
+            .status(product.getStatus().getName())
+            .createdAt(product.getCreatedAt())
+            .updatedAt(product.getUpdatedAt())
             .detail(detail)
             .price(price)
             .categories(categories)
@@ -77,16 +81,15 @@ public record ProductResponse(
     ) {
 
         public static DetailResponse of(Double weight, DimensionsResponse dimensions,
-            String materials, String countryOfOrigin, String warrantyInfo, String careInstructions,
-            Map<String, Object> additionalInfo) {
+            ProductDetail detail) {
             return DetailResponse.builder()
                 .weight(weight)
                 .dimensions(dimensions)
-                .materials(materials)
-                .countryOfOrigin(countryOfOrigin)
-                .warrantyInfo(warrantyInfo)
-                .careInstructions(careInstructions)
-                .additionalInfo(additionalInfo)
+                .materials(detail.getMaterials())
+                .countryOfOrigin(detail.getCountryOfOrigin())
+                .warrantyInfo(detail.getWarrantyInfo())
+                .careInstructions(detail.getCareInstructions())
+                .additionalInfo(detail.getAdditionalInfo())
                 .build();
         }
     }
@@ -98,11 +101,11 @@ public record ProductResponse(
         Integer depth
     ) {
 
-        public static DimensionsResponse of(Integer width, Integer height, Integer depth) {
+        public static DimensionsResponse of(Dimensions dimensions) {
             return DimensionsResponse.builder()
-                .width(width)
-                .height(height)
-                .depth(depth)
+                .width(dimensions.getWidth())
+                .height(dimensions.getHeight())
+                .depth(dimensions.getDepth())
                 .build();
         }
     }
@@ -119,18 +122,16 @@ public record ProductResponse(
         String currency
     ) {
 
-        public static RelatedProductResponse of(Long id, String name, String slug,
-            String shortDescription, ProductImageResponse primaryImage, BigDecimal basePrice,
-            BigDecimal salePrice, String currency) {
+        public static RelatedProductResponse of(Product product, ProductPrice price, ProductImageResponse image) {
             return RelatedProductResponse.builder()
-                .id(id)
-                .name(name)
-                .slug(slug)
-                .shortDescription(shortDescription)
-                .primaryImage(primaryImage)
-                .basePrice(basePrice.intValueExact())
-                .salePrice(salePrice.intValue())
-                .currency(currency)
+                .id(product.getId())
+                .name(product.getName())
+                .slug(product.getSlug())
+                .shortDescription(product.getShortDescription())
+                .primaryImage(image)
+                .basePrice(price.getBasePrice().intValue())
+                .salePrice(price.getSalePrice().intValue())
+                .currency(price.getCurrency())
                 .build();
         }
     }
@@ -145,26 +146,24 @@ public record ProductResponse(
         Long optionId
     ) {
 
-        public static ProductImageCreateResponse of(Long id, String url, String altText,
-            Boolean isPrimary, Integer displayOrder) {
+        public static ProductImageCreateResponse of(ProductImage image) {
             return ProductImageCreateResponse.builder()
-                .id(id)
-                .url(url)
-                .altText(altText)
-                .isPrimary(isPrimary)
-                .displayOrder(displayOrder)
+                .id(image.getId())
+                .url(image.getUrl())
+                .altText(image.getAltText())
+                .isPrimary(image.isPrimary())
+                .displayOrder(image.getDisplayOrder())
                 .build();
         }
 
-        public static ProductImageCreateResponse of(Long id, String url, String altText,
-            Boolean isPrimary, Integer displayOrder, Long optionId) {
+        public static ProductImageCreateResponse of(ProductImage image, ProductOption option) {
             return ProductImageCreateResponse.builder()
-                .id(id)
-                .url(url)
-                .altText(altText)
-                .isPrimary(isPrimary)
-                .displayOrder(displayOrder)
-                .optionId(optionId)
+                .id(image.getId())
+                .url(image.getUrl())
+                .altText(image.getAltText())
+                .isPrimary(image.isPrimary())
+                .displayOrder(image.getDisplayOrder())
+                .optionId(option.getId())
                 .build();
         }
     }
@@ -177,12 +176,11 @@ public record ProductResponse(
         List<ProductOptionResponse> options
     ) {
 
-        public static ProductOptionGroupResponse of(Long id, String name, Integer displayOrder,
-            List<ProductOptionResponse> options) {
+        public static ProductOptionGroupResponse of(ProductOptionGroup optionGroup, List<ProductOptionResponse> options) {
             return ProductOptionGroupResponse.builder()
-                .id(id)
-                .name(name)
-                .displayOrder(displayOrder)
+                .id(optionGroup.getId())
+                .name(optionGroup.getName())
+                .displayOrder(optionGroup.getDisplayOrder())
                 .options(options)
                 .build();
         }
@@ -190,20 +188,24 @@ public record ProductResponse(
 
     @Builder
     public record ProductPriceResponse(
-        Integer basePrice,
-        Integer salePrice,
+        Double basePrice,
+        Double salePrice,
         String currency,
         Double taxRate,
         Double discountPercentage
     ) {
 
-        public static ProductPriceResponse of(Double basePrice, Double salePrice,
-            String currency, Double taxRate, Double discountPercentage) {
+        public static ProductPriceResponse of(ProductPrice price) {
+            double basePrice = Double.parseDouble(String.format("%.2f", price.getBasePrice()));
+            double salePrice = Double.parseDouble(String.format("%.2f", price.getSalePrice()));
+            double discount = basePrice - salePrice;
+            double discountPercentage = Double.parseDouble(
+                String.format("%.2f", (discount / basePrice) * 100));
             return ProductPriceResponse.builder()
-                .basePrice(basePrice.intValue())
-                .salePrice(salePrice.intValue())
-                .currency(currency)
-                .taxRate(taxRate)
+                .basePrice(basePrice)
+                .salePrice(salePrice)
+                .currency(price.getCurrency())
+                .taxRate(price.getTaxRate().doubleValue())
                 .discountPercentage(discountPercentage)
                 .build();
         }

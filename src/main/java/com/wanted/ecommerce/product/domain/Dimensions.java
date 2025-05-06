@@ -1,5 +1,6 @@
 package com.wanted.ecommerce.product.domain;
 
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.DimensionsRequest;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,11 +16,11 @@ public class Dimensions {
     private Integer height;
     private Integer depth;
 
-    public static Dimensions of(Integer width, Integer height, Integer depth){
+    public static Dimensions of(DimensionsRequest request){
         return Dimensions.builder()
-            .width(width)
-            .height(height)
-            .depth(depth)
+            .width(request.getWidth())
+            .height(request.getHeight())
+            .depth(request.getDepth())
             .build();
     }
 }

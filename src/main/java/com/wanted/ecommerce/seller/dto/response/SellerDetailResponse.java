@@ -1,6 +1,8 @@
 package com.wanted.ecommerce.seller.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.wanted.ecommerce.seller.domain.Seller;
+import java.math.RoundingMode;
 import lombok.Builder;
 
 @Builder
@@ -15,16 +17,17 @@ public record SellerDetailResponse(
     String contactPhone
 ) {
 
-    public static SellerDetailResponse of(Long id, String name, String description, String logoUrl,
-        Double rating, String contactEmail, String contactPhone) {
+    public static SellerDetailResponse of(Seller seller) {
         return SellerDetailResponse.builder()
-            .id(id)
-            .name(name)
-            .description(description)
-            .logoUrl(logoUrl)
-            .rating(rating)
-            .contactEmail(contactEmail)
-            .contactPhone(contactPhone)
+            .id(seller.getId())
+            .name(seller.getName())
+            .description(seller.getDescription())
+            .logoUrl(seller.getLogoUrl())
+            .rating(seller.getRating()
+                .setScale(1, RoundingMode.HALF_UP)
+                .doubleValue())
+            .contactEmail(seller.getContactEmail())
+            .contactPhone(seller.getContactPhone())
             .build();
     }
 }

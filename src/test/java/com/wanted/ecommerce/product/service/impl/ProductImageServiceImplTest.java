@@ -13,6 +13,7 @@ import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductImage;
 import com.wanted.ecommerce.product.domain.ProductOption;
 import com.wanted.ecommerce.product.domain.ProductStatus;
+import com.wanted.ecommerce.product.dto.request.ProductOptionRequest;
 import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductImageRequest;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse.ProductImageCreateResponse;
@@ -64,8 +65,9 @@ class ProductImageServiceImplTest {
     }
 
     private ProductOption createOption() {
-        return ProductOption.of(null, "option", new BigDecimal(10), "sku",
-            10, 1);
+        ProductOptionRequest request = new ProductOptionRequest(1L, "option", new BigDecimal(10),
+            "sku", 10, 1);
+        return ProductOption.of(null, request);
     }
 
     private ProductImage createImage() {
@@ -95,7 +97,6 @@ class ProductImageServiceImplTest {
     @Test
     void test_createProductImage_success() {
         ProductImageRequest request = mock(ProductImageRequest.class);
-        when(productService.getProductById(anyLong())).thenReturn(product);
         when(optionService.getOptionById(anyLong())).thenReturn(option);
         when(imageRepository.saveAll(any())).thenReturn(List.of(image));
         ProductImageCreateResponse response = imageService.createProductImages(product,

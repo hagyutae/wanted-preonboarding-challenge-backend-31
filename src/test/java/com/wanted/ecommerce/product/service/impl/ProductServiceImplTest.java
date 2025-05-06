@@ -23,6 +23,8 @@ import com.wanted.ecommerce.product.domain.ProductPrice;
 import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.domain.ProductTag;
 import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.DimensionsRequest;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductPriceRequest;
 import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
 import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
@@ -60,6 +62,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
@@ -103,18 +107,18 @@ class ProductServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        seller = createSeller();
-        brand = createBrand();
-        price = createPrice();
-        detail = createDetail();
-        categories = createCategories();
-        images = createImages();
-        tags = createTags();
-        product = createProduct();
+        seller = registProductSeller();
+        brand = registProductBrand();
+        price = registProductPrice();
+        detail = registProductDetail();
+        categories = registProductCategories();
+        images = registProductImages();
+        tags = registProductTags();
+        product = registProductProduct();
     }
 
     @Test
-    void test_create_success() {
+    void test_registProduct_success() {
         ProductRegisterRequest request = mock(ProductRegisterRequest.class);
         when(request.getSellerId()).thenReturn(1L);
         when(request.getBrandId()).thenReturn(1L);
@@ -128,7 +132,7 @@ class ProductServiceImplTest {
         when(brandService.getBrandById(1L)).thenReturn(brand);
         when(productRepository.save(any())).thenReturn(product);
 
-        ProductRegisterResponse response = productService.create(request);
+        ProductRegisterResponse response = productService.registProduct(request);
 
         assertNotNull(response);
         assertEquals("Product", response.name());
@@ -136,19 +140,10 @@ class ProductServiceImplTest {
 
     @Test
     void test_readAll_success() {
-        ProductSearchRequest request = ProductSearchRequest.builder()
-            .page(1)
-            .perPage(10)
-            .sort("created_at:desc")
-            .status("ACTIVE")
-            .minPrice(1000)
-            .maxPrice(10000000)
-            .category("1")
-            .seller(1)
-            .brand(1)
-            .inStock(true)
-            .search("TEST")
-            .build();
+        ProductSearchRequest request = new ProductSearchRequest("ACTIVE", 1000, 10000000, "1", 1, 1,
+            true, "TEST");
+        Pageable pageable = PageRequest.of(0, 10); // 페이지 번호 0, 페이지 크기 10
+
         PageImpl<Product> productPage = new PageImpl<>(List.of(product));
 
         when(productRepository.findAllByRequest(any(), any())).thenReturn(
@@ -163,7 +158,7 @@ class ProductServiceImplTest {
         when(sellerService.createSellerResponse(any())).thenReturn(
             mock(SellerResponse.class));
 
-        Page<ProductListResponse> result = productService.readAll(request);
+        Page<ProductListResponse> result = productService.readAll(request, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -171,7 +166,7 @@ class ProductServiceImplTest {
 
     @Test
     void test_readDetail_success() {
-        Product relateProduct = createReleateProduct();
+        Product relateProduct = registProductReleateProduct();
 
         when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
         when(brandService.createBrandDetailResponse(any())).thenReturn(
@@ -194,7 +189,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void test_update_success() {
+    void test_update_Product_success() {
         ProductRegisterRequest request = mock(ProductRegisterRequest.class);
 
         when(request.getSellerId()).thenReturn(1L);
@@ -209,16 +204,16 @@ class ProductServiceImplTest {
         when(sellerService.getSellerById(1L)).thenReturn(seller);
         when(brandService.getBrandById(1L)).thenReturn(brand);
 
-        ProductUpdateResponse response = productService.update(1L, request);
+        ProductUpdateResponse response = productService.updateProduct(1L, request);
 
         assertNotNull(response);
         assertEquals("Updated", response.name());
     }
 
     @Test
-    void test_delete_success() {
+    void test_delete_Product_success() {
         when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
-        productService.delete(1L);
+        productService.deleteProduct(1L);
         verify(productRepository).delete(product);
     }
 
@@ -230,7 +225,7 @@ class ProductServiceImplTest {
         assertEquals(result.getId(), product.getId());
     }
 
-    private Seller createSeller() {
+    private Seller registProductSeller() {
         return Seller.builder()
             .id(1L)
             .name("TestSeller")
@@ -243,7 +238,7 @@ class ProductServiceImplTest {
             .build();
     }
 
-    private Brand createBrand() {
+    private Brand registProductBrand() {
         return Brand.builder()
             .id(1L)
             .name("TestBrand")
@@ -254,7 +249,7 @@ class ProductServiceImplTest {
             .build();
     }
 
-    private Product createProduct() {
+    private Product registProductProduct() {
         return Product.builder()
             .id(1L)
             .name("Product")
@@ -272,34 +267,36 @@ class ProductServiceImplTest {
             .build();
     }
 
-    private ProductPrice createPrice() {
-        return ProductPrice.of(null, new BigDecimal(100000), new BigDecimal(90000),
+    private ProductPrice registProductPrice() {
+        ProductPriceRequest request = new ProductPriceRequest(new BigDecimal(100000), new BigDecimal(90000),
             new BigDecimal(40000), "KRW", new BigDecimal("10.0"));
+        return ProductPrice.of(null, request);
     }
 
-    private ProductDetail createDetail() {
+    private ProductDetail registProductDetail() {
+        DimensionsRequest request = new DimensionsRequest(10, 20, 30);
         Map<String, Object> additionalInfo = new HashMap<>();
         additionalInfo.put("assembly_test", "test");
-        return ProductDetail.of(null, new BigDecimal(60), Dimensions.of(10, 20, 30),
+        return ProductDetail.of(null, new BigDecimal(60), Dimensions.of(request),
             "detail", "테스트", "1년", "테스트", additionalInfo);
     }
 
-    private List<ProductCategory> createCategories() {
+    private List<ProductCategory> registProductCategories() {
         Category category = Category.of("test", "category-slug", "categoryDescription", null, 1,
             "imageUrl");
         ProductCategory productCategory = ProductCategory.of(null, category, true);
         return List.of(productCategory);
     }
 
-    private List<ProductImage> createImages() {
+    private List<ProductImage> registProductImages() {
         return List.of();
     }
 
-    private List<ProductTag> createTags() {
+    private List<ProductTag> registProductTags() {
         return List.of();
     }
 
-    private Product createReleateProduct() {
+    private Product registProductReleateProduct() {
         return Product.builder()
             .id(2L)
             .name("relate")

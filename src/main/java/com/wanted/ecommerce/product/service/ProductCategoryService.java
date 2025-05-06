@@ -10,6 +10,5 @@ public interface ProductCategoryService {
 
     List<ProductCategory> saveProductCategories(Product product, List<ProductCategoryRequest> categoryRequestList);
     List<CategoryResponse> createCategoryResponse(List<ProductCategory> productCategories);
-    List<ProductCategory> getCategoriesByCategoryIdAndProductId(Long categoryId, Long productId);
     void updateCategories(Product product, List<ProductCategoryRequest> requests);
 }

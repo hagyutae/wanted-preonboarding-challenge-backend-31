@@ -27,21 +27,18 @@ public class ProductImageServiceImpl implements ProductImageService {
         List<ProductImage> images = imageRequestList.stream().map(imageRequest ->
         {
             ProductOption option = optionService.getOptionById(imageRequest.getOptionId());
-            return ProductImage.of(product, imageRequest.getUrl(), imageRequest.getAltText(),
-                imageRequest.getIsPrimary(), imageRequest.getDisplayOrder(), option);
+            return ProductImage.of(product, imageRequest, option);
         }).toList();
 
         return productImageRepository.saveAll(images).stream().map(
-            image -> ProductImageCreateResponse.of(image.getId(), image.getUrl(),
-                image.getAltText(),
-                image.isPrimary(), image.getDisplayOrder(), image.getOption().getId())).toList();
+            image -> ProductImageCreateResponse.of(image, image.getOption())).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
     public ProductImageResponse createPrimaryProductImageResponse(Long productId) {
         return productImageRepository.findByProductIdAndPrimaryTrue(productId)
-            .map(image -> ProductImageResponse.of(image.getUrl(), image.getAltText()))
+            .map(ProductImageResponse::of)
             .orElse(null);
     }
 
@@ -56,12 +53,9 @@ public class ProductImageServiceImpl implements ProductImageService {
         return images.stream()
             .map(image -> {
                 if (image.getOption() != null) {
-                    return ProductImageCreateResponse.of(image.getId(), image.getUrl(),
-                        image.getAltText(), image.isPrimary(), image.getDisplayOrder(),
-                        image.getOption().getId());
+                    return ProductImageCreateResponse.of(image, image.getOption());
                 }
-                return ProductImageCreateResponse.of(image.getId(), image.getUrl(),
-                    image.getAltText(), image.isPrimary(), image.getDisplayOrder());
+                return ProductImageCreateResponse.of(image);
             }).toList();
     }
 }

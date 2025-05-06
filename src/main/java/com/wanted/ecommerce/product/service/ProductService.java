@@ -8,18 +8,19 @@ import com.wanted.ecommerce.product.dto.response.ProductRegisterResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
 import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
 
-    ProductRegisterResponse create(ProductRegisterRequest request);
+    ProductRegisterResponse registProduct(ProductRegisterRequest request);
 
-    Page<ProductListResponse> readAll(ProductSearchRequest request);
+    Page<ProductListResponse> readAll(ProductSearchRequest request, Pageable pageable);
 
     ProductResponse readDetail(long productId);
 
-    ProductUpdateResponse update(long productId, ProductRegisterRequest request);
+    ProductUpdateResponse updateProduct(long productId, ProductRegisterRequest request);
 
-    void delete(long productId);
+    void deleteProduct(long productId);
 
     Product getProductById(long id);
 }

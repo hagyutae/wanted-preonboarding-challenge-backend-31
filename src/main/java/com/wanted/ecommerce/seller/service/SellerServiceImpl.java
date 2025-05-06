@@ -6,7 +6,6 @@ import com.wanted.ecommerce.seller.domain.Seller;
 import com.wanted.ecommerce.seller.dto.response.SellerDetailResponse;
 import com.wanted.ecommerce.seller.dto.response.SellerResponse;
 import com.wanted.ecommerce.seller.repository.SellerRepository;
-import java.math.RoundingMode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,12 +30,6 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public SellerDetailResponse createSellerDetailResponse(Seller seller) {
-        double sellerRating = seller.getRating()
-            .setScale(1, RoundingMode.HALF_UP)
-            .doubleValue();
-
-        return SellerDetailResponse.of(seller.getId(),
-            seller.getName(), seller.getDescription(), seller.getLogoUrl(), sellerRating,
-            seller.getContactEmail(), seller.getContactPhone());
+        return SellerDetailResponse.of(seller);
     }
 }

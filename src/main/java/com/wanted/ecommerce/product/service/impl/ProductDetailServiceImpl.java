@@ -26,8 +26,7 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     @Transactional
     @Override
     public ProductDetail saveDetail(Product product, ProductDetailRequest detailRequest) {
-        Dimensions dimensions = Dimensions.of(detailRequest.getDimensions().getWidth(),
-            detailRequest.getDimensions().hashCode(), detailRequest.getDimensions().getDepth());
+        Dimensions dimensions = Dimensions.of(detailRequest.getDimensions());
 
         Map<String, Object> additionalInfo = detailRequest.getAdditionalInfo();
 
@@ -42,11 +41,8 @@ public class ProductDetailServiceImpl implements ProductDetailService {
     @Override
     public void updateDetail(ProductDetail detail, ProductDetailRequest request) {
         DimensionsRequest dimensionsRequest = request.getDimensions();
-        Dimensions dimensions = Dimensions.of(dimensionsRequest.getWidth(),
-            dimensionsRequest.getHeight(), dimensionsRequest.getDepth());
-        detail.update(request.getWeight(), dimensions, request.getMaterials(),
-            request.getCountryOfOrigin(), request.getWarrantyInfo(), request.getCareInstructions(),
-            request.getAdditionalInfo());
+        Dimensions dimensions = Dimensions.of(dimensionsRequest);
+        detail.update(request, dimensions);
     }
 
     @Override
@@ -54,13 +50,9 @@ public class ProductDetailServiceImpl implements ProductDetailService {
         double weight = detail.getWeight()
             .setScale(1, RoundingMode.HALF_UP)
             .doubleValue();
-        DimensionsResponse dimensionsResponse = DimensionsResponse.of(
-            detail.getDimensions().getWidth(), detail.getDimensions().getHeight(),
-            detail.getDimensions().getDepth());
+        DimensionsResponse dimensionsResponse = DimensionsResponse.of(detail.getDimensions());
 
-        return DetailResponse.of(weight, dimensionsResponse,
-            detail.getMaterials(), detail.getCountryOfOrigin(), detail.getWarrantyInfo(),
-            detail.getCareInstructions(), detail.getAdditionalInfo());
+        return DetailResponse.of(weight, dimensionsResponse, detail);
     }
 
     @Transactional(readOnly = true)
