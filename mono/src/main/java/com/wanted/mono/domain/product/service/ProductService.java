@@ -4,11 +4,9 @@ import com.wanted.mono.domain.brand.entity.Brand;
 import com.wanted.mono.domain.brand.service.BrandService;
 import com.wanted.mono.domain.product.dto.Pagination;
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
+import com.wanted.mono.domain.product.dto.model.ProductImageDto;
 import com.wanted.mono.domain.product.dto.model.ProductInfoDto;
-import com.wanted.mono.domain.product.dto.request.ProductAddOptionRequest;
-import com.wanted.mono.domain.product.dto.request.ProductOptionRequest;
-import com.wanted.mono.domain.product.dto.request.ProductRequest;
-import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
+import com.wanted.mono.domain.product.dto.request.*;
 import com.wanted.mono.domain.product.dto.response.ProductOptionSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSearchResponse;
@@ -61,7 +59,7 @@ public class ProductService {
         Long savedProductPriceId = productPriceService.createProductPrice(productRequest.getPrice(), product);
         productCategoryService.createProductCategory(productRequest.getCategories(), product);
         productOptionGroupService.createProductOptionGroup(productRequest.getOptionGroups(), product);
-        productImageService.createProductImage(productRequest.getImages(), product);
+        productImageService.createProductImages(productRequest.getImages(), product);
         productTagService.createProductTag(productRequest.getTags(), product);
         log.info("Product 서브 엔티티 저장 종료");
 
@@ -158,5 +156,19 @@ public class ProductService {
     @Transactional
     public void deleteOption(Long productId, Long optionId) {
         productOptionService.deleteOption(optionId);
+    }
+
+    @Transactional
+    public ProductImageDto addImage(Long productId, ProductImageRequest productImageRequest) {
+        Product product = productRepository.findById(productId).orElseThrow(ProductEmptyException::new);
+        Long saveId = productImageService.createProductImage(productImageRequest, product);
+
+        return new ProductImageDto(
+                saveId,
+                productImageRequest.getUrl(),
+                productImageRequest.getAltText(),
+                productImageRequest.getIsPrimary(),
+                productImageRequest.getDisplayOrder(),
+                productImageRequest.getOptionId());
     }
 }
