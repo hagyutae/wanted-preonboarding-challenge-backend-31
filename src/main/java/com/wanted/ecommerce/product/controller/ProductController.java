@@ -1,0 +1,83 @@
+package com.wanted.ecommerce.product.controller;
+
+import com.wanted.ecommerce.common.constants.MessageConstants;
+import com.wanted.ecommerce.common.response.ApiResponse;
+import com.wanted.ecommerce.common.response.PaginationResponse;
+import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest;
+import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
+import com.wanted.ecommerce.product.dto.response.ProductListResponse;
+import com.wanted.ecommerce.product.dto.response.ProductRegisterResponse;
+import com.wanted.ecommerce.product.dto.response.ProductResponse;
+import com.wanted.ecommerce.product.dto.response.ProductUpdateResponse;
+import com.wanted.ecommerce.product.service.ProductService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/products")
+@RequiredArgsConstructor
+public class ProductController {
+
+    private final ProductService productService;
+
+    @PostMapping
+    public ResponseEntity<ApiResponse<ProductRegisterResponse>> createProduct(
+        @Valid @RequestBody ProductRegisterRequest productRegisterRequest
+    ) {
+        ApiResponse<ProductRegisterResponse> response = ApiResponse.success(
+            productService.registProduct(productRegisterRequest),
+            MessageConstants.CREATED_PRODUCTS.getMessage());
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<PaginationResponse<ProductListResponse>>> getAllProduct(
+        @Valid @ModelAttribute ProductSearchRequest request) {
+        Page<ProductListResponse> results = productService.readAll(request);
+        PaginationResponse<ProductListResponse> response = PaginationResponse.of(results);
+        return ResponseEntity.ok(
+            ApiResponse.success(response, MessageConstants.FUNDED_ALL_PRODUCTS.getMessage()));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductResponse>> getProduct(
+        @PathVariable Long id
+    ) {
+        ProductResponse response = productService.readDetail(id);
+        return ResponseEntity.ok(
+            ApiResponse.success(response, MessageConstants.FUNDED_PRODUCT_DETAIL.getMessage()));
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductUpdateResponse>> updateProduct(
+        @PathVariable Long id,
+        @Valid @RequestBody ProductRegisterRequest productRegisterRequest
+    ) {
+        ProductUpdateResponse response = productService.updateProduct(id, productRegisterRequest);
+        return ResponseEntity.ok(
+            ApiResponse.success(response, MessageConstants.UPDATED_PRODUCT.getMessage()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> DeleteProduct(
+        @PathVariable Long id
+    ) {
+        productService.deleteProduct(id);
+        return ResponseEntity.ok(
+            ApiResponse.success(null, MessageConstants.DELETED_PRODUCT.getMessage()));
+    }
+}
