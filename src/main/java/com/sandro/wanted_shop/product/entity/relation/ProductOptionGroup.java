@@ -18,7 +18,7 @@ import java.util.Optional;
 @Table(name = "product_option_groups")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductOptionGroup extends BaseEntity {
+public class ProductOptionGroup extends BaseEntity implements Comparable<ProductOptionGroup> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
@@ -28,6 +28,7 @@ public class ProductOptionGroup extends BaseEntity {
 
     private Integer displayOrder;
 
+    @OrderBy("displayOrder")
     @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOption> options;
 
@@ -53,5 +54,10 @@ public class ProductOptionGroup extends BaseEntity {
 
     public void addOption(ProductOption productOption) {
         this.options.add(productOption);
+    }
+
+    @Override
+    public int compareTo(ProductOptionGroup o) {
+        return this.displayOrder.compareTo(o.getDisplayOrder());
     }
 }

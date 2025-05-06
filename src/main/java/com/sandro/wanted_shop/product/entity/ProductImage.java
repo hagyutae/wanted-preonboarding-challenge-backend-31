@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
@@ -14,7 +16,7 @@ import java.util.Optional;
 @Getter
 @Table(name = "product_images")
 @Entity
-public class ProductImage extends BaseEntity {
+public class ProductImage extends BaseEntity implements Comparable<ProductImage> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
@@ -28,7 +30,7 @@ public class ProductImage extends BaseEntity {
 
     private Integer displayOrder;
 
-    // TODO: 옵션이 삭제되는 경우 id가 null이 된다.
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_id")
     private ProductOption option;
@@ -57,5 +59,10 @@ public class ProductImage extends BaseEntity {
 
         assert this.displayOrder > 0
                 : "displayOrder must be greater than 0";
+    }
+
+    @Override
+    public int compareTo(ProductImage o) {
+        return this.displayOrder.compareTo(o.getDisplayOrder());
     }
 }

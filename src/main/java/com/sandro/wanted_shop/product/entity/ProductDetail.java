@@ -1,8 +1,12 @@
 package com.sandro.wanted_shop.product.entity;
 
 import com.sandro.wanted_shop.common.entity.BaseEntity;
+import com.sandro.wanted_shop.product.dto.Dimensions;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -56,16 +60,5 @@ public class ProductDetail extends BaseEntity {
     private void validate() {
         assert product != null
                 : "Product must not be null";
-    }
-
-    @ToString
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    @Builder
-    public static class Dimensions {
-        private float depth;
-        private float width;
-        private float height;
     }
 }

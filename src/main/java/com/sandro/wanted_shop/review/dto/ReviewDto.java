@@ -2,6 +2,8 @@ package com.sandro.wanted_shop.review.dto;
 
 import com.sandro.wanted_shop.review.entity.Review;
 
+import java.util.List;
+
 public record ReviewDto(
         Long id,
         UserDto user,
@@ -21,5 +23,11 @@ public record ReviewDto(
                 review.getVerifiedPurchase(),
                 review.getHelpfulVotes()
         );
+    }
+
+    public static List<ReviewDto> from(List<Review> reviews) {
+        return reviews.stream()
+                .map(ReviewDto::from)
+                .toList();
     }
 }

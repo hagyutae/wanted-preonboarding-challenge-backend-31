@@ -1,6 +1,5 @@
 package com.sandro.wanted_shop.config;
 
-import com.sandro.wanted_shop.category.CategoryRepository;
 import com.sandro.wanted_shop.product.persistence.OptionGroupRepository;
 import com.sandro.wanted_shop.product.persistence.OptionRepository;
 import com.sandro.wanted_shop.product.persistence.ProductRepository;
@@ -25,12 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
                 "classpath:sql/product_extended.sql",
                 "classpath:sql/product_options.sql",
                 "classpath:sql/reviews.sql",
-        },
-        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS
-)
-@Sql(
-        scripts = "classpath:sql/clean_up.sql",
-        executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS
+        }
 )
 @AutoConfigureMockMvc
 @SpringBootTest

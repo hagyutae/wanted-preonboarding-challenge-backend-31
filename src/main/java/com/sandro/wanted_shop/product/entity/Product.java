@@ -3,6 +3,8 @@ package com.sandro.wanted_shop.product.entity;
 import com.sandro.wanted_shop.brand.Brand;
 import com.sandro.wanted_shop.category.Category;
 import com.sandro.wanted_shop.common.entity.BaseTimeEntity;
+import com.sandro.wanted_shop.product.dto.CreateProductCommand;
+import com.sandro.wanted_shop.product.dto.UpdateProductCommand;
 import com.sandro.wanted_shop.product.entity.enums.ProductStatus;
 import com.sandro.wanted_shop.product.entity.relation.ProductCategory;
 import com.sandro.wanted_shop.product.entity.relation.ProductOptionGroup;
@@ -17,9 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Entity
 @Table(name = "products")
@@ -49,25 +49,27 @@ public class Product extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
     private ProductPrice price;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
     private ProductDetail detail;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductCategory> categories;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("displayOrder")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOptionGroup> optionGroups;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("displayOrder")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> images;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductTag> tags;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 
     @Builder
@@ -132,6 +134,29 @@ public class Product extends BaseTimeEntity {
 
     public void addImage(ProductImage productImage) {
         this.images.add(productImage);
+    }
+
+    // TODO: 고도화하기
+    public void update(UpdateProductCommand command) {
+        this.name = command.name();
+        this.slug = command.slug();
+        this.shortDescription = command.shortDescription();
+        this.fullDescription = command.fullDescription();
+        this.status = command.status();
+    }
+
+    public void addAllTags(List<Tag> tags) {
+        List<ProductTag> productTags = tags.stream()
+                .map(tag -> ProductTag.of(this, tag))
+                .toList();
+        this.tags.addAll(productTags);
+    }
+
+    public void addAllCategories(List<CreateProductCommand.Category> categoryCommands, Map<Long, Category> categoryMap) {
+        List<ProductCategory> productCategories = categoryCommands.stream()
+                .map(command -> ProductCategory.of(this, categoryMap.get(command.id())))
+                .toList();
+        this.categories.addAll(productCategories);
     }
 
     // ... 나머지 필드 및 관계 매핑

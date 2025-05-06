@@ -1,5 +1,7 @@
 package com.sandro.wanted_shop.category;
 
+import com.sandro.wanted_shop.product.entity.relation.ProductCategory;
+
 import java.util.List;
 
 public record CategoryDto(
@@ -23,5 +25,13 @@ public record CategoryDto(
                         .map(CategoryDto::from)
                         .toList()
         );
+    }
+
+    public static List<CategoryDto> from(List<ProductCategory> categories) {
+        return categories.stream()
+                .map(productCategory -> {
+                    Category category = productCategory.getCategory();
+                    return CategoryDto.from(category);
+                }).toList();
     }
 }

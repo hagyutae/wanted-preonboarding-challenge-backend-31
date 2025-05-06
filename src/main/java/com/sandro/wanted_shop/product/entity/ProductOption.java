@@ -1,6 +1,7 @@
 package com.sandro.wanted_shop.product.entity;
 
 import com.sandro.wanted_shop.common.entity.BaseEntity;
+import com.sandro.wanted_shop.product.dto.UpdateOptionCommand;
 import com.sandro.wanted_shop.product.entity.relation.ProductOptionGroup;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @Table(name = "product_options")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductOption extends BaseEntity {
+public class ProductOption extends BaseEntity implements Comparable<ProductOption> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "option_group_id")
     private ProductOptionGroup optionGroup;
@@ -34,6 +35,7 @@ public class ProductOption extends BaseEntity {
 
     private Integer displayOrder; // order > 0
 
+    @OrderBy("displayOrder")
     @OneToMany(mappedBy = "option")
     private List<ProductImage> images;
 
@@ -63,5 +65,18 @@ public class ProductOption extends BaseEntity {
 
     public void addImage(ProductImage productImage) {
         this.images.add(productImage);
+    }
+
+    public void update(UpdateOptionCommand command) {
+        this.name = command.name();
+        this.additionalPrice = command.additionalPrice();
+        this.sku = command.sku();
+        this.stock = command.stock();
+        this.displayOrder = command.displayOrder();
+    }
+
+    @Override
+    public int compareTo(ProductOption o) {
+        return this.displayOrder.compareTo(o.displayOrder);
     }
 }
