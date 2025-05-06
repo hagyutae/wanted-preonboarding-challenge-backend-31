@@ -56,13 +56,6 @@ public class ProductOptionGroup {
     }
 
     public void associateProduct(Product product) {
-        if (this.product == product) {
-            return;
-        }
-        if (this.product != null) {
-            this.product.getOptionGroups().remove(this);
-        }
-
         this.product = product;
     }
 }

@@ -51,13 +51,11 @@ public class ProductCategory {
         this.isPrimary = isPrimary;
     }
 
+    public void associateCategory(Category category) {
+        this.category = category;
+    }
+
     public void associateProduct(Product product) {
-        if (this.product == product) {
-            return;
-        }
-        if (this.product != null) {
-            this.product.getCategories().remove(this);
-        }
         this.product = product;
     }
 }

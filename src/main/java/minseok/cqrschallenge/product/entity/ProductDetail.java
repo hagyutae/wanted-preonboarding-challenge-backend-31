@@ -80,12 +80,6 @@ public class ProductDetail {
     }
 
     public void associateProduct(Product product) {
-        if (this.product == product) {
-            return;
-        }
-        if (this.product != null) {
-            this.product.setDetail(null);
-        }
         this.product = product;
     }
 }

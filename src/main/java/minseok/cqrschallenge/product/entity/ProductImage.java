@@ -76,14 +76,6 @@ public class ProductImage {
 
 
     public void associateProduct(Product product) {
-        if (this.product == product) {
-            return;
-        }
-
-        if (this.product != null) {
-            this.product.getImages().remove(this);
-        }
-
         this.product = product;
     }
 

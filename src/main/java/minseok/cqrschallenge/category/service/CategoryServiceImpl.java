@@ -93,14 +93,14 @@ public class CategoryServiceImpl implements CategoryService {
                 .pagination(pagination)
                 .build();
     }
-    
+
     private void addSubcategoryIds(Category category, List<Long> categoryIds) {
         for (Category child : category.getChildren()) {
             categoryIds.add(child.getId());
             addSubcategoryIds(child, categoryIds);
         }
     }
-    
+
     private CategoryResponse convertToCategoryResponse(Category category) {
         return CategoryResponse.builder()
                 .id(category.getId())

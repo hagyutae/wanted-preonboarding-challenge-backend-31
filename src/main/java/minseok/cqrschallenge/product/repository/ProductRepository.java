@@ -30,4 +30,16 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
         "WHERE p.id = :id AND p.status <> 'DELETED'")
     Product findByIdWithAllDetails(@Param("id") Long id);
 
+    @Query("SELECT p FROM Product p " +
+        "WHERE p.status = 'ACTIVE' " +
+        "ORDER BY p.createdAt DESC")
+    List<Product> findNewProducts(Pageable pageable);
+
+    @Query("SELECT p FROM Product p " +
+        "LEFT JOIN p.reviews r " +
+        "WHERE p.status = 'ACTIVE' " +
+        "GROUP BY p.id " +
+        "ORDER BY AVG(r.rating) DESC, COUNT(r) DESC")
+    List<Product> findPopularProducts(Pageable pageable);
+
 }

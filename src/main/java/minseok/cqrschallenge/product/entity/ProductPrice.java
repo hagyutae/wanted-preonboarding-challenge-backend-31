@@ -67,12 +67,6 @@ public class ProductPrice {
     }
 
     public void associateProduct(Product product) {
-        if (this.product == product) {
-            return;
-        }
-        if (this.product != null) {
-            this.product.setPrice(null);
-        }
         this.product = product;
 
 
