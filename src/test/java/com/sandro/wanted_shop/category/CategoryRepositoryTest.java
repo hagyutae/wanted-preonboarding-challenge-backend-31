@@ -1,26 +1,16 @@
 package com.sandro.wanted_shop.category;
 
+import com.sandro.wanted_shop.config.IntegrationTestContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Sql(scripts = {
-        "classpath:sql/categories.sql"
-}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
-@Sql(scripts = {
-        "classpath:sql/clean_up.sql"
-}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS)
-@DataJpaTest
-class CategoryRepositoryTest {
+class CategoryRepositoryTest extends IntegrationTestContext {
     @Autowired CategoryRepository categoryRepository;
 
     @DisplayName("카테고리를 계층 구조로 조회한다.")
