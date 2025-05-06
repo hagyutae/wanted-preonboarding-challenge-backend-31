@@ -6,6 +6,8 @@ import com.shopping.mall.brand.entity.Brand;
 import com.shopping.mall.brand.repository.BrandRepository;
 import com.shopping.mall.category.entity.Category;
 import com.shopping.mall.category.repository.CategoryRepository;
+import com.shopping.mall.common.exception.ConflictException;
+import com.shopping.mall.common.exception.ResourceNotFoundException;
 import com.shopping.mall.product.dto.request.ProductCreateRequest;
 import com.shopping.mall.product.dto.request.ProductUpdateRequest;
 import com.shopping.mall.product.entity.*;
@@ -38,10 +40,10 @@ public class ProductService {
     public Long createProduct(ProductCreateRequest request) {
 
         Seller seller = sellerRepository.findById(request.getSellerId())
-                .orElseThrow(() -> new IllegalArgumentException("판매자가 존재하지 않습니다"));
+                .orElseThrow(() -> new ResourceNotFoundException("판매자가 존재하지 않습니다"));
 
         Brand brand = brandRepository.findById(request.getBrandId())
-                .orElseThrow(() -> new IllegalArgumentException("브랜드가 존재하지 않습니다"));
+                .orElseThrow(() -> new ResourceNotFoundException("브랜드가 존재하지 않습니다"));
 
         // Product
         Product product = Product.builder()
@@ -85,7 +87,7 @@ public class ProductService {
         // Product Category
         for (ProductCreateRequest.CategoryInfo categoryInfo : request.getCategories()) {
             Category category = categoryRepository.findById(categoryInfo.getCategoryId())
-                    .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다"));
+                    .orElseThrow(() -> new ResourceNotFoundException("카테고리가 존재하지 않습니다"));
 
             ProductCategory productCategory = ProductCategory.builder()
                     .product(product)
@@ -110,7 +112,7 @@ public class ProductService {
     @Transactional
     public void updateProduct(Long productId, ProductUpdateRequest request) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("상품이 존재하지 않습니다."));
 
         product.update(
                 request.getName(),
@@ -119,5 +121,17 @@ public class ProductService {
                 request.getFullDescription(),
                 request.getStatus()
         );
+    }
+
+    @Transactional
+    public void deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("상품을 찾을 수 없습니다."));
+
+        if (product.getStatus() == ProductStatus.DELETED) {
+            throw new ConflictException("이미 삭제된 상품입니다.");
+        }
+
+        product.delete();
     }
 }

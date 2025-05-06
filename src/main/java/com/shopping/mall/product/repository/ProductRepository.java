@@ -11,11 +11,12 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("""
-        SELECT DISTINCT p 
+        SELECT DISTINCT p
         FROM Product p
         LEFT JOIN FETCH p.productTags pt
         LEFT JOIN p.productPrice pp
-        WHERE (:status IS NULL OR p.status = :status)
+        WHERE p.status <> 'DELETED'
+          AND (:status IS NULL OR p.status = :status)
           AND (:minPrice IS NULL OR pp.basePrice >= :minPrice)
           AND (:maxPrice IS NULL OR pp.basePrice <= :maxPrice)
           AND (:sellerId IS NULL OR p.seller.id = :sellerId)
@@ -41,7 +42,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("""
         SELECT p FROM Product p
         JOIN ProductTag pt ON pt.product = p
-        WHERE (:tagIds IS NULL OR pt.tag.id IN :tagIds)
+        WHERE p.status <> 'DELETED'
+          AND (:tagIds IS NULL OR pt.tag.id IN :tagIds)
     """)
     List<Product> findByTags(@Param("tagIds") List<Long> tagIds);
 
@@ -57,6 +59,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         LEFT JOIN FETCH p.productCategories pc
         LEFT JOIN FETCH pc.category
         WHERE p.id = :productId
+          AND p.status <> 'DELETED'
     """)
     Optional<Product> findByIdWithAll(@Param("productId") Long productId);
 

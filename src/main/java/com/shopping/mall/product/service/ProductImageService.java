@@ -1,5 +1,6 @@
 package com.shopping.mall.product.service;
 
+import com.shopping.mall.common.exception.ResourceNotFoundException;
 import com.shopping.mall.product.dto.request.ProductImageCreateRequest;
 import com.shopping.mall.product.entity.Product;
 import com.shopping.mall.product.entity.ProductImage;
@@ -23,12 +24,12 @@ public class ProductImageService {
     public void addImage(Long productId, ProductImageCreateRequest request) {
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다"));
+                .orElseThrow(() -> new ResourceNotFoundException("상품이 존재하지 않습니다"));
 
         ProductOption option = null;
         if (request.getOptionId() != null) {
             option = productOptionRepository.findById(request.getOptionId())
-                    .orElseThrow(() -> new IllegalArgumentException("옵션이 존재하지 않습니다."));
+                    .orElseThrow(() -> new ResourceNotFoundException("옵션이 존재하지 않습니다."));
         }
 
         ProductImage image = ProductImage.builder()
