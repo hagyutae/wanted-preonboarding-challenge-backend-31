@@ -4,9 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import minseok.cqrschallenge.brand.entity.Brand;
-import minseok.cqrschallenge.brand.repository.BrandRepository;
-import minseok.cqrschallenge.category.repository.CategoryRepository;
 import minseok.cqrschallenge.common.dto.PaginationResponse;
 import minseok.cqrschallenge.common.exception.ConflictException;
 import minseok.cqrschallenge.common.exception.ResourceNotFoundException;
@@ -17,21 +14,9 @@ import minseok.cqrschallenge.product.dto.response.ProductDetailResponse;
 import minseok.cqrschallenge.product.dto.response.ProductListResponse;
 import minseok.cqrschallenge.product.dto.response.ProductUpdateResponse;
 import minseok.cqrschallenge.product.entity.Product;
-import minseok.cqrschallenge.product.entity.ProductCategory;
-import minseok.cqrschallenge.product.entity.ProductDetail;
-import minseok.cqrschallenge.product.entity.ProductImage;
-import minseok.cqrschallenge.product.entity.ProductOption;
-import minseok.cqrschallenge.product.entity.ProductOptionGroup;
-import minseok.cqrschallenge.product.entity.ProductPrice;
 import minseok.cqrschallenge.product.entity.ProductStatus;
-import minseok.cqrschallenge.product.entity.ProductTag;
 import minseok.cqrschallenge.product.mapper.ProductMapper;
-import minseok.cqrschallenge.product.repository.ProductOptionRepository;
 import minseok.cqrschallenge.product.repository.ProductRepository;
-import minseok.cqrschallenge.seller.entity.Seller;
-import minseok.cqrschallenge.seller.repository.SellerRepository;
-import minseok.cqrschallenge.tag.entity.Tag;
-import minseok.cqrschallenge.tag.repository.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,19 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
     private final ProductMapper productMapper;
-
-    private final BrandRepository brandRepository;
-
-    private final SellerRepository sellerRepository;
-
-    private final CategoryRepository categoryRepository;
-
-    private final TagRepository tagRepository;
-
-    private final ProductOptionRepository productOptionRepository;
-
     private final ObjectMapper objectMapper;
 
     @Override
@@ -68,105 +41,9 @@ public class ProductServiceImpl implements ProductService {
             throw new ConflictException("해당 슬러그는 이미 사용 중입니다.", "slug", request.getSlug());
         }
 
-        if (request.getSellerId() != null) {
-            Seller seller = sellerRepository.findById(request.getSellerId())
-                .orElseThrow(() -> new ResourceNotFoundException("판매자를 찾을 수 없습니다."));
-            product.assignSeller(seller);
-        }
-
-        if (request.getBrandId() != null) {
-            Brand brand = brandRepository.findById(request.getBrandId())
-                .orElseThrow(() -> new ResourceNotFoundException("브랜드를 찾을 수 없습니다."));
-            product.assignBrand(brand);
-        }
-
-        if (request.getPrice() != null) {
-            product.addPrice(
-                ProductPrice.builder()
-                    .basePrice(request.getPrice().getBasePrice())
-                    .salePrice(request.getPrice().getSalePrice())
-                    .costPrice(request.getPrice().getCostPrice())
-                    .currency(request.getPrice().getCurrency())
-                    .taxRate(request.getPrice().getTaxRate())
-                    .build()
-            );
-        }
-
-        if (request.getDetail() != null) {
-            product.addDetail(ProductDetail.builder()
-                .product(product)
-                .weight(request.getDetail().getWeight())
-                .dimensions(request.getDetail().getDimensions())
-                .materials(request.getDetail().getMaterials())
-                .countryOfOrigin(request.getDetail().getCountryOfOrigin())
-                .warrantyInfo(request.getDetail().getWarrantyInfo())
-                .careInstructions(request.getDetail().getCareInstructions())
-                .additionalInfo(request.getDetail().getAdditionalInfo())
-                .build());
-        }
-
-        if (request.getCategories() != null && !request.getCategories().isEmpty()) {
-            request.getCategories().forEach(categoryRequest ->
-                product.addCategory(ProductCategory.builder()
-                    .category(categoryRepository.findById(categoryRequest.getCategoryId())
-                        .orElseThrow(() -> new ResourceNotFoundException("카테고리를 찾을 수 없습니다.")))
-                    .isPrimary(categoryRequest.getIsPrimary())
-                    .build()));
-        }
-        if (request.getOptionGroups() != null && !request.getOptionGroups().isEmpty()) {
-            request.getOptionGroups().forEach(optionGroupRequest -> {
-                ProductOptionGroup optionGroup = ProductOptionGroup.builder()
-                    .name(optionGroupRequest.getName())
-                    .displayOrder(optionGroupRequest.getDisplayOrder())
-                    .build();
-                product.addOptionGroup(optionGroup);
-
-                optionGroupRequest.getOptions().forEach(optionRequest -> {
-                    ProductOption option = ProductOption.builder()
-                        .name(optionRequest.getName())
-                        .additionalPrice(optionRequest.getAdditionalPrice())
-                        .sku(optionRequest.getSku())
-                        .stock(optionRequest.getStock())
-                        .displayOrder(optionRequest.getDisplayOrder())
-                        .build();
-                    optionGroup.addOption(option);
-                });
-            });
-        }
-
-        if (request.getImages() != null && !request.getImages().isEmpty()) {
-            request.getImages().forEach(imageRequest -> {
-                ProductImage.ProductImageBuilder imageBuilder = ProductImage.builder()
-                    .url(imageRequest.getUrl())
-                    .altText(imageRequest.getAltText())
-                    .displayOrder(imageRequest.getDisplayOrder())
-                    .isPrimary(imageRequest.getIsPrimary());
-
-                if (imageRequest.getOptionId() != null) {
-                    ProductOption option = productOptionRepository.findById(
-                            imageRequest.getOptionId())
-                        .orElseThrow(() -> new ResourceNotFoundException(
-                            "옵션을 찾을 수 없습니다: " + imageRequest.getOptionId()));
-                    imageBuilder.option(option);
-                }
-
-                ProductImage image = imageBuilder.build();
-                product.addImage(image);
-            });
-        }
-
-        if (request.getTags() != null && !request.getTags().isEmpty()) {
-            request.getTags().forEach(tagId -> {
-                Tag tag = tagRepository.findById(tagId)
-                    .orElseThrow(() -> new ResourceNotFoundException("태그를 찾을 수 없습니다."));
-                ProductTag productTag = ProductTag.builder()
-                    .tag(tag)
-                    .build();
-                product.addTag(productTag);
-            });
-        }
-
         Product savedProduct = productRepository.save(product);
+
+        productMapper.mapImages(savedProduct, request);
         return productMapper.toCreateResponse(savedProduct);
     }
 

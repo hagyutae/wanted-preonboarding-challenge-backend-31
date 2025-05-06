@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import minseok.cqrschallenge.brand.entity.Brand;
+import minseok.cqrschallenge.brand.repository.BrandRepository;
+import minseok.cqrschallenge.category.repository.CategoryRepository;
+import minseok.cqrschallenge.common.exception.ResourceNotFoundException;
 import minseok.cqrschallenge.product.dto.request.ProductCreateRequest;
 import minseok.cqrschallenge.product.dto.response.ProductCreateResponse;
 import minseok.cqrschallenge.product.dto.response.ProductDetailResponse;
@@ -14,8 +18,20 @@ import minseok.cqrschallenge.product.dto.response.ProductListResponse;
 import minseok.cqrschallenge.product.dto.response.ProductUpdateResponse;
 import minseok.cqrschallenge.product.entity.Dimensions;
 import minseok.cqrschallenge.product.entity.Product;
+import minseok.cqrschallenge.product.entity.ProductCategory;
+import minseok.cqrschallenge.product.entity.ProductDetail;
+import minseok.cqrschallenge.product.entity.ProductImage;
+import minseok.cqrschallenge.product.entity.ProductOption;
+import minseok.cqrschallenge.product.entity.ProductOptionGroup;
+import minseok.cqrschallenge.product.entity.ProductPrice;
 import minseok.cqrschallenge.product.entity.ProductStatus;
+import minseok.cqrschallenge.product.entity.ProductTag;
+import minseok.cqrschallenge.product.repository.ProductOptionRepository;
 import minseok.cqrschallenge.review.repository.ReviewRepository;
+import minseok.cqrschallenge.seller.entity.Seller;
+import minseok.cqrschallenge.seller.repository.SellerRepository;
+import minseok.cqrschallenge.tag.entity.Tag;
+import minseok.cqrschallenge.tag.repository.TagRepository;
 import org.springframework.stereotype.Component;
 
 
@@ -24,17 +40,54 @@ import org.springframework.stereotype.Component;
 public class ProductMapper {
 
     private final ReviewRepository reviewRepository;
+    private final BrandRepository brandRepository;
+    private final SellerRepository sellerRepository;
+    private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
+    private final ProductOptionRepository productOptionRepository;
 
     public Product toEntity(ProductCreateRequest request) {
-        return Product.builder()
+        Product product = Product.builder()
             .name(request.getName())
             .slug(request.getSlug())
             .shortDescription(request.getShortDescription())
             .fullDescription(request.getFullDescription())
             .status(ProductStatus.valueOf(request.getStatus()))
             .build();
+
+        mapSeller(product, request);
+        mapBrand(product, request);
+        mapPrice(product, request);
+        mapDetail(product, request);
+        mapCategories(product, request);
+        mapOptionGroups(product, request);
+        mapTags(product, request);
+
+        return product;
     }
 
+    public void mapImages(Product product, ProductCreateRequest request) {
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            request.getImages().forEach(imageRequest -> {
+                ProductImage.ProductImageBuilder imageBuilder = ProductImage.builder()
+                    .url(imageRequest.getUrl())
+                    .altText(imageRequest.getAltText())
+                    .displayOrder(imageRequest.getDisplayOrder())
+                    .isPrimary(imageRequest.getIsPrimary());
+
+                if (imageRequest.getOptionId() != null) {
+                    ProductOption option = productOptionRepository.findById(
+                            imageRequest.getOptionId())
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                            "옵션을 찾을 수 없습니다: " + imageRequest.getOptionId()));
+                    imageBuilder.option(option);
+                }
+
+                ProductImage image = imageBuilder.build();
+                product.addImage(image);
+            });
+        }
+    }
 
     public ProductListResponse toListResponse(Product product) {
         return ProductListResponse.builder()
@@ -95,6 +148,98 @@ public class ProductMapper {
             .slug(product.getSlug())
             .updatedAt(product.getUpdatedAt())
             .build();
+    }
+
+    private void mapSeller(Product product, ProductCreateRequest request) {
+        if (request.getSellerId() != null) {
+            Seller seller = sellerRepository.findById(request.getSellerId())
+                .orElseThrow(() -> new ResourceNotFoundException("판매자를 찾을 수 없습니다."));
+            product.assignSeller(seller);
+        }
+    }
+
+    private void mapBrand(Product product, ProductCreateRequest request) {
+        if (request.getBrandId() != null) {
+            Brand brand = brandRepository.findById(request.getBrandId())
+                .orElseThrow(() -> new ResourceNotFoundException("브랜드를 찾을 수 없습니다."));
+            product.assignBrand(brand);
+        }
+    }
+
+    private void mapPrice(Product product, ProductCreateRequest request) {
+        if (request.getPrice() != null) {
+            product.addPrice(
+                ProductPrice.builder()
+                    .basePrice(request.getPrice().getBasePrice())
+                    .salePrice(request.getPrice().getSalePrice())
+                    .costPrice(request.getPrice().getCostPrice())
+                    .currency(request.getPrice().getCurrency())
+                    .taxRate(request.getPrice().getTaxRate())
+                    .build()
+            );
+        }
+    }
+
+    private void mapDetail(Product product, ProductCreateRequest request) {
+        if (request.getDetail() != null) {
+            product.addDetail(ProductDetail.builder()
+                .product(product)
+                .weight(request.getDetail().getWeight())
+                .dimensions(request.getDetail().getDimensions())
+                .materials(request.getDetail().getMaterials())
+                .countryOfOrigin(request.getDetail().getCountryOfOrigin())
+                .warrantyInfo(request.getDetail().getWarrantyInfo())
+                .careInstructions(request.getDetail().getCareInstructions())
+                .additionalInfo(request.getDetail().getAdditionalInfo())
+                .build());
+        }
+    }
+
+    private void mapCategories(Product product, ProductCreateRequest request) {
+        if (request.getCategories() != null && !request.getCategories().isEmpty()) {
+            request.getCategories().forEach(categoryRequest ->
+                product.addCategory(ProductCategory.builder()
+                    .category(categoryRepository.findById(categoryRequest.getCategoryId())
+                        .orElseThrow(() -> new ResourceNotFoundException("카테고리를 찾을 수 없습니다.")))
+                    .isPrimary(categoryRequest.getIsPrimary())
+                    .build()));
+        }
+    }
+
+    private void mapOptionGroups(Product product, ProductCreateRequest request) {
+        if (request.getOptionGroups() != null && !request.getOptionGroups().isEmpty()) {
+            request.getOptionGroups().forEach(optionGroupRequest -> {
+                ProductOptionGroup optionGroup = ProductOptionGroup.builder()
+                    .name(optionGroupRequest.getName())
+                    .displayOrder(optionGroupRequest.getDisplayOrder())
+                    .build();
+                product.addOptionGroup(optionGroup);
+
+                optionGroupRequest.getOptions().forEach(optionRequest -> {
+                    ProductOption option = ProductOption.builder()
+                        .name(optionRequest.getName())
+                        .additionalPrice(optionRequest.getAdditionalPrice())
+                        .sku(optionRequest.getSku())
+                        .stock(optionRequest.getStock())
+                        .displayOrder(optionRequest.getDisplayOrder())
+                        .build();
+                    optionGroup.addOption(option);
+                });
+            });
+        }
+    }
+
+    private void mapTags(Product product, ProductCreateRequest request) {
+        if (request.getTags() != null && !request.getTags().isEmpty()) {
+            request.getTags().forEach(tagId -> {
+                Tag tag = tagRepository.findById(tagId)
+                    .orElseThrow(() -> new ResourceNotFoundException("태그를 찾을 수 없습니다."));
+                ProductTag productTag = ProductTag.builder()
+                    .tag(tag)
+                    .build();
+                product.addTag(productTag);
+            });
+        }
     }
 
     private double getRating(Product product) {
