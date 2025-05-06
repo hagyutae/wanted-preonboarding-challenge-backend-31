@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,7 +36,7 @@ public class ProductDetail {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private String dimensions;
+    private Dimensions dimensions;
 
     private String materials;
 
@@ -50,12 +51,12 @@ public class ProductDetail {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "additional_info", columnDefinition = "jsonb")
-    private String additionalInfo;
+    private Map<String, Object> additionalInfo;
 
     @Builder
-    public ProductDetail(Product product, Double weight, String dimensions, String materials,
+    public ProductDetail(Product product, Double weight, Dimensions dimensions, String materials,
         String countryOfOrigin, String warrantyInfo, String careInstructions,
-        String additionalInfo) {
+        Map<String, Object> additionalInfo) {
         this.product = product;
         this.weight = weight;
         this.dimensions = dimensions;
@@ -66,9 +67,9 @@ public class ProductDetail {
         this.additionalInfo = additionalInfo;
     }
 
-    public void update(Product product, Double weight, String dimensions, String materials,
+    public void update(Product product, Double weight, Dimensions dimensions, String materials,
         String countryOfOrigin, String warrantyInfo, String careInstructions,
-        String additionalInfo) {
+        Map<String, Object> additionalInfo) {
         this.product = product;
         this.weight = weight;
         this.dimensions = dimensions;

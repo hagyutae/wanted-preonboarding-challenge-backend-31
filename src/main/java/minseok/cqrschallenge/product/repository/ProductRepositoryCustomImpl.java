@@ -6,9 +6,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import minseok.cqrschallenge.product.entity.Product;
 import minseok.cqrschallenge.product.entity.ProductStatus;
@@ -24,13 +24,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
 @Slf4j
+@RequiredArgsConstructor
 public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
-    public ProductRepositoryCustomImpl(EntityManager entityManager) {
-        this.queryFactory = new JPAQueryFactory(entityManager);
-    }
 
     @Override
     public Page<Product> findWithFilters(
@@ -79,7 +77,19 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         condition = applyBrandFilter(condition, product, brand);
         condition = applyStockFilter(condition, product, inStock);
         condition = applySearchFilter(condition, product, search);
+        condition = applyPriceFilter(condition, product, minPrice, maxPrice);
 
+        return condition;
+    }
+
+    private BooleanExpression applyPriceFilter(BooleanExpression condition, QProduct product,
+        Integer minPrice, Integer maxPrice) {
+        if (minPrice != null && minPrice > 0) {
+            condition = condition.and(product.price.basePrice.goe(minPrice));
+        }
+        if (maxPrice != null && maxPrice > 0) {
+            condition = condition.and(product.price.basePrice.loe(maxPrice));
+        }
         return condition;
     }
 
@@ -150,15 +160,11 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .exists());
     }
 
-    private BooleanExpression applySearchFilter(BooleanExpression condition, QProduct product, String search) {
-        if (!StringUtils.hasText(search)) {
+    private BooleanExpression applySearchFilter(BooleanExpression condition, QProduct product, String name) {
+        if (!StringUtils.hasText(name)) {
             return condition;
         }
-
-        String pattern = "%" + search.toLowerCase() + "%";
-        return condition.and(product.name.lower().like(pattern)
-            .or(product.shortDescription.lower().like(pattern))
-            .or(product.fullDescription.lower().like(pattern)));
+        return condition.and(product.name.containsIgnoreCase(name));
     }
 
     private boolean isPriceFilterPresent(Integer minPrice, Integer maxPrice) {

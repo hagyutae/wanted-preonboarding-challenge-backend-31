@@ -63,4 +63,8 @@ public class ProductOption {
         this.stock = stock;
         this.displayOrder = displayOrder;
     }
+
+    public void associateOptionGroup(ProductOptionGroup optionGroup) {
+        this.optionGroup = optionGroup;
+    }
 }

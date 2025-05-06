@@ -58,4 +58,9 @@ public class ProductOptionGroup {
     public void associateProduct(Product product) {
         this.product = product;
     }
+
+    public void addOption(ProductOption option) {
+        options.add(option);
+        option.associateOptionGroup(this);
+    }
 }

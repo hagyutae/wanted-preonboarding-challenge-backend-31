@@ -1,12 +1,12 @@
 package minseok.cqrschallenge.product.service;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.HashMap;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import minseok.cqrschallenge.brand.entity.Brand;
+import minseok.cqrschallenge.brand.repository.BrandRepository;
+import minseok.cqrschallenge.category.repository.CategoryRepository;
 import minseok.cqrschallenge.common.dto.PaginationResponse;
 import minseok.cqrschallenge.common.exception.ConflictException;
 import minseok.cqrschallenge.common.exception.ResourceNotFoundException;
@@ -17,9 +17,21 @@ import minseok.cqrschallenge.product.dto.response.ProductDetailResponse;
 import minseok.cqrschallenge.product.dto.response.ProductListResponse;
 import minseok.cqrschallenge.product.dto.response.ProductUpdateResponse;
 import minseok.cqrschallenge.product.entity.Product;
+import minseok.cqrschallenge.product.entity.ProductCategory;
+import minseok.cqrschallenge.product.entity.ProductDetail;
+import minseok.cqrschallenge.product.entity.ProductImage;
+import minseok.cqrschallenge.product.entity.ProductOption;
+import minseok.cqrschallenge.product.entity.ProductOptionGroup;
+import minseok.cqrschallenge.product.entity.ProductPrice;
 import minseok.cqrschallenge.product.entity.ProductStatus;
+import minseok.cqrschallenge.product.entity.ProductTag;
+import minseok.cqrschallenge.product.mapper.ProductMapper;
+import minseok.cqrschallenge.product.repository.ProductOptionRepository;
 import minseok.cqrschallenge.product.repository.ProductRepository;
-import minseok.cqrschallenge.review.entity.Review;
+import minseok.cqrschallenge.seller.entity.Seller;
+import minseok.cqrschallenge.seller.repository.SellerRepository;
+import minseok.cqrschallenge.tag.entity.Tag;
+import minseok.cqrschallenge.tag.repository.TagRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,44 +44,151 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
+    private final BrandRepository brandRepository;
+    private final SellerRepository sellerRepository;
+    private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
+    private final ProductOptionRepository productOptionRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
     @Transactional
     public ProductCreateResponse createProduct(ProductCreateRequest request) {
-        Product product = convertToEntity(request);
+        Product product = productMapper.toEntity(request);
 
         if (productRepository.existsBySlug(request.getSlug())) {
             throw new ConflictException("해당 슬러그는 이미 사용 중입니다.", "slug", request.getSlug());
         }
+
+
+        if (request.getSellerId() != null) {
+            Seller seller = sellerRepository.findById(request.getSellerId())
+                .orElseThrow(() -> new ResourceNotFoundException("판매자를 찾을 수 없습니다."));
+            product.assignSeller(seller);
+        }
+
+        if (request.getBrandId() != null) {
+            Brand brand = brandRepository.findById(request.getBrandId())
+                .orElseThrow(() -> new ResourceNotFoundException("브랜드를 찾을 수 없습니다."));
+            product.assignBrand(brand);
+        }
+
+        if (request.getPrice() != null) {
+            product.addPrice(
+                ProductPrice.builder()
+                    .basePrice(request.getPrice().getBasePrice())
+                    .salePrice(request.getPrice().getSalePrice())
+                    .costPrice(request.getPrice().getCostPrice())
+                    .currency(request.getPrice().getCurrency())
+                    .taxRate(request.getPrice().getTaxRate())
+                    .build()
+            );
+        }
+
+        if (request.getDetail() != null) {
+            product.addDetail(ProductDetail.builder()
+                .product(product)
+                .weight(request.getDetail().getWeight())
+                .dimensions(request.getDetail().getDimensions())
+                .materials(request.getDetail().getMaterials())
+                .countryOfOrigin(request.getDetail().getCountryOfOrigin())
+                .warrantyInfo(request.getDetail().getWarrantyInfo())
+                .careInstructions(request.getDetail().getCareInstructions())
+                .additionalInfo(request.getDetail().getAdditionalInfo())
+                .build());
+        }
+
+        if (request.getCategories() != null && !request.getCategories().isEmpty()) {
+            request.getCategories().forEach(categoryRequest ->
+                product.addCategory(ProductCategory.builder()
+                    .category(categoryRepository.findById(categoryRequest.getCategoryId())
+                        .orElseThrow(() -> new ResourceNotFoundException("카테고리를 찾을 수 없습니다.")))
+                    .isPrimary(categoryRequest.getIsPrimary())
+                    .build()));
+        }
+        if (request.getOptionGroups() != null && !request.getOptionGroups().isEmpty()) {
+            request.getOptionGroups().forEach(optionGroupRequest -> {
+                ProductOptionGroup optionGroup = ProductOptionGroup.builder()
+                    .name(optionGroupRequest.getName())
+                    .displayOrder(optionGroupRequest.getDisplayOrder())
+                    .build();
+                product.addOptionGroup(optionGroup);
+
+                 optionGroupRequest.getOptions().forEach(optionRequest -> {
+                    ProductOption option = ProductOption.builder()
+                        .name(optionRequest.getName())
+                        .additionalPrice(optionRequest.getAdditionalPrice())
+                        .sku(optionRequest.getSku())
+                        .stock(optionRequest.getStock())
+                        .displayOrder(optionRequest.getDisplayOrder())
+                        .build();
+                    optionGroup.addOption(option);
+                 });
+            });
+        }
+
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            request.getImages().forEach(imageRequest -> {
+                ProductImage.ProductImageBuilder imageBuilder = ProductImage.builder()
+                    .url(imageRequest.getUrl())
+                    .altText(imageRequest.getAltText())
+                    .displayOrder(imageRequest.getDisplayOrder())
+                    .isPrimary(imageRequest.getIsPrimary());
+
+                if (imageRequest.getOptionId() != null) {
+                    ProductOption option = productOptionRepository.findById(imageRequest.getOptionId())
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                            "옵션을 찾을 수 없습니다: " + imageRequest.getOptionId()));
+                    imageBuilder.option(option);
+                }
+
+                ProductImage image = imageBuilder.build();
+                product.addImage(image);
+            });
+        }
+
+        if (request.getTags() != null && !request.getTags().isEmpty()) {
+            request.getTags().forEach(tagId -> {
+                Tag tag = tagRepository.findById(tagId)
+                    .orElseThrow(() -> new ResourceNotFoundException("태그를 찾을 수 없습니다."));
+                ProductTag productTag = ProductTag.builder()
+                    .tag(tag)
+                    .build();
+                product.addTag(productTag);
+            });
+        }
+
+
         Product savedProduct = productRepository.save(product);
-        return convertToCreateResponse(savedProduct);
+        return productMapper.toCreateResponse(savedProduct);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PaginationResponse<ProductListResponse> getProducts(
-            int page, int perPage, String sort, String status,
-            Integer minPrice, Integer maxPrice, String category,
-            Integer seller, Integer brand, Boolean inStock, String search) {
-        
+        int page, int perPage, String sort, String status,
+        Integer minPrice, Integer maxPrice, String category,
+        Integer seller, Integer brand, Boolean inStock, String search) {
+
         Pageable pageable = createPageable(page, perPage, sort);
-        
+
         Page<Product> productPage = productRepository.findWithFilters(
-                status, minPrice, maxPrice, category, seller, brand, inStock, search, pageable);
-        
+            status, minPrice, maxPrice, category, seller, brand, inStock, search, pageable);
+
         List<ProductListResponse> productResponses = productPage.getContent().stream()
-                .map(this::convertToListResponse)
-                .collect(Collectors.toList());
-        
+            .map(productMapper::toListResponse)
+            .collect(Collectors.toList());
+
         return PaginationResponse.<ProductListResponse>builder()
-                .items(productResponses)
-                .pagination(PaginationResponse.Pagination.builder()
-                        .totalItems(productPage.getTotalElements())
-                        .totalPages(productPage.getTotalPages())
-                        .currentPage(page)
-                        .perPage(perPage)
-                        .build())
-                .build();
+            .items(productResponses)
+            .pagination(PaginationResponse.Pagination.builder()
+                .totalItems(productPage.getTotalElements())
+                .totalPages(productPage.getTotalPages())
+                .currentPage(page)
+                .perPage(perPage)
+                .build())
+            .build();
     }
 
     @Override
@@ -77,8 +196,8 @@ public class ProductServiceImpl implements ProductService {
     public ProductDetailResponse getProductDetail(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
-        
-        return convertToDetailResponse(product);
+
+        return productMapper.toDetailResponse(product);
     }
 
     @Override
@@ -94,7 +213,7 @@ public class ProductServiceImpl implements ProductService {
                 request.getFullDescription(),
                 ProductStatus.valueOf(request.getStatus())
         );
-        return convertToUpdateResponse(product);
+        return productMapper.toUpdateResponse(product);
     }
 
     @Override
@@ -123,189 +242,5 @@ public class ProductServiceImpl implements ProductService {
             case "updated_at" -> "updatedAt";
             default -> fieldName;
         };
-    }
-    private Product convertToEntity(ProductCreateRequest request) {
-        return Product.builder()
-                .name(request.getName())
-                .slug(request.getSlug())
-                .shortDescription(request.getShortDescription())
-                .fullDescription(request.getFullDescription())
-                .status(ProductStatus.valueOf(request.getStatus()))
-                .build();
-    }
-    
-
-    private ProductListResponse convertToListResponse(Product product) {
-        return ProductListResponse.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .slug(product.getSlug())
-                .shortDescription(product.getShortDescription())
-                .basePrice(product.getPrice().getBasePrice())
-                .salePrice(product.getPrice().getSalePrice())
-                .currency(product.getPrice().getCurrency())
-                .status(product.getStatus().name())
-                .createdAt(product.getCreatedAt())
-                .build();
-    }
-
-    private ProductDetailResponse convertToDetailResponse(Product product) {
-        ProductDetailResponse.SellerDetail sellerDetail = null;
-        if (product.getSeller() != null) {
-            sellerDetail = ProductDetailResponse.SellerDetail.builder()
-                .id(product.getSeller().getId())
-                .name(product.getSeller().getName())
-                .description(product.getSeller().getDescription())
-                .logoUrl(product.getSeller().getLogoUrl())
-                .rating(product.getSeller().getRating())
-                .contactEmail(product.getSeller().getContactEmail())
-                .contactPhone(product.getSeller().getContactPhone())
-                .build();
-        }
-
-        ProductDetailResponse.BrandDetail brandDetail = null;
-        if (product.getBrand() != null) {
-            brandDetail = ProductDetailResponse.BrandDetail.builder()
-                .id(product.getBrand().getId())
-                .name(product.getBrand().getName())
-                .description(product.getBrand().getDescription())
-                .logoUrl(product.getBrand().getLogoUrl())
-                .website(product.getBrand().getWebsite())
-                .build();
-        }
-        ProductDetailResponse.ProductPriceInfo productPriceInfo = null;
-        if (product.getPrice() != null) {
-            productPriceInfo = ProductDetailResponse.ProductPriceInfo.builder()
-                .basePrice(product.getPrice().getBasePrice())
-                .salePrice(product.getPrice().getSalePrice())
-                .currency(product.getPrice().getCurrency())
-                .taxRate(product.getPrice().getTaxRate())
-                .discountPercentage(
-                    product.getPrice().getBasePrice()
-                        .subtract(product.getPrice().getSalePrice())
-                        .multiply(new BigDecimal("100"))
-                        .divide(product.getPrice().getBasePrice(), 0, RoundingMode.HALF_UP)
-                        .intValue()
-                ).build();
-        }
-
-            List<ProductDetailResponse.CategoryInfo> categoryInfoList = null;
-            if (product.getCategories() != null && !product.getCategories().isEmpty()) {
-                categoryInfoList = product.getCategories().stream()
-                    .map(category -> ProductDetailResponse.CategoryInfo.builder()
-                        .id(category.getId())
-                        .name(category.getCategory().getName())
-                        .slug(category.getCategory().getSlug())
-                        .isPrimary(category.getIsPrimary())
-                        .parent(category.getCategory().getParent() != null
-                            ? ProductDetailResponse.CategoryInfo.CategoryParentInfo.builder()
-                            .id(category.getCategory().getParent().getId())
-                            .name(category.getCategory().getParent().getName())
-                            .slug(category.getCategory().getParent().getSlug())
-                            .build()
-                            : null)
-                        .build())
-                    .collect(Collectors.toList());
-            }
-
-            List<ProductDetailResponse.OptionGroupInfo> optionGroups = null;
-            if (product.getOptionGroups() != null && !product.getOptionGroups().isEmpty()) {
-                optionGroups = product.getOptionGroups().stream()
-                    .map(og -> ProductDetailResponse.OptionGroupInfo.builder()
-                        .id(og.getId())
-                        .name(og.getName())
-                        .displayOrder(og.getDisplayOrder())
-                        .options(og.getOptions().stream()
-                            .map(opt -> ProductDetailResponse.OptionGroupInfo.OptionInfo.builder()
-                                .id(opt.getId())
-                                .name(opt.getName())
-                                .additionalPrice(opt.getAdditionalPrice())
-                                .sku(opt.getSku())
-                                .stock(opt.getStock())
-                                .displayOrder(opt.getDisplayOrder())
-                                .build())
-                            .collect(Collectors.toList()))
-                        .build())
-                    .collect(Collectors.toList());
-            }
-
-            List<ProductDetailResponse.ProductImageInfo> images = null;
-            if (product.getImages() != null && !product.getImages().isEmpty()) {
-                images = product.getImages().stream()
-                    .map(img -> new ProductDetailResponse.ProductImageInfo(
-                        img.getId(), img.getUrl(), img.getAltText(), img.getIsPrimary(), img.getDisplayOrder(), img.getOption().getId()))
-                    .collect(Collectors.toList());
-            }
-
-            List<ProductDetailResponse.TagInfo> tags = null;
-            if (product.getTags() != null && !product.getTags().isEmpty()) {
-                tags = product.getTags().stream()
-                    .map(tag -> new ProductDetailResponse.TagInfo(
-                        tag.getId(), tag.getTag().getName(), tag.getTag().getSlug()))
-                    .collect(Collectors.toList());
-            }
-
-        ProductDetailResponse.RatingInfo ratingStatistics = null;
-        if (product.getReviews() != null && !product.getReviews().isEmpty()) {
-            double averageRating = product.getReviews().stream()
-                .mapToInt(Review::getRating)
-                .average()
-                .orElse(0.0);
-
-            int reviewCount = product.getReviews().size();
-
-            Map<String, Integer> distribution = new HashMap<>();
-            for (int i = 1; i <= 5; i++) {
-                final int rating = i;
-                int count = (int) product.getReviews().stream()
-                    .filter(r -> r.getRating() == rating)
-                    .count();
-                distribution.put(String.valueOf(i), count);
-            }
-
-            ratingStatistics = ProductDetailResponse.RatingInfo.builder()
-                .average(averageRating)
-                .count(reviewCount)
-                .distribution(distribution)
-                .build();
-        }
-
-            return ProductDetailResponse.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .slug(product.getSlug())
-                .shortDescription(product.getShortDescription())
-                .fullDescription(product.getFullDescription())
-                .seller(sellerDetail)
-                .brand(brandDetail)
-                .price(productPriceInfo)
-                .categories(categoryInfoList)
-                .optionGroups(optionGroups)
-                .images(images)
-                .tags(tags)
-                .rating(ratingStatistics)
-                .status(product.getStatus().name())
-                .createdAt(product.getCreatedAt())
-                .updatedAt(product.getUpdatedAt())
-                .build();
-        }
-
-    private ProductCreateResponse convertToCreateResponse(Product product) {
-        return ProductCreateResponse.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .slug(product.getSlug())
-                .createdAt(product.getCreatedAt())
-                .updatedAt(product.getUpdatedAt())
-                .build();
-    }
-
-    private ProductUpdateResponse convertToUpdateResponse(Product product) {
-        return ProductUpdateResponse.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .slug(product.getSlug())
-                .updatedAt(product.getUpdatedAt())
-                .build();
     }
 }

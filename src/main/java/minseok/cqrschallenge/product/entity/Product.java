@@ -132,31 +132,53 @@ public class Product {
 
     public void addCategory(ProductCategory category) {
         categories.add(category);
-        category.associateProduct(this);
+        if (category.getProduct() != this) {
+            category.associateProduct(this);
+        }
+    }
+
+    public void addPrice(ProductPrice price) {
+        this.price = price;
+        if (price.getProduct() != this) {
+            price.associateProduct(this);
+        }
+    }
+
+    public void addDetail(ProductDetail detail) {
+        this.detail = detail;
+        if (detail.getProduct() != this) {
+            detail.associateProduct(this);
+        }
     }
 
     public void addImage(ProductImage image) {
         images.add(image);
-        image.associateProduct(this);
+        if (image.getProduct() != this) {
+            image.associateProduct(this);
+        }
     }
 
     public void addTag(ProductTag tag) {
         tags.add(tag);
-        tag.associateProduct(this);
-    }
-
-    public void setDetail(ProductDetail detail) {
-        this.detail = detail;
-        detail.associateProduct(this);
-    }
-
-    public void setPrice(ProductPrice price) {
-        this.price = price;
-        price.associateProduct(this);
+        if (tag.getProduct() != this) {
+            tag.associateProduct(this);
+        }
     }
 
     public void addOptionGroup(ProductOptionGroup optionGroup) {
         optionGroups.add(optionGroup);
-        optionGroup.associateProduct(this);
+        if (optionGroup.getProduct() != this) {
+            optionGroup.associateProduct(this);
+        }
     }
+
+    public void assignSeller(Seller seller) {
+        this.seller = seller;
+    }
+
+    public void assignBrand(Brand brand) {
+        this.brand = brand;
+    }
+
+
 }

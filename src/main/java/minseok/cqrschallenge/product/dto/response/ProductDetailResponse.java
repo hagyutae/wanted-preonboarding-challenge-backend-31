@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import minseok.cqrschallenge.product.entity.Dimensions;
 
 @Data
 @Builder
@@ -65,7 +66,7 @@ public class ProductDetailResponse {
     @AllArgsConstructor
     public static class ProductDetailInfo {
         private Double weight;
-        private Map<String, Integer> dimensions;
+        private Dimensions dimensions;
         private String materials;
         private String countryOfOrigin;
         private String warrantyInfo;
