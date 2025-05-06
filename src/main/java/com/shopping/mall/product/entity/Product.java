@@ -62,4 +62,12 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductCategory> productCategories = new ArrayList<>();
+
+    public void update(String name, String slug, String shortDescription, String fullDescription, ProductStatus status) {
+        this.name = name;
+        this.slug = slug;
+        this.shortDescription = shortDescription;
+        this.fullDescription = fullDescription;
+        this.status = status;
+    }
 }

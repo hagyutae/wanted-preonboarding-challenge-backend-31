@@ -7,6 +7,7 @@ import com.shopping.mall.brand.repository.BrandRepository;
 import com.shopping.mall.category.entity.Category;
 import com.shopping.mall.category.repository.CategoryRepository;
 import com.shopping.mall.product.dto.request.ProductCreateRequest;
+import com.shopping.mall.product.dto.request.ProductUpdateRequest;
 import com.shopping.mall.product.entity.*;
 import com.shopping.mall.product.repository.ProductCategoryRepository;
 import com.shopping.mall.product.repository.ProductDetailRepository;
@@ -104,5 +105,19 @@ public class ProductService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Transactional
+    public void updateProduct(Long productId, ProductUpdateRequest request) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+
+        product.update(
+                request.getName(),
+                request.getSlug(),
+                request.getShortDescription(),
+                request.getFullDescription(),
+                request.getStatus()
+        );
     }
 }
