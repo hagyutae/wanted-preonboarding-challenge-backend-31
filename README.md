@@ -39,7 +39,7 @@
 
 ![Sunburst-graph](https://codecov.io/gh/narcisource/wanted-preonboarding-challenge-backend-31/graphs/sunburst.svg)
 
-## 📂 폴더 구조
+## 폴더 구조
 
 <details>
 <summary>열기</summary>
@@ -62,15 +62,10 @@ wanted-preonboarding-challenge-backend-31
 │  │  ├─ entities
 │  │  │  └─ index.ts
 │  │  │     ├─ Product.ts
-│  │  │     ├─ Product_Catalog.ts
-│  │  │     ├─ Product_Category.ts
 │  │  │     ├─ Product_Detail.ts
 │  │  │     ├─ Product_Image.ts
 │  │  │     ├─ Product_Option.ts
-│  │  │     ├─ Product_Option_Group.ts
 │  │  │     ├─ Product_Price.ts
-│  │  │     ├─ Product_Summary.ts
-│  │  │     ├─ Product_Tag.ts
 │  │  │     ├─ Brand.ts
 │  │  │     ├─ Category.ts
 │  │  │     ├─ Review.ts
@@ -85,7 +80,12 @@ wanted-preonboarding-challenge-backend-31
 │  │  ├─ dto
 │  │  │  └─ index.ts
 │  │  │     ├─ Filter.dto.ts
-│  │  │     └─ ProductInput.dto.ts
+│  │  │     ├─ ProductCatalog.dto.ts
+│  │  │     ├─ ProductCategory.dto.ts
+│  │  │     ├─ ProductInput.dto.ts
+│  │  │     ├─ ProductOptionGroup.dto.ts
+│  │  │     ├─ ProductSummary.dto.ts
+│  │  │     └─ ProductTag.dto.ts
 │  │  └─ services
 │  │     └─ index.ts
 │  │        ├─ Product.service.ts
@@ -183,34 +183,69 @@ wanted-preonboarding-challenge-backend-31
 │  │  │     └─ ApiStandardResponse.ts
 │  │  ├─ dto
 │  │  │  └─ index.ts
-│  │  │     ├─ Response.dto.ts
-│  │  │     │  └─ Response.dto.test.ts
+│  │  │     ├─ model
+│  │  │     │  ├─ Brand.dto.ts
+│  │  │     │  │  └─ Brand.dto.test.ts
+│  │  │     │  ├─ Category.dto.ts
+│  │  │     │  │  └─ Category.dto.test.ts
+│  │  │     │  ├─ Image.dto.ts
+│  │  │     │  │  └─ Image.dto.test.ts
+│  │  │     │  ├─ ProductDetail.dto.ts
+│  │  │     │  │  └─ ProductDetail.dto.test.ts
+│  │  │     │  ├─ ProductOption.dto.ts
+│  │  │     │  │  └─ ProductOption.dto.test.ts
+│  │  │     │  ├─ ProductOptionGroup.dto.ts
+│  │  │     │  │  └─ ProductOptionGroup.dto.test.ts
+│  │  │     │  ├─ ProductPrice.dto.ts
+│  │  │     │  │  └─ ProductPrice.dto.test.ts
+│  │  │     │  ├─ Review.dto.ts
+│  │  │     │  │  └─ Review.dto.test.ts
+│  │  │     │  ├─ Seller.dto.ts
+│  │  │     │  │  └─ Seller.dto.test.ts
+│  │  │     │  └─ Tag.dto.ts
+│  │  │     │     └─ Tag.dto.test.ts
+│  │  │     ├─ request
+│  │  │     │  ├─ CategoryQuery.dto.ts
+│  │  │     │  │  └─ CategoryQuery.dto.test.ts
+│  │  │     │  ├─ Param.dto.ts
+│  │  │     │  │  └─ Param.dto.test.ts
+│  │  │     │  ├─ ProductBody.dto.ts
+│  │  │     │  │  └─ ProductBody.dto.test.ts
+│  │  │     │  ├─ ProductQuery.dto.ts
+│  │  │     │  │  └─ ProductQuery.dto.test.ts
+│  │  │     │  ├─ ReviewBody.dto.ts
+│  │  │     │  │  └─ ReviewBody.dto.test.ts
+│  │  │     │  └─ ReviewQuery.dto.ts
+│  │  │     │     └─ ReviewQuery.dto.test.ts
+│  │  │     ├─ response
+│  │  │     │  ├─ CategoryResponseBundle.dto.ts
+│  │  │     │  │  └─ CategoryResponseBundle.dto.test.ts
+│  │  │     │  ├─ MainResponseBundle.dto.ts
+│  │  │     │  │  └─ MainResponseBundle.dto.test.ts
+│  │  │     │  ├─ NestedCategory.dto.ts
+│  │  │     │  │  └─ NestedCategory.dto.test.ts
+│  │  │     │  ├─ PaginationSummary.dto.ts
+│  │  │     │  │  └─ PaginationSummary.dto.test.ts
+│  │  │     │  ├─ ProductCatalog.dto.ts
+│  │  │     │  │  └─ ProductCatalog.dto.test.ts
+│  │  │     │  ├─ ProductResponse.dto.ts
+│  │  │     │  │  └─ ProductResponse.dto.test.ts
+│  │  │     │  ├─ ProductResponseBundle.dto.ts
+│  │  │     │  │  └─ ProductResponseBundle.dto.test.ts
+│  │  │     │  ├─ ProductSummary.dto.ts
+│  │  │     │  │  └─ ProductSummary.dto.test.ts
+│  │  │     │  ├─ Rating.dto.ts
+│  │  │     │  │  └─ Rating.dto.test.ts
+│  │  │     │  ├─ ReviewResponse.dto.ts
+│  │  │     │  │  └─ ReviewResponse.dto.test.ts
+│  │  │     │  ├─ ReviewResponseBundle.dto.ts
+│  │  │     │  │  └─ ReviewResponseBundle.dto.test.ts
+│  │  │     │  └─ ReviewSummary.dto.ts
+│  │  │     │     └─ ReviewSummary.dto.test.ts
 │  │  │     ├─ Error.dto.ts
 │  │  │     │  └─ Error.dto.test.ts
-│  │  │     ├─ PaginationSummary.dto.ts
-│  │  │     │  └─ PaginationSummary.dto.test.ts
-│  │  │     ├─ CategoryQuery.dto.ts
-│  │  │     │  └─ CategoryQuery.dto.test.ts
-│  │  │     ├─ ImageBody.dto.ts
-│  │  │     │  └─ ImageBody.dto.test.ts
-│  │  │     ├─ NestedCategory.dto.ts
-│  │  │     │  └─ NestedCategory.dto.test.ts
-│  │  │     ├─ OptionsBody.dto.ts
-│  │  │     │  └─ OptionsBody.dto.test.ts
-│  │  │     ├─ Param.dto.ts
-│  │  │     │  └─ Param.dto.test.ts
-│  │  │     ├─ ProductBody.dto.ts
-│  │  │     │  └─ ProductQuery.dto.test.ts
-│  │  │     ├─ ProductQuery.dto.ts
-│  │  │     │  └─ ProductBody.dto.test.ts
-│  │  │     ├─ ProductResponse.dto.ts
-│  │  │     │  └─ ProductResponse.dto.test.ts
-│  │  │     ├─ ReviewBody.dto.ts
-│  │  │     │  └─ ReviewBody.dto.test.ts
-│  │  │     ├─ ReviewQuery.dto.ts
-│  │  │     │  └─ ReviewQuery.dto.test.ts
-│  │  │     └─ ReviewSummary.dto.ts
-│  │  │        └─ ReviewSummary.dto.test.ts
+│  │  │     └─ Response.dto.ts
+│  │  │        └─ Response.dto.test.ts
 │  │  ├─ filters
 │  │  │  └─ index.ts
 │  │  │     ├─ BadRequestExceptionFilter.ts
@@ -225,7 +260,8 @@ wanted-preonboarding-challenge-backend-31
 │  │        └─ to_FilterDTO.ts
 │  ├─ utility
 │  │  ├─ downloadOpenAPI.ts
-│  │  └─ generatorSwagger.ts
+│  │  ├─ generatorSwagger.ts
+│  │  └─ extractDTOExample.ts
 │  ├─ __mocks__
 │  │  ├─ entityManagerMock.ts
 │  │  └─ repositoryMock.ts
