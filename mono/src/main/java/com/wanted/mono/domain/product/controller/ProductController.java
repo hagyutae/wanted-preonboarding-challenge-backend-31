@@ -6,6 +6,7 @@ import com.wanted.mono.domain.product.dto.request.ProductRequest;
 import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSearchResponse;
+import com.wanted.mono.domain.product.dto.response.ProductUpdateResponse;
 import com.wanted.mono.domain.product.entity.Product;
 import com.wanted.mono.domain.product.service.ProductService;
 import com.wanted.mono.global.common.CommonResponse;
@@ -61,11 +62,24 @@ public class ProductController {
                 .body(CommonResponse.success(productSearchResponse, messageUtil.get(PRODUCT_SEARCH_SUCCESS)));
     }
 
+    /**
+     * GET /api/products/id
+     * 상품 상세 정보를 조회합니다.
+     * @param productId
+     * @return
+     */
     @GetMapping("/{productId}")
     public ResponseEntity<?> detail(@PathVariable Long productId) {
         ProductInfoDto productInfoDto = productService.findById(productId);
         return ResponseEntity.ok()
                 .body(CommonResponse.success(productInfoDto, messageUtil.get(PRODUCT_DETAIL_SUCCESS)));
+    }
+
+    @PutMapping("/{productId}")
+    public ResponseEntity<?> update(@PathVariable Long productId, @Valid @RequestBody ProductRequest productRequest) {
+        ProductUpdateResponse updateResponse = productService.updateProduct(productId, productRequest);
+        return ResponseEntity.ok()
+                .body(CommonResponse.success(updateResponse, messageUtil.get(PRODUCT_DETAIL_SUCCESS)));
     }
 
 }

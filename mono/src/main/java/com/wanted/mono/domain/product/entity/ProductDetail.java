@@ -75,4 +75,14 @@ public class ProductDetail {
     public void addProduct(Product product) {
         this.product = product;
     }
+
+    public void update(ProductDetailRequest request) {
+        this.weight = request.getWeight();
+        this.materials = request.getMaterials();
+        this.countryOfOrigin = request.getCountryOfOrigin();
+        this.warrantyInfo = request.getWarrantyInfo();
+        this.careInstructions = request.getCareInstructions();
+        this.dimensions = request.getDimensions();
+        this.additionalInfo = request.getAdditionalInfo();
+    }
 }

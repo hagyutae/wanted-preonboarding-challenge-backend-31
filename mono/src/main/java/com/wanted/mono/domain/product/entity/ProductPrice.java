@@ -58,4 +58,12 @@ public class ProductPrice {
     public void addProduct(Product product) {
         this.product = product;
     }
+
+    public void update(ProductPriceRequest request) {
+        this.basePrice = request.getBasePrice();
+        this.salePrice = request.getSalePrice();
+        this.costPrice = request.getCostPrice();
+        this.currency = request.getCurrency();
+        this.taxRate = request.getTaxRate();
+    }
 }

@@ -114,6 +114,16 @@ public class Product {
         return product;
     }
 
+    public void updateFrom(ProductRequest request) {
+        this.name = request.getName();
+        this.slug = request.getSlug();
+        this.shortDescription = request.getShortDescription();
+        this.fullDescription = request.getFullDescription();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.status = request.getStatus();
+    }
+
     public void addSeller(Seller seller) {
         this.seller = seller;
     }
