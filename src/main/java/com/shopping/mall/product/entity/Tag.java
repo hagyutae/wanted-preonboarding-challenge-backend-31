@@ -1,4 +1,4 @@
-package com.shopping.mall.common.entity;
+package com.shopping.mall.product.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

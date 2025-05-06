@@ -1,6 +1,5 @@
 package com.shopping.mall.product.entity;
 
-import com.shopping.mall.common.entity.Tag;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

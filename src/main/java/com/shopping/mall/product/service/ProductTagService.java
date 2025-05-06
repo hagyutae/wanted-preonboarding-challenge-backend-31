@@ -1,7 +1,7 @@
 package com.shopping.mall.product.service;
 
-import com.shopping.mall.common.entity.Tag;
-import com.shopping.mall.common.repository.TagRepository;
+import com.shopping.mall.product.entity.Tag;
+import com.shopping.mall.product.repository.TagRepository;
 import com.shopping.mall.product.dto.request.ProductTagCreateRequest;
 import com.shopping.mall.product.entity.Product;
 import com.shopping.mall.product.entity.ProductTag;

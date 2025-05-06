@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "product")
 @Getter
@@ -41,4 +44,10 @@ public class Product extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductTag> productTags = new ArrayList<>();
+
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private ProductPrice productPrice;
 }
