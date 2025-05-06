@@ -20,7 +20,7 @@ public class ProductOptionService {
     private final ProductOptionRepository productOptionRepository;
 
     @Transactional
-    public void createProductOption(List<ProductOptionRequest> productOptionRequests, ProductOptionGroup productOptionGroup) {
+    public void createProductOptions(List<ProductOptionRequest> productOptionRequests, ProductOptionGroup productOptionGroup) {
         List<ProductOption> productOptions = new ArrayList<>();
         log.info("ProductOption 엔티티화");
         for (ProductOptionRequest productOptionRequest : productOptionRequests) {
@@ -30,5 +30,13 @@ public class ProductOptionService {
         }
         log.info("ProductOption 리스트 저장");
         productOptionRepository.saveAll(productOptions);
+    }
+
+    @Transactional
+    public Long createProductOption(ProductOptionRequest productOptionRequest, ProductOptionGroup productOptionGroup) {
+        ProductOption productOption = ProductOption.of(productOptionRequest);
+        productOption.addOptionGroup(productOptionGroup);
+        productOptionRepository.save(productOption);
+        return productOption.getId();
     }
 }

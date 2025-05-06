@@ -2,8 +2,11 @@ package com.wanted.mono.domain.product.controller;
 
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
 import com.wanted.mono.domain.product.dto.model.ProductInfoDto;
+import com.wanted.mono.domain.product.dto.request.ProductAddOptionRequest;
+import com.wanted.mono.domain.product.dto.request.ProductOptionRequest;
 import com.wanted.mono.domain.product.dto.request.ProductRequest;
 import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
+import com.wanted.mono.domain.product.dto.response.ProductOptionSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSearchResponse;
 import com.wanted.mono.domain.product.dto.response.ProductUpdateResponse;
@@ -78,6 +81,13 @@ public class ProductController {
                 .body(CommonResponse.success(productInfoDto, messageUtil.get(PRODUCT_DETAIL_SUCCESS)));
     }
 
+    /**
+     * PUT /api/products/{id}
+     * 특정 상품 정보를 수정합니다.
+     * @param productId
+     * @param productRequest
+     * @return
+     */
     @PutMapping("/{productId}")
     public ResponseEntity<?> update(@PathVariable Long productId, @Valid @RequestBody ProductRequest productRequest) {
         ProductUpdateResponse updateResponse = productService.updateProduct(productId, productRequest);
@@ -85,11 +95,31 @@ public class ProductController {
                 .body(CommonResponse.success(updateResponse, messageUtil.get(PRODUCT_DETAIL_SUCCESS)));
     }
 
+    /**
+     * DELETE /api/products/{id}
+     * 특정 상품을 삭제합니다 (소프트 삭제).
+     * @param productId
+     * @return
+     */
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> delete(@PathVariable Long productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.ok()
                 .body(CommonResponse.success(null, messageUtil.get(PRODUCT_DELETE_SUCCESS)));
+    }
+
+    /**
+     * POST /api/products/{id}/options
+     * 특정 상품에 옵션을 추가합니다.
+     * @param addOptionRequest
+     * @return
+     */
+    @PostMapping("/{productId}/options")
+    public ResponseEntity<?> addOption(@PathVariable Long productId, @Valid @RequestBody ProductAddOptionRequest addOptionRequest) {
+        ProductOptionSaveResponse saveResponse = productService.addOption(addOptionRequest, productId);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(CommonResponse.success(saveResponse, messageUtil.get(PRODUCT_OPTION_CREATE_SUCCESS)));
     }
 
 }
