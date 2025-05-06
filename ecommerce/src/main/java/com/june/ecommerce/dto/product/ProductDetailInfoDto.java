@@ -6,14 +6,11 @@ import com.june.ecommerce.domain.productdetail.ProductDetail;
 import com.june.ecommerce.domain.productprice.ProductPrice;
 import com.june.ecommerce.domain.seller.Seller;
 import com.june.ecommerce.dto.brand.BrandDto;
-import com.june.ecommerce.dto.category.CategoryDto;
 import com.june.ecommerce.dto.category.ProductCategoryDto;
-import com.june.ecommerce.dto.image.ImageDto;
 import com.june.ecommerce.dto.image.ProductImageDto;
 import com.june.ecommerce.dto.option.ProductOptionGroupDto;
 import com.june.ecommerce.dto.rating.RatingDto;
 import com.june.ecommerce.dto.seller.SellerDto;
-import com.june.ecommerce.dto.tag.TagDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
