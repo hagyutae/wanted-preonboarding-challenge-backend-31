@@ -1,0 +1,17 @@
+server:
+    port: 8080
+    servlet:
+      context-path: /api
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wanted
+    username: wanted
+    password: wanted
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    open-in-view: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: NON_NULL

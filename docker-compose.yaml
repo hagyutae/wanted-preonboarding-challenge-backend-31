@@ -1,0 +1,42 @@
+services:
+  postgresql:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: wanted
+      POSTGRES_PASSWORD: wanted
+      POSTGRES_DB: wanted
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+      - ./ddl.sql:/docker-entrypoint-initdb.d/00.ddl.sql
+      - ./data/categories.sql:/docker-entrypoint-initdb.d/01.categories.sql
+      - ./data/sellers.sql:/docker-entrypoint-initdb.d/02.sellers.sql
+      - ./data/brands.sql:/docker-entrypoint-initdb.d/03.brands.sql
+      - ./data/products.sql:/docker-entrypoint-initdb.d/04.products.sql
+      - ./data/tags.sql:/docker-entrypoint-initdb.d/05.tags.sql
+      - ./data/product_extended.sql:/docker-entrypoint-initdb.d/06.product_extended.sql
+      - ./data/product_options.sql:/docker-entrypoint-initdb.d/07.product_options.sql
+      - ./data/users.sql:/docker-entrypoint-initdb.d/08.users.sql
+      - ./data/reviews.sql:/docker-entrypoint-initdb.d/09.reviews.sql
+    networks:
+      - wanted
+  server:
+    image: backend31:0.0.1-SNAPSHOT
+    container_name: server
+    ports:
+      - 8080:8080
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - postgresql
+    networks:
+      - wanted
+volumes:
+  postgresql:
+networks:
+  wanted:
+    driver: bridge
