@@ -1,5 +1,6 @@
 package com.shopping.mall.product.service;
 
+import com.shopping.mall.common.exception.ResourceNotFoundException;
 import com.shopping.mall.product.dto.response.ProductDetailResponse;
 import com.shopping.mall.product.entity.Product;
 import com.shopping.mall.product.repository.ProductRepository;
@@ -16,7 +17,7 @@ public class ProductDetailQueryService {
     @Transactional(readOnly = true)
     public ProductDetailResponse getProductDetail(Long productId) {
         Product product = productRepository.findByIdWithAll(productId)
-                .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("상품을 찾을 수 없습니다."));
 
         return ProductDetailResponse.from(product);
     }

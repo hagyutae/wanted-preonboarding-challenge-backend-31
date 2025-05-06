@@ -1,5 +1,6 @@
 package com.shopping.mall.product.service;
 
+import com.shopping.mall.common.exception.ResourceNotFoundException;
 import com.shopping.mall.product.entity.Tag;
 import com.shopping.mall.product.repository.TagRepository;
 import com.shopping.mall.product.dto.request.ProductTagCreateRequest;
@@ -23,11 +24,11 @@ public class ProductTagService {
     public void addTags(Long productId, ProductTagCreateRequest request) {
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다"));
+                .orElseThrow(() -> new ResourceNotFoundException("상품이 존재하지 않습니다"));
 
         for (Long tagId : request.getTagIds()) {
             Tag tag = tagRepository.findById(tagId)
-                    .orElseThrow(() -> new IllegalArgumentException("태그가 존재하지 않습니다"));
+                    .orElseThrow(() -> new ResourceNotFoundException("태그가 존재하지 않습니다"));
 
             ProductTag productTag = ProductTag.builder()
                     .product(product)

@@ -1,5 +1,6 @@
 package com.shopping.mall.product.service;
 
+import com.shopping.mall.common.exception.ResourceNotFoundException;
 import com.shopping.mall.product.dto.request.ProductOptionCreateRequest;
 import com.shopping.mall.product.dto.request.ProductOptionUpdateRequest;
 import com.shopping.mall.product.entity.Product;
@@ -24,7 +25,7 @@ public class ProductOptionService {
     public void addOptionGroup(Long productId, ProductOptionCreateRequest request) {
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다"));
+                .orElseThrow(() -> new ResourceNotFoundException("상품이 존재하지 않습니다"));
 
         ProductOptionGroup optionGroup = ProductOptionGroup.builder()
                 .product(product)
@@ -52,7 +53,7 @@ public class ProductOptionService {
     public void updateOption(Long optionId, ProductOptionUpdateRequest request) {
 
         ProductOption option = productOptionRepository.findById(optionId)
-                .orElseThrow(() -> new IllegalArgumentException("옵션이 존재하지 않습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("옵션이 존재하지 않습니다."));
 
         option.update(
                 request.getName(),
