@@ -10,11 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryDetailResponse {
+
     private Long id;
+
     private String name;
+
     private String slug;
+
     private String description;
+
     private Integer level;
+
     private String imageUrl;
+
     private CategoryParentResponse parent;
 }

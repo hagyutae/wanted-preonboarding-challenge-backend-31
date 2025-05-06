@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
+
     private boolean success;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

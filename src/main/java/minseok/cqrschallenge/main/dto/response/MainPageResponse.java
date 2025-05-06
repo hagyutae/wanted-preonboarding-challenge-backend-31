@@ -12,7 +12,10 @@ import minseok.cqrschallenge.product.dto.response.ProductListResponse;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MainPageResponse {
+
     private List<ProductListResponse> newProducts;
+
     private List<ProductListResponse> popularProducts;
+
     private List<FeaturedCategoryResponse> featuredCategories;
 }

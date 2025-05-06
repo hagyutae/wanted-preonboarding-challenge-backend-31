@@ -46,7 +46,7 @@ public class ProductOption {
 
     @Builder
     public ProductOption(ProductOptionGroup optionGroup, String name, BigDecimal additionalPrice,
-                         String sku, Integer stock, Integer displayOrder) {
+        String sku, Integer stock, Integer displayOrder) {
         this.optionGroup = optionGroup;
         this.name = name;
         this.additionalPrice = additionalPrice;
@@ -56,7 +56,7 @@ public class ProductOption {
     }
 
     public void update(String name, BigDecimal additionalPrice,
-                       String sku, Integer stock, Integer displayOrder) {
+        String sku, Integer stock, Integer displayOrder) {
         this.name = name;
         this.additionalPrice = additionalPrice;
         this.sku = sku;

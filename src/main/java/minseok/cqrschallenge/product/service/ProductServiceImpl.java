@@ -44,12 +44,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+
     private final ProductMapper productMapper;
+
     private final BrandRepository brandRepository;
+
     private final SellerRepository sellerRepository;
+
     private final CategoryRepository categoryRepository;
+
     private final TagRepository tagRepository;
+
     private final ProductOptionRepository productOptionRepository;
+
     private final ObjectMapper objectMapper;
 
     @Override
@@ -60,7 +67,6 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.existsBySlug(request.getSlug())) {
             throw new ConflictException("해당 슬러그는 이미 사용 중입니다.", "slug", request.getSlug());
         }
-
 
         if (request.getSellerId() != null) {
             Seller seller = sellerRepository.findById(request.getSellerId())
@@ -115,7 +121,7 @@ public class ProductServiceImpl implements ProductService {
                     .build();
                 product.addOptionGroup(optionGroup);
 
-                 optionGroupRequest.getOptions().forEach(optionRequest -> {
+                optionGroupRequest.getOptions().forEach(optionRequest -> {
                     ProductOption option = ProductOption.builder()
                         .name(optionRequest.getName())
                         .additionalPrice(optionRequest.getAdditionalPrice())
@@ -124,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
                         .displayOrder(optionRequest.getDisplayOrder())
                         .build();
                     optionGroup.addOption(option);
-                 });
+                });
             });
         }
 
@@ -137,7 +143,8 @@ public class ProductServiceImpl implements ProductService {
                     .isPrimary(imageRequest.getIsPrimary());
 
                 if (imageRequest.getOptionId() != null) {
-                    ProductOption option = productOptionRepository.findById(imageRequest.getOptionId())
+                    ProductOption option = productOptionRepository.findById(
+                            imageRequest.getOptionId())
                         .orElseThrow(() -> new ResourceNotFoundException(
                             "옵션을 찾을 수 없습니다: " + imageRequest.getOptionId()));
                     imageBuilder.option(option);
@@ -158,7 +165,6 @@ public class ProductServiceImpl implements ProductService {
                 product.addTag(productTag);
             });
         }
-
 
         Product savedProduct = productRepository.save(product);
         return productMapper.toCreateResponse(savedProduct);
@@ -195,7 +201,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public ProductDetailResponse getProductDetail(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
 
         return productMapper.toDetailResponse(product);
     }
@@ -204,14 +210,14 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductUpdateResponse updateProduct(Long id, ProductUpdateRequest request) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
 
         product.update(
-                request.getName(),
-                request.getSlug(),
-                request.getShortDescription(),
-                request.getFullDescription(),
-                ProductStatus.valueOf(request.getStatus())
+            request.getName(),
+            request.getSlug(),
+            request.getShortDescription(),
+            request.getFullDescription(),
+            ProductStatus.valueOf(request.getStatus())
         );
         return productMapper.toUpdateResponse(product);
     }
@@ -220,11 +226,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
         if (product.isDeleted()) {
             throw new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다.");
         }
-       product.delete();
+        product.delete();
     }
 
     private Pageable createPageable(int page, int perPage, String sort) {

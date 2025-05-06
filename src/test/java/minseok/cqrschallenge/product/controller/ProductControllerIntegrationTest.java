@@ -75,7 +75,6 @@ public class ProductControllerIntegrationTest {
     }
 
 
-
     @Test
     @DisplayName("상품 목록 조회 - 기본 파라미터")
     public void getProducts_defaultParams_success() throws Exception {
@@ -105,7 +104,8 @@ public class ProductControllerIntegrationTest {
         String content = result.getResponse().getContentAsString();
         ApiResponse response = objectMapper.readValue(content, ApiResponse.class);
 
-        List<Map<String, Object>> items = (List<Map<String, Object>>) ((Map<String, Object>) response.getData()).get("items");
+        List<Map<String, Object>> items = (List<Map<String, Object>>) ((Map<String, Object>) response.getData()).get(
+            "items");
         if (items.size() >= 2) {
             int id1 = ((Number) items.get(0).get("id")).intValue();
             int id2 = ((Number) items.get(1).get("id")).intValue();
@@ -265,7 +265,6 @@ public class ProductControllerIntegrationTest {
     @Test
     @DisplayName("상품 삭제 - 성공")
     public void deleteProduct_success() throws Exception {
-
 
         mockMvc.perform(delete(BASE_URL + "/" + testProductId))
             .andDo(print())

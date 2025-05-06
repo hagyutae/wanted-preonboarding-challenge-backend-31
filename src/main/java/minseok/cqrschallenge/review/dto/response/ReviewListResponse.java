@@ -13,17 +13,23 @@ import minseok.cqrschallenge.common.dto.PaginationResponse;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewListResponse {
+
     private List<ReviewResponse> items;
+
     private ReviewSummary summary;
+
     private PaginationResponse.Pagination pagination;
-    
+
     @Getter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ReviewSummary {
+
         private Double averageRating;
+
         private Integer totalCount;
+
         private Map<Integer, Integer> distribution;
     }
 }

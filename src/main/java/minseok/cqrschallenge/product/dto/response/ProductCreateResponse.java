@@ -11,9 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductCreateResponse {
+
     private Long id;
+
     private String name;
+
     private String slug;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 }

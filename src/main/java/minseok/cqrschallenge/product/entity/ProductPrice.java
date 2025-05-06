@@ -47,7 +47,7 @@ public class ProductPrice {
 
     @Builder
     public ProductPrice(Product product, BigDecimal basePrice, BigDecimal salePrice,
-                        BigDecimal costPrice, String currency, BigDecimal taxRate) {
+        BigDecimal costPrice, String currency, BigDecimal taxRate) {
         this.product = product;
         this.basePrice = basePrice;
         this.salePrice = salePrice;
@@ -57,7 +57,7 @@ public class ProductPrice {
     }
 
     public void update(Product product, BigDecimal basePrice, BigDecimal salePrice,
-                       BigDecimal costPrice, String currency, BigDecimal taxRate) {
+        BigDecimal costPrice, String currency, BigDecimal taxRate) {
         this.product = product;
         this.basePrice = basePrice;
         this.salePrice = salePrice;

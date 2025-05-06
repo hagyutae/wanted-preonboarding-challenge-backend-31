@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductPriceRequest {
+
     @NotNull(message = "기본 가격은 필수 항목입니다.")
     @Positive(message = "기본 가격은 0보다 커야 합니다.")
     private BigDecimal basePrice;

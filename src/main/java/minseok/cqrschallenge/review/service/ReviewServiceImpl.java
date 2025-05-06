@@ -28,13 +28,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
+
     private final ProductRepository productRepository;
+
     private final UserRepository userRepository;
+
     private final ReviewMapper reviewMapper;
 
     @Override
     @Transactional(readOnly = true)
-    public ReviewListResponse getProductReviews(Long productId, int page, int perPage, String sort, Integer rating) {
+    public ReviewListResponse getProductReviews(Long productId, int page, int perPage, String sort,
+        Integer rating) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
 
@@ -80,7 +84,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewUpdateResponse updateReview(Long reviewId, Long userId, ReviewUpdateRequest request) {
+    public ReviewUpdateResponse updateReview(Long reviewId, Long userId,
+        ReviewUpdateRequest request) {
         Review review = reviewRepository.findById(reviewId)
             .orElseThrow(() -> new ResourceNotFoundException("요청한 리뷰를 찾을 수 없습니다."));
 

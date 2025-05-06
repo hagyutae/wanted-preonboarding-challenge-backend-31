@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Dimensions {
+
     private Double width;
+
     private Double height;
+
     private Double depth;
 }

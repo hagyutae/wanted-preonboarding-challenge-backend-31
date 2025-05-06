@@ -9,13 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
+
     boolean existsBySlug(String slug);
 
     @Query("SELECT DISTINCT p FROM Product p " +
         "JOIN p.categories pc " +
         "WHERE pc.category.id IN :categoryIds " +
         "AND p.status <> 'DELETED'")
-    Page<Product> findByCategoryIds(@Param("categoryIds") List<Long> categoryIds, Pageable pageable);
+    Page<Product> findByCategoryIds(@Param("categoryIds") List<Long> categoryIds,
+        Pageable pageable);
 
     @Query("SELECT p FROM Product p " +
         "LEFT JOIN FETCH p.seller " +

@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductCategoryRequest {
+
     @NotNull(message = "카테고리 ID는 필수 항목입니다.")
     private Long categoryId;
-    
+
     private Boolean isPrimary;
 }

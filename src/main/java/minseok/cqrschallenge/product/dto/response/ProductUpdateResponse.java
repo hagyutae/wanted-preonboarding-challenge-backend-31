@@ -11,8 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductUpdateResponse {
+
     private Long id;
+
     private String name;
+
     private String slug;
+
     private LocalDateTime updatedAt;
 }

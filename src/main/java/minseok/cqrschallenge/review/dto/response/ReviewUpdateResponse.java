@@ -11,9 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewUpdateResponse {
+
     private Long id;
+
     private Integer rating;
+
     private String title;
+
     private String content;
+
     private LocalDateTime updatedAt;
 }

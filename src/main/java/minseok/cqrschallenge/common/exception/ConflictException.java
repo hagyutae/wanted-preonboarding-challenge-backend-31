@@ -4,7 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class ConflictException extends BaseException {
+
     private final String field;
+
     private final String value;
 
     public ConflictException(String message, String field, String value) {

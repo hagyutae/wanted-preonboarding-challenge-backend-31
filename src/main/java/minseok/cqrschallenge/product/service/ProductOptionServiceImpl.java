@@ -18,38 +18,42 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductOptionServiceImpl implements ProductOptionService {
 
     private final ProductRepository productRepository;
+
     private final ProductOptionGroupRepository optionGroupRepository;
+
     private final ProductOptionRepository optionRepository;
 
     @Override
     @Transactional
-    public ProductOptionResponse addProductOption(Long productId, ProductOptionCreateRequest request) {
+    public ProductOptionResponse addProductOption(Long productId,
+        ProductOptionCreateRequest request) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
-        
+            .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
+
         ProductOptionGroup optionGroup = optionGroupRepository.findById(request.getOptionGroupId())
-                .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션 그룹을 찾을 수 없습니다."));
-        
+            .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션 그룹을 찾을 수 없습니다."));
+
         ProductOption option = ProductOption.builder()
-                .optionGroup(optionGroup)
-                .name(request.getName())
-                .additionalPrice(request.getAdditionalPrice())
-                .sku(request.getSku())
-                .stock(request.getStock())
-                .displayOrder(request.getDisplayOrder())
-                .build();
-        
+            .optionGroup(optionGroup)
+            .name(request.getName())
+            .additionalPrice(request.getAdditionalPrice())
+            .sku(request.getSku())
+            .stock(request.getStock())
+            .displayOrder(request.getDisplayOrder())
+            .build();
+
         ProductOption savedOption = optionRepository.save(option);
-        
+
         return convertToResponse(savedOption);
     }
 
     @Override
     @Transactional
-    public ProductOptionResponse updateProductOption(Long productId, Long optionId, ProductOptionCreateRequest request) {
+    public ProductOptionResponse updateProductOption(Long productId, Long optionId,
+        ProductOptionCreateRequest request) {
         ProductOption option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션을 찾을 수 없습니다."));
-        
+            .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션을 찾을 수 없습니다."));
+
         if (!option.getOptionGroup().getProduct().getId().equals(productId)) {
             throw new ResourceNotFoundException("해당 상품에 속한 옵션이 아닙니다.");
         }
@@ -61,7 +65,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
             request.getDisplayOrder()
         );
         ProductOption updatedOption = optionRepository.save(option);
-        
+
         return convertToResponse(updatedOption);
     }
 
@@ -69,24 +73,24 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Transactional
     public void deleteProductOption(Long productId, Long optionId) {
         ProductOption option = optionRepository.findById(optionId)
-                .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션을 찾을 수 없습니다."));
-        
+            .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션을 찾을 수 없습니다."));
+
         if (!option.getOptionGroup().getProduct().getId().equals(productId)) {
             throw new ResourceNotFoundException("해당 상품에 속한 옵션이 아닙니다.");
         }
-        
+
         optionRepository.delete(option);
     }
-    
+
     private ProductOptionResponse convertToResponse(ProductOption option) {
         return ProductOptionResponse.builder()
-                .id(option.getId())
-                .optionGroupId(option.getOptionGroup().getId())
-                .name(option.getName())
-                .additionalPrice(option.getAdditionalPrice())
-                .sku(option.getSku())
-                .stock(option.getStock())
-                .displayOrder(option.getDisplayOrder())
-                .build();
+            .id(option.getId())
+            .optionGroupId(option.getOptionGroup().getId())
+            .name(option.getName())
+            .additionalPrice(option.getAdditionalPrice())
+            .sku(option.getSku())
+            .stock(option.getStock())
+            .displayOrder(option.getDisplayOrder())
+            .build();
     }
 }

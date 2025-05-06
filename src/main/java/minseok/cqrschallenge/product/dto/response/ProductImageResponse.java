@@ -10,10 +10,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductImageResponse {
+
     private Long id;
+
     private String url;
+
     private String altText;
+
     private Boolean isPrimary;
+
     private Integer displayOrder;
+
     private Long optionId;
 }

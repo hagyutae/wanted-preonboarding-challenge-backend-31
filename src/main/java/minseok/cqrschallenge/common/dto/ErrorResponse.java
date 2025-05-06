@@ -12,8 +12,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
+
     private String code;
+
     private String message;
+
     private Object details;
 
     public ErrorResponse(String code, String message) {

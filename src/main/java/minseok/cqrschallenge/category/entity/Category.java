@@ -55,7 +55,8 @@ public class Category {
     private List<ProductCategory> products = new ArrayList<>();
 
     @Builder
-    public Category(String name, String slug, String description, Category parent, Integer level, String imageUrl) {
+    public Category(String name, String slug, String description, Category parent, Integer level,
+        String imageUrl) {
         this.name = name;
         this.slug = slug;
         this.description = description;

@@ -18,38 +18,40 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductImageServiceImpl implements ProductImageService {
 
     private final ProductRepository productRepository;
+
     private final ProductImageRepository imageRepository;
+
     private final ProductOptionRepository optionRepository;
 
     @Override
     @Transactional
     public ProductImageResponse addProductImage(Long productId, ProductImageCreateRequest request) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
 
         ProductOption option = null;
         if (request.getOptionId() != null) {
             option = optionRepository.findById(request.getOptionId())
-                    .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션을 찾을 수 없습니다."));
 
         }
 
         if (request.getIsPrimary() != null && request.getIsPrimary()) {
             imageRepository.findByProductIdAndIsPrimaryTrue(productId)
-                    .ifPresent(primaryImage -> {
-                        primaryImage.unmarkAsPrimary();
-                        imageRepository.save(primaryImage);
-                    });
+                .ifPresent(primaryImage -> {
+                    primaryImage.unmarkAsPrimary();
+                    imageRepository.save(primaryImage);
+                });
         }
 
         ProductImage image = ProductImage.builder()
-                .product(product)
-                .url(request.getUrl())
-                .altText(request.getAltText())
-                .isPrimary(request.getIsPrimary())
-                .displayOrder(request.getDisplayOrder())
-                .option(option)
-                .build();
+            .product(product)
+            .url(request.getUrl())
+            .altText(request.getAltText())
+            .isPrimary(request.getIsPrimary())
+            .displayOrder(request.getDisplayOrder())
+            .option(option)
+            .build();
 
         ProductImage savedImage = imageRepository.save(image);
 
@@ -58,12 +60,12 @@ public class ProductImageServiceImpl implements ProductImageService {
 
     private ProductImageResponse convertToResponse(ProductImage image) {
         return ProductImageResponse.builder()
-                .id(image.getId())
-                .url(image.getUrl())
-                .altText(image.getAltText())
-                .isPrimary(image.getIsPrimary())
-                .displayOrder(image.getDisplayOrder())
-                .optionId(image.getOption() != null ? image.getOption().getId() : null)
-                .build();
+            .id(image.getId())
+            .url(image.getUrl())
+            .altText(image.getAltText())
+            .isPrimary(image.getIsPrimary())
+            .displayOrder(image.getDisplayOrder())
+            .optionId(image.getOption() != null ? image.getOption().getId() : null)
+            .build();
     }
 }

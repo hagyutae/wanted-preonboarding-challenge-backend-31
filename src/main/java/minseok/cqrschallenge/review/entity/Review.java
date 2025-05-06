@@ -61,7 +61,8 @@ public class Review {
     private Integer helpfulVotes = 0;
 
     @Builder
-    public Review(Product product, User user, Integer rating, String title, String content, Boolean verifiedPurchase, Integer helpfulVotes) {
+    public Review(Product product, User user, Integer rating, String title, String content,
+        Boolean verifiedPurchase, Integer helpfulVotes) {
         this.product = product;
         this.user = user;
         this.rating = rating;

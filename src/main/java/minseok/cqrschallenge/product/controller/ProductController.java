@@ -35,7 +35,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
     private final ProductService productService;
+
     private final ProductOptionService productOptionService;
+
     private final ProductImageService productImageService;
 
 
@@ -73,7 +75,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductDetailResponse>> getProductDetail(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ProductDetailResponse>> getProductDetail(
+        @PathVariable Long id) {
         ProductDetailResponse response = productService.getProductDetail(id);
         return ResponseEntity.ok(
             ApiResponse.success(response, "상품 상세 정보를 성공적으로 조회했습니다.")
@@ -115,7 +118,8 @@ public class ProductController {
         @PathVariable Long id,
         @PathVariable Long optionId,
         @Valid @RequestBody ProductOptionCreateRequest request) {
-        ProductOptionResponse response = productOptionService.updateProductOption(id, optionId, request);
+        ProductOptionResponse response = productOptionService.updateProductOption(id, optionId,
+            request);
         return ResponseEntity.ok(
             ApiResponse.success(response, "상품 옵션이 성공적으로 수정되었습니다.")
         );

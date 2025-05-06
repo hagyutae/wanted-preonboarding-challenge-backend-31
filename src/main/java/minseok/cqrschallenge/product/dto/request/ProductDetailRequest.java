@@ -12,11 +12,18 @@ import minseok.cqrschallenge.product.entity.Dimensions;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDetailRequest {
+
     private Double weight;
+
     private Dimensions dimensions;
+
     private String materials;
+
     private String countryOfOrigin;
+
     private String warrantyInfo;
+
     private String careInstructions;
+
     private Map<String, Object> additionalInfo;
 }

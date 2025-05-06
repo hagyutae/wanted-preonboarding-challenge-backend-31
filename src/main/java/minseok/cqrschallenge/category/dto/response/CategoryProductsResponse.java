@@ -13,7 +13,10 @@ import minseok.cqrschallenge.product.dto.response.ProductListResponse;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryProductsResponse {
+
     private CategoryDetailResponse category;
+
     private List<ProductListResponse> items;
+
     private PaginationResponse.Pagination pagination;
 }

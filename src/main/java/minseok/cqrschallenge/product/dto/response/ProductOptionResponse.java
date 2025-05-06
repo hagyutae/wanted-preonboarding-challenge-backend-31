@@ -11,11 +11,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductOptionResponse {
+
     private Long id;
+
     private Long optionGroupId;
+
     private String name;
+
     private BigDecimal additionalPrice;
+
     private String sku;
+
     private Integer stock;
+
     private Integer displayOrder;
 }

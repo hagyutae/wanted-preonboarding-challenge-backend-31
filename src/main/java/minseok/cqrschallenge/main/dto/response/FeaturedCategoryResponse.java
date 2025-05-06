@@ -10,9 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeaturedCategoryResponse {
+
     private Long id;
+
     private String name;
+
     private String slug;
+
     private String imageUrl;
+
     private Integer productCount;
 }

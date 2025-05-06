@@ -93,17 +93,19 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         return condition;
     }
 
-    private BooleanExpression applyStatusFilter(BooleanExpression condition, QProduct product, String status) {
+    private BooleanExpression applyStatusFilter(BooleanExpression condition, QProduct product,
+        String status) {
         if (!StringUtils.hasText(status)) {
             return condition;
         }
 
-            ProductStatus statusEnum = ProductStatus.valueOf(status);
-            return condition.and(product.status.eq(statusEnum));
+        ProductStatus statusEnum = ProductStatus.valueOf(status);
+        return condition.and(product.status.eq(statusEnum));
 
     }
 
-    private BooleanExpression applyCategoryFilter(BooleanExpression condition, QProduct product, String category) {
+    private BooleanExpression applyCategoryFilter(BooleanExpression condition, QProduct product,
+        String category) {
         if (!StringUtils.hasText(category)) {
             return condition;
         }
@@ -129,21 +131,24 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         }
     }
 
-    private BooleanExpression applySellerFilter(BooleanExpression condition, QProduct product, Integer seller) {
+    private BooleanExpression applySellerFilter(BooleanExpression condition, QProduct product,
+        Integer seller) {
         if (seller == null || seller <= 0) {
             return condition;
         }
         return condition.and(product.seller.id.eq(seller.longValue()));
     }
 
-    private BooleanExpression applyBrandFilter(BooleanExpression condition, QProduct product, Integer brand) {
+    private BooleanExpression applyBrandFilter(BooleanExpression condition, QProduct product,
+        Integer brand) {
         if (brand == null || brand <= 0) {
             return condition;
         }
         return condition.and(product.brand.id.eq(brand.longValue()));
     }
 
-    private BooleanExpression applyStockFilter(BooleanExpression condition, QProduct product, Boolean inStock) {
+    private BooleanExpression applyStockFilter(BooleanExpression condition, QProduct product,
+        Boolean inStock) {
         if (!Boolean.TRUE.equals(inStock)) {
             return condition;
         }
@@ -160,7 +165,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
             .exists());
     }
 
-    private BooleanExpression applySearchFilter(BooleanExpression condition, QProduct product, String name) {
+    private BooleanExpression applySearchFilter(BooleanExpression condition, QProduct product,
+        String name) {
         if (!StringUtils.hasText(name)) {
             return condition;
         }
@@ -171,7 +177,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         return (minPrice != null && minPrice > 0) || (maxPrice != null && maxPrice > 0);
     }
 
-    private JPAQuery<Product> applyPriceJoin(JPAQuery<Product> query, QProduct product, boolean hasPriceFilter,
+    private JPAQuery<Product> applyPriceJoin(JPAQuery<Product> query, QProduct product,
+        boolean hasPriceFilter,
         Integer minPrice, Integer maxPrice) {
         if (hasPriceFilter) {
             QProductPrice price = QProductPrice.productPrice;
@@ -183,7 +190,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         }
     }
 
-    private BooleanExpression buildPriceCondition(QProductPrice price, Integer minPrice, Integer maxPrice) {
+    private BooleanExpression buildPriceCondition(QProductPrice price, Integer minPrice,
+        Integer maxPrice) {
         BooleanExpression condition = null;
 
         if (minPrice != null && minPrice > 0) {
@@ -198,7 +206,8 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         return condition;
     }
 
-    private long countTotalProducts(QProduct product, BooleanExpression filterCondition, boolean hasPriceFilter) {
+    private long countTotalProducts(QProduct product, BooleanExpression filterCondition,
+        boolean hasPriceFilter) {
         JPAQuery<Long> countQuery = queryFactory.select(product.count())
             .from(product);
 

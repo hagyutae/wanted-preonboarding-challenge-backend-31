@@ -15,5 +15,6 @@ public enum ErrorCode {
     INTERNAL_ERROR("INTERNAL_ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String code;
+
     private final HttpStatus status;
 }

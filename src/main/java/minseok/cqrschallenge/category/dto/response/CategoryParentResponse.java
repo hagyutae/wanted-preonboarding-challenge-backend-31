@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryParentResponse {
+
     private Long id;
+
     private String name;
+
     private String slug;
 }

@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/main")
 @RequiredArgsConstructor
 public class MainController {
-    
+
     private final MainService mainService;
-    
+
     @GetMapping
     public ResponseEntity<ApiResponse<MainPageResponse>> getMainPageData() {
         MainPageResponse response = mainService.getMainPageData();
-        
+
         return ResponseEntity.ok(ApiResponse.success(
-                response, 
-                "메인 페이지 상품 목록을 성공적으로 조회했습니다."
+            response,
+            "메인 페이지 상품 목록을 성공적으로 조회했습니다."
         ));
     }
 }
