@@ -5,8 +5,8 @@ import {
   paginationInfoSchema,
   paginationParamsSchema,
 } from '~/common/utils/response-schema.util';
-import { CategoryWithChildrenSchema } from '../entities/category.entity';
-import { ProductSelectSchema } from '~/modules/products/entities/product.entity';
+import { CategoryWithRelationsSchema } from '../entities/category.entity';
+import { ProductWithRelationsSchema } from '~/modules/products/entities/product.entity';
 
 // 카테고리 목록 조회 요청 스키마
 export const GetCategoriesRequestDtoSchema = z.object({
@@ -18,7 +18,7 @@ export type GetCategoriesRequestDto = z.infer<
 
 // 카테고리 목록 조회 응답 스키마
 export const GetCategoriesResponseDtoSchema = createSuccessResponseSchema(
-  z.array(CategoryWithChildrenSchema),
+  z.array(CategoryWithRelationsSchema),
 );
 export type GetCategoriesResponseDto = z.infer<
   typeof GetCategoriesResponseDtoSchema
@@ -37,17 +37,16 @@ export type GetProductsByCategoryIdRequestDto = z.infer<
   typeof GetProductsByCategoryIdRequestDtoSchema
 >;
 
+export const ProductsByCategorySchema = createPaginatedResponseSchema(
+  z.lazy(() => ProductWithRelationsSchema),
+).extend({
+  category: CategoryWithRelationsSchema,
+});
+export type ProductsByCategory = z.infer<typeof ProductsByCategorySchema>;
+
 // 카테고리별 상품 조회 응답 스키마
 export const GetProductsByCategoryIdResponseDtoSchema =
-  createSuccessResponseSchema(
-    z.object({
-      category: CategoryWithChildrenSchema.extend({
-        parent: CategoryWithChildrenSchema.optional(),
-      }),
-      items: z.array(ProductSelectSchema),
-      pagination: paginationInfoSchema,
-    }),
-  );
+  createSuccessResponseSchema(ProductsByCategorySchema);
 export type GetProductsByCategoryIdResponseDto = z.infer<
   typeof GetProductsByCategoryIdResponseDtoSchema
 >;

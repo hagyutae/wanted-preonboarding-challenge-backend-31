@@ -49,6 +49,14 @@ export function createPaginationInfo(
   };
 }
 
+export function createPaginatedData<T>(
+  items: T[],
+  totalItems: number,
+  params: PaginationParams,
+): PaginatedData<T> {
+  return { items, pagination: createPaginationInfo(totalItems, params) };
+}
+
 /**
  * 페이지네이션 응답 생성 유틸리티
  * @param items 페이지네이션된 데이터 아이템 배열
@@ -63,12 +71,7 @@ export function createPaginatedResponse<T>(
   params: PaginationParams,
   message = '요청이 성공적으로 처리되었습니다.',
 ): ApiPaginatedResponse<T> {
-  const pagination = createPaginationInfo(totalItems, params);
-
-  const paginatedData: PaginatedData<T> = {
-    items,
-    pagination,
-  };
+  const paginatedData = createPaginatedData(items, totalItems, params);
 
   return createSuccessResponse(paginatedData, message);
 }

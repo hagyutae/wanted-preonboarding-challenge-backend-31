@@ -7,12 +7,14 @@ import {
   products as productsSchema,
 } from '~/database/schema';
 import { GetProductsByCategoryIdRequestDto } from './dto/category.dto';
+import { ProductWithRelations } from '../products/entities/product.entity';
+import { CategoryWithRelations } from './entities/category.entity';
 
 @Injectable()
 export class CategoryRepository {
   constructor(private readonly drizzleService: DrizzleService) {}
 
-  async getCategories(level?: number) {
+  async getCategories(level?: number): Promise<CategoryWithRelations[]> {
     const categories = await this.drizzleService.db.query.categories.findMany({
       with: {
         children: {
@@ -21,15 +23,47 @@ export class CategoryRepository {
           },
         },
       },
-      where: eq(categoriesSchema.level, level),
+      where: level ? eq(categoriesSchema.level, level) : undefined,
     });
+
     return categories;
+  }
+
+  async getCategoryById(id: number): Promise<CategoryWithRelations> {
+    const category = await this.drizzleService.db.query.categories.findFirst({
+      with: {
+        children: {
+          with: {
+            children: true,
+          },
+        },
+      },
+      where: eq(categoriesSchema.id, id),
+    });
+
+    return category;
+  }
+
+  async getProductsCountByCategoryId(
+    categoryId: number,
+    query: GetProductsByCategoryIdRequestDto,
+  ): Promise<number> {
+    let categoryIds: number[] = [categoryId];
+    if (query.includeSubCategories) {
+      categoryIds = await this.getSubCategories(categoryId);
+    }
+
+    const result = await this.drizzleService.db
+      .select({ count: sql`count(*)` })
+      .from(productsSchema)
+      .where(inArray(productCategoriesSchema.categoryId, categoryIds));
+    return Number(result[0].count);
   }
 
   async getProductsByCategoryId(
     categoryId: number,
     query: GetProductsByCategoryIdRequestDto,
-  ) {
+  ): Promise<ProductWithRelations[]> {
     const {
       page = 1,
       per_page = 10,
@@ -40,18 +74,7 @@ export class CategoryRepository {
 
     let categoryIds: number[] = [categoryId];
     if (includeSubCategories) {
-      const subcategories = await this.drizzleService.db.execute(
-        sql`
-            WITH RECURSIVE category_tree AS (
-                SELECT id FROM categories WHERE id = ${categoryId}
-                UNION ALL
-                SELECT c.id FROM categories c
-                INNER JOIN category_tree ct ON c.parent_id = ct.id
-            )
-            SELECT id FROM category_tree
-        `,
-      );
-      categoryIds = subcategories.rows.map((row) => Number(row.id));
+      categoryIds = await this.getSubCategories(categoryId);
     }
 
     const products = await this.drizzleService.db.query.products.findMany({
@@ -66,6 +89,21 @@ export class CategoryRepository {
     });
 
     return products;
+  }
+
+  private async getSubCategories(categoryId: number): Promise<number[]> {
+    const subcategories = await this.drizzleService.db.execute(
+      sql`
+            WITH RECURSIVE category_tree AS (
+                SELECT id FROM categories WHERE id = ${categoryId}
+                UNION ALL
+                SELECT c.id FROM categories c
+                INNER JOIN category_tree ct ON c.parent_id = ct.id
+            )
+            SELECT id FROM category_tree
+        `,
+    );
+    return subcategories.rows.map((row) => Number(row.id));
   }
 
   private getOrderBy(sort: GetProductsByCategoryIdRequestDto['sort']) {

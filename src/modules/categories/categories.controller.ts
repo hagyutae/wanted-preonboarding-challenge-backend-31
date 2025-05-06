@@ -14,7 +14,13 @@ import {
   GetCategoriesRequestDtoSchema,
   GetProductsByCategoryIdRequestDto,
   GetProductsByCategoryIdRequestDtoSchema,
+  GetProductsByCategoryIdResponseDto,
+  GetCategoriesResponseDto,
 } from './dto/category.dto';
+import {
+  createPaginatedData,
+  createSuccessResponse,
+} from '~/common/utils/response.util';
 
 @Controller('categories')
 export class CategoriesController {
@@ -22,8 +28,13 @@ export class CategoriesController {
 
   @Get()
   @UsePipes(new ZodValidationPipe(GetCategoriesRequestDtoSchema))
-  async getCategories(@Query() query: GetCategoriesRequestDto) {
-    return this.categoriesService.getCategories(query.level);
+  async getCategories(
+    @Query() query: GetCategoriesRequestDto,
+  ): Promise<GetCategoriesResponseDto> {
+    return createSuccessResponse(
+      await this.categoriesService.getCategories(query.level),
+      '카테고리 목록을 성공적으로 조회했습니다.',
+    );
   }
 
   @Get(':id/products')
@@ -31,7 +42,15 @@ export class CategoriesController {
   async getProductsByCategoryId(
     @Param('id', new ParseIntPipe()) id: number,
     @Query() query: GetProductsByCategoryIdRequestDto,
-  ) {
-    return this.categoriesService.getProductsByCategoryId(id, query);
+  ): Promise<GetProductsByCategoryIdResponseDto> {
+    const { items, total } =
+      await this.categoriesService.getProductsByCategoryId(id, query);
+    return createSuccessResponse(
+      {
+        category: await this.categoriesService.getCategoryById(id),
+        ...createPaginatedData(items, total, query),
+      },
+      '카테고리 상품 목록을 성공적으로 조회했습니다.',
+    );
   }
 }
