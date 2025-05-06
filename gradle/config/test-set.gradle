@@ -1,0 +1,6 @@
+dependencies {
+    testImplementation TestSet.TEST_CONTAINER
+    testImplementation TestSet.TEST_CONTAINER_PSQL
+    testImplementation TestSet.JUNIT
+    testRuntimeOnly TestSet.JUNIT_LAUNCHER
+}

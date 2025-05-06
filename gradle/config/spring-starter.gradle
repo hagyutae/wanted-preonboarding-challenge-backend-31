@@ -1,0 +1,10 @@
+dependencies {
+    implementation SpringBootStarter.WEB
+    implementation SpringBootStarter.DATA_JPA
+    implementation SpringBootStarter.VALIDATION
+
+    compileOnly SpringBootStarter.LOMBOK_COMPILE_ONLY
+    annotationProcessor SpringBootStarter.LOMBOK_ANNOTATION_PROCESSOR
+
+    testImplementation SpringBootStarter.TEST
+}
