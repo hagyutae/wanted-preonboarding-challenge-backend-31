@@ -13,9 +13,6 @@ import com.wanted.ecommerce.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,9 +45,8 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<PaginationResponse<ProductListResponse>>> getAllProduct(
-        @Valid @ModelAttribute ProductSearchRequest request,
-        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ProductListResponse> results = productService.readAll(request, pageable);
+        @Valid @ModelAttribute ProductSearchRequest request) {
+        Page<ProductListResponse> results = productService.readAll(request);
         PaginationResponse<ProductListResponse> response = PaginationResponse.of(results);
         return ResponseEntity.ok(
             ApiResponse.success(response, MessageConstants.FUNDED_ALL_PRODUCTS.getMessage()));

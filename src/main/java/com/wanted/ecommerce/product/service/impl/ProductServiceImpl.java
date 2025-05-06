@@ -45,6 +45,7 @@ import com.wanted.ecommerce.tag.service.TagService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,7 +96,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<ProductListResponse> readAll(ProductSearchRequest request, Pageable pageable) {
+    public Page<ProductListResponse> readAll(ProductSearchRequest request) {
+        int pageNumber = Math.max(0, request.getPage() - 1);
+        Pageable pageable = PageRequest.of(pageNumber, request.getPerPage());
         Page<Product> products = productRepository.findAllByRequest(request, pageable);
         return products.map(product -> {
 

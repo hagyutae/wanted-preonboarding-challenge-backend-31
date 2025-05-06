@@ -62,8 +62,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
@@ -140,9 +138,8 @@ class ProductServiceImplTest {
 
     @Test
     void test_readAll_success() {
-        ProductSearchRequest request = new ProductSearchRequest("ACTIVE", 1000, 10000000, "1", 1, 1,
-            true, "TEST");
-        Pageable pageable = PageRequest.of(0, 10); // 페이지 번호 0, 페이지 크기 10
+        ProductSearchRequest request = new ProductSearchRequest(1, 10, "price:desc", "ACTIVE", 1000,
+            10000000, "1", 1, 1, true, "TEST");
 
         PageImpl<Product> productPage = new PageImpl<>(List.of(product));
 
@@ -158,7 +155,7 @@ class ProductServiceImplTest {
         when(sellerService.createSellerResponse(any())).thenReturn(
             mock(SellerResponse.class));
 
-        Page<ProductListResponse> result = productService.readAll(request, pageable);
+        Page<ProductListResponse> result = productService.readAll(request);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
@@ -268,7 +265,8 @@ class ProductServiceImplTest {
     }
 
     private ProductPrice registProductPrice() {
-        ProductPriceRequest request = new ProductPriceRequest(new BigDecimal(100000), new BigDecimal(90000),
+        ProductPriceRequest request = new ProductPriceRequest(new BigDecimal(100000),
+            new BigDecimal(90000),
             new BigDecimal(40000), "KRW", new BigDecimal("10.0"));
         return ProductPrice.of(null, request);
     }
