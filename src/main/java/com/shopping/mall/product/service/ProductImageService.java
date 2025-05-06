@@ -21,10 +21,9 @@ public class ProductImageService {
     private final ProductOptionRepository productOptionRepository;
 
     @Transactional
-    public void addImage(Long productId, ProductImageCreateRequest request) {
-
+    public ProductImage addImage(Long productId, ProductImageCreateRequest request) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("상품이 존재하지 않습니다"));
+                .orElseThrow(() -> new ResourceNotFoundException("상품이 존재하지 않습니다."));
 
         ProductOption option = null;
         if (request.getOptionId() != null) {
@@ -42,5 +41,7 @@ public class ProductImageService {
                 .build();
 
         productImageRepository.save(image);
+
+        return image;
     }
 }
