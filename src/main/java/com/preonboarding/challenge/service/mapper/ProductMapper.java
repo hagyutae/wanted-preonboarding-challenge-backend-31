@@ -32,7 +32,7 @@ public class ProductMapper {
     public ProductDetail toProductDetailEntity(ProductDto.Detail detail, Product product) {
         return ProductDetail.builder()
                 .product(product)
-                .weight(detail.getWeight())
+                .weight(detail.getWeight().doubleValue())
                 .dimensions(convertMapToJsonString(detail.getDimensions()))
                 .materials(detail.getMaterials())
                 .countryOfOrigin(detail.getCountryOfOrigin())

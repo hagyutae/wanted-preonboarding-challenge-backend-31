@@ -66,7 +66,7 @@ public class ProductDetailDMEHandler extends ProductDocumentModelEventHandler {
         }
 
         if (data.containsKey("weight")) {
-            detail.setWeight(getDoubleValue(data, "weight"));
+            detail.setWeight(getBigDecimalValue(data, "weight").doubleValue());
         }
 
         if (data.containsKey("dimensions")) {
