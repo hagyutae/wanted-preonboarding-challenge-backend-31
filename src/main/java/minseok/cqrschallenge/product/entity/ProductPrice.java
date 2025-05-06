@@ -65,4 +65,16 @@ public class ProductPrice {
         this.currency = currency;
         this.taxRate = taxRate;
     }
+
+    public void associateProduct(Product product) {
+        if (this.product == product) {
+            return;
+        }
+        if (this.product != null) {
+            this.product.setPrice(null);
+        }
+        this.product = product;
+
+
+    }
 }

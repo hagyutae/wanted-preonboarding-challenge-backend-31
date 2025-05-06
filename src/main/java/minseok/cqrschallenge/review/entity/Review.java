@@ -1,5 +1,6 @@
 package minseok.cqrschallenge.review.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -8,17 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import minseok.cqrschallenge.product.entity.Product;
 import minseok.cqrschallenge.user.entity.User;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -27,7 +24,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Review {
 
     @Id
@@ -63,4 +59,13 @@ public class Review {
 
     @Column(name = "helpful_votes")
     private Integer helpfulVotes = 0;
+
+    @Builder
+    public Review(Product product, User user, Integer rating, String title, String content) {
+        this.product = product;
+        this.user = user;
+        this.rating = rating;
+        this.title = title;
+        this.content = content;
+    }
 }

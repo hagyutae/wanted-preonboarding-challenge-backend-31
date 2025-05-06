@@ -54,4 +54,15 @@ public class ProductOptionGroup {
         this.name = name;
         this.displayOrder = displayOrder;
     }
+
+    public void associateProduct(Product product) {
+        if (this.product == product) {
+            return;
+        }
+        if (this.product != null) {
+            this.product.getOptionGroups().remove(this);
+        }
+
+        this.product = product;
+    }
 }

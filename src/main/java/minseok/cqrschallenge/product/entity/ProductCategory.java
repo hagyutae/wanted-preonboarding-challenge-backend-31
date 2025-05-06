@@ -21,7 +21,6 @@ import minseok.cqrschallenge.category.entity.Category;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ProductCategory {
 
     @Id
@@ -50,5 +49,15 @@ public class ProductCategory {
         this.product = product;
         this.category = category;
         this.isPrimary = isPrimary;
+    }
+
+    public void associateProduct(Product product) {
+        if (this.product == product) {
+            return;
+        }
+        if (this.product != null) {
+            this.product.getCategories().remove(this);
+        }
+        this.product = product;
     }
 }

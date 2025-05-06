@@ -26,25 +26,25 @@ public class ProductImageServiceImpl implements ProductImageService {
     public ProductImageResponse addProductImage(Long productId, ProductImageCreateRequest request) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("요청한 상품을 찾을 수 없습니다."));
-        
+
         ProductOption option = null;
         if (request.getOptionId() != null) {
             option = optionRepository.findById(request.getOptionId())
                     .orElseThrow(() -> new ResourceNotFoundException("요청한 옵션을 찾을 수 없습니다."));
-            
+
             if (!option.getOptionGroup().getProduct().getId().equals(productId)) {
                 throw new ResourceNotFoundException("해당 상품에 속한 옵션이 아닙니다.");
             }
         }
-        
+
         if (request.getIsPrimary() != null && request.getIsPrimary()) {
             imageRepository.findByProductIdAndIsPrimaryTrue(productId)
                     .ifPresent(primaryImage -> {
-                        primaryImage.setIsPrimary(false);
+                        primaryImage.unmarkAsPrimary();
                         imageRepository.save(primaryImage);
                     });
         }
-        
+
         ProductImage image = ProductImage.builder()
                 .product(product)
                 .url(request.getUrl())
@@ -53,12 +53,12 @@ public class ProductImageServiceImpl implements ProductImageService {
                 .displayOrder(request.getDisplayOrder())
                 .option(option)
                 .build();
-        
+
         ProductImage savedImage = imageRepository.save(image);
-        
+
         return convertToResponse(savedImage);
     }
-    
+
     private ProductImageResponse convertToResponse(ProductImage image) {
         return ProductImageResponse.builder()
                 .id(image.getId())

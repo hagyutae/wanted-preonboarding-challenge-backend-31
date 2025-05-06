@@ -47,7 +47,7 @@ public class ProductImage {
 
     @Builder
     public ProductImage(Product product, String url, String altText, Boolean isPrimary,
-                        Integer displayOrder, ProductOption option) {
+        Integer displayOrder, ProductOption option) {
         this.product = product;
         this.url = url;
         this.altText = altText;
@@ -57,13 +57,34 @@ public class ProductImage {
     }
 
     public void update(Product product, String url, String altText, Boolean isPrimary,
-                       Integer displayOrder, ProductOption option) {
+        Integer displayOrder, ProductOption option) {
         this.product = product;
         this.url = url;
         this.altText = altText;
         this.isPrimary = isPrimary;
         this.displayOrder = displayOrder;
         this.option = option;
+    }
+
+    public void markAsPrimary() {
+        this.isPrimary = true;
+    }
+
+    public void unmarkAsPrimary() {
+        this.isPrimary = false;
+    }
+
+
+    public void associateProduct(Product product) {
+        if (this.product == product) {
+            return;
+        }
+
+        if (this.product != null) {
+            this.product.getImages().remove(this);
+        }
+
+        this.product = product;
     }
 
 }

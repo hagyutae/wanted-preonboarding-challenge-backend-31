@@ -54,8 +54,8 @@ public class ProductDetail {
 
     @Builder
     public ProductDetail(Product product, Double weight, String dimensions, String materials,
-                         String countryOfOrigin, String warrantyInfo, String careInstructions,
-                         String additionalInfo) {
+        String countryOfOrigin, String warrantyInfo, String careInstructions,
+        String additionalInfo) {
         this.product = product;
         this.weight = weight;
         this.dimensions = dimensions;
@@ -67,8 +67,8 @@ public class ProductDetail {
     }
 
     public void update(Product product, Double weight, String dimensions, String materials,
-                       String countryOfOrigin, String warrantyInfo, String careInstructions,
-                       String additionalInfo) {
+        String countryOfOrigin, String warrantyInfo, String careInstructions,
+        String additionalInfo) {
         this.product = product;
         this.weight = weight;
         this.dimensions = dimensions;
@@ -77,5 +77,15 @@ public class ProductDetail {
         this.warrantyInfo = warrantyInfo;
         this.careInstructions = careInstructions;
         this.additionalInfo = additionalInfo;
+    }
+
+    public void associateProduct(Product product) {
+        if (this.product == product) {
+            return;
+        }
+        if (this.product != null) {
+            this.product.setDetail(null);
+        }
+        this.product = product;
     }
 }
