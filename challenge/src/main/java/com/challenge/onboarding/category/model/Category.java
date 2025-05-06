@@ -1,11 +1,13 @@
 package com.challenge.onboarding.category.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.List;
 
 @Entity
 @Table(name = "categories")
+@Getter
 public class Category {
 
     @Id

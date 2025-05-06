@@ -1,9 +1,11 @@
-package com.challenge.onboarding.product.model;
+package com.challenge.onboarding.product.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
 @Table(name = "tags")
+@Getter
 public class Tag {
 
     @Id

@@ -1,11 +1,16 @@
-package com.challenge.onboarding.product.model;
+package com.challenge.onboarding.product.domain;
 
+import com.challenge.onboarding.product.service.dto.request.CreateProductRequest;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product_prices")
+@Builder
+@AllArgsConstructor
 public class ProductPrice {
 
     @Id
@@ -32,4 +37,16 @@ public class ProductPrice {
     private BigDecimal taxRate;
 
     protected ProductPrice() {}
+
+    public static ProductPrice from(CreateProductRequest request, Product product) {
+        return ProductPrice.builder()
+                .product(product)
+                .basePrice(BigDecimal.valueOf(request.price().basePrice()))
+                .salePrice(BigDecimal.valueOf(request.price().salePrice()))
+                .costPrice(BigDecimal.valueOf(request.price().costPrice()))
+                .currency(request.price().currency())
+                .taxRate(BigDecimal.valueOf(request.price().taxRate()))
+                .build();
+
+    }
 }

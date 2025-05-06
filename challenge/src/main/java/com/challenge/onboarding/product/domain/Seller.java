@@ -1,4 +1,4 @@
-package com.challenge.onboarding.product.model;
+package com.challenge.onboarding.product.domain;
 
 import jakarta.persistence.*;
 

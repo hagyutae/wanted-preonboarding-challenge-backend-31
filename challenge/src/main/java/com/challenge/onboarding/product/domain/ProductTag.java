@@ -1,9 +1,13 @@
-package com.challenge.onboarding.product.model;
+package com.challenge.onboarding.product.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Entity
 @Table(name = "product_tags")
+@Builder
+@AllArgsConstructor
 public class ProductTag {
 
     @Id
@@ -18,5 +22,13 @@ public class ProductTag {
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
 
-    protected ProductTag() {}
+    protected ProductTag() {
+    }
+
+    public static ProductTag from(Product product, Tag tag) {
+        return ProductTag.builder()
+                .product(product)
+                .tag(tag)
+                .build();
+    }
 }
