@@ -3,12 +3,13 @@ package minseok.cqrschallenge.product.service;
 import minseok.cqrschallenge.common.dto.PaginationResponse;
 import minseok.cqrschallenge.product.dto.request.ProductCreateRequest;
 import minseok.cqrschallenge.product.dto.request.ProductUpdateRequest;
+import minseok.cqrschallenge.product.dto.response.ProductCreateResponse;
 import minseok.cqrschallenge.product.dto.response.ProductDetailResponse;
 import minseok.cqrschallenge.product.dto.response.ProductListResponse;
-import minseok.cqrschallenge.product.dto.response.ProductSimpleResponse;
+import minseok.cqrschallenge.product.dto.response.ProductUpdateResponse;
 
 public interface ProductService {
-    ProductSimpleResponse createProduct(ProductCreateRequest request);
+    ProductCreateResponse createProduct(ProductCreateRequest request);
     
     PaginationResponse<ProductListResponse> getProducts(
             int page, int perPage, String sort, String status,
@@ -17,7 +18,7 @@ public interface ProductService {
     
     ProductDetailResponse getProductDetail(Long id);
     
-    ProductDetailResponse updateProduct(Long id, ProductUpdateRequest request);
+    ProductUpdateResponse updateProduct(Long id, ProductUpdateRequest request);
     
     void deleteProduct(Long id);
 }

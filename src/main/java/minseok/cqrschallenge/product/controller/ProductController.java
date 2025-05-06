@@ -8,11 +8,12 @@ import minseok.cqrschallenge.product.dto.request.ProductCreateRequest;
 import minseok.cqrschallenge.product.dto.request.ProductImageCreateRequest;
 import minseok.cqrschallenge.product.dto.request.ProductOptionCreateRequest;
 import minseok.cqrschallenge.product.dto.request.ProductUpdateRequest;
+import minseok.cqrschallenge.product.dto.response.ProductCreateResponse;
 import minseok.cqrschallenge.product.dto.response.ProductDetailResponse;
 import minseok.cqrschallenge.product.dto.response.ProductImageResponse;
 import minseok.cqrschallenge.product.dto.response.ProductListResponse;
 import minseok.cqrschallenge.product.dto.response.ProductOptionResponse;
-import minseok.cqrschallenge.product.dto.response.ProductSimpleResponse;
+import minseok.cqrschallenge.product.dto.response.ProductUpdateResponse;
 import minseok.cqrschallenge.product.service.ProductImageService;
 import minseok.cqrschallenge.product.service.ProductOptionService;
 import minseok.cqrschallenge.product.service.ProductService;
@@ -39,9 +40,9 @@ public class ProductController {
 
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductSimpleResponse>> createProduct(
+    public ResponseEntity<ApiResponse<ProductCreateResponse>> createProduct(
         @Valid @RequestBody ProductCreateRequest request) {
-        ProductSimpleResponse response = productService.createProduct(request);
+        ProductCreateResponse response = productService.createProduct(request);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(ApiResponse.success(response, "상품이 성공적으로 등록되었습니다."));
@@ -81,10 +82,10 @@ public class ProductController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductDetailResponse>> updateProduct(
+    public ResponseEntity<ApiResponse<ProductUpdateResponse>> updateProduct(
         @PathVariable Long id,
         @Valid @RequestBody ProductUpdateRequest request) {
-        ProductDetailResponse response = productService.updateProduct(id, request);
+        ProductUpdateResponse response = productService.updateProduct(id, request);
         return ResponseEntity.ok(
             ApiResponse.success(response, "상품이 성공적으로 수정되었습니다.")
         );

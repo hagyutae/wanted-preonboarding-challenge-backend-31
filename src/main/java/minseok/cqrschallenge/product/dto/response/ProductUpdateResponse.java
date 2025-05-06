@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductSimpleResponse {
+public class ProductUpdateResponse {
     private Long id;
     private String name;
     private String slug;
-    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

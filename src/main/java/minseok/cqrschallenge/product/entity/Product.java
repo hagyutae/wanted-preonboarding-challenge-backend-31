@@ -23,6 +23,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import minseok.cqrschallenge.brand.entity.Brand;
+import minseok.cqrschallenge.review.entity.Review;
 import minseok.cqrschallenge.seller.entity.Seller;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -91,6 +92,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOptionGroup> optionGroups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Review> reviews = new ArrayList<>();
 
     @Builder(toBuilder = true)
     public Product(String name, String slug, String shortDescription, String fullDescription,

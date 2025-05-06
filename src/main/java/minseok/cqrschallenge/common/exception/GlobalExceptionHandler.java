@@ -1,5 +1,7 @@
 package minseok.cqrschallenge.common.exception;
 
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import minseok.cqrschallenge.common.dto.ApiResponse;
 import minseok.cqrschallenge.common.dto.ErrorResponse;
@@ -9,9 +11,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
@@ -38,15 +37,13 @@ public class GlobalExceptionHandler {
         
         Map<String, String> validationErrors = new HashMap<>();
         
-        if (ex instanceof MethodArgumentNotValidException) {
-            MethodArgumentNotValidException validationEx = (MethodArgumentNotValidException) ex;
+        if (ex instanceof MethodArgumentNotValidException validationEx) {
             validationEx.getBindingResult().getAllErrors().forEach(error -> {
                 String fieldName = ((FieldError) error).getField();
                 String errorMessage = error.getDefaultMessage();
                 validationErrors.put(fieldName, errorMessage);
             });
-        } else if (ex instanceof BindException) {
-            BindException bindEx = (BindException) ex;
+        } else if (ex instanceof BindException bindEx) {
             bindEx.getBindingResult().getAllErrors().forEach(error -> {
                 String fieldName = ((FieldError) error).getField();
                 String errorMessage = error.getDefaultMessage();
@@ -78,4 +75,29 @@ public class GlobalExceptionHandler {
                 .status(ErrorCode.INTERNAL_ERROR.getStatus())
                 .body(ApiResponse.error(errorResponse, "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."));
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleConflictException(ConflictException ex) {
+        Map<String, Object> details = new HashMap<>();
+
+        if (ex.getField() != null) {
+            details.put("field", ex.getField());
+        }
+        details.put("message", ex.getMessage());
+
+        if (ex.getValue() != null) {
+            details.put("value", ex.getValue());
+        }
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+            .code(ex.getErrorCode().getCode())
+            .message("리소스 충돌이 발생했습니다.")
+            .details(details)
+            .build();
+
+        return ResponseEntity
+            .status(ex.getErrorCode().getStatus())
+            .body(ApiResponse.error(errorResponse, ex.getMessage()));
+    }
+
 }

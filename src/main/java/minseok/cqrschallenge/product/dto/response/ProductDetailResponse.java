@@ -116,7 +116,7 @@ public class ProductDetailResponse {
         private String name;
         private Integer displayOrder;
         private List<OptionInfo> options;
-        
+
         @Data
         @Builder
         @NoArgsConstructor
