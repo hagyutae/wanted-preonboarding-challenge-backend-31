@@ -4,6 +4,7 @@ import com.wanted.mono.global.common.Error;
 import com.wanted.mono.global.common.ErrorCode;
 import com.wanted.mono.global.common.ErrorResponse;
 import com.wanted.mono.global.exception.ProductEmptyException;
+import com.wanted.mono.global.exception.ProductOptionGroupEmptyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -126,6 +127,26 @@ public class ProductControllerAdvice {
                 .build();
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+    }
+
+    @ExceptionHandler(ProductOptionGroupEmptyException.class)
+    public ResponseEntity<ErrorResponse> handleProductOptionGroupException(Exception ex, Locale locale) {
+        log.error("ProductController OptionGroup 조회 결과 없음 : ", ex);
+
+        ErrorCode errorCode = ErrorCode.RESOURCE_NOT_FOUND;
+
+        String localizedMessage = messageSource.getMessage(errorCode.getMessageKey(), null, locale);
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .success(false)
+                .error(Error.builder()
+                        .code(errorCode.getCode())
+                        .message(localizedMessage)
+                        .build())
+                .build();
+
+        log.info("Not Found 반환");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     private String extractDuplicateValue(String raw) {

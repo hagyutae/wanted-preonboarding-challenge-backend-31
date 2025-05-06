@@ -4,6 +4,7 @@ import com.wanted.mono.domain.product.dto.request.ProductOptionGroupRequest;
 import com.wanted.mono.domain.product.entity.Product;
 import com.wanted.mono.domain.product.entity.ProductOptionGroup;
 import com.wanted.mono.domain.product.repository.ProductOptionGroupRepository;
+import com.wanted.mono.global.exception.ProductOptionGroupEmptyException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,11 @@ public class ProductOptionGroupService {
             productOptionGroupRepository.save(productOptionGroup);
 
             log.info("ProductOptionGroup -> List<ProductOption> 엔티티 화");
-            productOptionService.createProductOption(productOptionGroupRequest.getOptions(), productOptionGroup);
+            productOptionService.createProductOptions(productOptionGroupRequest.getOptions(), productOptionGroup);
         }
+    }
+
+    public ProductOptionGroup findById(Long optionGroupId, Long productId) {
+        return productOptionGroupRepository.findByIdAndProductId(optionGroupId, productId).orElseThrow(ProductOptionGroupEmptyException::new);
     }
 }

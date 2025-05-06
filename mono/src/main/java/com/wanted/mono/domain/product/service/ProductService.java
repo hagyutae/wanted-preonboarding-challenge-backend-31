@@ -5,12 +5,16 @@ import com.wanted.mono.domain.brand.service.BrandService;
 import com.wanted.mono.domain.product.dto.Pagination;
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
 import com.wanted.mono.domain.product.dto.model.ProductInfoDto;
+import com.wanted.mono.domain.product.dto.request.ProductAddOptionRequest;
+import com.wanted.mono.domain.product.dto.request.ProductOptionRequest;
 import com.wanted.mono.domain.product.dto.request.ProductRequest;
 import com.wanted.mono.domain.product.dto.request.ProductSearchRequest;
+import com.wanted.mono.domain.product.dto.response.ProductOptionSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSaveResponse;
 import com.wanted.mono.domain.product.dto.response.ProductSearchResponse;
 import com.wanted.mono.domain.product.dto.response.ProductUpdateResponse;
 import com.wanted.mono.domain.product.entity.Product;
+import com.wanted.mono.domain.product.entity.ProductOptionGroup;
 import com.wanted.mono.domain.product.repository.query.ProductInfoQueryRepository;
 import com.wanted.mono.domain.product.repository.query.ProductSearchQueryRepository;
 import com.wanted.mono.domain.product.repository.ProductRepository;
@@ -45,6 +49,7 @@ public class ProductService {
     private final ProductSearchQueryRepository productSearchQueryRepository;
     private final ProductItemService productItemService;
     private final ProductInfoQueryRepository productInfoQueryRepository;
+    private final ProductOptionService productOptionService;
 
     @Transactional
     public ProductSaveResponse createProduct(ProductRequest productRequest) {
@@ -128,5 +133,25 @@ public class ProductService {
         return productInfoQueryRepository.getProductInfo(productId);
     }
 
+    @Transactional
+    public ProductOptionSaveResponse addOption(ProductAddOptionRequest addOptionRequest, Long productId) {
+        ProductOptionGroup productOptionGroup = productOptionGroupService.findById(addOptionRequest.getOptionGroupId(), productId);
 
+        ProductOptionRequest productOptionRequest = new ProductOptionRequest(
+                addOptionRequest.getName(),
+                addOptionRequest.getAdditionalPrice(),
+                addOptionRequest.getSku(),
+                addOptionRequest.getStock(),
+                addOptionRequest.getDisplayOrder());
+
+        Long saveId = productOptionService.createProductOption(productOptionRequest, productOptionGroup);
+        return new ProductOptionSaveResponse(
+                saveId,
+                addOptionRequest.getOptionGroupId(),
+                addOptionRequest.getName(),
+                addOptionRequest.getAdditionalPrice(),
+                addOptionRequest.getSku(),
+                addOptionRequest.getStock(),
+                addOptionRequest.getDisplayOrder());
+    }
 }
