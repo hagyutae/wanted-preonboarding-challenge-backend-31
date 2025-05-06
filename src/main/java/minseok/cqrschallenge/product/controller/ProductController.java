@@ -12,6 +12,7 @@ import minseok.cqrschallenge.product.dto.response.ProductDetailResponse;
 import minseok.cqrschallenge.product.dto.response.ProductImageResponse;
 import minseok.cqrschallenge.product.dto.response.ProductListResponse;
 import minseok.cqrschallenge.product.dto.response.ProductOptionResponse;
+import minseok.cqrschallenge.product.dto.response.ProductSimpleResponse;
 import minseok.cqrschallenge.product.service.ProductImageService;
 import minseok.cqrschallenge.product.service.ProductOptionService;
 import minseok.cqrschallenge.product.service.ProductService;
@@ -38,9 +39,9 @@ public class ProductController {
 
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductDetailResponse>> createProduct(
+    public ResponseEntity<ApiResponse<ProductSimpleResponse>> createProduct(
         @Valid @RequestBody ProductCreateRequest request) {
-        ProductDetailResponse response = productService.createProduct(request);
+        ProductSimpleResponse response = productService.createProduct(request);
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(ApiResponse.success(response, "상품이 성공적으로 등록되었습니다."));

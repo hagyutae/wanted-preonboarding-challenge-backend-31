@@ -15,18 +15,18 @@ public class ProductListResponse {
     private Long id;
     private String name;
     private String slug;
-    private String short_description;
-    private BigDecimal base_price;
-    private BigDecimal sale_price;
+    private String shortDescription;
+    private BigDecimal basePrice;
+    private BigDecimal salePrice;
     private String currency;
-    private ProductImageSummary primary_image;
+    private ProductImageSummary primaryImage;
     private BrandSummary brand;
     private SellerSummary seller;
     private double rating;
-    private int review_count;
-    private boolean in_stock;
+    private int reviewCount;
+    private boolean inStock;
     private String status;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
     
     @Data
     @Builder
@@ -34,7 +34,7 @@ public class ProductListResponse {
     @AllArgsConstructor
     public static class ProductImageSummary {
         private String url;
-        private String alt_text;
+        private String altText;
     }
     
     @Data

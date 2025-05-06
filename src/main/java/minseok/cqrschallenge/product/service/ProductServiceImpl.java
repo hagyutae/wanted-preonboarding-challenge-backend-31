@@ -9,6 +9,7 @@ import minseok.cqrschallenge.product.dto.request.ProductCreateRequest;
 import minseok.cqrschallenge.product.dto.request.ProductUpdateRequest;
 import minseok.cqrschallenge.product.dto.response.ProductDetailResponse;
 import minseok.cqrschallenge.product.dto.response.ProductListResponse;
+import minseok.cqrschallenge.product.dto.response.ProductSimpleResponse;
 import minseok.cqrschallenge.product.entity.Product;
 import minseok.cqrschallenge.product.entity.ProductStatus;
 import minseok.cqrschallenge.product.repository.ProductRepository;
@@ -27,10 +28,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductDetailResponse createProduct(ProductCreateRequest request) {
+    public ProductSimpleResponse createProduct(ProductCreateRequest request) {
         Product product = convertToEntity(request);
         Product savedProduct = productRepository.save(product);
-        return convertToDetailResponse(savedProduct);
+        return convertToSimpleResponse(savedProduct);
     }
 
     @Override
@@ -126,12 +127,12 @@ public class ProductServiceImpl implements ProductService {
                 .id(product.getId())
                 .name(product.getName())
                 .slug(product.getSlug())
-                .short_description(product.getShortDescription())
-                .base_price(product.getPrice().getBasePrice())
-                .sale_price(product.getPrice().getSalePrice())
+                .shortDescription(product.getShortDescription())
+                .basePrice(product.getPrice().getBasePrice())
+                .salePrice(product.getPrice().getSalePrice())
                 .currency(product.getPrice().getCurrency())
                 .status(product.getStatus().name())
-                .created_at(product.getCreatedAt())
+                .createdAt(product.getCreatedAt())
                 .build();
     }
     
@@ -143,6 +144,16 @@ public class ProductServiceImpl implements ProductService {
                 .shortDescription(product.getShortDescription())
                 .fullDescription(product.getFullDescription())
                 .status(product.getStatus().name())
+                .createdAt(product.getCreatedAt())
+                .updatedAt(product.getUpdatedAt())
+                .build();
+    }
+
+    private ProductSimpleResponse convertToSimpleResponse(Product product) {
+        return ProductSimpleResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .slug(product.getSlug())
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();
