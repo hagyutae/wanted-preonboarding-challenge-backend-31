@@ -2,11 +2,13 @@ package wanted.shop.common.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-@Builder
 public class Pagination {
+
     @JsonProperty("total_items")
-    private int totalItems;
+    private long totalItems;
 
     @JsonProperty("total_pages")
     private int totalPages;
@@ -16,5 +18,21 @@ public class Pagination {
 
     @JsonProperty("per_page")
     private int perPage;
+
+    public Pagination(long totalItems, int totalPages, int currentPage, int perPage) {
+        this.totalItems = totalItems;
+        this.totalPages = totalPages;
+        this.currentPage = currentPage;
+        this.perPage = perPage;
+    }
+
+    public static Pagination from(Page<?> page) {
+        return new Pagination(
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.getNumber() + 1,
+                page.getSize()
+        );
+    }
 
 }

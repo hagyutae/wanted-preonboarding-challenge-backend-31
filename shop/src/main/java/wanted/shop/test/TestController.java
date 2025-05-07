@@ -27,7 +27,7 @@ public class TestController {
 
     @GetMapping("/pings")
     public SuccessResponse<PaginatedData<String>> pings() {
-        Pagination pagination = Pagination.builder().perPage(1).totalPages(2).currentPage(3).totalItems(4).build();
+        Pagination pagination = new Pagination(1, 2, 3, 4);
         List<String> list = Arrays.asList("a", "b", "c", "d");
         PaginatedData<String> data = new PaginatedData<>(list, pagination);
         return new SuccessResponse<>(data);
