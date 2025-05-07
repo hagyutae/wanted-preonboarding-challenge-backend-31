@@ -10,12 +10,15 @@ import wanted.domain.product.dto.response.ProductRatingResponse;
 import wanted.domain.product.entity.Product;
 import wanted.domain.product.repository.ProductRepository;
 import wanted.domain.review.ReviewSearchCondition;
+import wanted.domain.review.dto.request.ProductReviewRequest;
 import wanted.domain.review.dto.response.ProductReviewResponse;
 import wanted.domain.review.dto.response.ReviewResponse;
 import wanted.domain.review.dto.response.ReviewUserResponse;
 import wanted.domain.review.dto.response.SummaryResponse;
 import wanted.domain.review.entity.Review;
 import wanted.domain.review.repository.ReviewRepository;
+import wanted.domain.user.entity.User;
+import wanted.domain.user.repository.UserRepository;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -29,6 +32,7 @@ import java.util.Optional;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     public ProductRatingResponse getProductRating(Long productId) {
         List<Review> reviews = reviewRepository.findByProductId(productId);
@@ -111,6 +115,20 @@ public class ReviewService {
         return new ProductReviewResponse(items, summary, pagination);
     }
 
+    @Transactional
+    public ReviewResponse createProductReview(Long productId, ProductReviewRequest request) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Product", productId)));
+
+        //시큐리티 생략으로 인한 임의 유저 선택
+        User user = userRepository.findById(1L)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("User", 1L)));
+
+        Review review = Review.from(request, user, product);
+        reviewRepository.save(review);
+
+        return ReviewResponse.of(review);
+    }
 
     private Map<String, Object> resourceNotFoundDetails(String type, Object id) {
         return Map.of("resourceType", type, "resourceId", id);

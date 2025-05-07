@@ -2,14 +2,18 @@ package wanted.domain.review.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wanted.common.response.SuccessResponse;
 import wanted.domain.review.ReviewSearchCondition;
+import wanted.domain.review.dto.request.ProductReviewRequest;
 import wanted.domain.review.service.ReviewService;
 
 @RestController
@@ -22,4 +26,10 @@ public class ReviewController {
     public ResponseEntity<?> getProductReviews(@PathVariable(value = "id") Long productId, @ModelAttribute ReviewSearchCondition condition){
         return ResponseEntity.ok(SuccessResponse.ok(reviewService.getProductReviews(productId, condition)));
     }
+
+    @PostMapping("/products/{id}/reviews")
+    public ResponseEntity<?> createProductReview(@PathVariable(value = "id") Long productId, @Valid @RequestBody ProductReviewRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(SuccessResponse.ok(reviewService.createProductReview(productId, request)));
+    }
+
 }

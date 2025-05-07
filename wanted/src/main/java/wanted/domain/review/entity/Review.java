@@ -11,10 +11,12 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wanted.common.entity.BaseCreateUpdateEntity;
 import wanted.domain.product.entity.Product;
+import wanted.domain.review.dto.request.ProductReviewRequest;
 import wanted.domain.user.entity.User;
 
 @Entity
@@ -46,4 +48,26 @@ public class Review extends BaseCreateUpdateEntity {
 
     private int helpfulVotes;
 
+    @Builder
+    public Review(Product product, User user, int rating, String title, String content, boolean verifiedPurchase, int helpfulVotes) {
+        this.product = product;
+        this.user = user;
+        this.rating = rating;
+        this.title = title;
+        this.content = content;
+        this.verifiedPurchase = verifiedPurchase;
+        this.helpfulVotes = helpfulVotes;
+    }
+
+    public static Review from(ProductReviewRequest request, User user, Product product) {
+        return Review.builder()
+                .product(product)
+                .user(user)
+                .rating(request.rating())
+                .title(request.title())
+                .content(request.content())
+                .helpfulVotes(0)
+                .verifiedPurchase(true)
+                .build();
+    }
 }
