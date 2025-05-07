@@ -18,74 +18,97 @@ import {
 
 @ViewEntity({
   expression: (dataSource: DataSource) => {
-    return dataSource
-      .getRepository(ProductEntity)
-      .createQueryBuilder("products")
-      .leftJoin(SellerEntity, "sellers", "sellers.id = products.seller_id")
-      .leftJoin(BrandEntity, "brands", "brands.id = products.brand_id")
-      .innerJoin(ProductDetailEntity, "product_details", "product_details.product_id = products.id")
-      .leftJoin(ProductImageEntity, "product_images", "product_images.product_id = products.id")
-      .leftJoin(ProductTagEntity, "product_tag", "product_tag.product_id = products.id")
-      .leftJoin(TagEntity, "tags", "tags.id = product_tag.tag_id")
-      .select([
-        "products.id as id",
-        "products.name as name",
-        "products.slug as slug",
-        "products.short_description as short_description",
-        "products.full_description as full_description",
+    return (
+      dataSource
+        .getRepository(ProductEntity)
+        // 기본 정보
+        .createQueryBuilder("products")
+        .select([
+          "products.id as id",
+          "products.name as name",
+          "products.slug as slug",
+          "products.short_description as short_description",
+          "products.full_description as full_description",
+          "products.status as status",
+          "products.created_at as created_at",
+          "products.updated_at as updated_at",
+        ])
 
-        "to_jsonb(sellers) - 'created_at' AS seller",
-        "to_jsonb(brands) - 'slug' AS brand",
+        // 제품 상세 정보
+        .innerJoin(
+          ProductDetailEntity,
+          "product_details",
+          "product_details.product_id = products.id",
+        )
+        .addSelect("to_jsonb(product_details) - 'product_id' - 'id'", "detail")
 
-        "products.status as status",
-        "products.created_at as created_at",
-        "products.updated_at as updated_at",
+        // 브랜드, 판매자 정보
+        .leftJoin(SellerEntity, "sellers", "sellers.id = products.seller_id")
+        .leftJoin(BrandEntity, "brands", "brands.id = products.brand_id")
+        .addSelect([
+          "to_jsonb(brands) - 'slug' AS brand",
+          "to_jsonb(sellers) - 'created_at' AS seller",
+        ])
 
-        "to_jsonb(product_details) - 'product_id' - 'id' AS detail",
-        "array_agg(to_jsonb(product_images) - 'product_id') AS images",
-        "array_agg(to_jsonb(tags)) AS tags",
-      ])
-      .addSelect((subQuery) => {
-        return subQuery
-          .select(
-            `jsonb_build_object(
+        // 가격 정보
+        .addSelect((subQuery) => {
+          return subQuery
+            .select(
+              `jsonb_build_object(
               'base_price', price.base_price,
               'sale_price', price.sale_price,
               'currency', price.currency,
               'tax_rate', price.tax_rate,
               'discount_percentage', FLOOR(((price.base_price - price.sale_price) * 100.0) / price.base_price)
               )`,
-            "price",
-          )
-          .from(ProductPriceEntity, "price")
-          .where("price.product_id = products.id");
-      }, "price")
-      .addSelect((subQuery) => {
-        return subQuery
-          .select(
-            `array_agg(jsonb_build_object(
-              'id', categories.id,
-              'name', categories.name,
+              "price",
+            )
+            .from(ProductPriceEntity, "price")
+            .where("price.product_id = products.id");
+        }, "price")
+
+        // 카테고리 정보
+        .addSelect((subQuery) => {
+          return subQuery
+            .select(
+              `array_agg(jsonb_build_object(
+                'id', categories.id,
+                'name', categories.name,
               'slug', categories.slug,
               'is_primary', product_categories.is_primary,
               'parent', jsonb_build_object(
                 'id', parent.id,
                 'name', parent.name,
                 'slug', parent.slug
-              ))
-            )`,
-            "categories",
-          )
-          .from(ProductCategoryEntity, "product_categories")
-          .innerJoin(CategoryEntity, "categories", "categories.id = product_categories.category_id")
-          .leftJoin(CategoryEntity, "parent", "parent.id = categories.parent_id")
-          .where("product_categories.product_id = products.id")
-          .groupBy("product_categories.product_id");
-      }, "categories")
-      .addSelect((subQuery) => {
-        return subQuery
-          .select(
-            `array_agg(jsonb_build_object(
+                ))
+                )`,
+              "categories",
+            )
+            .from(ProductCategoryEntity, "product_categories")
+            .innerJoin(
+              CategoryEntity,
+              "categories",
+              "categories.id = product_categories.category_id",
+            )
+            .leftJoin(CategoryEntity, "parent", "parent.id = categories.parent_id")
+            .where("product_categories.product_id = products.id")
+            .groupBy("product_categories.product_id");
+        }, "categories")
+
+        // 이미지 정보 집계
+        .leftJoin(ProductImageEntity, "product_images", "product_images.product_id = products.id")
+        .addSelect("array_agg(to_jsonb(product_images) - 'product_id')", "images")
+
+        // 태그 정보 집계
+        .leftJoin(ProductTagEntity, "product_tag", "product_tag.product_id = products.id")
+        .leftJoin(TagEntity, "tags", "tags.id = product_tag.tag_id")
+        .addSelect("array_agg(to_jsonb(tags))", "tags")
+
+        // 옵션 그룹 정보
+        .addSelect((subQuery) => {
+          return subQuery
+            .select(
+              `array_agg(jsonb_build_object(
               'id', product_option_groups.id,
               'name', product_option_groups.name,
               'display_order', product_option_groups.display_order,
@@ -95,24 +118,26 @@ import {
                 WHERE product_options.option_group_id = product_option_groups.id
               ))
             )`,
-            "option_groups",
-          )
-          .from(ProductOptionGroupEntity, "product_option_groups")
-          .leftJoin(
-            ProductOptionEntity,
-            "product_options",
-            "product_options.option_group_id = product_option_groups.id",
-          )
-          .where("product_option_groups.product_id = products.id")
-          .groupBy("product_option_groups.id")
-          .addGroupBy("product_option_groups.name")
-          .addGroupBy("product_option_groups.display_order")
-          .limit(1);
-      }, "option_groups")
-      .addSelect((subQuery) => {
-        return subQuery
-          .select(
-            `jsonb_build_object(
+              "option_groups",
+            )
+            .from(ProductOptionGroupEntity, "product_option_groups")
+            .leftJoin(
+              ProductOptionEntity,
+              "product_options",
+              "product_options.option_group_id = product_option_groups.id",
+            )
+            .where("product_option_groups.product_id = products.id")
+            .groupBy("product_option_groups.id")
+            .addGroupBy("product_option_groups.name")
+            .addGroupBy("product_option_groups.display_order")
+            .limit(1);
+        }, "option_groups")
+
+        // 리뷰 정보 집계
+        .addSelect((subQuery) => {
+          return subQuery
+            .select(
+              `jsonb_build_object(
               'average', ROUND(AVG(reviews.rating), 1),
               'count', COUNT(reviews.id),
               'distribution', jsonb_build_object(
@@ -123,15 +148,16 @@ import {
                 '1', COUNT(CASE WHEN reviews.rating = 1 THEN 1 END)
                 )
               )`,
-            "rating",
-          )
-          .from(ReviewEntity, "reviews")
-          .where("reviews.product_id = products.id");
-      }, "rating")
-      .groupBy("products.id")
-      .addGroupBy("sellers")
-      .addGroupBy("brands")
-      .addGroupBy("product_details");
+              "rating",
+            )
+            .from(ReviewEntity, "reviews")
+            .where("reviews.product_id = products.id");
+        }, "rating")
+        .groupBy("products.id")
+        .addGroupBy("sellers")
+        .addGroupBy("brands")
+        .addGroupBy("product_details")
+    );
   },
 })
 export default class ProductCatalogView {
