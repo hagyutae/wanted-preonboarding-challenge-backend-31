@@ -64,9 +64,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public ProductOption getProductOptionById(Long id) {
-        return productOptionJpaRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("ProductOption", id));
+    public ProductOption getProductOptionByOptionId(Long optionId) {
+        return productOptionJpaRepository.findById(optionId)
+            .orElseThrow(() -> new ResourceNotFoundException("ProductOption", optionId));
     }
 
     @Override

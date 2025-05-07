@@ -17,7 +17,7 @@ public interface ProductRepository {
     ProductImage saveProductImage(ProductImage productImage);
     ProductTag saveProductTag(ProductTag productTag);
 
-    ProductOption getProductOptionById(Long id);
+    ProductOption getProductOptionByOptionId(Long id);
     ProductOptionGroup getProductOptionGroupByOptionGroupId(Long optionGroupId);
 
     Page<GetAllProductsResponse> getAllProducts(GetAllProductsRequest request);

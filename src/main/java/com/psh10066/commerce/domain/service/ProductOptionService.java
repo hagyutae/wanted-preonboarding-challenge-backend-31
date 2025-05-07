@@ -1,7 +1,9 @@
 package com.psh10066.commerce.domain.service;
 
 import com.psh10066.commerce.api.dto.request.CreateProductOptionRequest;
+import com.psh10066.commerce.api.dto.request.UpdateProductOptionRequest;
 import com.psh10066.commerce.api.dto.response.CreateProductOptionResponse;
+import com.psh10066.commerce.api.dto.response.UpdateProductOptionResponse;
 import com.psh10066.commerce.domain.exception.ResourceNotFoundException;
 import com.psh10066.commerce.domain.model.product.ProductOption;
 import com.psh10066.commerce.domain.model.product.ProductOptionGroup;
@@ -36,6 +38,40 @@ public class ProductOptionService {
         productRepository.saveProductOption(productOption);
 
         return new CreateProductOptionResponse(
+            productOption.getId(),
+            productOptionGroup.getId(),
+            productOption.getName(),
+            productOption.getAdditionalPrice(),
+            productOption.getSku(),
+            productOption.getStock(),
+            productOption.getDisplayOrder()
+        );
+    }
+
+    @Transactional
+    public UpdateProductOptionResponse updateProductOption(Long id, Long optionId, UpdateProductOptionRequest request) {
+
+        ProductOption productOption = productRepository.getProductOptionByOptionId(optionId);
+        ProductOptionGroup productOptionGroup = productOption.getOptionGroup();
+        if (!productOptionGroup.getId().equals(request.optionGroupId())) {
+            productOptionGroup = productRepository.getProductOptionGroupByOptionGroupId(request.optionGroupId());
+            if (!productOptionGroup.getProduct().getId().equals(id)) {
+                throw new ResourceNotFoundException("ProductOptionGroup", request.optionGroupId());
+            }
+        }
+
+        productOption.update(
+            productOptionGroup,
+            request.name(),
+            request.additionalPrice(),
+            request.sku(),
+            request.stock(),
+            request.displayOrder()
+        );
+
+        productRepository.saveProductOption(productOption);
+
+        return new UpdateProductOptionResponse(
             productOption.getId(),
             productOptionGroup.getId(),
             productOption.getName(),

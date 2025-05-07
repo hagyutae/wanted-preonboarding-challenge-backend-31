@@ -44,4 +44,13 @@ public class ProductOption {
         this.stock = stock;
         this.displayOrder = displayOrder;
     }
+
+    public void update(ProductOptionGroup optionGroup, String name, BigDecimal additionalPrice, String sku, Integer stock, Integer displayOrder) {
+        this.optionGroup = optionGroup;
+        this.name = name;
+        this.additionalPrice = additionalPrice;
+        this.sku = sku;
+        this.stock = stock;
+        this.displayOrder = displayOrder;
+    }
 }

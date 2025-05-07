@@ -109,7 +109,7 @@ public class ProductService {
                 requestImage.altText(),
                 requestImage.isPrimary(),
                 requestImage.displayOrder(),
-                requestImage.optionId() != null ? productRepository.getProductOptionById(requestImage.optionId()) : null
+                requestImage.optionId() != null ? productRepository.getProductOptionByOptionId(requestImage.optionId()) : null
             ));
         });
 

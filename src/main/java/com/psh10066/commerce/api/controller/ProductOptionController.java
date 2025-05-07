@@ -2,7 +2,9 @@ package com.psh10066.commerce.api.controller;
 
 import com.psh10066.commerce.api.common.ApiResponse;
 import com.psh10066.commerce.api.dto.request.CreateProductOptionRequest;
+import com.psh10066.commerce.api.dto.request.UpdateProductOptionRequest;
 import com.psh10066.commerce.api.dto.response.CreateProductOptionResponse;
+import com.psh10066.commerce.api.dto.response.UpdateProductOptionResponse;
 import com.psh10066.commerce.domain.service.ProductOptionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +26,15 @@ public class ProductOptionController {
     ) {
         CreateProductOptionResponse response = productOptionService.createProductOption(id, request);
         return ApiResponse.success(response, "상품 옵션이 성공적으로 추가되었습니다.");
+    }
+
+    @PutMapping("/{optionId}")
+    public ApiResponse<UpdateProductOptionResponse> updateProductOption(
+        @PathVariable Long id,
+        @PathVariable Long optionId,
+        @Valid @RequestBody UpdateProductOptionRequest request
+    ) {
+        UpdateProductOptionResponse response = productOptionService.updateProductOption(id, optionId, request);
+        return ApiResponse.success(response, "상품 옵션이 성공적으로 수정되었습니다.");
     }
 }
