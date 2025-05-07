@@ -144,7 +144,7 @@ public class ProductServiceImpl implements ProductService {
         return Arrays.stream(snake.split("_"))
                 .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
                 .collect(Collectors.joining())
-                .replaceFirst("^[A-Z]", String::toLowerCase); // created_at -> createdAt
+                .replaceFirst("^[A-Z]", ); // created_at -> createdAt
     }
 
 }
