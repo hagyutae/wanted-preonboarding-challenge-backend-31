@@ -12,8 +12,9 @@ public enum MessageCode {
     PRODUCT_DELETE_SUCCESS("product.delete.success"),
     PRODUCT_OPTION_CREATE_SUCCESS("product.option.create.success"),
     PRODUCT_OPTION_DELETE_SUCCESS("product.option.delete.success"),
-    PRODUCT_IMAGE_CREATE_SUCCESS("product.image.create.success");
+    PRODUCT_IMAGE_CREATE_SUCCESS("product.image.create.success"),
 
+    CATEGORY_LIST_SUCCESS("category.list.success");
     private final String code;
 
     MessageCode(String code) {

@@ -11,4 +11,6 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     @EntityGraph(attributePaths = "productCategories")
     List<Category> findAllByIdIn(List<Long> categoryIds);
+
+    List<Category> findCategoriesByLevel(Integer level);
 }
