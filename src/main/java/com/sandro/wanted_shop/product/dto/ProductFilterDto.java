@@ -1,7 +1,10 @@
 package com.sandro.wanted_shop.product.dto;
 
+import lombok.Builder;
+
 import java.time.LocalDate;
 
+@Builder
 public record ProductFilterDto(
         String keyword,
         Long tagId,
