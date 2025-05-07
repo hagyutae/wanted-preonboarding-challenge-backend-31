@@ -10,7 +10,6 @@ import com.challenge.onboarding.product.service.dto.request.ProductSearchConditi
 import com.challenge.onboarding.product.service.dto.response.CreateProductResponse;
 import com.challenge.onboarding.product.service.dto.response.ProductListResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -45,20 +44,14 @@ public class ProductServiceImpl implements ProductService {
                 request.perPage(),
                 parseSort(request.sort())
         );
-        Page<Product> products = productRepository.findAll(pageable);
-        ProductPrice price = products.getContent()
 
-
-
-        Product product = productRepository.findAll(pageable)
+        List<Product> products = productRepository.findAll(pageable)
                 .getContent()
                 .stream()
                 .filter(p -> request.status() == null || p.getStatus().name().equalsIgnoreCase(request.status()))
-                .filter(p -> request.minPrice() == null || p.getPrice().getPrice() >= request.minPrice())
-                .filter(p -> request.maxPrice() == null || p.getPrice().getPrice() <= request.maxPrice())
                 .filter(p -> p.isAvailable(request.inStock()))
                 .filter(p -> request.search() == null || p.getName().contains(request.search()))
-                .collect(Collectors.toList());
+                .toList();
 
         return new ProductListResponse();
     }
