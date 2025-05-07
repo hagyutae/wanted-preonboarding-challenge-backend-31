@@ -142,25 +142,93 @@ class ProductControllerTest extends IntegrationTestContext {
                     .andDo(print());
         }
 
-        @DisplayName("필터링 X, 최신순, 평점 내림순, 가격 내림차순으로 정렬된다.")
-        @Test
-        void noFilterOrderByPriceDesc() throws Exception {
-            ResultActions resultActions = mvc
-                    .perform(
-                            get("/api/products")
-                                    .param("sort", "createdAt,desc")
-                                    .param("sort", "price.basePrice")
-//                                    .param("sort", "reviews.rating,desc")
-                    )
-                    .andDo(print());
+        @Nested
+        class Sort {
+            @DisplayName("최신순으로 정렬된다.")
+            @Test
+            void orderByCreatedAtDesc() throws Exception {
+                ResultActions resultActions = mvc
+                        .perform(
+                                get("/api/products")
+                                        .param("sort", "createdAt,desc")
+                        )
+                        .andDo(print());
 
-            resultActions
-                    .andExpectAll(
-                            status().isOk(),
-                            jsonPath("$.content.[*].id").exists(),
-                            jsonPath("$.pageable.pageSize").value(10)
-                    )
-                    .andDo(print());
+                resultActions
+                        .andExpectAll(
+                                status().isOk(),
+                                jsonPath("$.pageable.pageSize").value(10),
+                                jsonPath("$.content.[*].id").exists(),
+                                jsonPath("$.content.[0].name").value("공기청정기"),
+                                jsonPath("$.content.[9].name").value("4K UHD 스마트 TV")
+                        )
+                        .andDo(print());
+            }
+
+            @DisplayName("평점 내림차순으로 정렬된다.")
+            @Test
+            void orderByRatingDesc() throws Exception {
+                ResultActions resultActions = mvc
+                        .perform(
+                                get("/api/products")
+                                        .param("sort", "reviews.rating,desc")
+                        )
+                        .andDo(print());
+
+                resultActions
+                        .andExpectAll(
+                                status().isOk(),
+                                jsonPath("$.pageable.pageSize").value(10),
+                                jsonPath("$.content.[*].id").exists(),
+                                jsonPath("$.content.[0].name").value("럭셔리 옷장"),
+                                jsonPath("$.content.[9].name").value("패브릭 1인 소파")
+                        )
+                        .andDo(print());
+            }
+
+            @DisplayName("가격 내림차순으로 정렬된다.")
+            @Test
+            void orderByPriceDesc() throws Exception {
+                ResultActions resultActions = mvc
+                        .perform(
+                                get("/api/products")
+                                        .param("sort", "price.basePrice")
+                        )
+                        .andDo(print());
+
+                resultActions
+                        .andExpectAll(
+                                status().isOk(),
+                                jsonPath("$.pageable.pageSize").value(10),
+                                jsonPath("$.content.[*].id").exists(),
+                                jsonPath("$.content.[0].name").value("전문가용 수영 고글"),
+                                jsonPath("$.content.[9].name").value("초고속 블렌더")
+                        )
+                        .andDo(print());
+            }
+
+            @DisplayName("평점 내림차순, 가격 내림차순, 최신순으로 정렬된다.")
+            @Test
+            void orderByComplexity() throws Exception {
+                ResultActions resultActions = mvc
+                        .perform(
+                                get("/api/products")
+                                        .param("sort", "reviews.rating,desc")
+                                        .param("sort", "price.basePrice")
+                                        .param("sort", "createdAt,desc")
+                        )
+                        .andDo(print());
+
+                resultActions
+                        .andExpectAll(
+                                status().isOk(),
+                                jsonPath("$.pageable.pageSize").value(10),
+                                jsonPath("$.content.[*].id").exists(),
+                                jsonPath("$.content.[0].name").value("프로페셔널 등산화"),
+                                jsonPath("$.content.[9].name").value("편안한 침대 프레임")
+                        )
+                        .andDo(print());
+            }
         }
 
         @DisplayName("정렬 X, 판매자로 필터링한다.")

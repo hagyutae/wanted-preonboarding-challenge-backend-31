@@ -25,6 +25,7 @@ import static com.sandro.wanted_shop.category.QCategory.category;
 import static com.sandro.wanted_shop.product.entity.QProduct.product;
 import static com.sandro.wanted_shop.product.entity.QProductOption.productOption;
 import static com.sandro.wanted_shop.product.entity.relation.QProductOptionGroup.productOptionGroup;
+import static com.sandro.wanted_shop.review.entity.QReview.review;
 import static com.sandro.wanted_shop.tag.QTag.tag;
 
 @RequiredArgsConstructor
@@ -137,7 +138,10 @@ public class QueryDslProductRepositoryImpl implements QueryDslProductRepository 
     private static Expression getTarget(String property) {
         return switch (property) {
             case "createdAt" -> product.createdAt;
-//            case "reviews.rating" -> product.reviews.
+            case "reviews.rating" -> JPAExpressions
+                    .select(review.rating.avg())
+                    .from(review)
+                    .where(review.product.eq(product));
             case "price.basePrice" -> product.price.basePrice;
             default -> throw new IllegalStateException("Unexpected value: " + property);
         };
