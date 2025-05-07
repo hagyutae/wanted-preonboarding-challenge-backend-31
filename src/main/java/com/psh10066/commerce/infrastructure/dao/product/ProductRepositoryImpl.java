@@ -127,4 +127,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void deleteProductCategoryById(Long id) {
         productCategoryJpaRepository.deleteAllByProductId(id);
     }
+
+    @Override
+    public void deleteProductOptionByOptionId(Long optionId) {
+        productOptionJpaRepository.deleteById(optionId);
+    }
 }

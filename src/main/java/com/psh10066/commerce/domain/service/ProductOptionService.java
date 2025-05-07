@@ -81,4 +81,9 @@ public class ProductOptionService {
             productOption.getDisplayOrder()
         );
     }
+
+    @Transactional
+    public void deleteProductOption(Long id, Long optionId) {
+        productRepository.deleteProductOptionByOptionId(optionId);
+    }
 }

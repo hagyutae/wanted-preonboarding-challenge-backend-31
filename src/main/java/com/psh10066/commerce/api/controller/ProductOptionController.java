@@ -37,4 +37,13 @@ public class ProductOptionController {
         UpdateProductOptionResponse response = productOptionService.updateProductOption(id, optionId, request);
         return ApiResponse.success(response, "상품 옵션이 성공적으로 수정되었습니다.");
     }
+
+    @DeleteMapping("/{optionId}")
+    public ApiResponse<Void> deleteProductOption(
+        @PathVariable Long id,
+        @PathVariable Long optionId
+    ) {
+        productOptionService.deleteProductOption(id, optionId);
+        return ApiResponse.success(null, "상품 옵션이 성공적으로 삭제되었습니다.");
+    }
 }
