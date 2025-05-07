@@ -11,3 +11,8 @@ spring:
 
   jackson:
     property-naming-strategy: SNAKE_CASE
+
+jwt:
+  issuer: ${JWT_ISSUER:wanted}
+  secret-key: ${JWT_KEY:exampleSecretKeyForWantedSystemAccessSecretKeyTestForPadding}
+  access-expiration: ${JWT_ACCESS_EXPIRATION:1800000}
