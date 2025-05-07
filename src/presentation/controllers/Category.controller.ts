@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { plainToInstance } from "class-transformer";
 
 import { CategoryService } from "src/application/services";
 import { ApiBadRequestResponse, ApiErrorResponse, ApiStandardResponse } from "../decorators";
@@ -26,7 +27,13 @@ export default class CategoryController {
   async read_categories(
     @Query() { level }: { level: number },
   ): Promise<ResponseDTO<NestedCategoryDTO[]>> {
-    const data = await this.service.find_all_as_tree(level);
+    const plains = await this.service.find_all_as_tree(level);
+
+    const data = plains.map((plain) =>
+      plainToInstance(NestedCategoryDTO, plain, {
+        enableImplicitConversion: true,
+      }),
+    );
 
     return {
       success: true,
@@ -46,7 +53,11 @@ export default class CategoryController {
     @Param() { id }: ParamDTO,
     @Query() query: CategoryQueryDTO,
   ): Promise<ResponseDTO<CategoryResponseBundle>> {
-    const data = await this.service.find_products_by_category_id(id, to_FilterDTO(query));
+    const plain = await this.service.find_products_by_category_id(id, to_FilterDTO(query));
+
+    const data = plainToInstance(CategoryResponseBundle, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,

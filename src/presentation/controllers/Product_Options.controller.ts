@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { plainToInstance } from "class-transformer";
 
 import { ProductOptionsService } from "src/application/services";
 import {
@@ -26,7 +27,11 @@ export default class ProductOptionsController {
     @Param() { id }: ParamDTO,
     @Body() { option_group_id, ...body }: ProductOptionDTO,
   ): Promise<ResponseDTO<ProductOptionDTO>> {
-    const data = await this.service.register(id, option_group_id!, body);
+    const plain = await this.service.register(id, option_group_id!, body);
+
+    const data = plainToInstance(ProductOptionDTO, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,
@@ -45,7 +50,11 @@ export default class ProductOptionsController {
     @Param() { id, optionId }: OptionParamDTO,
     @Body() body: ProductOptionDTO,
   ): Promise<ResponseDTO<ProductOptionDTO>> {
-    const data = await this.service.update(id, optionId, body);
+    const plain = await this.service.update(id, optionId, body);
+
+    const data = plainToInstance(ProductOptionDTO, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,
@@ -79,7 +88,11 @@ export default class ProductOptionsController {
     @Param() { id }: OptionParamDTO,
     @Body() body: ImageDTO,
   ): Promise<ResponseDTO<ImageDTO>> {
-    const data = await this.service.register_images(id, body.option_id!, body);
+    const plain = await this.service.register_images(id, body.option_id!, body);
+
+    const data = plainToInstance(ImageDTO, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,

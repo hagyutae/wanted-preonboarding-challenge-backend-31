@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { plainToInstance } from "class-transformer";
 
 import { ProductService } from "src/application/services";
 import {
@@ -9,8 +10,8 @@ import {
   ApiStandardResponse,
 } from "../decorators";
 import {
-  ProductBodyDTO,
   ParamDTO,
+  ProductBodyDTO,
   ProductCatalogDTO,
   ProductQueryDTO,
   ProductResponseBundle,
@@ -31,7 +32,11 @@ export default class ProductController {
   @ApiBadRequestResponse("상품 등록에 실패했습니다.")
   @Post()
   async create(@Body() body: ProductBodyDTO): Promise<ResponseDTO<ProductResponseDTO>> {
-    const data = await this.service.register(body);
+    const plain = await this.service.register(body);
+
+    const data = plainToInstance(ProductResponseDTO, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,
@@ -45,7 +50,11 @@ export default class ProductController {
   @ApiBadRequestResponse("상품 목록 조회에 실패했습니다.")
   @Get()
   async read_all(@Query() query: ProductQueryDTO): Promise<ResponseDTO<ProductResponseBundle>> {
-    const data = await this.service.find_all(to_FilterDTO(query));
+    const plain = await this.service.find_all(to_FilterDTO(query));
+
+    const data = plainToInstance(ProductResponseBundle, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,
@@ -59,7 +68,11 @@ export default class ProductController {
   @ApiBadRequestResponse("요청한 상품을 찾을 수 없습니다.")
   @Get(":id")
   async read(@Param() { id }: ParamDTO): Promise<ResponseDTO<ProductCatalogDTO>> {
-    const data = await this.service.find(id);
+    const plain = await this.service.find(id);
+
+    const data = plainToInstance(ProductCatalogDTO, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,
@@ -76,7 +89,11 @@ export default class ProductController {
     @Param() { id }: ParamDTO,
     @Body() body: ProductBodyDTO,
   ): Promise<ResponseDTO<ProductResponseDTO>> {
-    const data = await this.service.edit(id, body);
+    const plain = await this.service.edit(id, body);
+
+    const data = plainToInstance(ProductResponseDTO, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,

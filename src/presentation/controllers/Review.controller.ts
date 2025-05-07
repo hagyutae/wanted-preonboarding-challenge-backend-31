@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { plainToInstance } from "class-transformer";
 
 import { ReviewService } from "src/application/services";
 import {
@@ -35,7 +36,11 @@ export default class ReviewController {
     @Param() { id }: ParamDTO,
     @Query() query: ReviewQueryDTO,
   ): Promise<ResponseDTO<ReviewResponseBundle>> {
-    const data = await this.service.find(id, to_FilterDTO(query));
+    const plain = await this.service.find(id, to_FilterDTO(query));
+
+    const data = plainToInstance(ReviewResponseBundle, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,
@@ -52,7 +57,11 @@ export default class ReviewController {
     @Param() { id }: ParamDTO,
     @Body() body: ReviewBodyDTO,
   ): Promise<ResponseDTO<ReviewDTO>> {
-    const data = await this.service.register(id, body);
+    const plain = await this.service.register(id, body);
+
+    const data = plainToInstance(ReviewDTO, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,
@@ -69,7 +78,11 @@ export default class ReviewController {
     @Param() { id }: ParamDTO,
     @Body() body: ReviewBodyDTO,
   ): Promise<ResponseDTO<ReviewResponseDTO>> {
-    const data = await this.service.edit(id, body);
+    const plain = await this.service.edit(id, body);
+
+    const data = plainToInstance(ReviewResponseDTO, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,

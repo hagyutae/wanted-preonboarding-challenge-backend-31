@@ -1,5 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { plainToInstance } from "class-transformer";
 
 import { MainService } from "src/application/services";
 import { ApiErrorResponse, ApiStandardResponse } from "../decorators";
@@ -15,7 +16,11 @@ export default class MainController {
   @ApiStandardResponse("메인 페이지 상품 목록을 성공적으로 조회했습니다.", MainResponseBundle)
   @Get()
   async read_main_products(): Promise<ResponseDTO<MainResponseBundle>> {
-    const data = await this.service.find();
+    const plain = await this.service.find();
+
+    const data = plainToInstance(MainResponseBundle, plain, {
+      enableImplicitConversion: true,
+    });
 
     return {
       success: true,
