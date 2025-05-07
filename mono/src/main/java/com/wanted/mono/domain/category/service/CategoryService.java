@@ -38,14 +38,16 @@ public class CategoryService {
         // 카테고리 수가 많지 않기 때문에 메모리에 올려도 성능 문제는 없음
         List<Category> allCategories = categoryRepository.findAll();
 
+        // 데이터를 DTO로 변환 및 Map에 저장
         Map<Long, CategoryDto> map = new HashMap<>();
         List<CategoryDto> roots = new ArrayList<>();
-
         for (Category entity : allCategories) {
             CategoryDto dto = CategoryDto.of(entity);
             map.put(dto.getId(), dto);
         }
 
+        // 모든 카테고리를 탐색
+        // 부모를 가지고 있다면 부모의 자식 리스트에 나를 추가
         for (Category entity : allCategories) {
             Long parentId = entity.getParent() != null ? entity.getParent().getId() : null;
             if (parentId == null) {
@@ -57,14 +59,24 @@ public class CategoryService {
             }
         }
 
-        // level 파라미터가 주어졌다면 필터링
-        if (level != null) {
-            return roots.stream()
-                    .filter(dto -> dto.getLevel() != null && dto.getLevel().equals(level))
-                    .collect(Collectors.toList());
-        }
+        // level이 null이면 전체 트리 반환
+        if (level == null) return roots;
 
-        return roots;
+        // level 파라미터가 주어졌다면 필터링
+        List<CategoryDto> filtered = new ArrayList<>();
+        collectByLevel(roots, level, filtered);
+        return filtered;
+    }
+
+    private void collectByLevel(List<CategoryDto> nodes, int level, List<CategoryDto> result) {
+        for (CategoryDto node : nodes) {
+            if (node.getLevel() != null && node.getLevel() == level) {
+                result.add(node);
+            }
+            if (node.getChildren() != null) {
+                collectByLevel(node.getChildren(), level, result);
+            }
+        }
     }
 
 }
