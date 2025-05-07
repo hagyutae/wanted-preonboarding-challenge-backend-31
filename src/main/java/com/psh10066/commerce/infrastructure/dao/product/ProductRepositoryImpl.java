@@ -87,6 +87,21 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public List<GetAllProductsResponse> getNewProducts() {
+        return productJpaRepository.getNewProducts();
+    }
+
+    @Override
+    public List<GetAllProductsResponse> getPopularProducts() {
+        return productJpaRepository.getPopularProducts();
+    }
+
+    @Override
+    public Integer getCategoryProductCount(Long categoryId) {
+        return productCategoryJpaRepository.countByCategoryId(categoryId);
+    }
+
+    @Override
     public Product getById(Long id) {
         return productJpaRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Product", id));

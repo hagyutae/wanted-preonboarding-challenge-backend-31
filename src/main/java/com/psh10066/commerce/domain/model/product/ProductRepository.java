@@ -23,6 +23,9 @@ public interface ProductRepository {
 
     Page<GetAllProductsResponse> getAllProducts(GetAllProductsRequest request);
     Page<GetAllProductsResponse> getCategoryProducts(Long categoryId, GetCategoryProductsRequest request);
+    List<GetAllProductsResponse> getNewProducts();
+    List<GetAllProductsResponse> getPopularProducts();
+    Integer getCategoryProductCount(Long categoryId);
 
     Product getById(Long id);
     ProductDetail getProductDetailById(Long id);

@@ -10,4 +10,6 @@ public interface ProductCategoryJpaRepository extends JpaRepository<ProductCateg
     List<ProductCategory> findAllByProductId(Long productId);
 
     void deleteAllByProductId(Long productId);
+
+    Integer countByCategoryId(Long categoryId);
 }

@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -195,6 +196,119 @@ public class ProductCustomRepositoryImpl implements ProductCustomRepository {
                 .where(whereClauses(categoryId, request))
                 .fetchOne()
         );
+    }
+
+    @Override
+    public List<GetAllProductsResponse> getNewProducts() {
+        List<GetAllProductsResponse> result = queryFactory.selectDistinct(Projections.constructor(GetAllProductsResponse.class,
+                product.id,
+                product.name,
+                product.slug,
+                product.shortDescription,
+                productPrice.basePrice,
+                productPrice.salePrice,
+                productPrice.currency,
+                Projections.constructor(GetAllProductsResponse.PrimaryImage.class, productImage.url, productImage.altText),
+                Projections.constructor(GetAllProductsResponse.Brand.class, brand.id, brand.name),
+                Projections.constructor(GetAllProductsResponse.Seller.class, seller.id, seller.name),
+                Expressions.nullExpression(BigDecimal.class),
+                Expressions.nullExpression(Integer.class),
+                new CaseBuilder().when(product.status.eq(ProductStatus.ACTIVE)).then(true).otherwise(false),
+                product.status,
+                product.createdAt
+            ))
+            .from(product)
+            .join(productPrice).on(productPrice.product.id.eq(product.id))
+            .join(productImage).on(productImage.product.id.eq(product.id).and(productImage.isPrimary.isTrue()))
+            .join(product.brand, brand)
+            .join(product.seller, seller)
+            .orderBy(product.createdAt.desc())
+            .limit(2)
+            .fetch();
+
+        List<Long> productIds = result.stream().map(GetAllProductsResponse::id).toList();
+        List<Review> totalReviews = queryFactory
+            .select(review)
+            .from(review)
+            .where(review.product.id.in(productIds))
+            .fetch();
+
+        // Review 추가
+        Map<Long, List<Review>> reviewsByProductId = totalReviews.stream()
+            .collect(Collectors.groupingBy(o -> o.getProduct().getId()));
+
+        List<GetAllProductsResponse> newResult = new ArrayList<>();
+
+        result.forEach(response -> {
+            ReviewFirstCollection reviews = new ReviewFirstCollection(reviewsByProductId.get(response.id()));
+            if (reviews.isNullOrEmpty()) {
+                newResult.add(response);
+                return;
+            }
+            newResult.add(response.toBuilder()
+                .rating(reviews.getAverage())
+                .reviewCount(reviews.getSize())
+                .build());
+        });
+        return newResult;
+    }
+
+    @Override
+    public List<GetAllProductsResponse> getPopularProducts() {
+        List<Review> totalReviews = queryFactory
+            .select(review)
+            .from(review)
+            .fetch();
+
+        Map<Long, List<Review>> reviewsByProductId = totalReviews.stream()
+            .collect(Collectors.groupingBy(o -> o.getProduct().getId()))
+            .entrySet().stream()
+            .sorted(Map.Entry.<Long, List<Review>>comparingByValue(
+                Comparator.comparingInt(List::size)
+            ).reversed())
+            .limit(2)
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        List<GetAllProductsResponse> result = queryFactory.selectDistinct(Projections.constructor(GetAllProductsResponse.class,
+                product.id,
+                product.name,
+                product.slug,
+                product.shortDescription,
+                productPrice.basePrice,
+                productPrice.salePrice,
+                productPrice.currency,
+                Projections.constructor(GetAllProductsResponse.PrimaryImage.class, productImage.url, productImage.altText),
+                Projections.constructor(GetAllProductsResponse.Brand.class, brand.id, brand.name),
+                Projections.constructor(GetAllProductsResponse.Seller.class, seller.id, seller.name),
+                Expressions.nullExpression(BigDecimal.class),
+                Expressions.nullExpression(Integer.class),
+                new CaseBuilder().when(product.status.eq(ProductStatus.ACTIVE)).then(true).otherwise(false),
+                product.status,
+                product.createdAt
+            ))
+            .from(product)
+            .join(productPrice).on(productPrice.product.id.eq(product.id))
+            .join(productImage).on(productImage.product.id.eq(product.id).and(productImage.isPrimary.isTrue()))
+            .join(product.brand, brand)
+            .join(product.seller, seller)
+            .where(product.id.in(reviewsByProductId.keySet()))
+            .limit(2)
+            .fetch();
+
+        List<GetAllProductsResponse> newResult = new ArrayList<>();
+
+        result.forEach(response -> {
+            ReviewFirstCollection reviews = new ReviewFirstCollection(reviewsByProductId.get(response.id()));
+            if (reviews.isNullOrEmpty()) {
+                newResult.add(response);
+                return;
+            }
+            newResult.add(response.toBuilder()
+                .rating(reviews.getAverage())
+                .reviewCount(reviews.getSize())
+                .build());
+        });
+        return newResult;
     }
 
     private BooleanExpression[] whereClauses(Long categoryId, GetCategoryProductsRequest request) {
