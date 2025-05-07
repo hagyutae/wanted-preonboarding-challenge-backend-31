@@ -3,6 +3,8 @@ package com.sandro.wanted_shop.product.persistence;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sandro.wanted_shop.product.dto.ProductFilterDto;
@@ -21,6 +23,8 @@ import java.util.List;
 import static com.sandro.wanted_shop.brand.QBrand.brand;
 import static com.sandro.wanted_shop.category.QCategory.category;
 import static com.sandro.wanted_shop.product.entity.QProduct.product;
+import static com.sandro.wanted_shop.product.entity.QProductOption.productOption;
+import static com.sandro.wanted_shop.product.entity.relation.QProductOptionGroup.productOptionGroup;
 import static com.sandro.wanted_shop.tag.QTag.tag;
 
 @RequiredArgsConstructor
@@ -105,6 +109,21 @@ public class QueryDslProductRepositoryImpl implements QueryDslProductRepository 
         Integer endPrice = filter.endPrice();
         if (endPrice != null)
             query.where(product.price.basePrice.loe(endPrice));
+
+        Boolean hasStock = filter.hasStock();
+        if (hasStock != null)
+            query.where(hasStock
+                    ? getStock().exists()
+                    : getStock().notExists());
+    }
+
+    private static JPQLQuery<Integer> getStock() {
+        return JPAExpressions
+                .selectOne()
+                .from(productOption)
+                .join(productOption.optionGroup, productOptionGroup)
+                .where(productOptionGroup.product.eq(product)
+                        .and(productOption.stock.gt(0)));
     }
 
     private static OrderSpecifier<?>[] getOrderSpecifiers(Sort sort) {

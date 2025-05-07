@@ -7,21 +7,23 @@ import com.sandro.wanted_shop.product.entity.ProductPrice;
 import com.sandro.wanted_shop.product.entity.enums.Currency;
 import com.sandro.wanted_shop.product.entity.enums.ProductStatus;
 import com.sandro.wanted_shop.seller.Seller;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 public record CreateProductCommand(
-        String name,
-        String slug,
+        @NotEmpty String name,
+        @NotEmpty String slug,
         String shortDescription,
         String fullDescription,
-        Long sellerId,
-        Long brandId,
+        @NotNull Long sellerId,
+        @NotNull Long brandId,
         ProductStatus status,
-        Price price,
-        Detail detail,
+        @NotNull Price price,
+        @NotNull Detail detail,
         List<Category> categories,
         List<CreateOptionGroupCommand> options,
         List<CreateImageCommand> images,
@@ -61,6 +63,10 @@ public record CreateProductCommand(
             Currency currency,
             BigDecimal taxRate
     ) {
+        public Price() {
+            this(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, null, BigDecimal.ZERO);
+        }
+
         public ProductPrice toEntity(Product product) {
             return ProductPrice.builder()
                     .product(product)
@@ -82,6 +88,10 @@ public record CreateProductCommand(
             String careInstructions,
             Map<String, Object> additionalInfo
     ) {
+        public Detail() {
+            this(BigDecimal.ZERO, null, null, null, null, null, null);
+        }
+
         public ProductDetail toEntity(Product product) {
             return ProductDetail.builder()
                     .product(product)

@@ -239,25 +239,52 @@ class ProductControllerTest extends IntegrationTestContext {
                     .andDo(print());
         }
 
-        // TODO: 구현하기
-//        @DisplayName("재고 유무로 필터링한다.")
-//        @Test
-//        void noSortFilteredByhasStock() throws Exception {
-//            ResultActions resultActions = mvc
-//                    .perform(
-//                            get("/api/products")
-//                                    .param("hasStock", "true")
-//                    )
-//                    .andDo(print());
-//
-//            resultActions
-//                    .andExpectAll(
-//                            status().isOk(),
-//                            jsonPath("$.content.[*].id").exists(),
-//                            jsonPath("$.content.size()").value(1)
-//                    )
-//                    .andDo(print());
-//        }
+        @DisplayName("재고 유무로 필터링한다.")
+        @Test
+        void noSortFilteredByhasStock() throws Exception {
+            productService.register(new CreateProductCommand(
+                    "재고없는 제품",
+                    "slug",
+                    null,
+                    null,
+                    1L,
+                    1L,
+                    ProductStatus.ACTIVE,
+                    new CreateProductCommand.Price(),
+                    new CreateProductCommand.Detail(),
+                    List.of(new CreateProductCommand.Category(1L, true)),
+                    List.of(new CreateOptionGroupCommand(
+                            "옵션 그룹",
+                            1,
+                            List.of(
+                                    new CreateOptionCommand(
+                                            "옵션",
+                                            null,
+                                            null,
+                                            0,
+                                            null
+                                    )
+                            )
+                    )),
+                    null,
+                    List.of(1L)
+            ));
+
+            ResultActions resultActions = mvc
+                    .perform(
+                            get("/api/products")
+                                    .param("hasStock", "false")
+                    )
+                    .andDo(print());
+
+            resultActions
+                    .andExpectAll(
+                            status().isOk(),
+                            jsonPath("$.content.[*].id").exists(),
+                            jsonPath("$.content.size()").value(1)
+                    )
+                    .andDo(print());
+        }
     }
 
     @DisplayName("상품 상세 조회")

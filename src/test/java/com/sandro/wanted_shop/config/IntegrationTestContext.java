@@ -1,5 +1,6 @@
 package com.sandro.wanted_shop.config;
 
+import com.sandro.wanted_shop.product.ProductService;
 import com.sandro.wanted_shop.product.persistence.OptionGroupRepository;
 import com.sandro.wanted_shop.product.persistence.OptionRepository;
 import com.sandro.wanted_shop.product.persistence.ProductRepository;
@@ -31,6 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 public class IntegrationTestContext {
     @Autowired protected MockMvc mvc;
     @Autowired protected ReviewService reviewService;
+    @Autowired protected ProductService productService;
     @Autowired protected ProductRepository productRepository;
     @Autowired protected UserRepository userRepository;
     @Autowired protected ReviewRepository reviewRepository;
