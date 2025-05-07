@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsInt, IsNumber, IsOptional, IsString, Matches, Max, Min } from "class-validator";
+import { IsInt, IsNumber, IsOptional, Matches, Max, Min } from "class-validator";
 
 export default class ProductPriceDTO {
   @ApiProperty({ description: "기본 가격", example: 599000 })

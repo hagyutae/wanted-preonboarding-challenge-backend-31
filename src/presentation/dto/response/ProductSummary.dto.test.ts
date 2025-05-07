@@ -26,7 +26,6 @@ describe("ProductSummaryDTO", () => {
   it("유효한 데이터로 성공적으로 검증되어야 한다", async () => {
     const errors = await validateDTO(validData);
 
-    console.log("ProductSummary 유효한 데이터 검증 결과:", errors);
     expect(errors.length).toBe(0);
   });
 
