@@ -15,6 +15,7 @@ import wanted.domain.review.dto.response.ProductReviewResponse;
 import wanted.domain.review.dto.response.ReviewResponse;
 import wanted.domain.review.dto.response.ReviewUserResponse;
 import wanted.domain.review.dto.response.SummaryResponse;
+import wanted.domain.review.dto.response.UpdatedReviewResponse;
 import wanted.domain.review.entity.Review;
 import wanted.domain.review.repository.ReviewRepository;
 import wanted.domain.user.entity.User;
@@ -127,6 +128,20 @@ public class ReviewService {
         reviewRepository.save(review);
 
         return ReviewResponse.of(review);
+    }
+
+    @Transactional
+    public UpdatedReviewResponse updateProductReview(Long reviewId, ProductReviewRequest request, Long userId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Review", reviewId)));
+
+        if (!review.getUser().getId().equals(userId)) {
+            throw new CustomException(GlobalExceptionCode.FORBIDDEN, null);
+        }
+
+        review.update(request);
+
+        return UpdatedReviewResponse.from(review);
     }
 
     private Map<String, Object> resourceNotFoundDetails(String type, Object id) {

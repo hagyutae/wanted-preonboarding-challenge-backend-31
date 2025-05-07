@@ -27,7 +27,6 @@ import wanted.domain.product.service.ProductService;
 public class ProductController {
     private final ProductService productService;
 
-    // 인증 로직 생략
     @PostMapping()
     public ResponseEntity<?> createProduct(@Valid @RequestBody ProductRequest productRequest){
         ProductCreateResponse productCreateResponse =  productService.createProduct(productRequest);

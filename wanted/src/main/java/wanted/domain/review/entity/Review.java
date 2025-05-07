@@ -70,4 +70,10 @@ public class Review extends BaseCreateUpdateEntity {
                 .verifiedPurchase(true)
                 .build();
     }
+
+    public void update(ProductReviewRequest request) {
+        this.rating = request.rating();
+        this.title = request.title();
+        this.content = request.content();
+    }
 }
