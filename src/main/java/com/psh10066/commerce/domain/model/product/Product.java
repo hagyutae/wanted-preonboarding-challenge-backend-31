@@ -8,7 +8,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
+@SQLRestriction("status != 'DELETED'")
 @Entity
 @Table(name = "products")
 @Getter
@@ -62,5 +64,9 @@ public class Product extends BaseUpdatableEntity {
         this.seller = seller;
         this.brand = brand;
         this.status = status;
+    }
+
+    public void delete() {
+        this.status = ProductStatus.DELETED;
     }
 }

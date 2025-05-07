@@ -53,4 +53,10 @@ public class ProductController {
         UpdateProductResponse response = productService.updateProduct(id, request);
         return ApiResponse.success(response, "상품이 성공적으로 수정되었습니다.");
     }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ApiResponse.success(null, "상품이 성공적으로 삭제되었습니다.");
+    }
 }

@@ -310,4 +310,11 @@ public class ProductService {
             product.getUpdatedAt()
         );
     }
+
+    @Transactional
+    public void deleteProduct(Long id) {
+        Product product = productRepository.getById(id);
+        product.delete();
+        productRepository.save(product);
+    }
 }
