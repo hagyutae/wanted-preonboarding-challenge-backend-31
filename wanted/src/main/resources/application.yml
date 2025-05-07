@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+jwt:
+  issuer: ${JWT_ISSUER:wanted}
+  secret-key: ${JWT_KEY:exampleSecretKeyForWantedSystemAccessSecretKeyTestForPadding}
+  access-expiration: ${JWT_ACCESS_EXPIRATION:1800000}

@@ -1,0 +1,78 @@
+package wanted.domain.product.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import wanted.domain.product.dto.request.ProductPriceRequest;
+
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "product_prices")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ProductPrice {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal basePrice;
+
+    @Column(precision = 12, scale = 2)
+    private BigDecimal salePrice;
+
+    @Column(precision = 12, scale = 2)
+    private BigDecimal costPrice;
+
+    @Column(nullable = false, length = 3)
+    private String currency;
+
+    @Column(precision = 5, scale = 2)
+    private BigDecimal taxRate;
+
+    @Builder
+    public ProductPrice(Product product, BigDecimal basePrice, BigDecimal salePrice, BigDecimal costPrice,
+                        String currency, BigDecimal taxRate) {
+        this.product = product;
+        this.basePrice = basePrice;
+        this.salePrice = salePrice;
+        this.costPrice = costPrice;
+        this.currency = currency;
+        this.taxRate = taxRate;
+    }
+
+    public static ProductPrice from(ProductPriceRequest dto, Product product) {
+        return ProductPrice.builder()
+                .product(product)
+                .basePrice(dto.basePrice())
+                .salePrice(dto.salePrice())
+                .costPrice(dto.costPrice())
+                .currency(dto.currency())
+                .taxRate(dto.taxRate())
+                .build();
+    }
+
+    public Integer calculateDiscountPercentage() {
+        if (basePrice == null || salePrice == null || basePrice.compareTo(BigDecimal.ZERO) == 0) {
+            return 0;
+        }
+        BigDecimal discount = basePrice.subtract(salePrice)
+                .divide(basePrice, 4, BigDecimal.ROUND_HALF_UP)
+                .multiply(BigDecimal.valueOf(100));
+        return discount.intValue();
+    }
+}
