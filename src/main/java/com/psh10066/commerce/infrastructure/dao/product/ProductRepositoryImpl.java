@@ -70,6 +70,12 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
+    public ProductOptionGroup getProductOptionGroupByOptionGroupId(Long optionGroupId) {
+        return productOptionGroupJpaRepository.findById(optionGroupId)
+            .orElseThrow(() -> new ResourceNotFoundException("ProductOptionGroup", optionGroupId));
+    }
+
+    @Override
     public Page<GetAllProductsResponse> getAllProducts(GetAllProductsRequest request) {
         return productJpaRepository.getAllProducts(request);
     }
