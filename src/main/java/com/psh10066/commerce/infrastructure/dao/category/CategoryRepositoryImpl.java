@@ -6,6 +6,8 @@ import com.psh10066.commerce.domain.model.category.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class CategoryRepositoryImpl implements CategoryRepository {
@@ -16,5 +18,10 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public Category getById(Long id) {
         return categoryJpaRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Category", id));
+    }
+
+    @Override
+    public List<Category> findAllByLevel(Integer level) {
+        return categoryJpaRepository.findAllByLevel(level);
     }
 }
