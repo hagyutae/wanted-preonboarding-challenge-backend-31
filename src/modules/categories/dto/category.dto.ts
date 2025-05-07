@@ -9,7 +9,7 @@ import { ProductWithRelationsSchema } from '~/modules/products/entities/product.
 
 // 카테고리 목록 조회 요청 스키마
 export const GetCategoriesRequestDtoSchema = z.object({
-  level: z.number().min(1).max(3).optional(),
+  level: z.coerce.number().min(1).max(3).optional(),
 });
 export type GetCategoriesRequestDto = z.infer<
   typeof GetCategoriesRequestDtoSchema

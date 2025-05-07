@@ -34,8 +34,8 @@ export const paginationInfoSchema = z.object({
  * 페이지네이션 파라미터 Zod 스키마
  */
 export const paginationParamsSchema = z.object({
-  page: z.number().int().positive().default(1),
-  per_page: z.number().int().positive().default(10),
+  page: z.coerce.number().int().positive().default(1),
+  per_page: z.coerce.number().int().positive().default(10),
 });
 
 /**

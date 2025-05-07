@@ -27,9 +27,9 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
-  @UsePipes(new ZodValidationPipe(GetCategoriesRequestDtoSchema))
   async getCategories(
-    @Query() query: GetCategoriesRequestDto,
+    @Query(new ZodValidationPipe(GetCategoriesRequestDtoSchema))
+    query: GetCategoriesRequestDto,
   ): Promise<GetCategoriesResponseDto> {
     return createSuccessResponse(
       await this.categoriesService.getCategories(query.level),
@@ -38,10 +38,10 @@ export class CategoriesController {
   }
 
   @Get(':id/products')
-  @UsePipes(new ZodValidationPipe(GetProductsByCategoryIdRequestDtoSchema))
   async getProductsByCategoryId(
     @Param('id', new ParseIntPipe()) id: number,
-    @Query() query: GetProductsByCategoryIdRequestDto,
+    @Query(new ZodValidationPipe(GetProductsByCategoryIdRequestDtoSchema))
+    query: GetProductsByCategoryIdRequestDto,
   ): Promise<GetProductsByCategoryIdResponseDto> {
     const { items, total } =
       await this.categoriesService.getProductsByCategoryId(id, query);

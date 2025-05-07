@@ -18,13 +18,15 @@ export class CategoryRepository {
 
   async getCategories(level?: number): Promise<CategoryWithRelations[]> {
     const categories = await this.drizzleService.db.query.categories.findMany({
-      with: {
-        children: {
-          with: {
-            children: true,
-          },
-        },
-      },
+      with: !level
+        ? {
+            children: {
+              with: {
+                children: true,
+              },
+            },
+          }
+        : undefined,
       where: level ? eq(categoriesSchema.level, level) : undefined,
     });
 
@@ -55,10 +57,22 @@ export class CategoryRepository {
       categoryIds = await this.getSubCategories(categoryId);
     }
 
+    const productIds = await this.drizzleService.db
+      .select({ productId: productCategoriesSchema.productId })
+      .from(productCategoriesSchema)
+      .where(inArray(productCategoriesSchema.categoryId, categoryIds))
+      .groupBy(productCategoriesSchema.productId);
+
     const result = await this.drizzleService.db
       .select({ count: sql`count(*)` })
       .from(productsSchema)
-      .where(inArray(productCategoriesSchema.categoryId, categoryIds));
+      .where(
+        inArray(
+          productsSchema.id,
+          productIds.map((p) => p.productId),
+        ),
+      );
+
     return Number(result[0].count);
   }
 
@@ -79,12 +93,20 @@ export class CategoryRepository {
       categoryIds = await this.getSubCategories(categoryId);
     }
 
+    const productIds = await this.drizzleService.db
+      .select({ productId: productCategoriesSchema.productId })
+      .from(productCategoriesSchema)
+      .where(inArray(productCategoriesSchema.categoryId, categoryIds))
+      .groupBy(productCategoriesSchema.productId);
+
     const products = await this.drizzleService.db.query.products.findMany({
       with: {
-        categories: {
-          where: inArray(productCategoriesSchema.categoryId, categoryIds),
-        },
+        categories: true,
       },
+      where: inArray(
+        productsSchema.id,
+        productIds.map((p) => p.productId),
+      ),
       orderBy: getOrderBy('product', sort),
       limit: per_page,
       offset: offset,
