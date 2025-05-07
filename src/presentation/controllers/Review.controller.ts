@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseInterceptors,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { ReviewService } from "src/application/services";
@@ -18,7 +8,7 @@ import {
   ApiErrorResponse,
   ApiForbiddenResponse,
   ApiStandardResponse,
-  ResponseValidation,
+  ResponseType,
 } from "../decorators";
 import {
   ParamDTO,
@@ -41,8 +31,8 @@ export default class ReviewController {
   @ApiOperation({ summary: "상품 리뷰 조회" })
   @ApiStandardResponse("상품 리뷰를 성공적으로 조회했습니다.", ReviewResponseBundle)
   @ApiBadRequestResponse("상품 리뷰 조회에 실패했습니다.")
-  @UseInterceptors(new ResponseValidation(ResponseDTO<ReviewResponseBundle>))
   @Get("products/:id/reviews")
+  @ResponseType(ResponseDTO<ReviewResponseBundle>)
   async read(
     @Param() { id }: ParamDTO,
     @Query() query: ReviewQueryDTO,
@@ -59,8 +49,8 @@ export default class ReviewController {
   @ApiOperation({ summary: "리뷰 작성" })
   @ApiCreatedResponse("리뷰가 성공적으로 작성되었습니다.", ReviewDTO)
   @ApiBadRequestResponse("리뷰 작성에 실패했습니다.")
-  @UseInterceptors(new ResponseValidation(ResponseDTO<ReviewDTO>))
   @Post("products/:id/reviews")
+  @ResponseType(ResponseDTO<ReviewDTO>)
   async create(
     @Param() { id }: ParamDTO,
     @Body() body: ReviewBodyDTO,
@@ -77,8 +67,8 @@ export default class ReviewController {
   @ApiOperation({ summary: "리뷰 수정" })
   @ApiStandardResponse("리뷰가 성공적으로 수정되었습니다.", ReviewResponseDTO)
   @ApiForbiddenResponse("다른 사용자의 리뷰를 수정할 권한이 없습니다.")
-  @UseInterceptors(new ResponseValidation(ResponseDTO<ReviewResponseDTO>))
   @Put("reviews/:id")
+  @ResponseType(ResponseDTO<ReviewResponseDTO>)
   async update(
     @Param() { id }: ParamDTO,
     @Body() body: ReviewBodyDTO,
@@ -96,7 +86,7 @@ export default class ReviewController {
   @ApiStandardResponse("리뷰가 성공적으로 삭제되었습니다.")
   @ApiForbiddenResponse("다른 사용자의 리뷰를 삭제할 권한이 없습니다.")
   @Delete("reviews/:id")
-  async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO<null>> {
+  async delete(@Param() { id }: ParamDTO) {
     await this.service.remove(id);
 
     return {

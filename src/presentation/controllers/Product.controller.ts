@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseInterceptors,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { ProductService } from "src/application/services";
@@ -17,7 +7,7 @@ import {
   ApiCreatedResponse,
   ApiErrorResponse,
   ApiStandardResponse,
-  ResponseValidation,
+  ResponseType,
 } from "../decorators";
 import {
   ParamDTO,
@@ -40,9 +30,9 @@ export default class ProductController {
   @ApiOperation({ summary: "상품 등록" })
   @ApiCreatedResponse("상품이 성공적으로 등록되었습니다.", ProductResponseDTO)
   @ApiBadRequestResponse("상품 등록에 실패했습니다.")
-  @UseInterceptors(new ResponseValidation(ResponseDTO<ProductResponseDTO>))
   @Post()
-  async create(@Body() body: ProductBodyDTO): Promise<ResponseDTO<ProductResponseDTO>> {
+  @ResponseType(ResponseDTO<ProductResponseDTO>)
+  async create(@Body() body: ProductBodyDTO) {
     const data = await this.service.register(body);
 
     return {
@@ -55,9 +45,9 @@ export default class ProductController {
   @ApiOperation({ summary: "상품 목록 조회" })
   @ApiStandardResponse("상품 목록을 성공적으로 조회했습니다.", ProductResponseBundle)
   @ApiBadRequestResponse("상품 목록 조회에 실패했습니다.")
-  @UseInterceptors(new ResponseValidation(ResponseDTO<ProductResponseBundle>))
   @Get()
-  async read_all(@Query() query: ProductQueryDTO): Promise<ResponseDTO<ProductResponseBundle>> {
+  @ResponseType(ResponseDTO<ProductResponseBundle>)
+  async read_all(@Query() query: ProductQueryDTO) {
     const data = await this.service.find_all(to_FilterDTO(query));
 
     return {
@@ -70,9 +60,9 @@ export default class ProductController {
   @ApiOperation({ summary: "상품 상세 조회" })
   @ApiStandardResponse("상품 상세 정보를 성공적으로 조회했습니다.", ProductCatalogDTO)
   @ApiBadRequestResponse("요청한 상품을 찾을 수 없습니다.")
-  @UseInterceptors(new ResponseValidation(ResponseDTO<ProductCatalogDTO>))
   @Get(":id")
-  async read(@Param() { id }: ParamDTO): Promise<ResponseDTO<ProductCatalogDTO>> {
+  @ResponseType(ResponseDTO<ProductCatalogDTO>)
+  async read(@Param() { id }: ParamDTO) {
     const data = await this.service.find(id);
 
     return {
@@ -85,12 +75,9 @@ export default class ProductController {
   @ApiOperation({ summary: "상품 수정" })
   @ApiStandardResponse("상품이 성공적으로 수정되었습니다.", ProductResponseDTO)
   @ApiBadRequestResponse("상품 수정에 실패했습니다.")
-  @UseInterceptors(new ResponseValidation(ResponseDTO<ProductResponseDTO>))
   @Put(":id")
-  async update(
-    @Param() { id }: ParamDTO,
-    @Body() body: ProductBodyDTO,
-  ): Promise<ResponseDTO<ProductResponseDTO>> {
+  @ResponseType(ResponseDTO<ProductResponseDTO>)
+  async update(@Param() { id }: ParamDTO, @Body() body: ProductBodyDTO) {
     const data = await this.service.edit(id, body);
 
     return {
@@ -104,7 +91,7 @@ export default class ProductController {
   @ApiStandardResponse("상품이 성공적으로 삭제되었습니다.")
   @ApiBadRequestResponse("상품 삭제에 실패했습니다.")
   @Delete(":id")
-  async delete(@Param() { id }: ParamDTO): Promise<ResponseDTO<null>> {
+  async delete(@Param() { id }: ParamDTO) {
     await this.service.remove(id);
 
     return {

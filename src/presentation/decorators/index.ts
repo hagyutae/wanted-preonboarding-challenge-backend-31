@@ -8,4 +8,4 @@ export {
   ApiUnauthorizedResponse,
 } from "./ApiErrorResponse";
 export { ApiCreatedResponse, ApiStandardResponse } from "./ApiStandardResponse";
-export { default as ResponseValidation } from "./ResponseValidation";
+export { default as ResponseType } from "./ResponseType";

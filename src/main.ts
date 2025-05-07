@@ -1,11 +1,12 @@
 import { BadRequestException, ValidationPipe } from "@nestjs/common";
-import { NestFactory } from "@nestjs/core";
+import { NestFactory, Reflector } from "@nestjs/core";
 import { ValidationError } from "class-validator";
 
 import { JwtInterceptor } from "./infrastructure/auth/jwtInterceptor";
-import { AppModule } from "./module";
 import * as exception_filters from "./presentation/filters";
 import generatorSwagger from "./utility/generatorSwagger";
+import { ResponseInterceptor } from "./utility/ResponseInterceptor";
+import { AppModule } from "./module";
 
 async function bootstrap() {
   // 모듈 등록
@@ -20,6 +21,9 @@ async function bootstrap() {
       exceptionFactory,
     }),
   );
+
+  // 응답 인터셉터
+  app.useGlobalInterceptors(new ResponseInterceptor(app.get(Reflector)));
 
   // 에러 핸들링
   for (const filter of Object.values(exception_filters)) {
