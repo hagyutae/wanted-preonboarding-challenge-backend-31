@@ -31,12 +31,15 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String accessTokenHeader = request.getHeader("Authorization");
+        String uri = request.getRequestURI();
+        String method = request.getMethod();
 
-        if (request.getRequestURI().startsWith("/api/auth")) {
+        if (isPublicEndpoint(uri, method)) {
             filterChain.doFilter(request, response);
             return;
         }
+
+        String accessTokenHeader = request.getHeader("Authorization");
 
         if (accessTokenHeader == null || !accessTokenHeader.startsWith("Bearer ")) {
             handleExceptionToken(response, GlobalExceptionCode.UNAUTHORIZED);
@@ -72,5 +75,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         response.setCharacterEncoding("UTF-8");
         response.setStatus(exceptionCode.getStatus().value());
         response.getWriter().write(messageBody);
+    }
+
+    private boolean isPublicEndpoint(String uri, String method) {
+        return method.equals("GET") && (
+                uri.matches("^/api/products$") ||
+                        uri.matches("^/api/products/\\d+$") ||
+                        uri.matches("^/api/categories$") ||
+                        uri.matches("^/api/categories/\\d+/products$") ||
+                        uri.matches("^/api/main$") ||
+                        uri.matches("^/api/products/\\d+/reviews$")
+        ) || uri.startsWith("/api/auth");
     }
 }
