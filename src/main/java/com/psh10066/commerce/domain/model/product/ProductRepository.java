@@ -1,6 +1,7 @@
 package com.psh10066.commerce.domain.model.product;
 
 import com.psh10066.commerce.api.dto.request.GetAllProductsRequest;
+import com.psh10066.commerce.api.dto.request.GetCategoryProductsRequest;
 import com.psh10066.commerce.api.dto.response.GetAllProductsResponse;
 import org.springframework.data.domain.Page;
 
@@ -21,6 +22,7 @@ public interface ProductRepository {
     ProductOptionGroup getProductOptionGroupByOptionGroupId(Long optionGroupId);
 
     Page<GetAllProductsResponse> getAllProducts(GetAllProductsRequest request);
+    Page<GetAllProductsResponse> getCategoryProducts(Long categoryId, GetCategoryProductsRequest request);
 
     Product getById(Long id);
     ProductDetail getProductDetailById(Long id);

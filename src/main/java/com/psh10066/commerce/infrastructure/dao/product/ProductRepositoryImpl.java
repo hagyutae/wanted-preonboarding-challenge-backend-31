@@ -1,6 +1,7 @@
 package com.psh10066.commerce.infrastructure.dao.product;
 
 import com.psh10066.commerce.api.dto.request.GetAllProductsRequest;
+import com.psh10066.commerce.api.dto.request.GetCategoryProductsRequest;
 import com.psh10066.commerce.api.dto.response.GetAllProductsResponse;
 import com.psh10066.commerce.domain.exception.ResourceNotFoundException;
 import com.psh10066.commerce.domain.model.product.*;
@@ -78,6 +79,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Page<GetAllProductsResponse> getAllProducts(GetAllProductsRequest request) {
         return productJpaRepository.getAllProducts(request);
+    }
+
+    @Override
+    public Page<GetAllProductsResponse> getCategoryProducts(Long categoryId, GetCategoryProductsRequest request) {
+        return productJpaRepository.getCategoryProducts(categoryId, request);
     }
 
     @Override
