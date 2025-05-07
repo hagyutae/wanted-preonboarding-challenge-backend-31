@@ -116,13 +116,12 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewResponse createProductReview(Long productId, ProductReviewRequest request) {
+    public ReviewResponse createProductReview(Long productId, ProductReviewRequest request, Long userId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Product", productId)));
 
-        //시큐리티 생략으로 인한 임의 유저 선택
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("User", 1L)));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("User", userId)));
 
         Review review = Review.from(request, user, product);
         reviewRepository.save(review);

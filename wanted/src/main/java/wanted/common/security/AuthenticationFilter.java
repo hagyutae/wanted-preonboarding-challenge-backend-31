@@ -33,6 +33,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         String accessTokenHeader = request.getHeader("Authorization");
 
+        if (request.getRequestURI().startsWith("/api/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (accessTokenHeader == null || !accessTokenHeader.startsWith("Bearer ")) {
             handleExceptionToken(response, GlobalExceptionCode.UNAUTHORIZED);
             return;
