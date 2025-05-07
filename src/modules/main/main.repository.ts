@@ -100,7 +100,7 @@ export class MainRepository {
           altText: true,
         },
       },
-      prices: {
+      price: {
         columns: {
           basePrice: true,
           salePrice: true,

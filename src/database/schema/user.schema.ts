@@ -9,7 +9,6 @@ export const users = pgTable('users', {
   avatarUrl: varchar('avatar_url', { length: 255 }),
   createdAt: timestamp('created_at').defaultNow(),
 });
-
 export const usersRelations = relations(users, ({ many }) => ({
   reviews: many(reviews),
 }));

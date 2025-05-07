@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { MainService } from './main.service';
-import { GetMainPageResponseDto, MainPageResponse } from './dto/main.dto';
+import { GetMainPageResponseDto } from './dto/main.dto';
 import { createSuccessResponse } from '~/common/utils/response.util';
 
 @Controller('main')

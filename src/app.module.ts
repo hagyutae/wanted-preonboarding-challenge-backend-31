@@ -6,6 +6,7 @@ import { ProductsModule } from '~/modules/products/products.module';
 import { ReviewsModule } from '~/modules/reviews/reviews.module';
 import { CategoriesModule } from '~/modules/categories/categories.module';
 import { DrizzleModule } from '~/database/drizzle.module';
+import { MainModule } from '~/modules/main/main.module';
 
 const envSchema = z.object({
   DATABASE_URL: z.string(),
@@ -27,6 +28,7 @@ const envSchema = z.object({
     ProductsModule,
     ReviewsModule,
     CategoriesModule,
+    MainModule,
     DrizzleModule,
   ],
   controllers: [],
