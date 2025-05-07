@@ -1,9 +1,13 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Controller, Get, Param, Query, UseInterceptors } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { plainToInstance } from "class-transformer";
 
 import { CategoryService } from "src/application/services";
-import { ApiBadRequestResponse, ApiErrorResponse, ApiStandardResponse } from "../decorators";
+import {
+  ApiBadRequestResponse,
+  ApiErrorResponse,
+  ApiStandardResponse,
+  ResponseValidation,
+} from "../decorators";
 import {
   CategoryQueryDTO,
   CategoryResponseBundle,
@@ -23,17 +27,12 @@ export default class CategoryController {
   @ApiOperation({ summary: "카테고리 목록 조회" })
   @ApiStandardResponse("카테고리 목록을 성공적으로 조회했습니다.", NestedCategoryDTO)
   @ApiBadRequestResponse("카테고리 목록 조회에 실패했습니다.")
+  @UseInterceptors(new ResponseValidation(ResponseDTO<NestedCategoryDTO[]>))
   @Get()
   async read_categories(
     @Query() { level }: { level: number },
   ): Promise<ResponseDTO<NestedCategoryDTO[]>> {
-    const plains = await this.service.find_all_as_tree(level);
-
-    const data = plains.map((plain) =>
-      plainToInstance(NestedCategoryDTO, plain, {
-        enableImplicitConversion: true,
-      }),
-    );
+    const data = await this.service.find_all_as_tree(level);
 
     return {
       success: true,
@@ -48,16 +47,13 @@ export default class CategoryController {
     CategoryResponseBundle,
   )
   @ApiBadRequestResponse("특정 카테고리의 상품 목록 조회에 실패했습니다.")
+  @UseInterceptors(new ResponseValidation(ResponseDTO<CategoryResponseBundle>))
   @Get(":id/products")
   async read_products(
     @Param() { id }: ParamDTO,
     @Query() query: CategoryQueryDTO,
   ): Promise<ResponseDTO<CategoryResponseBundle>> {
-    const plain = await this.service.find_products_by_category_id(id, to_FilterDTO(query));
-
-    const data = plainToInstance(CategoryResponseBundle, plain, {
-      enableImplicitConversion: true,
-    });
+    const data = await this.service.find_products_by_category_id(id, to_FilterDTO(query));
 
     return {
       success: true,

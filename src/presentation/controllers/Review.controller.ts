@@ -1,6 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseInterceptors,
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { plainToInstance } from "class-transformer";
 
 import { ReviewService } from "src/application/services";
 import {
@@ -9,6 +18,7 @@ import {
   ApiErrorResponse,
   ApiForbiddenResponse,
   ApiStandardResponse,
+  ResponseValidation,
 } from "../decorators";
 import {
   ParamDTO,
@@ -31,16 +41,13 @@ export default class ReviewController {
   @ApiOperation({ summary: "상품 리뷰 조회" })
   @ApiStandardResponse("상품 리뷰를 성공적으로 조회했습니다.", ReviewResponseBundle)
   @ApiBadRequestResponse("상품 리뷰 조회에 실패했습니다.")
+  @UseInterceptors(new ResponseValidation(ResponseDTO<ReviewResponseBundle>))
   @Get("products/:id/reviews")
   async read(
     @Param() { id }: ParamDTO,
     @Query() query: ReviewQueryDTO,
   ): Promise<ResponseDTO<ReviewResponseBundle>> {
-    const plain = await this.service.find(id, to_FilterDTO(query));
-
-    const data = plainToInstance(ReviewResponseBundle, plain, {
-      enableImplicitConversion: true,
-    });
+    const data = await this.service.find(id, to_FilterDTO(query));
 
     return {
       success: true,
@@ -52,16 +59,13 @@ export default class ReviewController {
   @ApiOperation({ summary: "리뷰 작성" })
   @ApiCreatedResponse("리뷰가 성공적으로 작성되었습니다.", ReviewDTO)
   @ApiBadRequestResponse("리뷰 작성에 실패했습니다.")
+  @UseInterceptors(new ResponseValidation(ResponseDTO<ReviewDTO>))
   @Post("products/:id/reviews")
   async create(
     @Param() { id }: ParamDTO,
     @Body() body: ReviewBodyDTO,
   ): Promise<ResponseDTO<ReviewDTO>> {
-    const plain = await this.service.register(id, body);
-
-    const data = plainToInstance(ReviewDTO, plain, {
-      enableImplicitConversion: true,
-    });
+    const data = await this.service.register(id, body);
 
     return {
       success: true,
@@ -73,16 +77,13 @@ export default class ReviewController {
   @ApiOperation({ summary: "리뷰 수정" })
   @ApiStandardResponse("리뷰가 성공적으로 수정되었습니다.", ReviewResponseDTO)
   @ApiForbiddenResponse("다른 사용자의 리뷰를 수정할 권한이 없습니다.")
+  @UseInterceptors(new ResponseValidation(ResponseDTO<ReviewResponseDTO>))
   @Put("reviews/:id")
   async update(
     @Param() { id }: ParamDTO,
     @Body() body: ReviewBodyDTO,
   ): Promise<ResponseDTO<ReviewResponseDTO>> {
-    const plain = await this.service.edit(id, body);
-
-    const data = plainToInstance(ReviewResponseDTO, plain, {
-      enableImplicitConversion: true,
-    });
+    const data = await this.service.edit(id, body);
 
     return {
       success: true,
