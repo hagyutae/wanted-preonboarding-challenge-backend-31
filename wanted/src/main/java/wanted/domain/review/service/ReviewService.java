@@ -144,6 +144,18 @@ public class ReviewService {
         return UpdatedReviewResponse.from(review);
     }
 
+    @Transactional
+    public void deleteProductReview(Long reviewId, Long userId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new CustomException(GlobalExceptionCode.RESOURCE_NOT_FOUND, resourceNotFoundDetails("Review", reviewId)));
+
+        if (!review.getUser().getId().equals(userId)) {
+            throw new CustomException(GlobalExceptionCode.FORBIDDEN, null);
+        }
+
+        reviewRepository.delete(review);
+    }
+
     private Map<String, Object> resourceNotFoundDetails(String type, Object id) {
         return Map.of("resourceType", type, "resourceId", id);
     }
