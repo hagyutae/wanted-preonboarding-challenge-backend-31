@@ -4,9 +4,11 @@ import com.psh10066.commerce.api.common.ApiResponse;
 import com.psh10066.commerce.api.common.PaginationResponse;
 import com.psh10066.commerce.api.dto.request.CreateProductRequest;
 import com.psh10066.commerce.api.dto.request.GetAllProductsRequest;
+import com.psh10066.commerce.api.dto.request.UpdateProductRequest;
 import com.psh10066.commerce.api.dto.response.CreateProductResponse;
 import com.psh10066.commerce.api.dto.response.GetAllProductsResponse;
 import com.psh10066.commerce.api.dto.response.GetProductDetailResponse;
+import com.psh10066.commerce.api.dto.response.UpdateProductResponse;
 import com.psh10066.commerce.domain.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +43,14 @@ public class ProductController {
 
         GetProductDetailResponse response = productService.getProductDetail(id);
         return ApiResponse.success(response, "상품 상세 정보를 성공적으로 조회했습니다.");
+    }
+
+    @PutMapping("/{id}")
+    public ApiResponse<UpdateProductResponse> updateProduct(
+        @PathVariable Long id,
+        @Valid @RequestBody UpdateProductRequest request
+    ) {
+        UpdateProductResponse response = productService.updateProduct(id, request);
+        return ApiResponse.success(response, "상품이 성공적으로 수정되었습니다.");
     }
 }

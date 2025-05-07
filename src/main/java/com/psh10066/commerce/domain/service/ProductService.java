@@ -3,9 +3,11 @@ package com.psh10066.commerce.domain.service;
 import com.psh10066.commerce.api.common.PaginationResponse;
 import com.psh10066.commerce.api.dto.request.CreateProductRequest;
 import com.psh10066.commerce.api.dto.request.GetAllProductsRequest;
+import com.psh10066.commerce.api.dto.request.UpdateProductRequest;
 import com.psh10066.commerce.api.dto.response.CreateProductResponse;
 import com.psh10066.commerce.api.dto.response.GetAllProductsResponse;
 import com.psh10066.commerce.api.dto.response.GetProductDetailResponse;
+import com.psh10066.commerce.api.dto.response.UpdateProductResponse;
 import com.psh10066.commerce.domain.model.brand.Brand;
 import com.psh10066.commerce.domain.model.brand.BrandRepository;
 import com.psh10066.commerce.domain.model.category.Category;
@@ -17,6 +19,7 @@ import com.psh10066.commerce.domain.model.seller.Seller;
 import com.psh10066.commerce.domain.model.seller.SellerRepository;
 import com.psh10066.commerce.domain.model.tag.Tag;
 import com.psh10066.commerce.domain.model.tag.TagRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -211,5 +214,100 @@ public class ProductService {
             ))
 //            .relatedProducts() // TODO
             .build();
+    }
+
+    @Transactional
+    public UpdateProductResponse updateProduct(Long id, @Valid UpdateProductRequest request) {
+
+        Product product = productRepository.getById(id);
+
+        Seller seller = sellerRepository.getById(request.sellerId());
+        Brand brand = brandRepository.getById(request.brandId());
+
+        product.update(
+            request.name(),
+            request.slug(),
+            request.shortDescription(),
+            request.fullDescription(),
+            seller,
+            brand,
+            request.status()
+        );
+
+        productRepository.save(product);
+
+        UpdateProductRequest.ProductDetailRequest requestDetail = request.detail();
+
+        productRepository.getProductDetailById(id);
+        ProductDetail productDetail = productRepository.getProductDetailById(id);
+        productDetail.update(
+            requestDetail.weight(),
+            new ProductDetail.Dimensions(
+                requestDetail.dimensions().width(),
+                requestDetail.dimensions().height(),
+                requestDetail.dimensions().depth()
+            ),
+            requestDetail.materials(),
+            requestDetail.countryOfOrigin(),
+            requestDetail.warrantyInfo(),
+            requestDetail.careInstructions(),
+            requestDetail.additionalInfo()
+        );
+
+        productRepository.saveProductDetail(productDetail);
+
+        UpdateProductRequest.ProductPriceRequest requestPrice = request.price();
+        ProductPrice productPrice = productRepository.getProductPriceById(id);
+        productPrice.update(
+            requestPrice.basePrice(),
+            requestPrice.salePrice(),
+            requestPrice.costPrice(),
+            requestPrice.currency(),
+            requestPrice.taxRate()
+        );
+
+        productRepository.saveProductPrice(productPrice);
+
+        List<UpdateProductRequest.ProductCategoryRequest> requestCategories = request.categories();
+
+        productRepository.deleteProductCategoryById(id);
+        requestCategories.forEach(requestCategory -> {
+            Category category = categoryRepository.getById(requestCategory.categoryId());
+            productRepository.saveProductCategory(new ProductCategory(product, category, requestCategory.isPrimary()));
+        });
+
+        // TODO
+//        List<UpdateProductRequest.ProductOptionGroupRequest> requestOptionGroups = request.optionGroups();
+//        requestOptionGroups.forEach(requestOptionGroup -> {
+//            ProductOptionGroup productOptionGroup = productRepository.saveProductOptionGroup(new ProductOptionGroup(product, requestOptionGroup.name(), requestOptionGroup.displayOrder()));
+//            requestOptionGroup.options().forEach(requestOption -> {
+//                productRepository.saveProductOption(new ProductOption(productOptionGroup, requestOption.name(), requestOption.additionalPrice(), requestOption.sku(), requestOption.stock(), requestOption.displayOrder()));
+//            });
+//        });
+//
+//        List<UpdateProductRequest.ProductImageRequest> requestImages = request.images();
+//        requestImages.forEach(requestImage -> {
+//            productRepository.saveProductImage(new ProductImage(
+//                product,
+//                requestImage.url(),
+//                requestImage.altText(),
+//                requestImage.isPrimary(),
+//                requestImage.displayOrder(),
+//                requestImage.optionId() != null ? productRepository.getProductOptionById(requestImage.optionId()) : null
+//            ));
+//        });
+//
+//        List<Long> requestTagIds = request.tags();
+//        requestTagIds.forEach(tagId -> {
+//            Tag tag = tagRepository.getById(tagId);
+//            productRepository.saveProductTag(new ProductTag(product, tag));
+//        });
+
+        return new UpdateProductResponse(
+            product.getId(),
+            product.getName(),
+            product.getSlug(),
+            product.getUpdatedAt()
+        );
     }
 }

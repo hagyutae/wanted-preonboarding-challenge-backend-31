@@ -53,4 +53,14 @@ public class Product extends BaseUpdatableEntity {
         this.brand = brand;
         this.status = status;
     }
+
+    public void update(String name, String slug, String shortDescription, String fullDescription, Seller seller, Brand brand, ProductStatus status) {
+        this.name = name;
+        this.slug = slug;
+        this.shortDescription = shortDescription;
+        this.fullDescription = fullDescription;
+        this.seller = seller;
+        this.brand = brand;
+        this.status = status;
+    }
 }

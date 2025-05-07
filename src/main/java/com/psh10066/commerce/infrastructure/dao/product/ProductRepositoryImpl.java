@@ -116,4 +116,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     public List<ProductOption> findProductOptionsByProductOptionGroupId(Long productOptionGroupId) {
         return productOptionJpaRepository.findAllProductOptionsByOptionGroupId(productOptionGroupId);
     }
+
+    @Override
+    public void deleteProductCategoryById(Long id) {
+        productCategoryJpaRepository.deleteAllByProductId(id);
+    }
 }

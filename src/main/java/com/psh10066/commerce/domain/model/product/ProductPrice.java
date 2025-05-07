@@ -48,6 +48,14 @@ public class ProductPrice {
         this.taxRate = taxRate;
     }
 
+    public void update(BigDecimal basePrice, BigDecimal salePrice, BigDecimal costPrice, String currency, BigDecimal taxRate) {
+        this.basePrice = basePrice;
+        this.salePrice = salePrice;
+        this.costPrice = costPrice;
+        this.currency = currency;
+        this.taxRate = taxRate;
+    }
+
     public Integer calculateDiscountPercentage() {
         if (salePrice == null) {
             return 0;

@@ -30,4 +30,6 @@ public interface ProductRepository {
     List<ProductTag> findProductTagsById(Long id);
 
     List<ProductOption> findProductOptionsByProductOptionGroupId(Long productOptionGroupId);
+
+    void deleteProductCategoryById(Long id);
 }
