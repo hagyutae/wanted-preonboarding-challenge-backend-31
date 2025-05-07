@@ -8,6 +8,7 @@ export * from './category.schema';
 export * from './product-category.schema';
 export * from './product-image.schema';
 export * from './product-price.schema';
+export * from './product-detail.schema';
 export * from './product-tag.schema';
 export * from './review.schema';
 export * from './tag.schema';

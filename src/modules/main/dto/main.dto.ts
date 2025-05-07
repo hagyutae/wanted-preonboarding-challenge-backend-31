@@ -1,24 +1,41 @@
 import { z } from 'zod';
-import { ProductResponseSchema } from '~/modules/products/entities/product.entity';
-import { CategorySchema } from '~/modules/categories/entities/category.entity';
 import { createSuccessResponseSchema } from '~/common/utils/response-schema.util';
+import {
+  ProductSchema,
+  ProductImageSchema,
+  BrandSchema,
+  SellerSchema,
+} from '~/modules/products/entities/product.entity';
+import { CategorySchema } from '~/modules/categories/entities/category.entity';
 
-export const MainPageProductSchema = ProductResponseSchema.pick({
+export const MainPageProductSchema = ProductSchema.pick({
   id: true,
   name: true,
   slug: true,
   shortDescription: true,
-  basePrice: true,
-  salePrice: true,
-  currency: true,
-  primaryImage: true,
-  brand: true,
-  seller: true,
-  rating: true,
-  reviewCount: true,
-  inStock: true,
   status: true,
   createdAt: true,
+}).extend({
+  basePrice: z.number(),
+  salePrice: z.number().nullable(),
+  currency: z.string(),
+  primaryImage: ProductImageSchema.pick({
+    url: true,
+    altText: true,
+  }).nullable(),
+  brand: BrandSchema.pick({
+    id: true,
+    name: true,
+    logoUrl: true,
+  }).nullable(),
+  seller: SellerSchema.pick({
+    id: true,
+    name: true,
+    logoUrl: true,
+  }).nullable(),
+  rating: z.number().nullable(),
+  reviewCount: z.number(),
+  inStock: z.boolean(),
 });
 
 export const FeaturedCategorySchema = CategorySchema.pick({

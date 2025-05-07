@@ -90,24 +90,29 @@ export const SellerSchema = z.object({
 
 export const ProductCategorySchema = z.object({
   id: z.number(),
+  productId: z.number(),
+  categoryId: z.number(),
+  isPrimary: z.boolean(),
+  category: CategoryWithRelationsSchema,
+});
+
+export const TagSchema = z.object({
+  id: z.number(),
   name: z.string(),
   slug: z.string(),
-  parentId: z.number().nullable(),
-  level: z.number(),
+});
+
+export const ProductTagSchema = z.object({
+  id: z.number(),
+  productId: z.number(),
+  tagId: z.number(),
 });
 
 // 관계를 포함한 상품 스키마
 export const ProductWithRelationsSchema = ProductSchema.extend({
   detail: ProductDetailSchema.optional(),
   price: ProductPriceSchema,
-  categories: z.array(
-    CategoryWithRelationsSchema.pick({
-      id: true,
-      name: true,
-      slug: true,
-      parent: true,
-    }),
-  ),
+  categories: z.array(ProductCategorySchema),
   optionGroups: z.array(
     ProductOptionGroupSchema.extend({
       options: z.array(ProductOptionSchema),
@@ -147,13 +152,6 @@ export const ProductWithRelationsSchema = ProductSchema.extend({
     .optional(),
 });
 
-export const ProductResponseSchema = ProductWithRelationsSchema.extend({
-  basePrice: z.number(),
-  salePrice: z.number(),
-  currency: z.string(),
-  inStock: z.boolean(),
-});
-
 // 타입 추론
 export type Product = z.infer<typeof ProductSchema>;
 export type ProductWithRelations = z.infer<typeof ProductWithRelationsSchema>;
@@ -165,3 +163,5 @@ export type ProductImage = z.infer<typeof ProductImageSchema>;
 export type Brand = z.infer<typeof BrandSchema>;
 export type Seller = z.infer<typeof SellerSchema>;
 export type ProductCategory = z.infer<typeof ProductCategorySchema>;
+export type Tag = z.infer<typeof TagSchema>;
+export type ProductTag = z.infer<typeof ProductTagSchema>;

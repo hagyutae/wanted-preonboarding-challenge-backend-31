@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { asc, desc, eq, inArray, sql } from 'drizzle-orm';
+import { eq, inArray, sql } from 'drizzle-orm';
+
 import { DrizzleService } from '~/database/drizzle.service';
+import { getOrderBy } from '~/common/utils/drizzle-helpers';
 import {
   categories as categoriesSchema,
   productCategories as productCategoriesSchema,
@@ -83,7 +85,7 @@ export class CategoryRepository {
           where: inArray(productCategoriesSchema.categoryId, categoryIds),
         },
       },
-      orderBy: this.getOrderBy(sort),
+      orderBy: getOrderBy('product', sort),
       limit: per_page,
       offset: offset,
     });
@@ -104,17 +106,5 @@ export class CategoryRepository {
         `,
     );
     return subcategories.rows.map((row) => Number(row.id));
-  }
-
-  private getOrderBy(sort: GetProductsByCategoryIdRequestDto['sort']) {
-    const fieldMap = {
-      created_at: productsSchema.createdAt,
-    };
-    const [field, order] = sort.split(':');
-
-    if (!fieldMap[field]) {
-      return desc(productsSchema.createdAt);
-    }
-    return order === 'desc' ? desc(fieldMap[field]) : asc(fieldMap[field]);
   }
 }

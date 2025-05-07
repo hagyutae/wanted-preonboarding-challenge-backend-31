@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { ProductCategorySchema } from '~/modules/products/entities/product.entity';
 
 // 기본 카테고리 스키마
 export const CategorySchema = z.object({
@@ -16,7 +15,6 @@ export const CategorySchema = z.object({
 export const CategoryWithRelationsSchema = CategorySchema.extend({
   parent: z.lazy(() => CategorySchema).optional(),
   children: z.array(z.lazy(() => CategoryWithRelationsSchema)).optional(),
-  productCategories: z.array(ProductCategorySchema).optional(),
 });
 
 // 타입 추론

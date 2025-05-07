@@ -75,9 +75,3 @@ export const UpdateReviewResponseDtoSchema = createSuccessResponseSchema(
 export type UpdateReviewResponseDto = z.infer<
   typeof UpdateReviewResponseDtoSchema
 >;
-
-// 리뷰 삭제 응답
-export const DeleteReviewResponseDtoSchema = createSuccessResponseSchema(null);
-export type DeleteReviewResponseDto = z.infer<
-  typeof DeleteReviewResponseDtoSchema
->;
