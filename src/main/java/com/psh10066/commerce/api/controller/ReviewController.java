@@ -48,4 +48,10 @@ public class ReviewController {
         UpdateReviewResponse response = reviewService.updateReview(id, request);
         return ApiResponse.success(response, "리뷰가 성공적으로 수정되었습니다.");
     }
+
+    @DeleteMapping("/reviews/{id}")
+    public ApiResponse<Void> deleteReview(@PathVariable Long id) {
+        reviewService.deleteReview(id);
+        return ApiResponse.success(null, "리뷰가 성공적으로 삭제되었습니다.");
+    }
 }

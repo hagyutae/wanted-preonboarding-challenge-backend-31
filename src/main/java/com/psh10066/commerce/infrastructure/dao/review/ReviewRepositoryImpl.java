@@ -37,4 +37,9 @@ public class ReviewRepositoryImpl implements ReviewRepository {
         return reviewJpaRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Review", id));
     }
+
+    @Override
+    public void deleteById(Long id) {
+        reviewJpaRepository.deleteById(id);
+    }
 }

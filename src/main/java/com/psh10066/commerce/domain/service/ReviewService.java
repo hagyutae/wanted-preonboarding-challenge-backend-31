@@ -64,4 +64,9 @@ public class ReviewService {
         reviewRepository.save(review);
         return new UpdateReviewResponse(review.getId(), review.getRating(), review.getTitle(), review.getContent(), review.getUpdatedAt());
     }
+
+    @Transactional
+    public void deleteReview(Long id) {
+        reviewRepository.deleteById(id);
+    }
 }

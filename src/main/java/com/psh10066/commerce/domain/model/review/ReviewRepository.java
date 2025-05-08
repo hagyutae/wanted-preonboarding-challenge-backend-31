@@ -15,4 +15,6 @@ public interface ReviewRepository {
     Review save(Review review);
 
     Review getById(Long id);
+
+    void deleteById(Long id);
 }
