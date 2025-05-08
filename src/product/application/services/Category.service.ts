@@ -1,16 +1,16 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
+import { IBaseRepository } from "src/libs/domain/repositories";
 import { Category, Product } from "src/product/domain/entities";
-import { IRepository } from "src/product/domain/repositories";
 import { FilterDTO, ProductCatalogDTO, ProductSummaryDTO } from "../dto";
 
 @Injectable()
 export default class CategoryService {
   constructor(
     @Inject("ICategoryRepository")
-    private readonly repository: IRepository<Category>,
+    private readonly repository: IBaseRepository<Category>,
     @Inject("IProductRepository")
-    private readonly product_repository: IRepository<
+    private readonly product_repository: IBaseRepository<
       Product | ProductSummaryDTO | ProductCatalogDTO
     >,
   ) {}

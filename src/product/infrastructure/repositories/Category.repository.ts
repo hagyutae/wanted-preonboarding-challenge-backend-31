@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
+import { BaseRepository } from "src/libs/domain/repositories";
 import { Category } from "src/product/domain/entities";
 import { CategoryEntity } from "src/product/infrastructure/entities";
-import BaseRepository from "./BaseRepository";
 
 @Injectable()
 export default class CategoryRepository extends BaseRepository<Category> {

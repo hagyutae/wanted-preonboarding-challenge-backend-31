@@ -2,8 +2,8 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
+import { IBaseRepository } from "src/libs/domain/repositories";
 import { Product, Product_Detail, Product_Image, Product_Price } from "src/product/domain/entities";
-import { IRepository } from "src/product/domain/repositories";
 import {
   FilterDTO,
   ProductCatalogDTO,
@@ -19,19 +19,19 @@ export default class ProductService {
   constructor(
     private readonly entity_manager: EntityManager,
     @Inject("IProductRepository")
-    private readonly repository: IRepository<Product | ProductSummaryDTO | ProductCatalogDTO>,
+    private readonly repository: IBaseRepository<Product | ProductSummaryDTO | ProductCatalogDTO>,
     @Inject("IProductDetailRepository")
-    private readonly product_detail_repository: IRepository<Product_Detail>,
+    private readonly product_detail_repository: IBaseRepository<Product_Detail>,
     @Inject("IProductPriceRepository")
-    private readonly product_price_repository: IRepository<Product_Price>,
+    private readonly product_price_repository: IBaseRepository<Product_Price>,
     @Inject("IProductCategoryRepository")
-    private readonly product_category_repository: IRepository<ProductCategoryDTO>,
+    private readonly product_category_repository: IBaseRepository<ProductCategoryDTO>,
     @Inject("IProductOptionGroupRepository")
-    private readonly product_option_group_repository: IRepository<ProductOptionGroupDTO>,
+    private readonly product_option_group_repository: IBaseRepository<ProductOptionGroupDTO>,
     @Inject("IProductImageRepository")
-    private readonly product_image_repository: IRepository<Product_Image>,
+    private readonly product_image_repository: IBaseRepository<Product_Image>,
     @Inject("IProductTagRepository")
-    private readonly product_tag_repository: IRepository<ProductTagDTO>,
+    private readonly product_tag_repository: IBaseRepository<ProductTagDTO>,
   ) {}
 
   async register({

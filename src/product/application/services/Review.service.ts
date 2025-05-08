@@ -1,14 +1,14 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
+import { IBaseRepository } from "src/libs/domain/repositories";
 import { Review } from "src/product/domain/entities";
-import { IRepository } from "src/product/domain/repositories";
 import { FilterDTO } from "../dto";
 
 @Injectable()
 export default class ReviewService {
   constructor(
     @Inject("IReviewRepository")
-    private readonly repository: IRepository<Review>,
+    private readonly repository: IBaseRepository<Review>,
   ) {}
 
   async find(product_id: number, { page = 1, per_page = 10, sort, rating }: FilterDTO) {

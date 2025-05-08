@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
+import { BaseRepository } from "src/libs/domain/repositories";
 import { Product_Price } from "src/product/domain/entities";
 import { ProductPriceEntity } from "../entities";
-import BaseRepository from "./BaseRepository";
 
 @Injectable()
 export default class ProductPriceRepository extends BaseRepository<Product_Price> {

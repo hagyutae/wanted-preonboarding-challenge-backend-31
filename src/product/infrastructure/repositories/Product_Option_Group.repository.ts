@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
+import { BaseRepository } from "src/libs/domain/repositories";
 import { ProductOptionGroupDTO } from "src/product/application/dto";
 import { ProductOptionEntity, ProductOptionGroupEntity } from "../entities";
-import BaseRepository from "./BaseRepository";
 
 @Injectable()
 export default class ProductOptionGroupRepository extends BaseRepository<ProductOptionGroupDTO> {

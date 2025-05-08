@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { Product } from "src/product/domain/entities";
+import { BaseRepository } from "src/libs/domain/repositories";
 import { ProductCatalogDTO, ProductSummaryDTO } from "src/product/application/dto";
+import { Product } from "src/product/domain/entities";
 import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "../entities";
 import { ProductCatalogView, ProductSummaryView } from "../views";
-import BaseRepository from "./BaseRepository";
 
 @Injectable()
 export default class ProductRepository extends BaseRepository<

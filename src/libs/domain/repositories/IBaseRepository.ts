@@ -1,6 +1,6 @@
 import { EntityManager } from "typeorm";
 
-export default interface IRepository<T> {
+export default interface IBaseRepository<T> {
   with_transaction(manager: EntityManager): this;
 
   save(param: T): Promise<T>;

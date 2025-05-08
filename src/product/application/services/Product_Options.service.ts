@@ -1,15 +1,15 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
+import { IBaseRepository } from "src/libs/domain/repositories";
 import { Product_Image, Product_Option } from "src/product/domain/entities";
-import { IRepository } from "src/product/domain/repositories";
 
 @Injectable()
 export default class ProductOptionsService {
   constructor(
     @Inject("IProductOptionsRepository")
-    private readonly repository: IRepository<Product_Option>,
+    private readonly repository: IBaseRepository<Product_Option>,
     @Inject("IProductImageRepository")
-    private readonly product_image_repository: IRepository<Product_Image>,
+    private readonly product_image_repository: IBaseRepository<Product_Image>,
   ) {}
 
   async register(

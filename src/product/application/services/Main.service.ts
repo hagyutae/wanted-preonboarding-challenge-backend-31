@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { IMainRepository } from "src/product/domain/repositories";
+import { IMainRepository } from "src/libs/domain/repositories";
 
 @Injectable()
 export default class MainService {

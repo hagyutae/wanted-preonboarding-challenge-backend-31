@@ -1,8 +1,8 @@
 import { EntityManager } from "typeorm";
 
-import { IRepository } from "src/product/domain/repositories";
+import { IBaseRepository } from "src/libs/domain/repositories";
 
-export default abstract class BaseRepository<T> implements IRepository<T> {
+export default abstract class BaseRepository<T> implements IBaseRepository<T> {
   constructor(protected readonly entity_manager: EntityManager) {}
 
   with_transaction<M extends BaseRepository<T>>(this: M, manager: EntityManager): M {
