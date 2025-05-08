@@ -10,6 +10,16 @@ import {
   UpdateProductResponseData,
 } from './dto/product.dto';
 import { ProductWithRelations } from './entities/product.entity';
+import {
+  CreateProductOptionRequestDto,
+  CreateProductOptionResponseData,
+  UpdateProductOptionRequestDto,
+  UpdateProductOptionResponseData,
+} from './dto/product-option.dto';
+import {
+  CreateProductImageRequestDto,
+  CreateProductImageResponseData,
+} from './dto/product-image.dto';
 
 @Injectable()
 export class ProductsService {
@@ -104,5 +114,54 @@ export class ProductsService {
         discountPercentage,
       },
     };
+  }
+
+  async createProductOption(
+    productId: number,
+    dto: CreateProductOptionRequestDto,
+  ): Promise<CreateProductOptionResponseData> {
+    const product = await this.productsRepository.getProduct(productId);
+    if (!product) {
+      throw new NotFoundException('상품을 찾을 수 없습니다.');
+    }
+
+    return this.productsRepository.createProductOption(dto);
+  }
+
+  async updateProductOption(
+    productId: number,
+    optionId: number,
+    dto: UpdateProductOptionRequestDto,
+  ): Promise<UpdateProductOptionResponseData> {
+    const product = await this.productsRepository.getProduct(productId);
+    if (!product) {
+      throw new NotFoundException('상품을 찾을 수 없습니다.');
+    }
+
+    return this.productsRepository.updateProductOption(optionId, dto);
+  }
+
+  async deleteProductOption(
+    productId: number,
+    optionId: number,
+  ): Promise<void> {
+    const product = await this.productsRepository.getProduct(productId);
+    if (!product) {
+      throw new NotFoundException('상품을 찾을 수 없습니다.');
+    }
+
+    await this.productsRepository.deleteProductOption(optionId);
+  }
+
+  async createProductImage(
+    productId: number,
+    dto: CreateProductImageRequestDto,
+  ): Promise<CreateProductImageResponseData> {
+    const product = await this.productsRepository.getProduct(productId);
+    if (!product) {
+      throw new NotFoundException('상품을 찾을 수 없습니다.');
+    }
+
+    return this.productsRepository.createProductImage(productId, dto);
   }
 }

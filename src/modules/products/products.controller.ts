@@ -33,6 +33,17 @@ import {
 } from './dto/product.dto';
 import { DeleteResponseDto } from '~/common/dto/response.dto';
 import { RandomUser } from '~/common/decorators/random-user.decorator';
+import {
+  CreateProductOptionRequestDto,
+  CreateProductOptionResponseDto,
+  UpdateProductOptionRequestDto,
+  UpdateProductOptionResponseDto,
+} from './dto/product-option.dto';
+import {
+  CreateProductImageRequestDto,
+  CreateProductImageResponseDto,
+} from './dto/product-image.dto';
+
 @Controller('products')
 export class ProductsController {
   constructor(
@@ -121,5 +132,62 @@ export class ProductsController {
       await this.reviewsService.createReview(productId, userId, dto),
       '리뷰가 성공적으로 등록되었습니다.',
     );
+  }
+
+  @Post(':id/options')
+  async createProductOption(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: CreateProductOptionRequestDto,
+  ): Promise<CreateProductOptionResponseDto> {
+    const option = await this.productsService.createProductOption(id, dto);
+    return {
+      success: true,
+      data: option,
+      message: '상품 옵션이 성공적으로 추가되었습니다.',
+    };
+  }
+
+  @Put(':id/options/:optionId')
+  async updateProductOption(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('optionId', ParseIntPipe) optionId: number,
+    @Body() dto: UpdateProductOptionRequestDto,
+  ): Promise<UpdateProductOptionResponseDto> {
+    const option = await this.productsService.updateProductOption(
+      id,
+      optionId,
+      dto,
+    );
+    return {
+      success: true,
+      data: option,
+      message: '상품 옵션이 성공적으로 수정되었습니다.',
+    };
+  }
+
+  @Delete(':id/options/:optionId')
+  async deleteProductOption(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('optionId', ParseIntPipe) optionId: number,
+  ): Promise<DeleteResponseDto> {
+    await this.productsService.deleteProductOption(id, optionId);
+    return {
+      success: true,
+      data: null,
+      message: '상품 옵션이 성공적으로 삭제되었습니다.',
+    };
+  }
+
+  @Post(':id/images')
+  async createProductImage(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: CreateProductImageRequestDto,
+  ): Promise<CreateProductImageResponseDto> {
+    const image = await this.productsService.createProductImage(id, dto);
+    return {
+      success: true,
+      data: image,
+      message: '상품 이미지가 성공적으로 추가되었습니다.',
+    };
   }
 }

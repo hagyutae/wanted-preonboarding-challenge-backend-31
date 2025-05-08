@@ -21,6 +21,19 @@ import {
   UpdateProductResponseData,
 } from './dto/product.dto';
 import { ProductWithRelations } from './entities/product.entity';
+import {
+  CreateProductOptionRequestDto,
+  CreateProductOptionResponseData,
+  CreateProductOptionResponseDto,
+  UpdateProductOptionRequestDto,
+  UpdateProductOptionResponseData,
+  UpdateProductOptionResponseDto,
+} from './dto/product-option.dto';
+import {
+  CreateProductImageRequestDto,
+  CreateProductImageResponseData,
+  CreateProductImageResponseDto,
+} from './dto/product-image.dto';
 
 @Injectable()
 export class ProductsRepository {
@@ -537,5 +550,98 @@ export class ProductsRepository {
         },
       },
     };
+  }
+
+  async createProductOption(
+    dto: CreateProductOptionRequestDto,
+  ): Promise<CreateProductOptionResponseData> {
+    const [option] = await this.drizzleService.db
+      .insert(productOptionsSchema)
+      .values({
+        id: undefined,
+        optionGroupId: dto.optionGroupId,
+        name: dto.name,
+        additionalPrice: String(dto.additionalPrice),
+        sku: dto.sku,
+        stock: dto.stock,
+        displayOrder: dto.displayOrder,
+      })
+      .returning({
+        id: productOptionsSchema.id,
+        optionGroupId: productOptionsSchema.optionGroupId,
+        name: productOptionsSchema.name,
+        additionalPrice: productOptionsSchema.additionalPrice,
+        sku: productOptionsSchema.sku,
+        stock: productOptionsSchema.stock,
+        displayOrder: productOptionsSchema.displayOrder,
+      });
+
+    return {
+      ...option,
+      additionalPrice: Number(option.additionalPrice),
+    };
+  }
+
+  async updateProductOption(
+    optionId: number,
+    dto: UpdateProductOptionRequestDto,
+  ): Promise<UpdateProductOptionResponseData> {
+    const [option] = await this.drizzleService.db
+      .update(productOptionsSchema)
+      .set({
+        name: dto.name,
+        additionalPrice: String(dto.additionalPrice),
+        sku: dto.sku,
+        stock: dto.stock,
+        displayOrder: dto.displayOrder,
+      })
+      .where(and(eq(productOptionsSchema.id, optionId)))
+      .returning({
+        id: productOptionsSchema.id,
+        optionGroupId: productOptionsSchema.optionGroupId,
+        name: productOptionsSchema.name,
+        additionalPrice: productOptionsSchema.additionalPrice,
+        sku: productOptionsSchema.sku,
+        stock: productOptionsSchema.stock,
+        displayOrder: productOptionsSchema.displayOrder,
+      });
+
+    return {
+      ...option,
+      additionalPrice: Number(option.additionalPrice),
+    };
+  }
+
+  async deleteProductOption(optionId: number): Promise<void> {
+    await this.drizzleService.db
+      .delete(productOptionsSchema)
+      .where(eq(productOptionsSchema.id, optionId));
+  }
+
+  async createProductImage(
+    productId: number,
+    dto: CreateProductImageRequestDto,
+  ): Promise<CreateProductImageResponseData> {
+    const [image] = await this.drizzleService.db
+      .insert(productImagesSchema)
+      .values({
+        id: undefined,
+        productId,
+        url: dto.url,
+        altText: dto.altText,
+        isPrimary: dto.isPrimary,
+        displayOrder: dto.displayOrder,
+        optionId: dto.optionId,
+      })
+      .returning({
+        id: productImagesSchema.id,
+        url: productImagesSchema.url,
+        altText: productImagesSchema.altText,
+        isPrimary: productImagesSchema.isPrimary,
+        displayOrder: productImagesSchema.displayOrder,
+        optionId: productImagesSchema.optionId,
+      });
+
+    return image;
   }
 }
