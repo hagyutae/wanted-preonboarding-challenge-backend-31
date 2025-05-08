@@ -1,0 +1,7 @@
+package cqrs.precourse.repository;
+
+import cqrs.precourse.domain.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+}
