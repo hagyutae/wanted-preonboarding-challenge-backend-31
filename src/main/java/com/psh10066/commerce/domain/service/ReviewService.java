@@ -2,9 +2,11 @@ package com.psh10066.commerce.domain.service;
 
 import com.psh10066.commerce.api.dto.request.CreateReviewRequest;
 import com.psh10066.commerce.api.dto.request.GetProductReviewsRequest;
+import com.psh10066.commerce.api.dto.request.UpdateReviewRequest;
 import com.psh10066.commerce.api.dto.response.CreateReviewResponse;
 import com.psh10066.commerce.api.dto.response.GetAllReviewsResponse;
 import com.psh10066.commerce.api.dto.response.PaginationWithSummaryResponse;
+import com.psh10066.commerce.api.dto.response.UpdateReviewResponse;
 import com.psh10066.commerce.domain.model.product.Product;
 import com.psh10066.commerce.domain.model.product.ProductRepository;
 import com.psh10066.commerce.domain.model.review.Review;
@@ -53,5 +55,13 @@ public class ReviewService {
             review.getVerifiedPurchase(),
             review.getHelpfulVotes()
         );
+    }
+
+    @Transactional
+    public UpdateReviewResponse updateReview(Long id, UpdateReviewRequest request) {
+        Review review = reviewRepository.getById(id);
+        review.update(request.rating(), request.title(), request.content());
+        reviewRepository.save(review);
+        return new UpdateReviewResponse(review.getId(), review.getRating(), review.getTitle(), review.getContent(), review.getUpdatedAt());
     }
 }

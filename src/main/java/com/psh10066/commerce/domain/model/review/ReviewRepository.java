@@ -13,4 +13,6 @@ public interface ReviewRepository {
     Page<GetAllReviewsResponse> getProductReviews(Long productId, GetProductReviewsRequest request);
 
     Review save(Review review);
+
+    Review getById(Long id);
 }

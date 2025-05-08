@@ -3,9 +3,11 @@ package com.psh10066.commerce.api.controller;
 import com.psh10066.commerce.api.common.ApiResponse;
 import com.psh10066.commerce.api.dto.request.CreateReviewRequest;
 import com.psh10066.commerce.api.dto.request.GetProductReviewsRequest;
+import com.psh10066.commerce.api.dto.request.UpdateReviewRequest;
 import com.psh10066.commerce.api.dto.response.CreateReviewResponse;
 import com.psh10066.commerce.api.dto.response.GetAllReviewsResponse;
 import com.psh10066.commerce.api.dto.response.PaginationWithSummaryResponse;
+import com.psh10066.commerce.api.dto.response.UpdateReviewResponse;
 import com.psh10066.commerce.domain.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +38,14 @@ public class ReviewController {
     ) {
         CreateReviewResponse response = reviewService.createReview(id, request);
         return ApiResponse.success(response, "리뷰가 성공적으로 등록되었습니다.");
+    }
+
+    @PutMapping("/reviews/{id}")
+    public ApiResponse<UpdateReviewResponse> updateReview(
+        @PathVariable Long id,
+        @Valid @RequestBody UpdateReviewRequest request
+    ) {
+        UpdateReviewResponse response = reviewService.updateReview(id, request);
+        return ApiResponse.success(response, "리뷰가 성공적으로 수정되었습니다.");
     }
 }

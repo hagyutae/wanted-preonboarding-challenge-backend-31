@@ -1,8 +1,8 @@
 package com.psh10066.commerce.domain.model.review;
 
 import com.psh10066.commerce.domain.common.BaseUpdatableEntity;
-import com.psh10066.commerce.domain.model.user.User;
 import com.psh10066.commerce.domain.model.product.Product;
+import com.psh10066.commerce.domain.model.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,6 +44,12 @@ public class Review extends BaseUpdatableEntity {
     public Review(Product product, User user, Integer rating, String title, String content) {
         this.product = product;
         this.user = user;
+        this.rating = rating;
+        this.title = title;
+        this.content = content;
+    }
+
+    public void update(Integer rating, String title, String content) {
         this.rating = rating;
         this.title = title;
         this.content = content;
