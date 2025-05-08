@@ -1,7 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { IBaseRepository } from "@libs/domain/repositories";
-import { ProductSummaryDTO } from "@product/application/dto";
 import { Category } from "@category/domain/entities";
 
 @Injectable()
@@ -10,7 +9,7 @@ export default class CategoryService {
     @Inject("ICategoryRepository")
     private readonly repository: IBaseRepository<Category>,
     @Inject("IProductRepository")
-    private readonly product_repository: IBaseRepository<ProductSummaryDTO>,
+    private readonly product_repository: IBaseRepository<any>,
   ) {}
 
   async find_all_as_tree(level: number = 1) {

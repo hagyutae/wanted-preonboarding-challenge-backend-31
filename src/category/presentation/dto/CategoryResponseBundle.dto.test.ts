@@ -1,7 +1,6 @@
 import getValidateDTO from "__test-utils__/getValidateDTO";
 
-import { PaginationSummaryDTO } from "@libs/common/dto";
-import ProductSummaryDTO from "@product/presentation/dto/response/ProductSummary.dto";
+import { PaginationSummaryDTO, ProductSummaryDTO } from "@libs/common/dto";
 import CategoryResponseBundleDTO, { CategoryResponseDTO } from "./CategoryResponseBundle.dto";
 
 describe("CategoryResponseBundleDTO", () => {
@@ -9,7 +8,7 @@ describe("CategoryResponseBundleDTO", () => {
 
   const validData: Partial<CategoryResponseBundleDTO> = {
     category: { name: "카테고리 정보" } as CategoryResponseDTO,
-    // items: [{ name: "상품 요약" }] as ProductSummaryDTO[],
+    items: [{ name: "상품 요약" }] as ProductSummaryDTO[],
     pagination: {
       total_items: 100,
       total_pages: 10,

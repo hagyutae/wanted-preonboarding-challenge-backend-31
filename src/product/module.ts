@@ -7,5 +7,6 @@ import * as controllers from "./presentation/controllers";
 @Module({
   providers: [...Object.values(services), ...repository_providers],
   controllers: [...Object.values(controllers)],
+  exports: ["IProductRepository"],
 })
 export default class ProductModule {}

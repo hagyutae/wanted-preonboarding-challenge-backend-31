@@ -1,15 +1,17 @@
 import getValidateDTO from "__test-utils__/getValidateDTO";
 
+import { ProductOptionGroupDTO } from "@product/application/dto";
+import {
+  BrandDTO,
+  ImageDTO,
+  ProductDetailDTO,
+  ProductPriceDTO,
+  RatingDTO,
+  SellerDTO,
+  TagDTO,
+} from "@product/presentation/dto";
 import { CategoryDTO } from "@category/presentation/dto";
-import BrandDTO from "../model/Brand.dto";
-import ImageDTO from "../model/Image.dto";
-import ProductDetailDTO from "../model/ProductDetail.dto";
-import ProductOptionGroupDTO from "../model/ProductOptionGroup.dto";
-import ProductPriceDTO from "../model/ProductPrice.dto";
-import SellerDTO from "../model/Seller.dto";
-import TagDTO from "../model/Tag.dto";
 import ProductCatalogDTO from "./ProductCatalog.dto";
-import RatingDTO from "./Rating.dto";
 
 describe("ProductCatalogDTO", () => {
   const validateDTO = getValidateDTO(ProductCatalogDTO);
