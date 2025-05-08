@@ -14,7 +14,6 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "product_option_groups")
-@Builder
 public class ProductOptionGroup {
 
     @Id
@@ -37,14 +36,15 @@ public class ProductOptionGroup {
     @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProductOption> options = new ArrayList<>();
 
-    public ProductOptionGroup(Long id, Long productId, String name, int displayOrder) {
+    private ProductOptionGroup(Long id, Long productId, String name, int displayOrder) {
         this.id = id;
         this.productId = productId;
         this.name = name;
         this.displayOrder = displayOrder;
     }
 
-    public ProductOptionGroup(Long id, Long productId, String name, int displayOrder, List<ProductOption> options) {
+    @Builder
+    protected ProductOptionGroup(Long id, Long productId, String name, int displayOrder, List<ProductOption> options) {
         this(id, productId, name, displayOrder);
         if (Objects.nonNull(options)) {
             options.forEach(this::addOption);
