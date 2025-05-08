@@ -15,9 +15,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.psh10066.commerce.domain.model.QUser.user;
 import static com.psh10066.commerce.domain.model.product.QProduct.product;
 import static com.psh10066.commerce.domain.model.review.QReview.review;
+import static com.psh10066.commerce.domain.model.user.QUser.user;
 
 @Repository
 @RequiredArgsConstructor

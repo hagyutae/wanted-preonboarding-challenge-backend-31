@@ -25,4 +25,9 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     public Page<GetAllReviewsResponse> getProductReviews(Long productId, GetProductReviewsRequest request) {
         return reviewJpaRepository.getProductReviews(productId, request);
     }
+
+    @Override
+    public Review save(Review review) {
+        return reviewJpaRepository.save(review);
+    }
 }

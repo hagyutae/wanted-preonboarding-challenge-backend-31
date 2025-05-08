@@ -1,4 +1,4 @@
-package com.psh10066.commerce.domain.model;
+package com.psh10066.commerce.domain.model.user;
 
 import com.psh10066.commerce.domain.common.BaseEntity;
 import jakarta.persistence.*;

@@ -1,7 +1,7 @@
 package com.psh10066.commerce.domain.model.review;
 
 import com.psh10066.commerce.domain.common.BaseUpdatableEntity;
-import com.psh10066.commerce.domain.model.User;
+import com.psh10066.commerce.domain.model.user.User;
 import com.psh10066.commerce.domain.model.product.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -40,4 +40,12 @@ public class Review extends BaseUpdatableEntity {
 
     @Column(name = "helpful_votes")
     private Integer helpfulVotes = 0;
+
+    public Review(Product product, User user, Integer rating, String title, String content) {
+        this.product = product;
+        this.user = user;
+        this.rating = rating;
+        this.title = title;
+        this.content = content;
+    }
 }
