@@ -79,6 +79,7 @@ const config: Config = {
     "^@libs/(.*)$": "<rootDir>/src/libs/$1",
     "^@utility/(.*)$": "<rootDir>/src/utility/$1",
     "^@product/(.*)$": "<rootDir>/src/product/$1",
+    "^@category/(.*)$": "<rootDir>/src/category/$1",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

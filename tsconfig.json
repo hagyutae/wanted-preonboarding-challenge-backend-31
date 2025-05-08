@@ -22,6 +22,7 @@
       "@libs/*": ["./src/libs/*"],
       "@utility/*": ["./src/utility/*"],
       "@product/*": ["./src/product/*"],
+      "@category/*": ["./src/category/*"],
     }
   }
 }

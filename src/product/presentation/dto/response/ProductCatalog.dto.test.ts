@@ -1,7 +1,7 @@
 import getValidateDTO from "__test-utils__/getValidateDTO";
 
+import { CategoryDTO } from "@category/presentation/dto";
 import BrandDTO from "../model/Brand.dto";
-import CategoryDTO from "../model/Category.dto";
 import ImageDTO from "../model/Image.dto";
 import ProductDetailDTO from "../model/ProductDetail.dto";
 import ProductOptionGroupDTO from "../model/ProductOptionGroup.dto";

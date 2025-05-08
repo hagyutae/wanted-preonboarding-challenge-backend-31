@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { CategoryService } from "@product/application/services";
+import { CategoryService } from "@category/application/services";
 import { CategoryQueryDTO } from "../dto";
 import CategoryController from "./Category.controller";
 

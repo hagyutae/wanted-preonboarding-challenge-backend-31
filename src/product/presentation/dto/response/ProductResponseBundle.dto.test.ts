@@ -1,6 +1,6 @@
 import getValidateDTO from "__test-utils__/getValidateDTO";
 
-import PaginationSummaryDTO from "./PaginationSummary.dto";
+import { PaginationSummaryDTO } from "@category/presentation/dto";
 import ProductResponseBundleDTO from "./ProductResponseBundle.dto";
 import ProductSummaryDTO from "./ProductSummary.dto";
 

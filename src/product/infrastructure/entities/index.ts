@@ -1,5 +1,4 @@
 export { default as BrandEntity } from "./Brand.entity";
-export { default as CategoryEntity } from "./Category.entity";
 export { default as ProductEntity } from "./Product.entity";
 export { default as ProductCategoryEntity } from "./Product_Category.entity";
 export { default as ProductDetailEntity } from "./Product_Detail.entity";

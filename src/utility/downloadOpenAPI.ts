@@ -5,9 +5,8 @@ import { NestFactory } from "@nestjs/core";
 import { EntityManager } from "typeorm";
 import * as YAML from "yamljs";
 
-import * as services from "@product/application/services";
-import repository_providers from "@product/infrastructure/provider";
-import * as controllers from "@product/presentation/controllers";
+import ProductModule from "@product/module";
+import CategoryModule from "@category/module";
 import generatorSwagger from "./generatorSwagger";
 
 @Module({
@@ -16,10 +15,9 @@ import generatorSwagger from "./generatorSwagger";
       provide: EntityManager,
       useValue: {},
     },
-    ...Object.values(services),
-    ...repository_providers,
+    ProductModule,
+    CategoryModule,
   ],
-  controllers: [...Object.values(controllers)],
 })
 class SwaggerAppModule {}
 

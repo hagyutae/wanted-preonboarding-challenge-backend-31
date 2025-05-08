@@ -1,8 +1,8 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { IBaseRepository } from "@libs/domain/repositories";
-import { Category, Product } from "@product/domain/entities";
-import { FilterDTO, ProductCatalogDTO, ProductSummaryDTO } from "../dto";
+import { ProductSummaryDTO } from "@product/application/dto";
+import { Category } from "@category/domain/entities";
 
 @Injectable()
 export default class CategoryService {
@@ -10,9 +10,7 @@ export default class CategoryService {
     @Inject("ICategoryRepository")
     private readonly repository: IBaseRepository<Category>,
     @Inject("IProductRepository")
-    private readonly product_repository: IBaseRepository<
-      Product | ProductSummaryDTO | ProductCatalogDTO
-    >,
+    private readonly product_repository: IBaseRepository<ProductSummaryDTO>,
   ) {}
 
   async find_all_as_tree(level: number = 1) {
@@ -48,7 +46,7 @@ export default class CategoryService {
 
   async find_products_by_category_id(
     category_id: number,
-    { page = 1, per_page = 10, sort = "created_at:desc", has_sub = true }: FilterDTO,
+    { page = 1, per_page = 10, sort = "created_at:desc", has_sub = true },
   ) {
     const [sort_field, sort_order] = sort?.split(":") ?? ["created_at", "DESC"];
 
@@ -65,13 +63,13 @@ export default class CategoryService {
     }
 
     // 아이템 필터링
-    const items = (await this.product_repository.find_by_filters({
+    const items = await this.product_repository.find_by_filters({
       page,
       per_page,
       sort_field,
       sort_order,
       category: [category_id],
-    })) as ProductSummaryDTO[];
+    });
 
     // 페이지네이션 요약 정보
     const pagination = {

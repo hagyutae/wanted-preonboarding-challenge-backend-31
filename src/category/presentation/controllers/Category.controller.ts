@@ -8,10 +8,10 @@ import {
   ResponseType,
 } from "@libs/common/decorators";
 import { to_FilterDTO } from "@libs/common/mappers";
-import { CategoryService } from "@product/application/services";
+import { CategoryService } from "@category/application/services";
 import {
   CategoryQueryDTO,
-  CategoryResponseBundle,
+  CategoryResponseBundleDTO,
   NestedCategoryDTO,
   ParamDTO,
   ResponseDTO,
@@ -42,11 +42,11 @@ export default class CategoryController {
   @ApiOperation({ summary: "특정 카테고리의 상품 목록 조회" })
   @ApiStandardResponse(
     "특정 카테고리의 상품 목록을 성공적으로 조회했습니다.",
-    CategoryResponseBundle,
+    CategoryResponseBundleDTO,
   )
   @ApiBadRequestResponse("특정 카테고리의 상품 목록 조회에 실패했습니다.")
   @Get(":id/products")
-  @ResponseType(ResponseDTO<CategoryResponseBundle>)
+  @ResponseType(ResponseDTO<CategoryResponseBundleDTO>)
   async read_products(@Param() { id }: ParamDTO, @Query() query: CategoryQueryDTO) {
     const data = await this.service.find_products_by_category_id(id, to_FilterDTO(query));
 

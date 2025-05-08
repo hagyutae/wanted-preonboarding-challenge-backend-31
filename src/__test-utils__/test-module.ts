@@ -3,9 +3,11 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import { DataSource } from "typeorm";
 
-import * as entities from "@product/infrastructure/entities";
-import repository_providers from "@product/infrastructure/provider";
+import * as product_entities from "@product/infrastructure/entities";
+import product_repository_providers from "@product/infrastructure/provider";
 import * as views from "@product/infrastructure/views";
+import * as category_entities from "@category/infrastructure/entities";
+import category_repository_providers from "@category/infrastructure/provider";
 
 let container: StartedPostgreSqlContainer;
 let test_module: TestingModule;
@@ -30,13 +32,21 @@ export async function get_module() {
           username: container.getUsername(),
           password: container.getPassword(),
           database: container.getDatabase(),
-          entities: [...Object.values(entities), ...Object.values(views)],
+          entities: [
+            ...Object.values(product_entities),
+            ...Object.values(category_entities),
+            ...Object.values(views),
+          ],
           synchronize: true,
         }),
       }),
-      TypeOrmModule.forFeature([...Object.values(entities), ...Object.values(views)]),
+      TypeOrmModule.forFeature([
+        ...Object.values(product_entities),
+        ...Object.values(category_entities),
+        ...Object.values(views),
+      ]),
     ],
-    providers: [...repository_providers],
+    providers: [...product_repository_providers, ...category_repository_providers],
   }).compile();
 
   return test_module;

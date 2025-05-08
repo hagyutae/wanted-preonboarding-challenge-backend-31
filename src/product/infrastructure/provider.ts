@@ -1,5 +1,4 @@
 import {
-  CategoryRepository,
   MainRepository,
   ProductCategoryRepository,
   ProductDetailRepository,
@@ -22,6 +21,5 @@ export default [
   { provide: "IProductImageRepository", useClass: ProductImageRepository },
   { provide: "IProductTagRepository", useClass: ProductTagRepository },
   { provide: "IReviewRepository", useClass: ReviewRepository },
-  { provide: "ICategoryRepository", useClass: CategoryRepository },
   { provide: "IMainRepository", useClass: MainRepository },
 ];

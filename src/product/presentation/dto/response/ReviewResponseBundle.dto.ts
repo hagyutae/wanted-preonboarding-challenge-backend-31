@@ -2,8 +2,8 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsDefined, ValidateNested } from "class-validator";
 
+import { PaginationSummaryDTO } from "@libs/common/dto";
 import ReviewDTO from "../model/Review.dto";
-import PaginationSummaryDTO from "./PaginationSummary.dto";
 import ReviewSummaryDTO from "./ReviewSummary.dto";
 
 export default class ReviewResponseBundleDTO {

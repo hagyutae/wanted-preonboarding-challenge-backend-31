@@ -1,7 +1,7 @@
 import getValidateDTO from "__test-utils__/getValidateDTO";
 
+import { PaginationSummaryDTO } from "@libs/common/dto";
 import ReviewDTO from "../model/Review.dto";
-import PaginationSummaryDTO from "./PaginationSummary.dto";
 import ReviewResponseBundleDTO from "./ReviewResponseBundle.dto";
 import ReviewSummaryDTO from "./ReviewSummary.dto";
 

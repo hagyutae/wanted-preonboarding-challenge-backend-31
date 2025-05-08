@@ -1,8 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
 import { MainService } from "@product/application/services";
-import { CategoryEntity } from "@product/infrastructure/entities";
 import { ProductSummaryView } from "@product/infrastructure/views";
+import { CategoryEntity } from "@category/infrastructure/entities";
 import { ResponseDTO } from "../dto";
 import MainController from "./Main.controller";
 

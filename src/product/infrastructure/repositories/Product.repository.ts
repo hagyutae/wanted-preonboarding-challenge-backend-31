@@ -4,7 +4,8 @@ import { EntityManager } from "typeorm";
 import { BaseRepository } from "@libs/domain/repositories";
 import { ProductCatalogDTO, ProductSummaryDTO } from "@product/application/dto";
 import { Product } from "@product/domain/entities";
-import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "../entities";
+import { CategoryEntity } from "@category/infrastructure/entities";
+import { ProductCategoryEntity, ProductEntity } from "../entities";
 import { ProductCatalogView, ProductSummaryView } from "../views";
 
 @Injectable()

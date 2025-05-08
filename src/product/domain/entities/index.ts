@@ -1,5 +1,4 @@
 export { default as Brand } from "./Brand";
-export { default as Category } from "./Category";
 export { default as Product } from "./Product";
 export { default as Product_Detail } from "./Product_Detail";
 export { default as Product_Image } from "./Product_Image";

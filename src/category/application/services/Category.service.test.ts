@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { Category } from "@product/domain/entities";
-import { FilterDTO, ProductSummaryDTO } from "../dto";
+import { ProductSummaryDTO } from "@product/application/dto";
+import { Category } from "@category/domain/entities";
 import CategoryService from "./Category.service";
 
 describe("CategoryService", () => {
@@ -73,7 +73,7 @@ describe("CategoryService", () => {
     });
 
     it("카테고리 ID로 상품 조회", async () => {
-      const filter = { page: 1, per_page: 10, sort: "created_at:desc", has_sub: true } as FilterDTO;
+      const filter = { page: 1, per_page: 10, sort: "created_at:desc", has_sub: true };
 
       const result = await service.find_products_by_category_id(1, filter);
 
@@ -95,7 +95,7 @@ describe("CategoryService", () => {
         per_page: 10,
         sort: "created_at:desc",
         has_sub: false,
-      } as FilterDTO;
+      };
 
       const result = await service.find_products_by_category_id(1, filter);
 
