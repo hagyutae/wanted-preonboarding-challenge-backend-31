@@ -8,7 +8,7 @@ import { createSuccessResponse } from '~/common/utils/response.util';
 import { DeleteResponseDto } from '~/common/dto/response.dto';
 import { RandomUser } from '~/common/decorators/random-user.decorator';
 
-@Controller('')
+@Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
