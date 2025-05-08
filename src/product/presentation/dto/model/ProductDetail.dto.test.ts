@@ -1,4 +1,4 @@
-import getValidateDTO from "src/__test-utils__/getValidateDTO";
+import getValidateDTO from "__test-utils__/getValidateDTO";
 
 import ProductDetailDTO, { AdditionalInfoDTO, DimensionsDTO } from "./ProductDetail.dto";
 

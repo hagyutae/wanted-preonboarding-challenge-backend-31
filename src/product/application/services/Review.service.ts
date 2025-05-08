@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
-import { IBaseRepository } from "src/libs/domain/repositories";
-import { Review } from "src/product/domain/entities";
+import { IBaseRepository } from "@libs/domain/repositories";
+import { Review } from "@product/domain/entities";
 import { FilterDTO } from "../dto";
 
 @Injectable()

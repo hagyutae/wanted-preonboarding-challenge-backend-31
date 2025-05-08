@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
-import { Product_Image } from "src/product/domain/entities";
+import { Product_Image } from "@product/domain/entities";
 import ProductImageRepository from "./Product_Image.repository";
 
 describe("ProductImageRepository", () => {

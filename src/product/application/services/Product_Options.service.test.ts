@@ -1,7 +1,7 @@
-import { Test, TestingModule } from "@nestjs/testing";
 import { NotFoundException } from "@nestjs/common";
+import { Test, TestingModule } from "@nestjs/testing";
 
-import { Product_Image, Product_Option } from "src/product/domain/entities";
+import { Product_Image, Product_Option } from "@product/domain/entities";
 import ProductOptionsService from "./Product_Options.service";
 
 describe("ProductOptionsService", () => {

@@ -1,8 +1,8 @@
-import getValidateDTO from "src/__test-utils__/getValidateDTO";
+import getValidateDTO from "__test-utils__/getValidateDTO";
 
-import ProductSummaryDTO from "./ProductSummary.dto";
 import CategoryResponseBundleDTO, { CategoryResponseDTO } from "./CategoryResponseBundle.dto";
 import PaginationSummaryDTO from "./PaginationSummary.dto";
+import ProductSummaryDTO from "./ProductSummary.dto";
 
 describe("CategoryResponseBundleDTO", () => {
   const validateDTO = getValidateDTO(CategoryResponseBundleDTO);

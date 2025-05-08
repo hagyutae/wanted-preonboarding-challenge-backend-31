@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
-import { CategoryEntity } from "src/product/infrastructure/entities";
+import { CategoryEntity } from "@product/infrastructure/entities";
 import CategoryRepository from "./Category.repository";
 
 describe("CategoryRepository", () => {

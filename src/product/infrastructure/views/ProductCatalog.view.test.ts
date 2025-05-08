@@ -2,9 +2,9 @@ import { TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 
-import ProductCatalogView from "./ProductCatalog.view";
+import { get_module } from "__test-utils__/test-module";
 
-import { get_module } from "src/__test-utils__/test-module";
+import ProductCatalogView from "./ProductCatalog.view";
 
 describe("ProductCatalogView", () => {
   let data_source: DataSource;

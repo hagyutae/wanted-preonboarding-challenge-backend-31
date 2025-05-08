@@ -7,9 +7,9 @@ import {
   ApiErrorResponse,
   ApiStandardResponse,
   ResponseType,
-} from "src/libs/common/decorators";
-import { to_FilterDTO } from "src/libs/common/mappers";
-import { ProductService } from "src/product/application/services";
+} from "@libs/common/decorators";
+import { to_FilterDTO } from "@libs/common/mappers";
+import { ProductService } from "@product/application/services";
 import {
   ParamDTO,
   ProductBodyDTO,

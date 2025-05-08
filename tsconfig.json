@@ -16,6 +16,12 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "__test-utils__/*": ["./src/__test-utils__/*"],
+      "@libs/*": ["./src/libs/*"],
+      "@utility/*": ["./src/utility/*"],
+      "@product/*": ["./src/product/*"],
+    }
   }
 }

@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { BaseRepository } from "src/libs/domain/repositories";
-import { Product_Detail } from "src/product/domain/entities";
+import { BaseRepository } from "@libs/domain/repositories";
+import { Product_Detail } from "@product/domain/entities";
 import { ProductDetailEntity } from "../entities";
 
 @Injectable()

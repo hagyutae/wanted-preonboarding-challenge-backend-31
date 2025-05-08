@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { Category } from "src/product/domain/entities";
+import { Category } from "@product/domain/entities";
 import { FilterDTO, ProductSummaryDTO } from "../dto";
 import CategoryService from "./Category.service";
 

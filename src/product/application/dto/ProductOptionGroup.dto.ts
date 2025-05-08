@@ -1,4 +1,4 @@
-import Product_Option from "src/product/domain/entities/Product_Option";
+import Product_Option from "@product/domain/entities/Product_Option";
 
 export default class ProductOptionGroupDTO {
   constructor(

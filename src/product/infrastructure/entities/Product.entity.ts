@@ -8,8 +8,8 @@ import {
   JoinColumn,
 } from "typeorm";
 
-import SellerEntity from "./Seller.entity";
 import BrandEntity from "./Brand.entity";
+import SellerEntity from "./Seller.entity";
 
 @Entity("products")
 export default class ProductEntity {

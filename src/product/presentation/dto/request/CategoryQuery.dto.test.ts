@@ -1,7 +1,7 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
-import getValidateDTO from "src/__test-utils__/getValidateDTO";
+import getValidateDTO from "__test-utils__/getValidateDTO";
 
 import CategoryQueryDTO from "./CategoryQuery.dto";
 

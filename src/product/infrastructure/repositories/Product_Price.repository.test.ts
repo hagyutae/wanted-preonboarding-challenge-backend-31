@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager, UpdateResult } from "typeorm";
 
-import { Product_Price } from "src/product/domain/entities";
+import { Product_Price } from "@product/domain/entities";
 import ProductPriceRepository from "./Product_Price.repository";
 
 describe("ProductPriceRepository", () => {

@@ -1,4 +1,4 @@
-import getValidateDTO from "src/__test-utils__/getValidateDTO";
+import getValidateDTO from "__test-utils__/getValidateDTO";
 
 import ReviewDTO from "../model/Review.dto";
 import PaginationSummaryDTO from "./PaginationSummary.dto";

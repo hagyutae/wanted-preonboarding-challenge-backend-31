@@ -2,10 +2,10 @@ import { TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { DataSource, Repository, UpdateResult } from "typeorm";
 
+import { get_module } from "__test-utils__/test-module";
+
 import ProductEntity from "./Product.entity";
 import ProductPriceEntity from "./Product_Price.entity";
-
-import { get_module } from "src/__test-utils__/test-module";
 
 describe("ProductPriceEntity", () => {
   let data_source: DataSource;

@@ -1,4 +1,4 @@
-export * from "src/libs/common/dto";
+export * from "@libs/common/dto";
 
 export { default as CategoryQueryDTO } from "./request/CategoryQuery.dto";
 export { default as ProductBodyDTO } from "./request/ProductBody.dto";

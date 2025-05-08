@@ -1,13 +1,13 @@
 import { promises } from "fs";
 
+import { Module } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { EntityManager } from "typeorm";
 import * as YAML from "yamljs";
 
-import { Module } from "@nestjs/common";
-import * as services from "src/product/application/services";
-import repository_providers from "src/product/infrastructure/provider";
-import * as controllers from "src/product/presentation/controllers";
+import * as services from "@product/application/services";
+import repository_providers from "@product/infrastructure/provider";
+import * as controllers from "@product/presentation/controllers";
 import generatorSwagger from "./generatorSwagger";
 
 @Module({

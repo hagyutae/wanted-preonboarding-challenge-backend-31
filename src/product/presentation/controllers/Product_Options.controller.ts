@@ -7,8 +7,8 @@ import {
   ApiErrorResponse,
   ApiStandardResponse,
   ResponseType,
-} from "src/libs/common/decorators";
-import { ProductOptionsService } from "src/product/application/services";
+} from "@libs/common/decorators";
+import { ProductOptionsService } from "@product/application/services";
 import { ImageDTO, OptionParamDTO, ParamDTO, ProductOptionDTO, ResponseDTO } from "../dto";
 
 @ApiTags("상품 옵션 관리")

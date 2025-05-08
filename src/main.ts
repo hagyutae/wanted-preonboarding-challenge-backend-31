@@ -2,9 +2,9 @@ import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import { NestFactory, Reflector } from "@nestjs/core";
 import { ValidationError } from "class-validator";
 
-import { JwtInterceptor } from "./product/infrastructure/auth/jwtInterceptor";
+import generatorSwagger from "@utility/generatorSwagger";
+import { JwtInterceptor } from "@product/infrastructure/auth/jwtInterceptor";
 import * as exception_filters from "./libs/common/filters";
-import generatorSwagger from "./utility/generatorSwagger";
 import { ResponseInterceptor } from "./libs/common/interceptors/ResponseInterceptor";
 import { AppModule } from "./module";
 

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
-import { ProductTagDTO } from "src/product/application/dto";
+import { ProductTagDTO } from "@product/application/dto";
 import ProductTagRepository from "./Product_Tag.repository";
 
 describe("ProductTagRepository", () => {

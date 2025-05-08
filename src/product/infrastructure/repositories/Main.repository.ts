@@ -1,13 +1,13 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { IMainRepository } from "src/libs/domain/repositories";
+import { IMainRepository } from "@libs/domain/repositories";
 import {
   CategoryEntity,
   ProductCategoryEntity,
   ProductEntity,
-} from "src/product/infrastructure/entities";
-import { ProductSummaryView } from "src/product/infrastructure/views";
+} from "@product/infrastructure/entities";
+import { ProductSummaryView } from "@product/infrastructure/views";
 
 @Injectable()
 export default class MainRepository implements IMainRepository {

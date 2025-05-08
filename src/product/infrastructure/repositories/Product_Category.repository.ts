@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { BaseRepository } from "src/libs/domain/repositories";
-import { ProductCategoryDTO } from "src/product/application/dto";
+import { BaseRepository } from "@libs/domain/repositories";
+import { ProductCategoryDTO } from "@product/application/dto";
 import { ProductCategoryEntity } from "../entities";
 
 @Injectable()

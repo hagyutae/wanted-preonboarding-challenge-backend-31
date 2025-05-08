@@ -5,7 +5,7 @@ import {
   Product_Price,
   Seller,
   Tag,
-} from "src/product/domain/entities";
+} from "@product/domain/entities";
 import ProductCategoryDTO from "./ProductCategory.dto";
 import ProductOptionGroupDTO from "./ProductOptionGroup.dto";
 

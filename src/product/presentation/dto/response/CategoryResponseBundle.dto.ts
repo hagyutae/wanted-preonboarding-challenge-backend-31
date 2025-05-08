@@ -3,8 +3,8 @@ import { Type } from "class-transformer";
 import { IsArray, IsDefined, ValidateNested } from "class-validator";
 
 import CategoryDTO from "../model/Category.dto";
-import ProductSummaryDTO from "./ProductSummary.dto";
 import PaginationSummaryDTO from "./PaginationSummary.dto";
+import ProductSummaryDTO from "./ProductSummary.dto";
 
 export class CategoryResponseDTO extends PickType(CategoryDTO, [
   "id",

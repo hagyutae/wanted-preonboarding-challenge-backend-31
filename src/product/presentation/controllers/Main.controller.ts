@@ -1,8 +1,8 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
-import { ApiErrorResponse, ApiStandardResponse, ResponseType } from "src/libs/common/decorators";
-import { MainService } from "src/product/application/services";
+import { ApiErrorResponse, ApiStandardResponse, ResponseType } from "@libs/common/decorators";
+import { MainService } from "@product/application/services";
 import { MainResponseBundle, ResponseDTO } from "../dto";
 
 @ApiTags("메인")

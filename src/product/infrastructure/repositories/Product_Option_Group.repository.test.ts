@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
-import { ProductOptionGroupDTO } from "src/product/application/dto";
+import { ProductOptionGroupDTO } from "@product/application/dto";
 import ProductOptionGroupRepository from "./Product_Option_Group.repository";
 
 describe("ProductOptionGroupRepository", () => {

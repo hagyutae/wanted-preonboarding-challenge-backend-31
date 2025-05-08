@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
-import { IBaseRepository } from "src/libs/domain/repositories";
-import { Product_Image, Product_Option } from "src/product/domain/entities";
+import { IBaseRepository } from "@libs/domain/repositories";
+import { Product_Image, Product_Option } from "@product/domain/entities";
 
 @Injectable()
 export default class ProductOptionsService {

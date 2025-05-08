@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { BaseRepository } from "src/libs/domain/repositories";
-import { ProductCatalogDTO, ProductSummaryDTO } from "src/product/application/dto";
-import { Product } from "src/product/domain/entities";
+import { BaseRepository } from "@libs/domain/repositories";
+import { ProductCatalogDTO, ProductSummaryDTO } from "@product/application/dto";
+import { Product } from "@product/domain/entities";
 import { CategoryEntity, ProductCategoryEntity, ProductEntity } from "../entities";
 import { ProductCatalogView, ProductSummaryView } from "../views";
 

@@ -1,4 +1,4 @@
-import { Product, Product_Detail, Product_Image, Product_Price } from "src/product/domain/entities";
+import { Product, Product_Detail, Product_Image, Product_Price } from "@product/domain/entities";
 import ProductCategoryDTO from "./ProductCategory.dto";
 import ProductOptionGroupDTO from "./ProductOptionGroup.dto";
 

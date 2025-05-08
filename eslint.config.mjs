@@ -1,11 +1,11 @@
 import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
+import * as eslintPluginImport from "eslint-plugin-import";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import prettierPlugin from "eslint-plugin-prettier";
 import globals from "globals";
 import prettier from "prettier";
+import tseslint from "typescript-eslint";
 
-const prettierOptions = await prettier.resolveConfig(".prettierrc");
+const prettierOptions = (await prettier.resolveConfig(".prettierrc")) || {};
 
 export default tseslint.config(
   {
@@ -20,14 +20,15 @@ export default tseslint.config(
         ...globals.node,
         ...globals.jest,
       },
-      sourceType: "commonjs",
+      sourceType: "module",
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
     },
-  },
-  {
+    plugins: {
+      import: eslintPluginImport,
+    },
     rules: {
       "@typescript-eslint/interface-name-prefix": "off",
       "@typescript-eslint/explicit-function-return-type": "off",
@@ -40,10 +41,40 @@ export default tseslint.config(
       "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "linebreak-style": "off",
-      "prettier/prettier": ["error", prettierOptions ?? {}],
+      "prettier/prettier": ["error", prettierOptions],
+      "import/no-unresolved": "error",
+      "import/order": [
+        "warn",
+        {
+          groups: ["builtin", "external", "internal", "parent", "sibling", "index"],
+          pathGroups: [
+            {
+              pattern: "__test-utils__/*",
+              group: "internal",
+              position: "before",
+            },
+            {
+              pattern: "@libs/**",
+              group: "internal",
+              position: "before",
+            },
+            {
+              pattern: "@product/**",
+              group: "internal",
+              position: "after",
+            },
+          ],
+          pathGroupsExcludedImportTypes: ["builtin"],
+          alphabetize: { order: "asc", caseInsensitive: true },
+        },
+      ],
     },
-    plugins: {
-      prettier: prettierPlugin,
+    settings: {
+      "import/resolver": {
+        typescript: {
+          project: "./tsconfig.json",
+        },
+      },
     },
   },
 );

@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { IBaseRepository } from "src/libs/domain/repositories";
-import { Product, Product_Detail, Product_Image, Product_Price } from "src/product/domain/entities";
+import { IBaseRepository } from "@libs/domain/repositories";
+import { Product, Product_Detail, Product_Image, Product_Price } from "@product/domain/entities";
 import {
   FilterDTO,
   ProductCatalogDTO,

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager, UpdateResult } from "typeorm";
 
-import { ProductCatalogDTO, ProductSummaryDTO } from "src/product/application/dto";
-import { Product } from "src/product/domain/entities";
+import { ProductCatalogDTO, ProductSummaryDTO } from "@product/application/dto";
+import { Product } from "@product/domain/entities";
 import ProductRepository from "./Product.repository";
 
 describe("ProductRepository", () => {

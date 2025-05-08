@@ -8,9 +8,9 @@ import {
   ApiForbiddenResponse,
   ApiStandardResponse,
   ResponseType,
-} from "src/libs/common/decorators";
-import { to_FilterDTO } from "src/libs/common/mappers";
-import { ReviewService } from "src/product/application/services";
+} from "@libs/common/decorators";
+import { to_FilterDTO } from "@libs/common/mappers";
+import { ReviewService } from "@product/application/services";
 import {
   ParamDTO,
   ResponseDTO,

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { IMainRepository } from "src/libs/domain/repositories";
+import { IMainRepository } from "@libs/domain/repositories";
 import MainService from "./Main.service";
 
 describe("MainService", () => {

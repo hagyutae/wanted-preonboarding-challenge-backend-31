@@ -1,4 +1,4 @@
-import getValidateDTO from "src/__test-utils__/getValidateDTO";
+import getValidateDTO from "__test-utils__/getValidateDTO";
 
 import BrandDTO from "./Brand.dto";
 
