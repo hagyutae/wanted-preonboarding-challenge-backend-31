@@ -125,8 +125,8 @@ export class ProductsController {
   @Post(':id/reviews')
   async createReview(
     @Param('id', new ParseIntPipe()) productId: number,
-    @Body() dto: CreateReviewRequestDto,
     @RandomUser() userId: number,
+    @Body() dto: CreateReviewRequestDto,
   ): Promise<CreateReviewResponseDto> {
     return createSuccessResponse(
       await this.reviewsService.createReview(productId, userId, dto),

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CategoryRepository } from './categories.repository';
 import { GetProductsByCategoryIdRequestDto } from './dto/category.dto';
@@ -14,7 +14,11 @@ export class CategoriesService {
   }
 
   async getCategoryById(id: number): Promise<CategoryWithRelations> {
-    return this.categoryRepository.getCategoryById(id);
+    const category = await this.categoryRepository.getCategoryById(id);
+    if (!category) {
+      throw new NotFoundException('카테고리를 찾을 수 없습니다.');
+    }
+    return category;
   }
 
   async getProductsByCategoryId(
