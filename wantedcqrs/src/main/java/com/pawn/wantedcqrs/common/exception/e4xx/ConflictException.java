@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatus;
 
 public enum ConflictException implements ResponseDefinition {
 
-    CONFLICT(HttpStatus.CONFLICT, "CONFLICT", "리소스 충돌 발생");
+    CONFLICT(HttpStatus.CONFLICT, "CONFLICT", "리소스 충돌 발생"),
+    PRODUCT_SLUG_DUP(HttpStatus.CONFLICT, "PRODUCT_SLUG_DUP", "이미 존재하는 Slug 입니다."),;
 
     private final ResponseException responseException;
 
