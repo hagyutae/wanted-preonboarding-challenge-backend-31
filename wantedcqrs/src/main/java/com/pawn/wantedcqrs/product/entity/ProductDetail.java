@@ -1,5 +1,6 @@
 package com.pawn.wantedcqrs.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -78,15 +79,21 @@ public class ProductDetail {
     public static class Dimensions {
 
         @Column(name = "width")
+        @JsonProperty("width")
         private int width;
 
         @Column(name = "height")
+        @JsonProperty("height")
         private int height;
 
         @Column(name = "depth")
+        @JsonProperty("depth")
         private int depth;
 
-        protected Dimensions(int width, int height, int depth) {
+        protected Dimensions(
+                @JsonProperty("width") int width,
+                @JsonProperty("height") int height,
+                @JsonProperty("depth") int depth) {
             this.width = width;
             this.height = height;
             this.depth = depth;
@@ -99,12 +106,15 @@ public class ProductDetail {
     public static class AdditionalInfo {
 
         @Column(name = "assembly_required")
+        @JsonProperty("assembly_required")
         private boolean assemblyRequired;
 
         @Column(name = "assembly_time")
         private String assemblyTime;
 
-        protected AdditionalInfo(boolean assemblyRequired, String assemblyTime) {
+        protected AdditionalInfo(
+                @JsonProperty("assembly_required") boolean assemblyRequired,
+                @JsonProperty("assembly_time") String assemblyTime) {
             this.assemblyRequired = assemblyRequired;
             this.assemblyTime = assemblyTime;
         }
