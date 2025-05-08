@@ -11,7 +11,9 @@ import {
   ValidateNested,
 } from "class-validator";
 
-import { BrandDTO, ImageDTO, SellerDTO } from "@product/presentation/dto";
+import BrandDTO from "@product/presentation/dto/model/Brand.dto";
+import ImageDTO from "@product/presentation/dto/model/Image.dto";
+import SellerDTO from "@product/presentation/dto/model/Seller.dto";
 import ProductCatalogDTO from "./ProductCatalog.dto";
 
 class ProductSummaryOfBrandDTO extends PickType(BrandDTO, ["id", "name"] as const) {}

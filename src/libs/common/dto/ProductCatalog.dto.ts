@@ -3,16 +3,14 @@ import { Type } from "class-transformer";
 import { IsArray, IsDate, IsDefined, IsIn, IsInt, IsString, ValidateNested } from "class-validator";
 
 import { ProductOptionGroupDTO } from "@product/application/dto";
-import {
-  BrandDTO,
-  ImageDTO,
-  ProductDetailDTO,
-  ProductPriceDTO,
-  RatingDTO,
-  SellerDTO,
-  TagDTO,
-} from "@product/presentation/dto";
-import { CategoryDTO } from "@category/presentation/dto";
+import BrandDTO from "@product/presentation/dto/model/Brand.dto";
+import ImageDTO from "@product/presentation/dto/model/Image.dto";
+import ProductDetailDTO from "@product/presentation/dto/model/ProductDetail.dto";
+import ProductPriceDTO from "@product/presentation/dto/model/ProductPrice.dto";
+import SellerDTO from "@product/presentation/dto/model/Seller.dto";
+import TagDTO from "@product/presentation/dto/model/Tag.dto";
+import RatingDTO from "@product/presentation/dto/response/Rating.dto";
+import CategoryDTO from "@category/presentation/dto/Category.dto";
 
 export default class ProductCatalogDTO {
   @ApiProperty({ description: "상품 ID", example: 123 })
