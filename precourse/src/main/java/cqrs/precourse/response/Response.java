@@ -18,8 +18,7 @@ public class Response<T> {
         return new Response<>(true, data, "요청이 성공적으로 처리되었습니다.");
     }
 
-    public static <T> Response<T> fail(String message) {
-        return new Response<>(false, null, message);
+    public static <T> Response<T> fail(ErrorCode errorCode) {
+        return new Response<>(false, null, null);
     }
 }
-
