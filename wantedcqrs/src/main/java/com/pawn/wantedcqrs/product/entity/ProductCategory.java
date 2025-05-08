@@ -27,14 +27,14 @@ public class ProductCategory {
 
     //    is_primary: 주요 카테고리 여부
     @Column(name = "is_primary")
-    private boolean is_primary = false;
+    private boolean isPrimary = false;
 
     @Builder
-    protected ProductCategory(Long id, Long productId, Long categoryId, boolean is_primary) {
+    protected ProductCategory(Long id, Long productId, Long categoryId, boolean isPrimary) {
         this.id = id;
         this.productId = productId;
         this.categoryId = categoryId;
-        this.is_primary = is_primary;
+        this.isPrimary = isPrimary;
     }
 
 }
