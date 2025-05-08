@@ -1,0 +1,21 @@
+spring:
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    clean-disabled: true
+    validate-on-migrate: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/commerce
+    username: wanted
+    password: wanted123!@#
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
