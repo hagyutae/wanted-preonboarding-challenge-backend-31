@@ -1,7 +1,7 @@
 import { Catch, InternalServerErrorException, ArgumentsHost } from "@nestjs/common";
 import { Response } from "express";
 
-import { ErrorCode } from "src/product/presentation/dto/Error.dto";
+import ErrorCode from "../constants/ErrorCode";
 
 @Catch(InternalServerErrorException)
 export default class InternalServerErrorExceptionFilter {

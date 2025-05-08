@@ -1,4 +1,3 @@
-export { default as ErrorDTO, HttpStatusToErrorCodeMap } from "./Error.dto";
 export { default as ResponseDTO } from "./Response.dto";
 
 export { default as CategoryQueryDTO } from "./request/CategoryQuery.dto";

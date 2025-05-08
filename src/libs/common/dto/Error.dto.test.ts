@@ -1,7 +1,8 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
-import ErrorDTO, { ErrorCode, ErrorDetails, HttpStatusToErrorCodeMap } from "./Error.dto";
+import ErrorCode, { HttpStatusToErrorCodeMap } from "../constants/ErrorCode";
+import ErrorDTO, { ErrorDetails } from "./Error.dto";
 
 describe("ErrorDTO", () => {
   const validateDTO = async (dto: Partial<ErrorDTO>) => {

@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, ConflictException, ExceptionFilter } from "@nestjs/common";
 import { Response } from "express";
 
-import { ErrorCode } from "src/product/presentation/dto/Error.dto";
+import ErrorCode from "../constants/ErrorCode";
 
 @Catch(ConflictException)
 export default class ConflictExceptionFilter implements ExceptionFilter {
