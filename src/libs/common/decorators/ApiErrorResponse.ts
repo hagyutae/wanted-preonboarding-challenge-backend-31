@@ -1,7 +1,7 @@
-import { applyDecorators as apply_decorators } from "@nestjs/common";
+import { applyDecorators } from "@nestjs/common";
 import { ApiExtraModels, ApiResponse, getSchemaPath } from "@nestjs/swagger";
 
-import { ErrorDTO, HttpStatusToErrorCodeMap } from "../dto";
+import { ErrorDTO, HttpStatusToErrorCodeMap } from "src/product/presentation/dto";
 
 export function ApiBadRequestResponse(description = "입력 데이터가 유효하지 않습니다..") {
   return get_apply_decorators(400, description);
@@ -28,7 +28,7 @@ export function ApiInternalServerErrorResponse(description = "서버 내부 오�
 }
 
 export default function ApiErrorResponse() {
-  return apply_decorators(
+  return applyDecorators(
     ApiBadRequestResponse(),
     ApiUnauthorizedResponse(),
     ApiForbiddenResponse(),
@@ -48,7 +48,7 @@ function get_apply_decorators(status: number, description: string) {
     },
   };
 
-  return apply_decorators(
+  return applyDecorators(
     ApiExtraModels(ErrorDTO),
     ApiResponse({
       status,

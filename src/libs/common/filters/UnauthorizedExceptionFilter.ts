@@ -1,7 +1,7 @@
 import { ArgumentsHost, Catch, UnauthorizedException } from "@nestjs/common";
 import { Response } from "express";
 
-import { ErrorCode } from "../dto/Error.dto";
+import { ErrorCode } from "src/product/presentation/dto/Error.dto";
 
 @Catch(UnauthorizedException)
 export default class UnauthorizedExceptionFilter {

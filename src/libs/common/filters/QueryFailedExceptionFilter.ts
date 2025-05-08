@@ -2,7 +2,7 @@ import { Catch, ExceptionFilter, ArgumentsHost } from "@nestjs/common";
 import { Response } from "express";
 import { QueryFailedError } from "typeorm";
 
-import { ErrorCode } from "../dto/Error.dto";
+import { ErrorCode } from "src/product/presentation/dto/Error.dto";
 
 @Catch(QueryFailedError)
 export default class QueryFailedExceptionFilter implements ExceptionFilter {

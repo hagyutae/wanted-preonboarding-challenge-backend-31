@@ -3,9 +3,9 @@ import { NestFactory, Reflector } from "@nestjs/core";
 import { ValidationError } from "class-validator";
 
 import { JwtInterceptor } from "./product/infrastructure/auth/jwtInterceptor";
-import * as exception_filters from "./product/presentation/filters";
+import * as exception_filters from "./libs/common/filters";
 import generatorSwagger from "./utility/generatorSwagger";
-import { ResponseInterceptor } from "./utility/ResponseInterceptor";
+import { ResponseInterceptor } from "./libs/common/interceptors/ResponseInterceptor";
 import { AppModule } from "./module";
 
 async function bootstrap() {

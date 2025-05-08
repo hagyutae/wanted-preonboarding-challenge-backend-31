@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 
-import { ReviewService } from "src/product/application/services";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -9,7 +8,9 @@ import {
   ApiForbiddenResponse,
   ApiStandardResponse,
   ResponseType,
-} from "../decorators";
+} from "src/libs/common/decorators";
+import { to_FilterDTO } from "src/libs/common/mappers";
+import { ReviewService } from "src/product/application/services";
 import {
   ParamDTO,
   ResponseDTO,
@@ -19,7 +20,6 @@ import {
   ReviewResponseBundle,
   ReviewResponseDTO,
 } from "../dto";
-import { to_FilterDTO } from "../mappers";
 
 @ApiTags("리뷰")
 @ApiBearerAuth()

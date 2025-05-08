@@ -1,14 +1,14 @@
 import { Body, Controller, Delete, Param, Post, Put } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 
-import { ProductOptionsService } from "src/product/application/services";
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
   ApiErrorResponse,
   ApiStandardResponse,
   ResponseType,
-} from "../decorators";
+} from "src/libs/common/decorators";
+import { ProductOptionsService } from "src/product/application/services";
 import { ImageDTO, OptionParamDTO, ParamDTO, ProductOptionDTO, ResponseDTO } from "../dto";
 
 @ApiTags("상품 옵션 관리")

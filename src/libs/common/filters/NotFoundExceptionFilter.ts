@@ -1,7 +1,7 @@
 import { Catch, NotFoundException, ExceptionFilter, ArgumentsHost } from "@nestjs/common";
 import { Response } from "express";
 
-import { ErrorCode } from "../dto/Error.dto";
+import { ErrorCode } from "src/product/presentation/dto/Error.dto";
 
 @Catch(NotFoundException)
 export default class NotFoundExceptionFilter implements ExceptionFilter {
