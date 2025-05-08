@@ -2,9 +2,8 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import * as services from "./product/application/services";
-import { repository_providers, type_orm_config } from "./product/infrastructure/provider";
-import * as controllers from "./product/presentation/controllers";
+import { type_orm_config } from "./libs/config/typeorm.config";
+import ProductModule from "./product/module";
 
 @Module({
   imports: [
@@ -13,8 +12,7 @@ import * as controllers from "./product/presentation/controllers";
       isGlobal: true,
       envFilePath: [".env"],
     }),
+    ProductModule,
   ],
-  providers: [...Object.values(services), ...repository_providers],
-  controllers: [...Object.values(controllers)],
 })
 export class AppModule {}

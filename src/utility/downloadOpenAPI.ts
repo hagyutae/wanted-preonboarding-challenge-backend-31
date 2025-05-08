@@ -5,8 +5,8 @@ import { EntityManager } from "typeorm";
 import * as YAML from "yamljs";
 
 import { Module } from "@nestjs/common";
-import { repository_providers } from "src/product/infrastructure/provider";
 import * as services from "src/product/application/services";
+import repository_providers from "src/product/infrastructure/provider";
 import * as controllers from "src/product/presentation/controllers";
 import generatorSwagger from "./generatorSwagger";
 
