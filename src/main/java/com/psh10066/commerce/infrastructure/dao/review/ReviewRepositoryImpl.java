@@ -1,8 +1,11 @@
 package com.psh10066.commerce.infrastructure.dao.review;
 
+import com.psh10066.commerce.api.dto.request.GetProductReviewsRequest;
+import com.psh10066.commerce.api.dto.response.GetAllReviewsResponse;
 import com.psh10066.commerce.domain.model.review.Review;
 import com.psh10066.commerce.domain.model.review.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,5 +19,10 @@ public class ReviewRepositoryImpl implements ReviewRepository {
     @Override
     public List<Review> findAllByProductId(Long productId) {
         return reviewJpaRepository.findAllByProductId(productId);
+    }
+
+    @Override
+    public Page<GetAllReviewsResponse> getProductReviews(Long productId, GetProductReviewsRequest request) {
+        return reviewJpaRepository.getProductReviews(productId, request);
     }
 }

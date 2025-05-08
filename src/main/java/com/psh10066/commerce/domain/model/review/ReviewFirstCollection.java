@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 public class ReviewFirstCollection {
@@ -18,6 +17,9 @@ public class ReviewFirstCollection {
     }
 
     public BigDecimal getAverage() {
+        if (reviews.isEmpty()) {
+            return null;
+        }
         return BigDecimal.valueOf(reviews.stream().mapToInt(Review::getRating).average().getAsDouble()).setScale(1, RoundingMode.HALF_UP);
     }
 
