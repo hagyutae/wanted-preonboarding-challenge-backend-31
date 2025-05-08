@@ -12,7 +12,7 @@ const config: Config = {
   clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: true,
+  collectCoverage: false,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
@@ -59,9 +59,7 @@ const config: Config = {
   // maxWorkers: "50%",
 
   // An array of directory names to be searched recursively up from the requiring module's location
-  // moduleDirectories: [
-  //   "node_modules"
-  // ],
+  moduleDirectories: ["node_modules", "src"],
 
   // An array of file extensions your modules use
   // moduleFileExtensions: [
@@ -77,7 +75,10 @@ const config: Config = {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "^src/(.*)$": "<rootDir>/src/$1",
+    "^__test-utils__/(.*)$": "<rootDir>/src/__test-utils__/$1",
+    "^@libs/(.*)$": "<rootDir>/src/libs/$1",
+    "^@utility/(.*)$": "<rootDir>/src/utility/$1",
+    "^@product/(.*)$": "<rootDir>/src/product/$1",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

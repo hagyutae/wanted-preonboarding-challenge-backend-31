@@ -3,9 +3,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import { DataSource } from "typeorm";
 
-import * as entities from "../product/infrastructure/entities";
-import repository_providers from "../product/infrastructure/provider";
-import * as views from "../product/infrastructure/views";
+import * as entities from "@product/infrastructure/entities";
+import repository_providers from "@product/infrastructure/provider";
+import * as views from "@product/infrastructure/views";
 
 let container: StartedPostgreSqlContainer;
 let test_module: TestingModule;
