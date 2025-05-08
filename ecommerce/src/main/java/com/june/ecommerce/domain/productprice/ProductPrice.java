@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -34,5 +35,13 @@ public class ProductPrice {
         this.costPrice = costPrice;
         this.currency = currency;
         this.taxRate = BigDecimal.ZERO;
+    }
+
+    public void update(int basePrice, int salePrice, int costPrice, String currency, int taxRate) {
+        Optional.ofNullable(basePrice).ifPresent(b -> this.basePrice = BigDecimal.valueOf(b));
+        Optional.ofNullable(salePrice).ifPresent(s -> this.salePrice = BigDecimal.valueOf(s));
+        Optional.ofNullable(costPrice).ifPresent(s -> this.costPrice = BigDecimal.valueOf(s));
+        Optional.ofNullable(currency).ifPresent(c -> this.currency = currency);
+        Optional.ofNullable(taxRate).ifPresent(tax -> this.taxRate = BigDecimal.valueOf(tax));
     }
 }

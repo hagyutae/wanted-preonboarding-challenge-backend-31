@@ -37,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -280,14 +281,123 @@ public class ProductService {
     /**
      * 상품 수정
      * @param id
-     * @param requestDto
+     * @param dto
      */
-    public void updateProduct(int id, ProductRequestDto requestDto) {
+    public void updateProduct(int id, ProductCreateDto dto) {
+        // 기존 상품 조회
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("상품을 찾을 수 없습니다"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "상품을 찾을 수 없습니다."));
 
-        product.updateProduct(requestDto);
-        productRepository.save(product);
+        // 연관 엔티티 조회
+        Seller seller = sellerRepository.findById(dto.getSellerId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT, "판매자를 찾을 수 없습니다."));
+        Brand brand = brandRepository.findById(dto.getBrandId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT, "브랜드를 찾을 수 없습니다."));
+
+        // 상품 정보 수정
+        product.update(
+                dto.getName(),
+                dto.getSlug(),
+                dto.getShortDescription(),
+                dto.getFullDescription(),
+                seller,
+                brand,
+                dto.getStatus()
+        );
+
+        // 상품 사세 정보 수정
+        ProductDetail detail = productDetailRepository.findByProductId(product.getId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_INPUT, "상품 상세 정보 업데이트 실패"));
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            detail.update(
+                    dto.getDetail().getWeight(),
+                    mapper.writeValueAsString(dto.getDetail().getDimensions()),
+                    dto.getDetail().getMaterials(),
+                    dto.getDetail().getCountryOfOrigin(),
+                    dto.getDetail().getWarrantyInfo(),
+                    dto.getDetail().getCareInstructions(),
+                    mapper.writeValueAsString(dto.getDetail().getAdditionalInfo())
+            );
+        } catch (JsonProcessingException  e) {
+            throw new BusinessException(ErrorCode.INVALID_INPUT, "상품 상세 정보 처리 실패");
+        }
+
+        ProductPrice price = productPriceRepository.findByProductId(product.getId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND, "가격 정보를 찾을 수 없습니다."));
+
+        price.update(
+                dto.getPrice().getBasePrice(),
+                dto.getPrice().getSalePrice(),
+                dto.getPrice().getCostPrice(),
+                dto.getPrice().getCurrency(),
+                dto.getPrice().getTaxRate()
+        );
+
+        // 카테고리
+        productCategoryRepository.deleteByProductId(product.getId());
+        for(ProductCategoryCreateDto categoryCreateDto : dto.getCategories()) {
+            Category category = categoryRepository.findById(categoryCreateDto.getCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
+
+            productCategoryRepository.save(ProductCategory.builder()
+                    .product(product)
+                    .category(category)
+                    .isPrimary(categoryCreateDto.isPrimary())
+                    .build());
+        }
+
+        productOptionRepository.deleteByProductId(product.getId()); // 옵션, 옵션 그룹 제거
+        productOptionGroupRepository.deleteByProductId(product.getId());
+
+        for(ProductOptionGroupCreateDto groupDto : dto.getOptionGroups()) {
+            ProductOptionGroup group = productOptionGroupRepository.save(
+                    ProductOptionGroup.builder()
+                            .product(product)
+                            .name(groupDto.getName())
+                            .displayOrder(groupDto.getDisplayOrder())
+                            .build());
+
+            for(ProductOptionCreateDto optionDto : groupDto.getOptions()) {
+                productOptionRepository.save(ProductOption.builder()
+                        .group(group)
+                        .name(optionDto.getName())
+                        .additionalPrice(optionDto.getAdditionalPrice())
+                        .sku(optionDto.getSku())
+                        .stock(optionDto.getStock())
+                        .displayOrder(optionDto.getDisplayOrder())
+                        .build());
+            }
+        }
+
+        productImageRepository.deleteByProduct(product);
+        for (ProductImageCreateDto imageDto : dto.getImages()) {
+            ProductOption option = null;
+            if (imageDto.getOptionId() != null) {
+                option = productOptionRepository.findById(imageDto.getOptionId())
+                        .orElseThrow(() -> new IllegalArgumentException("옵션을 찾을 수 없습니다."));
+            }
+            productImageRepository.save(ProductImage.builder()
+                    .product(product)
+                    .url(imageDto.getUrl())
+                    .altText(imageDto.getAltText())
+                    .isPrimary(imageDto.isPrimary())
+                    .displayOrder(imageDto.getDisplayOrder())
+                    .productOption(option)
+                    .build());
+        }
+
+        productTagRepository.deleteByProduct(product);
+        for (Integer tagId : dto.getTags()) {
+            Tag tag = tagRepository.findById(tagId)
+                    .orElseThrow(() -> new IllegalArgumentException("태그를 찾을 수 없습니다."));
+            productTagRepository.save(ProductTag.builder()
+                    .product(product)
+                    .tag(tag)
+                    .build());
+        }
 
     }
 

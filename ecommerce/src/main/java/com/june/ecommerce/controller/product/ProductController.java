@@ -61,12 +61,12 @@ public class ProductController {
      * @param requestDto
      * @return
      */
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateProduct(@PathVariable int id,
-//                                           @RequestBody ProductRequestDto requestDto) {
-//        productService.updateProduct(id, requestDto);
-//        return ResponseEntity.ok().build();
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable int id,
+                                           @RequestBody ProductCreateDto requestDto) {
+        productService.updateProduct(id, requestDto);
+        return ResponseEntity.ok().build();
+    }
 
     /**
      * 상품 삭제
