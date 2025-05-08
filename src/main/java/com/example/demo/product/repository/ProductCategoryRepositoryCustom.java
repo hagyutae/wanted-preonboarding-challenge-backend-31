@@ -1,7 +1,7 @@
 package com.example.demo.product.repository;
 
-import com.example.demo.product.entity.ProductCategoryEntity;
 import com.example.demo.product.dto.FeaturedCategory;
+import com.example.demo.product.entity.ProductCategoryEntity;
 
 import java.util.Collection;
 import java.util.List;

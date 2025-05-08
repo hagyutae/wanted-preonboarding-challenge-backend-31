@@ -2,7 +2,6 @@ package com.example.demo.review.service;
 
 import com.example.demo.common.exception.ErrorCode;
 import com.example.demo.common.exception.GlobalException;
-import com.example.demo.common.response.PageResponse;
 import com.example.demo.product.entity.ProductEntity;
 import com.example.demo.product.repository.ProductRepository;
 import com.example.demo.review.ReviewError;
@@ -11,8 +10,6 @@ import com.example.demo.review.controller.request.UpdateReviewRequest;
 import com.example.demo.review.dto.*;
 import com.example.demo.review.entity.ReviewEntity;
 import com.example.demo.review.repository.ReviewRepository;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

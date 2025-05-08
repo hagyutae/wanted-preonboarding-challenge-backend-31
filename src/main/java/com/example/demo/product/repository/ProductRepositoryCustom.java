@@ -1,7 +1,7 @@
 package com.example.demo.product.repository;
 
-import com.example.demo.product.entity.ProductEntity;
 import com.example.demo.product.dto.ProductQueryFilter;
+import com.example.demo.product.entity.ProductEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

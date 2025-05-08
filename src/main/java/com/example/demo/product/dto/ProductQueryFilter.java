@@ -4,7 +4,6 @@ import com.example.demo.product.entity.ProductStatus;
 import lombok.Builder;
 
 import java.util.Collection;
-import java.util.List;
 
 @Builder
 public record ProductQueryFilter(

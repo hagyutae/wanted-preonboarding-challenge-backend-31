@@ -1,9 +1,9 @@
 package com.example.demo.product.service;
 
-import com.example.demo.product.entity.ProductEntity;
-import com.example.demo.product.entity.ProductImageEntity;
 import com.example.demo.product.dto.FeaturedCategory;
 import com.example.demo.product.dto.MainProductSummary;
+import com.example.demo.product.entity.ProductEntity;
+import com.example.demo.product.entity.ProductImageEntity;
 import com.example.demo.product.repository.ProductCategoryRepository;
 import com.example.demo.product.repository.ProductImageRepository;
 import com.example.demo.product.repository.ProductRepository;

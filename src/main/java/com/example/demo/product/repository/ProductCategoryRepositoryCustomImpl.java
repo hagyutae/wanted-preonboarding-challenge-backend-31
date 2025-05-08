@@ -1,9 +1,9 @@
 package com.example.demo.product.repository;
 
 import com.example.demo.category.entity.QCategoryEntity;
-import com.example.demo.product.entity.ProductCategoryEntity;
 import com.example.demo.product.dto.FeaturedCategory;
 import com.example.demo.product.dto.QFeaturedCategory;
+import com.example.demo.product.entity.ProductCategoryEntity;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +19,7 @@ import static com.example.demo.product.entity.QProductDetailEntity.productDetail
 import static com.example.demo.product.entity.QProductEntity.productEntity;
 import static com.example.demo.product.entity.QProductPriceEntity.productPriceEntity;
 import static com.example.demo.user.entity.QSellerEntity.sellerEntity;
+
 ;
 
 @Repository

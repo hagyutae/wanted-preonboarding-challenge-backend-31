@@ -1,8 +1,8 @@
 package com.example.demo.product.repository;
 
+import com.example.demo.product.dto.ProductQueryFilter;
 import com.example.demo.product.entity.ProductEntity;
 import com.example.demo.product.entity.ProductStatus;
-import com.example.demo.product.dto.ProductQueryFilter;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -27,8 +27,8 @@ import static com.example.demo.brand.entity.QBrandEntity.brandEntity;
 import static com.example.demo.product.entity.QProductCategoryEntity.productCategoryEntity;
 import static com.example.demo.product.entity.QProductDetailEntity.productDetailEntity;
 import static com.example.demo.product.entity.QProductEntity.productEntity;
-import static com.example.demo.productoption.entity.QProductOptionEntity.productOptionEntity;
 import static com.example.demo.product.entity.QProductPriceEntity.productPriceEntity;
+import static com.example.demo.productoption.entity.QProductOptionEntity.productOptionEntity;
 import static com.example.demo.user.entity.QSellerEntity.sellerEntity;
 import static java.util.Objects.nonNull;
 
