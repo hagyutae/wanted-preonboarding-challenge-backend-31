@@ -38,11 +38,13 @@ public class Product {
 
     private String status;
 
-    public void updateProduct(ProductRequestDto requestDto) {
-        Optional.ofNullable(requestDto.getName()).ifPresent(name -> this.name = name);
-        Optional.ofNullable(requestDto.getSlug()).ifPresent(slug -> this.slug = slug);
-        Optional.ofNullable(requestDto.getShortDescription()).ifPresent(shortDescription -> this.shortDescription = shortDescription);
-        Optional.ofNullable(requestDto.getFullDescription()).ifPresent(fullDescription -> this.fullDescription = fullDescription);
+    public void update(String name, String slug, String shortDescription, String fullDescription, Seller seller, Brand brand, String status) {
+        Optional.ofNullable(name).ifPresent(value -> this.name = value);
+        Optional.ofNullable(slug).ifPresent(value -> this.slug = value);
+        Optional.ofNullable(shortDescription).ifPresent(value -> this.shortDescription = value);
+        Optional.ofNullable(fullDescription).ifPresent(value -> this.fullDescription = value);
+        Optional.ofNullable(seller).ifPresent(value -> this.seller = value);
+        Optional.ofNullable(brand).ifPresent(value -> this.brand = value);
+        Optional.ofNullable(status).ifPresent(value -> this.status = value);
     }
-
 }

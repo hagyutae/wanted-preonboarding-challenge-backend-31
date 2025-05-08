@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Optional;
+
 @Entity
 @Getter
 public class ProductDetail {
@@ -41,5 +43,15 @@ public class ProductDetail {
         this.warrantyInfo = warrantyInfo;
         this.careInstructions = careInstructions;
         this.additionalInfo = additionalInfo;
+    }
+
+    public void update(double weight, String dimensions, String materials, String countryOfOrigin, String warrantyInfo, String careInstructions, String additionalInfo) {
+        Optional.ofNullable(weight).ifPresent(w -> this.weight = w);
+        Optional.ofNullable(dimensions).ifPresent(d -> this.dimensions = d);
+        Optional.ofNullable(materials).ifPresent(m -> this.materials = m);
+        Optional.ofNullable(countryOfOrigin).ifPresent(o -> this.countryOfOrigin = o);
+        Optional.ofNullable(warrantyInfo).ifPresent(w -> this.warrantyInfo = w);
+        Optional.ofNullable(careInstructions).ifPresent(c -> this.careInstructions = c);
+        Optional.ofNullable(additionalInfo).ifPresent(o -> this.additionalInfo = o);
     }
 }
