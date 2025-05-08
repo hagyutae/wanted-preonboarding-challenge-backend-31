@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "product_categories")
-@Builder
 public class ProductCategory {
 
     @Id
@@ -30,7 +29,8 @@ public class ProductCategory {
     @Column(name = "is_primary")
     private boolean is_primary = false;
 
-    public ProductCategory(Long id, Long productId, Long categoryId, boolean is_primary) {
+    @Builder
+    protected ProductCategory(Long id, Long productId, Long categoryId, boolean is_primary) {
         this.id = id;
         this.productId = productId;
         this.categoryId = categoryId;

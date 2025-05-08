@@ -13,7 +13,6 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "products")
-@Builder
 public class Product extends AbstractDateTimeEntity {
 
     @Id
@@ -56,7 +55,7 @@ public class Product extends AbstractDateTimeEntity {
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, optional = false)
     private ProductPrice productPrice;
 
-    protected Product(Long id, String name, String slug, String shortDescription, String fullDescription, Long sellerId, Long brandId, ProductStatus status, ProductDetail productDetail, ProductPrice productPrice) {
+    private Product(Long id, String name, String slug, String shortDescription, String fullDescription, Long sellerId, Long brandId, ProductStatus status) {
         this.id = id;
         this.name = name;
         this.slug = slug;
@@ -65,6 +64,11 @@ public class Product extends AbstractDateTimeEntity {
         this.sellerId = sellerId;
         this.brandId = brandId;
         this.status = status;
+    }
+
+    @Builder
+    protected Product(Long id, String name, String slug, String shortDescription, String fullDescription, Long sellerId, Long brandId, ProductStatus status, ProductDetail productDetail, ProductPrice productPrice) {
+        this(id, name, slug, shortDescription, fullDescription, sellerId, brandId, status);
         this.setProductDetail(productDetail);
         this.setProductPrice(productPrice);
     }

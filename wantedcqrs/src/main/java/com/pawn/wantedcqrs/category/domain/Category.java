@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "categories")
-@Builder
 public class Category {
 
     @Id
@@ -42,6 +41,7 @@ public class Category {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Builder
     public Category(Long id, String name, String slug, String description, Long parentId, Integer level, String imageUrl) {
         this.id = id;
         this.name = name;

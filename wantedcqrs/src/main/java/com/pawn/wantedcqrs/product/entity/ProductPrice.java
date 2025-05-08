@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "product_prices")
-@Builder
 public class ProductPrice {
 
     @Id
@@ -46,14 +45,19 @@ public class ProductPrice {
     @Column(name = "tax_rate", precision = 5, scale = 2)
     private BigDecimal taxRate;
 
-    protected ProductPrice(Long id, Product product, BigDecimal basePrice, BigDecimal salePrice, BigDecimal costPrice, Currency currency, BigDecimal taxRate) {
+    private ProductPrice(Long id, BigDecimal basePrice, BigDecimal salePrice, BigDecimal costPrice, Currency currency, BigDecimal taxRate) {
         this.id = id;
-        this.product = product;
         this.basePrice = basePrice;
         this.salePrice = salePrice;
         this.costPrice = costPrice;
         this.currency = currency;
         this.taxRate = taxRate;
+    }
+
+    @Builder
+    protected ProductPrice(Long id, Product product, BigDecimal basePrice, BigDecimal salePrice, BigDecimal costPrice, Currency currency, BigDecimal taxRate) {
+        this(id, basePrice, salePrice, costPrice, currency, taxRate);
+        this.setProduct(product);
     }
 
     public void setProduct(Product product) {

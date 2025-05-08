@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "tags")
-@Builder
 public class Tag {
 
     @Id
@@ -26,7 +25,8 @@ public class Tag {
     @Column(name = "slug", length = 100, nullable = false, unique = true)
     private String slug;
 
-    public Tag(Long id, String name, String slug) {
+    @Builder
+    protected Tag(Long id, String name, String slug) {
         this.id = id;
         this.name = name;
         this.slug = slug;

@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "product_images")
-@Builder
 public class ProductImage {
 
     @Id
@@ -42,7 +41,8 @@ public class ProductImage {
     @Column(name = "option_id", nullable = false)
     private Long optionId;
 
-    public ProductImage(Long id, String url, String altText, Boolean isPrimary, Integer displayOrder, Long productId, Long optionId) {
+    @Builder
+    protected ProductImage(Long id, String url, String altText, Boolean isPrimary, Integer displayOrder, Long productId, Long optionId) {
         this.id = id;
         this.url = url;
         this.altText = altText;

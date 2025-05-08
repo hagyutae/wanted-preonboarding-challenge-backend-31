@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "sellers")
-@Builder
 public class Seller {
 
     @Id
@@ -48,7 +47,8 @@ public class Seller {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt; // TODO: 더 좋은 방법 찾기
 
-    public Seller(Long id, String name, String description, String logoUrl, BigDecimal rating, String contactEmail, String contactPhone, LocalDateTime createdAt) {
+    @Builder
+    protected Seller(Long id, String name, String description, String logoUrl, BigDecimal rating, String contactEmail, String contactPhone, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -58,4 +58,5 @@ public class Seller {
         this.contactPhone = contactPhone;
         this.createdAt = createdAt;
     }
+
 }

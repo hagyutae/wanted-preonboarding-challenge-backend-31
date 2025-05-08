@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "reviews")
-@Builder
 public class Review {
 
     @Id
@@ -46,6 +45,7 @@ public class Review {
     @Column(name = "helpful_votes")
     private Integer helpful_votes = 0;
 
+    @Builder
     protected Review(Long id, Long productId, Long userId, Integer rating, String title, String content, Boolean verifiedPurchase, Integer helpful_votes) {
         this.id = id;
         this.productId = productId;

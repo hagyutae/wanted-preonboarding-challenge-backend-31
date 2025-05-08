@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "product_details")
-@Builder
 public class ProductDetail {
 
     @Id
@@ -41,7 +40,7 @@ public class ProductDetail {
     private String materials;
 
     //    country_of_origin: 원산지
-    @Column(name = "country_of_origin" , length = 500)
+    @Column(name = "country_of_origin", length = 500)
     private String countryOfOrigin;
 
     //    warranty_info: 보증 정보
@@ -57,9 +56,8 @@ public class ProductDetail {
     @Column(name = "additional_info", columnDefinition = "jsonb")
     private AdditionalInfo additionalInfo;
 
-    protected ProductDetail(Long id, Product product, BigDecimal weight, Dimensions dimensions, String materials, String countryOfOrigin, String warrantyInfo, String careInstructions, AdditionalInfo additionalInfo) {
+    private ProductDetail(Long id, BigDecimal weight, Dimensions dimensions, String materials, String countryOfOrigin, String warrantyInfo, String careInstructions, AdditionalInfo additionalInfo) {
         this.id = id;
-        this.product = product;
         this.weight = weight;
         this.dimensions = dimensions;
         this.materials = materials;
@@ -67,6 +65,12 @@ public class ProductDetail {
         this.warrantyInfo = warrantyInfo;
         this.careInstructions = careInstructions;
         this.additionalInfo = additionalInfo;
+    }
+
+    @Builder
+    protected ProductDetail(Long id, Product product, BigDecimal weight, Dimensions dimensions, String materials, String countryOfOrigin, String warrantyInfo, String careInstructions, AdditionalInfo additionalInfo) {
+        this(id, weight, dimensions, materials, countryOfOrigin, warrantyInfo, careInstructions, additionalInfo);
+        this.setProduct(product);
     }
 
     @Getter
