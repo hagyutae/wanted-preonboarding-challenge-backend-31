@@ -1,10 +1,14 @@
-package com.pawn.wantedcqrs.product.entity;
+package com.pawn.wantedcqrs.productOptionGroup.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -30,11 +34,31 @@ public class ProductOptionGroup {
     @Column(name = "display_order")
     private int displayOrder;
 
+    @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ProductOption> options = new ArrayList<>();
+
     public ProductOptionGroup(Long id, Long productId, String name, int displayOrder) {
         this.id = id;
         this.productId = productId;
         this.name = name;
         this.displayOrder = displayOrder;
+    }
+
+    public ProductOptionGroup(Long id, Long productId, String name, int displayOrder, List<ProductOption> options) {
+        this(id, productId, name, displayOrder);
+        if (Objects.nonNull(options)) {
+            options.forEach(this::addOption);
+        }
+    }
+
+    public void addOption(ProductOption productOption) {
+        options.add(productOption);
+        productOption.setOptionGroup(this);
+    }
+
+    public void removeOption(ProductOption productOption) {
+        options.remove(productOption);
+        productOption.setOptionGroup(null);
     }
 
 }

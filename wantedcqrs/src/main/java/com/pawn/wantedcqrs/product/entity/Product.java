@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -63,7 +65,21 @@ public class Product extends AbstractDateTimeEntity {
         this.sellerId = sellerId;
         this.brandId = brandId;
         this.status = status;
+        this.setProductDetail(productDetail);
+        this.setProductPrice(productPrice);
+    }
+
+    public void setProductDetail(ProductDetail productDetail) {
+        if (Objects.nonNull(productDetail)) {
+            productDetail.setProduct(this);
+        }
         this.productDetail = productDetail;
+    }
+
+    public void setProductPrice(ProductPrice productPrice) {
+        if (Objects.nonNull(productPrice)) {
+            productPrice.setProduct(this);
+        }
         this.productPrice = productPrice;
     }
 

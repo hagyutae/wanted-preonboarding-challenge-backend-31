@@ -56,4 +56,8 @@ public class ProductPrice {
         this.taxRate = taxRate;
     }
 
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
 }

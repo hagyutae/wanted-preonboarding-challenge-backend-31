@@ -107,5 +107,9 @@ public class ProductDetail {
 
     }
 
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
 }
 

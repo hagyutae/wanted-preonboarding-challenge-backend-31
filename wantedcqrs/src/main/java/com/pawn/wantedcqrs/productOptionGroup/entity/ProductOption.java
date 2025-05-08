@@ -1,4 +1,4 @@
-package com.pawn.wantedcqrs.product.entity;
+package com.pawn.wantedcqrs.productOptionGroup.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,10 +20,6 @@ public class ProductOption {
     @Column(name = "id")
     private Long id;
 
-    //    option_group_id: 옵션 그룹 ID (FK)
-    @Column(name = "option_group_id", nullable = false)
-    private Long optionGroupId;
-
     //    name: 옵션명 (예: "빨강", "XL")
     @Column(name = "name", length = 100, nullable = false)
     private String name;
@@ -42,16 +38,25 @@ public class ProductOption {
 
     //    display_order: 표시 순서
     @Column(name = "display_order", nullable = false)
-    private Integer display_order;
+    private Integer displayOrder;
 
-    public ProductOption(Long id, Long optionGroupId, String name, BigDecimal additionalPrice, String sku, Integer stock, Integer display_order) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_group_id", nullable = false)
+    private ProductOptionGroup optionGroup;
+
+    protected ProductOption(Long id, String name, BigDecimal additionalPrice, String sku, Integer stock, Integer displayOrder, ProductOptionGroup optionGroup) {
         this.id = id;
-        this.optionGroupId = optionGroupId;
         this.name = name;
         this.additionalPrice = additionalPrice;
         this.sku = sku;
         this.stock = stock;
-        this.display_order = display_order;
+        this.displayOrder = displayOrder;
+        this.optionGroup = optionGroup;
+        this.setOptionGroup(optionGroup);
+    }
+
+    public void setOptionGroup(ProductOptionGroup optionGroup) {
+        this.optionGroup = optionGroup;
     }
 
 }
