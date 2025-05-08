@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DrizzleService } from '~/database/drizzle.service';
-import { and, asc, desc, eq, or, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, or, sql } from 'drizzle-orm';
 import { reviews as reviewsSchema } from '~/database/schema';
 import {
   GetReviewsRequestDto,
@@ -28,7 +28,7 @@ export class ReviewsRepository {
       },
       where: and(
         eq(reviewsSchema.productId, productId),
-        eq(reviewsSchema.rating, rating),
+        rating ? gte(reviewsSchema.rating, rating) : undefined,
       ),
       orderBy: this.getOrderBy(sort),
       limit: per_page,
@@ -69,7 +69,7 @@ export class ReviewsRepository {
       .where(
         and(
           eq(reviewsSchema.productId, productId),
-          eq(reviewsSchema.rating, rating),
+          rating ? gte(reviewsSchema.rating, rating) : undefined,
         ),
       );
 
@@ -98,8 +98,10 @@ export class ReviewsRepository {
 
   async createReview(
     productId: number,
+    userId: number,
     dto: CreateReviewRequestDto,
   ): Promise<ReviewWithRelations> {
+    const now = new Date();
     const [review] = await this.drizzleService.db
       .insert(reviewsSchema)
       .values({
@@ -109,8 +111,10 @@ export class ReviewsRepository {
         title: dto.title,
         content: dto.content,
         verifiedPurchase: true,
-        userId: 0,
+        userId,
         helpfulVotes: 0,
+        createdAt: now,
+        updatedAt: now,
       })
       .returning({
         id: reviewsSchema.id,

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { ReviewsRepository } from './reviews.repository';
 import {
   GetReviewsRequestDto,
@@ -23,35 +27,41 @@ export class ReviewsService {
     };
   }
 
-  async createReview(productId: number, dto: CreateReviewRequestDto) {
-    return this.reviewsRepository.createReview(productId, dto);
+  async createReview(
+    productId: number,
+    userId: number,
+    dto: CreateReviewRequestDto,
+  ) {
+    return this.reviewsRepository.createReview(productId, userId, dto);
   }
 
-  async updateReview(id: number, dto: UpdateReviewRequestDto) {
+  async updateReview(id: number, userId: number, dto: UpdateReviewRequestDto) {
     const review = await this.reviewsRepository.getReview(id);
     if (!review) {
       throw new NotFoundException('리뷰를 찾을 수 없습니다.');
     }
 
-    // TODO: 인증된 사용자의 리뷰인지 확인
-    // if (review.userId !== currentUserId) {
-    //   throw new ForbiddenException('다른 사용자의 리뷰를 수정할 권한이 없습니다.');
-    // }
+    if (review.userId !== userId) {
+      throw new ForbiddenException(
+        '다른 사용자의 리뷰를 수정할 권한이 없습니다.',
+      );
+    }
 
     const updatedReview = await this.reviewsRepository.updateReview(id, dto);
     return updatedReview;
   }
 
-  async deleteReview(id: number): Promise<void> {
+  async deleteReview(id: number, userId: number): Promise<void> {
     const review = await this.reviewsRepository.getReview(id);
     if (!review) {
       throw new NotFoundException('리뷰를 찾을 수 없습니다.');
     }
 
-    // TODO: 인증된 사용자의 리뷰인지 확인
-    // if (review.userId !== currentUserId) {
-    //   throw new ForbiddenException('다른 사용자의 리뷰를 삭제할 권한이 없습니다.');
-    // }
+    if (review.userId !== userId) {
+      throw new ForbiddenException(
+        '다른 사용자의 리뷰를 삭제할 권한이 없습니다.',
+      );
+    }
 
     await this.reviewsRepository.deleteReview(id);
   }

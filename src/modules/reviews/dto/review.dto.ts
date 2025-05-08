@@ -40,8 +40,8 @@ export type GetReviewResponseDto = z.infer<typeof GetReviewResponseDtoSchema>;
 // 리뷰 등록 요청
 export const CreateReviewRequestDtoSchema = z.object({
   rating: z.number().min(1).max(5),
-  title: z.string().optional(),
-  content: z.string().optional(),
+  title: z.string(),
+  content: z.string(),
 });
 export type CreateReviewRequestDto = z.infer<
   typeof CreateReviewRequestDtoSchema

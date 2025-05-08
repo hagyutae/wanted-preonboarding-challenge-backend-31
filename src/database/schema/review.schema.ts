@@ -6,13 +6,14 @@ import {
   integer,
   timestamp,
   boolean,
+  serial,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { products } from './product.schema';
 import { users } from './user.schema';
 
 export const reviews = pgTable('reviews', {
-  id: bigint('id', { mode: 'number' }).primaryKey().notNull(),
+  id: serial('id').primaryKey(),
   productId: bigint('product_id', { mode: 'number' }).references(
     () => products.id,
     { onDelete: 'cascade' },

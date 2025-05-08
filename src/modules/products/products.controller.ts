@@ -8,6 +8,7 @@ import {
   Delete,
   Query,
   Put,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { CreateReviewResponseDto } from '../reviews/dto/review.dto';
@@ -30,8 +31,8 @@ import {
   UpdateProductRequestDto,
   UpdateProductResponseDto,
 } from './dto/product.dto';
-import { DeleteResponseDto } from '~/common/dto/common.dto';
-
+import { DeleteResponseDto } from '~/common/dto/response.dto';
+import { RandomUser } from '~/common/decorators/random-user.decorator';
 @Controller('products')
 export class ProductsController {
   constructor(
@@ -90,7 +91,7 @@ export class ProductsController {
 
   @Get(':id/reviews')
   async getReviews(
-    @Param('id') productId: number,
+    @Param('id', new ParseIntPipe()) productId: number,
     @Query() query: GetReviewsRequestDto,
   ): Promise<GetReviewsResponseDto> {
     const { items, summary } = await this.reviewsService.getReviews(
@@ -112,11 +113,12 @@ export class ProductsController {
 
   @Post(':id/reviews')
   async createReview(
-    @Param('id') productId: number,
+    @Param('id', new ParseIntPipe()) productId: number,
     @Body() dto: CreateReviewRequestDto,
+    @RandomUser() userId: number,
   ): Promise<CreateReviewResponseDto> {
     return createSuccessResponse(
-      await this.reviewsService.createReview(productId, dto),
+      await this.reviewsService.createReview(productId, userId, dto),
       '리뷰가 성공적으로 등록되었습니다.',
     );
   }
