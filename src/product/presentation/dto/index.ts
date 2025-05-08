@@ -1,7 +1,6 @@
-export { default as ResponseDTO } from "./Response.dto";
+export * from "src/libs/common/dto";
 
 export { default as CategoryQueryDTO } from "./request/CategoryQuery.dto";
-export { OptionParamDTO, ParamDTO } from "./request/Param.dto";
 export { default as ProductBodyDTO } from "./request/ProductBody.dto";
 export { default as ProductQueryDTO } from "./request/ProductQuery.dto";
 export { default as ReviewBodyDTO } from "./request/ReviewBody.dto";
