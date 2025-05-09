@@ -18,7 +18,7 @@ public class ProductDto {
             ProductDetailDto detail,
             PriceDto price,
             List<CategoryDto> categories,
-            List<OptionGroupDto> optionGroup,
+            List<OptionGroupDto> optionGroups,
             List<ImagesDto> images,
             List<Long> tags
     ) {}
