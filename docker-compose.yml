@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  database:
+    image: postgres:latest
+    container_name: database
+    networks:
+      - network
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./data:/docker-entrypoint-initdb.d
+
+  server:
+    depends_on:
+      - database
+    image: e-commerce-server:${VERSION}
+    container_name: server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - network
+    ports:
+      - "${PORT}:3000"
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=database
+      - DB_PORT=5432
+
+networks:
+  network:
+    driver: bridge
