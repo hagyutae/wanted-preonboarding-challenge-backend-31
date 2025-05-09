@@ -8,5 +8,7 @@ spring:
     password: mypassword
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
