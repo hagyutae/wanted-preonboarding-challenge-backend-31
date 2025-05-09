@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { IBrowsingRepository } from "@libs/domain/repositories";
+import { IBrowsingRepository } from "@shared/repositories";
 import BrowsingService from "./Browsing.service";
 
 describe("BrowsingService", () => {

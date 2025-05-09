@@ -1,7 +1,7 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
-import { ApiErrorResponse, ApiStandardResponse, ResponseType } from "@libs/common/decorators";
+import { ApiErrorResponse, ApiStandardResponse, ResponseType } from "@libs/decorators";
 import { BrowsingService } from "@browsing/application/services";
 import { MainResponseBundleDTO, ResponseDTO } from "../dto";
 

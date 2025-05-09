@@ -9,8 +9,8 @@ import * as category_entities from "@category/infrastructure/entities";
 import category_repository_providers from "@category/infrastructure/provider";
 import * as review_entities from "@review/infrastructure/entities";
 import review_repository_providers from "@review/infrastructure/provider";
-import * as views from "@browsing/infrastructure/views";
 import browsing_repository_providers from "@browsing/infrastructure/provider";
+import * as views from "@browsing/infrastructure/views";
 
 let container: StartedPostgreSqlContainer;
 let test_module: TestingModule;

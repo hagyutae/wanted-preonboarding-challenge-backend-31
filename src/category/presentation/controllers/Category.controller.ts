@@ -6,8 +6,8 @@ import {
   ApiErrorResponse,
   ApiStandardResponse,
   ResponseType,
-} from "@libs/common/decorators";
-import { to_FilterDTO } from "@libs/common/mappers";
+} from "@libs/decorators";
+import { to_FilterDTO } from "@shared/mappers";
 import { CategoryService } from "@category/application/services";
 import {
   CategoryQueryDTO,

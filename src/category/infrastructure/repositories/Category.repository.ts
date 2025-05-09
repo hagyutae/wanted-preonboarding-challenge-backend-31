@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { BaseRepository } from "@libs/domain/repositories";
+import { BaseRepository } from "@shared/repositories";
 import { Category } from "@category/domain/entities";
 import { CategoryEntity } from "@category/infrastructure/entities";
 

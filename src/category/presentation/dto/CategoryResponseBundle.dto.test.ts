@@ -1,6 +1,7 @@
 import getValidateDTO from "__test-utils__/getValidateDTO";
 
-import { PaginationSummaryDTO, ProductSummaryDTO } from "@libs/common/dto";
+import { PaginationSummaryDTO } from "@shared/dto";
+import { ProductSummaryDTO } from "@browsing/presentation/dto";
 import CategoryResponseBundleDTO, { CategoryResponseDTO } from "./CategoryResponseBundle.dto";
 
 describe("CategoryResponseBundleDTO", () => {

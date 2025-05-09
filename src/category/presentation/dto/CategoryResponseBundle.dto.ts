@@ -2,7 +2,8 @@ import { ApiProperty, PickType } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsDefined, ValidateNested } from "class-validator";
 
-import { PaginationSummaryDTO, ProductSummaryDTO } from "@libs/common/dto";
+import { PaginationSummaryDTO } from "@shared/dto";
+import { ProductSummaryDTO } from "@browsing/presentation/dto";
 import CategoryDTO from "./Category.dto";
 
 export class CategoryResponseDTO extends PickType(CategoryDTO, [

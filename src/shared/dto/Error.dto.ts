@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsBoolean, IsEnum, IsOptional, ValidateNested } from "class-validator";
 
-import ErrorCode from "../constants/ErrorCode";
+import ErrorCode from "@libs/constants/ErrorCode";
 
 export class ErrorDetails {
   [key: string]: string;

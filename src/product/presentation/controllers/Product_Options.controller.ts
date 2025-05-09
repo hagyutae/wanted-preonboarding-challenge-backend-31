@@ -7,7 +7,7 @@ import {
   ApiErrorResponse,
   ApiStandardResponse,
   ResponseType,
-} from "@libs/common/decorators";
+} from "@libs/decorators";
 import { ProductOptionsService } from "@product/application/services";
 import { ImageDTO, OptionParamDTO, ParamDTO, ProductOptionDTO, ResponseDTO } from "../dto";
 

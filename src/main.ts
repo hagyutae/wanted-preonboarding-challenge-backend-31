@@ -4,8 +4,8 @@ import { ValidationError } from "class-validator";
 
 import generatorSwagger from "@utility/generatorSwagger";
 import { JwtInterceptor } from "@product/infrastructure/auth/jwtInterceptor";
-import * as exception_filters from "./libs/common/filters";
-import { ResponseInterceptor } from "./libs/common/interceptors/ResponseInterceptor";
+import * as exception_filters from "./libs/filters";
+import ResponseInterceptor from "./libs/interceptors/ResponseInterceptor";
 import { AppModule } from "./module";
 
 async function bootstrap() {

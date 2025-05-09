@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
-import { IBaseRepository } from "@libs/domain/repositories";
+import { IBaseRepository } from "@shared/repositories";
 import { Category } from "@category/domain/entities";
 
 @Injectable()

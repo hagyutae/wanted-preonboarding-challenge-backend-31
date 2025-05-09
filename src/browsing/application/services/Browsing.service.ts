@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { IBrowsingRepository } from "@libs/domain/repositories";
+import { IBrowsingRepository } from "@shared/repositories";
 
 @Injectable()
 export default class BrowsingService {

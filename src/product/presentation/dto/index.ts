@@ -1,4 +1,4 @@
-export * from "@libs/common/dto";
+export * from "@shared/dto";
 
 export { default as ProductBodyDTO } from "./request/ProductBody.dto";
 export { default as ProductQueryDTO } from "./request/ProductQuery.dto";

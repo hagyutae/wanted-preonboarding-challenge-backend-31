@@ -1,4 +1,4 @@
-export * from "@libs/common/dto";
+export * from "@shared/dto";
 
 export { default as ReviewDTO } from "./Review.dto";
 export { default as ReviewBodyDTO } from "./ReviewBody.dto";

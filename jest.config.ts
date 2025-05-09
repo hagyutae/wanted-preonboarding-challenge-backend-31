@@ -76,8 +76,9 @@ const config: Config = {
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
     "^__test-utils__/(.*)$": "<rootDir>/src/__test-utils__/$1",
-    "^@libs/(.*)$": "<rootDir>/src/libs/$1",
     "^@utility/(.*)$": "<rootDir>/src/utility/$1",
+    "^@libs/(.*)$": "<rootDir>/src/libs/$1",
+    "^@shared/(.*)$": "<rootDir>/src/shared/$1",
     "^@product/(.*)$": "<rootDir>/src/product/$1",
     "^@category/(.*)$": "<rootDir>/src/category/$1",
     "^@review/(.*)$": "<rootDir>/src/review/$1",

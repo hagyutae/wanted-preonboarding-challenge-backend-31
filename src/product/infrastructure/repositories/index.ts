@@ -1,5 +1,3 @@
-export { default as BaseRepository } from "@libs/domain/repositories/BaseRepository";
-
 export { default as ProductRepository } from "./Product.repository";
 export { default as ProductCategoryRepository } from "./Product_Category.repository";
 export { default as ProductDetailRepository } from "./Product_Detail.repository";

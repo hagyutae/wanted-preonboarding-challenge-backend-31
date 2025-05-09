@@ -1,7 +1,7 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
-import ErrorCode, { HttpStatusToErrorCodeMap } from "../constants/ErrorCode";
+import ErrorCode, { HttpStatusToErrorCodeMap } from "@libs/constants/ErrorCode";
 import ErrorDTO, { ErrorDetails } from "./Error.dto";
 
 describe("ErrorDTO", () => {

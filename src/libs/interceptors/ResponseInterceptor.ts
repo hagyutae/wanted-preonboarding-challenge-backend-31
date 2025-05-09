@@ -7,7 +7,7 @@ import { Observable, map } from "rxjs";
 export const RESPONSE_DTO_KEY = "RESPONSE_DTO_KEY";
 
 @Injectable()
-export class ResponseInterceptor implements NestInterceptor {
+export default class ResponseInterceptor implements NestInterceptor {
   constructor(private readonly reflector: Reflector) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {

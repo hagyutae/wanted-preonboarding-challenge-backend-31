@@ -1,4 +1,4 @@
-import User from "../../../review/domain/entities/User";
+import User from "@review/domain/entities/User";
 
 export default class Seller extends User {
   constructor(

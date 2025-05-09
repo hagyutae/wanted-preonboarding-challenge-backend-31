@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsDefined, ValidateNested } from "class-validator";
 
-import { PaginationSummaryDTO } from "@libs/common/dto";
+import { PaginationSummaryDTO } from "@shared/dto";
 import ReviewDTO from "./Review.dto";
 import ReviewSummaryDTO from "./ReviewSummary.dto";
 

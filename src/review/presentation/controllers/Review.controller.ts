@@ -8,8 +8,8 @@ import {
   ApiForbiddenResponse,
   ApiStandardResponse,
   ResponseType,
-} from "@libs/common/decorators";
-import { to_FilterDTO } from "@libs/common/mappers";
+} from "@libs/decorators";
+import { to_FilterDTO } from "@shared/mappers";
 import { ReviewService } from "@review/application/services";
 import {
   ReviewResponseBundle,

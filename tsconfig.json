@@ -19,8 +19,9 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "__test-utils__/*": ["./src/__test-utils__/*"],
-      "@libs/*": ["./src/libs/*"],
       "@utility/*": ["./src/utility/*"],
+      "@libs/*": ["./src/libs/*"],
+      "@shared/*": ["./src/shared/*"],
       "@product/*": ["./src/product/*"],
       "@category/*": ["./src/category/*"],
       "@review/*": ["./src/review/*"],

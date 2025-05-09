@@ -3,8 +3,8 @@ import { EntityManager, UpdateResult } from "typeorm";
 
 import { ProductCatalogDTO, ProductSummaryDTO } from "@product/application/dto";
 import { Product } from "@product/domain/entities";
-import ProductRepository from "./Product.repository";
 import { BrowsingRepository } from "@browsing/infrastructure/repositories";
+import ProductRepository from "./Product.repository";
 
 describe("ProductRepository", () => {
   let productRepository: ProductRepository;

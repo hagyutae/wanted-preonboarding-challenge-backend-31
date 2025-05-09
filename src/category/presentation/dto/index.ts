@@ -1,4 +1,4 @@
-export * from "@libs/common/dto";
+export * from "@shared/dto";
 
 export { default as CategoryDTO } from "./Category.dto";
 export { default as CategoryQueryDTO } from "./CategoryQuery.dto";

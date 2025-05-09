@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { IBaseRepository, IBrowsingRepository } from "@libs/domain/repositories";
+import { IBaseRepository, IBrowsingRepository } from "@shared/repositories";
 import { Product, Product_Detail, Product_Image, Product_Price } from "@product/domain/entities";
 import {
   FilterDTO,
@@ -181,7 +181,7 @@ export default class ProductService {
       name,
       slug,
       updated_at: updated_at!,
-    }))(updated_product!);
+    }))(updated_product);
   }
 
   async remove(id: number) {
