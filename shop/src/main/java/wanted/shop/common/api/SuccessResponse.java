@@ -8,10 +8,16 @@ import lombok.Getter;
 public class SuccessResponse<T> {
     private final boolean success = true;
     private final T data;
-    private final String message = "요청이 성공적으로 처리되었습니다";
+    private final Message message;
 
     public SuccessResponse(T data) {
         this.data = data;
+        this.message = new Message("요청이 성공적으로 처리되었습니다");
+    }
+
+    public SuccessResponse(T data, Message message) {
+        this.data = data;
+        this.message = message;
     }
 
 }
