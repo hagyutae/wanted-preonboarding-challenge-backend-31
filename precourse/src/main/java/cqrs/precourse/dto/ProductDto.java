@@ -2,6 +2,7 @@ package cqrs.precourse.dto;
 
 import cqrs.precourse.domain.Product;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,11 +20,11 @@ public class ProductDto {
             List<CategoryDto> categories,
             List<OptionGroupDto> optionGroup,
             List<ImagesDto> images,
-            List<Integer> tag
+            List<Long> tags
     ) {}
 
     public record ProductDetailDto(
-            Float weight,
+            BigDecimal weight,
             DimensionsDto dimensions,
             String materials,
             String countryOfOrigin,
@@ -44,11 +45,11 @@ public class ProductDto {
     ) {}
 
     public record PriceDto(
-            int basePrice,
-            int salePrice,
-            int costPrice,
+            BigDecimal basePrice,
+            BigDecimal salePrice,
+            BigDecimal costPrice,
             String currency,
-            int taxRate
+            BigDecimal taxRate
     ) {}
 
     public record CategoryDto(
@@ -64,7 +65,7 @@ public class ProductDto {
 
     public record OptionDto(
             String name,
-            int additionalPrice,
+            BigDecimal additionalPrice,
             String sku,
             int stock,
             int displayOrder
@@ -74,10 +75,11 @@ public class ProductDto {
             String url,
             String altText,
             Boolean isPrimary,
-            Long displayOrder,
+            Integer displayOrder,
             Long optionId
 
-    ) {}
+    ) { }
+
 
     public record ProductCreateResponseDto(
           Long id,
@@ -86,6 +88,8 @@ public class ProductDto {
           LocalDateTime createdAt,
           LocalDateTime updatedAt
     ) {
+
+
         public static ProductCreateResponseDto of(Product product) {
             return new ProductCreateResponseDto(
                     product.getId(),
