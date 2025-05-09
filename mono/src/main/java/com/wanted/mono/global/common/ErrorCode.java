@@ -15,8 +15,8 @@ public enum ErrorCode {
     FORBIDDEN("FORBIDDEN", HttpStatus.FORBIDDEN, "error.forbidden"),
     CONFLICT("CONFLICT", HttpStatus.CONFLICT, "error.conflict"),
     INTERNAL_ERROR("INTERNAL_ERROR", HttpStatus.INTERNAL_SERVER_ERROR, "error.internal_error"),
-    PRODUCT_EMPTY("RESOURCE_NOT_FOUND", HttpStatus.NOT_FOUND, "error.product.list_empty");
-
+    PRODUCT_EMPTY("RESOURCE_NOT_FOUND", HttpStatus.NOT_FOUND, "error.product.list_empty"),
+    CATEGORY_EMPTY("RESOURCE_NOT_FOUND", HttpStatus.NOT_FOUND, "error.category.empty");
     private final String code;
     private final HttpStatus status;
     private final String messageKey;

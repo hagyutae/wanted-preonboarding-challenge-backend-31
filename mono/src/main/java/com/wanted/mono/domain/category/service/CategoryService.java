@@ -2,7 +2,9 @@ package com.wanted.mono.domain.category.service;
 
 import com.wanted.mono.domain.category.entity.Category;
 import com.wanted.mono.domain.category.entity.dto.CategoryDto;
+import com.wanted.mono.domain.category.entity.dto.ProductCategoryDto;
 import com.wanted.mono.domain.category.repository.CategoryRepository;
+import com.wanted.mono.global.exception.CategoryNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -21,10 +23,6 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-
-    public Category findById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElse(null);
-    }
 
     public List<Category> findByIds(List<Long> categoryIds) {
         return categoryRepository.findAllById(categoryIds);
@@ -77,6 +75,11 @@ public class CategoryService {
                 collectByLevel(node.getChildren(), level, result);
             }
         }
+    }
+
+    public CategoryDto findById(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
+        return CategoryDto.of(category);
     }
 
 }

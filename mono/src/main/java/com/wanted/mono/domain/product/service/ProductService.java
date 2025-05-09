@@ -2,7 +2,8 @@ package com.wanted.mono.domain.product.service;
 
 import com.wanted.mono.domain.brand.entity.Brand;
 import com.wanted.mono.domain.brand.service.BrandService;
-import com.wanted.mono.domain.product.dto.Pagination;
+import com.wanted.mono.domain.category.service.ProductCategoryService;
+import com.wanted.mono.global.common.Pagination;
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
 import com.wanted.mono.domain.product.dto.model.ProductImageDto;
 import com.wanted.mono.domain.product.dto.model.ProductInfoDto;
@@ -82,6 +83,12 @@ public class ProductService {
     public ProductSearchResponse searchProduct(ProductSearchRequest request) {
         log.info("ProductService 페이징 및 필터 처리 조회");
         Page<Product> searchResult = productSearchQueryRepository.search(request);
+
+        log.info("ProductService LAZY 엔티티 Batch Size 로딩");
+        for (Product product : searchResult.getContent()) {
+            product.getProductImages().size();
+            product.getReviews().size();
+        }
 
         List<ProductSearchItem> displayProducts = new ArrayList<>();
         for (Product product : searchResult.getContent()) {

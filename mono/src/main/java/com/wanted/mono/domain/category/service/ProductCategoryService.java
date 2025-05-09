@@ -1,11 +1,12 @@
-package com.wanted.mono.domain.product.service;
+package com.wanted.mono.domain.category.service;
 
 import com.wanted.mono.domain.category.entity.Category;
 import com.wanted.mono.domain.category.entity.ProductCategory;
-import com.wanted.mono.domain.category.service.CategoryService;
+import com.wanted.mono.domain.category.entity.dto.ProductCategoryDto;
+import com.wanted.mono.domain.category.repository.ProductCategoryRepository;
 import com.wanted.mono.domain.product.dto.request.ProductCategoryRequest;
 import com.wanted.mono.domain.product.entity.Product;
-import com.wanted.mono.domain.product.repository.ProductCategoryRepository;
+import com.wanted.mono.global.exception.CategoryNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ProductCategoryService {
-    private final ProductCategoryRepository productCategoryRepository;
     private final CategoryService categoryService;
+    private final ProductCategoryRepository productCategoryRepository;
 
     public void createProductCategory(List<ProductCategoryRequest> productCategoryRequests, Product product) {
         log.info("카테고리 Id 리스트화");
@@ -77,5 +78,11 @@ public class ProductCategoryService {
                 .toList();
 
         productCategoryRepository.saveAll(newRelations);
+    }
+
+    public ProductCategoryDto findById(Long categoryId) {
+        ProductCategory productCategory = productCategoryRepository.findById(categoryId).orElseThrow(CategoryNotFoundException::new);
+
+        return ProductCategoryDto.of(productCategory);
     }
 }

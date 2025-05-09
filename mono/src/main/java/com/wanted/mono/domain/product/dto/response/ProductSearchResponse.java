@@ -1,6 +1,6 @@
 package com.wanted.mono.domain.product.dto.response;
 
-import com.wanted.mono.domain.product.dto.Pagination;
+import com.wanted.mono.global.common.Pagination;
 import com.wanted.mono.domain.product.dto.ProductSearchItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
