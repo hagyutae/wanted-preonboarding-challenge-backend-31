@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Embeddable
 public class ReviewData {
-    private int rating;
+    private Integer rating;
     private String title;
     private String content;
 }

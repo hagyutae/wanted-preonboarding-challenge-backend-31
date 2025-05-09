@@ -46,7 +46,7 @@ public class Review {
     private String verifiedPurchase;
 
     @Column(name = "helpful_votes")
-    private int helpfulVotes;
+    private Integer helpfulVotes;
 
 
     public ReviewDto toReviewDto() {

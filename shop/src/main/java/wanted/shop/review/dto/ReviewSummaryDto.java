@@ -17,17 +17,17 @@ import java.util.stream.IntStream;
 public class ReviewSummaryDto {
 
     @JsonProperty("average_rating")
-    private final double averageRating;
+    private final Double averageRating;
 
     @JsonProperty("total_count")
-    private final int totalCount;
+    private final Integer totalCount;
 
     @JsonProperty("distribution")
     private final Map<Integer, Long> ratingDistribution;
 
     public static ReviewSummaryDto from(List<Review> reviews) {
 
-        double ratingAverage = reviews.stream()
+        Double ratingAverage = reviews.stream()
                 .mapToInt(review -> review.getReviewData().getRating())
                 .average()
                 .orElse(0.0);

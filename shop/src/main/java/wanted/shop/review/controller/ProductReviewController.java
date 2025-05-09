@@ -19,7 +19,7 @@ public class ProductReviewController {
     @GetMapping("/{productId}/reviews")
     public SuccessResponse<ReviewListResponse> getReviewsByProductId(
             @ModelAttribute @Valid ReviewPageRequest request,
-            @PathVariable long productId
+            @PathVariable Long productId
     ) {
         System.out.println(request.toString());
         ReviewListResponse response = reviewService.getReviewsByProductId(new ProductId(productId), request);

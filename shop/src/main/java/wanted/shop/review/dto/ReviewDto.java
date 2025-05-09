@@ -8,18 +8,18 @@ import lombok.Getter;
 public class ReviewDto {
     private Long id;
     private UserDto user;
-    private int rating;
+    private Integer rating;
     private String title;
     private String content;
     private String createdAt;
     private String updatedAt;
     private boolean verifiedPurchase;
-    private int helpfulVotes;
+    private Integer helpfulVotes;
 
     @Getter
     @Builder
     public static class UserDto {
-        private long id;
+        private Long id;
         private String name;
         private String email;
         private String avatarUrl;
