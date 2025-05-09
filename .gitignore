@@ -6,3 +6,15 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+
+.DS_Store
+node_modules/
+*.log
+.env
+
+.vite/
+coverage/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
