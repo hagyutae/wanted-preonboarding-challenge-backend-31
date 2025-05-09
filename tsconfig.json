@@ -23,7 +23,8 @@
       "@utility/*": ["./src/utility/*"],
       "@product/*": ["./src/product/*"],
       "@category/*": ["./src/category/*"],
-      "@review/*": ["./src/review/*"]
+      "@review/*": ["./src/review/*"],
+      "@browsing/*": ["./src/browsing/*"]
     }
   }
 }

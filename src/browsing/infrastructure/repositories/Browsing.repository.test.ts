@@ -1,16 +1,16 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { EntityManager } from "typeorm";
 
-import MainRepository from "./Main.repository";
+import BrowsingRepository from "./Browsing.repository";
 
-describe("MainRepository", () => {
-  let repository: MainRepository;
+describe("BrowsingRepository", () => {
+  let repository: BrowsingRepository;
   const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        MainRepository,
+        BrowsingRepository,
         {
           provide: EntityManager,
           useValue: mockEntityManager,
@@ -18,7 +18,7 @@ describe("MainRepository", () => {
       ],
     }).compile();
 
-    repository = module.get<MainRepository>(MainRepository);
+    repository = module.get<BrowsingRepository>(BrowsingRepository);
   });
 
   describe("get_new_products", () => {

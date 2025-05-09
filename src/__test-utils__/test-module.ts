@@ -5,11 +5,11 @@ import { DataSource } from "typeorm";
 
 import * as product_entities from "@product/infrastructure/entities";
 import product_repository_providers from "@product/infrastructure/provider";
-import * as views from "@product/infrastructure/views";
 import * as category_entities from "@category/infrastructure/entities";
 import category_repository_providers from "@category/infrastructure/provider";
 import * as review_entities from "@review/infrastructure/entities";
 import review_repository_providers from "@review/infrastructure/provider";
+import * as views from "@browsing/infrastructure/views";
 
 let container: StartedPostgreSqlContainer;
 let test_module: TestingModule;

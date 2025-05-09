@@ -6,6 +6,7 @@ import { type_orm_config } from "@libs/config/typeorm.config";
 import ProductModule from "@product/module";
 import CategoryModule from "@category/module";
 import ReviewModule from "@review/module";
+import BrowsingModule from "@browsing/module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import ReviewModule from "@review/module";
     ProductModule,
     CategoryModule,
     ReviewModule,
+    BrowsingModule,
   ],
 })
 export class AppModule {}

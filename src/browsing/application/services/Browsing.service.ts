@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { IMainRepository } from "@libs/domain/repositories";
+import { IBrowsingRepository } from "@libs/domain/repositories";
 
 @Injectable()
-export default class MainService {
+export default class BrowsingService {
   constructor(
-    @Inject("IMainRepository")
-    private readonly repository: IMainRepository,
+    @Inject("IBrowsingRepository")
+    private readonly repository: IBrowsingRepository,
   ) {}
 
   async find() {

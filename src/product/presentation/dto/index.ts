@@ -12,6 +12,5 @@ export { default as SellerDTO } from "./model/Seller.dto";
 export { default as TagDTO } from "./model/Tag.dto";
 
 export { default as ProductResponseDTO } from "./response/ProductResponse.dto";
-export { default as RatingDTO } from "./response/Rating.dto";
-export { default as MainResponseBundle } from "./response/MainResponseBundle.dto";
 export { default as ProductResponseBundle } from "./response/ProductResponseBundle.dto";
+export { default as RatingDTO } from "./response/Rating.dto";

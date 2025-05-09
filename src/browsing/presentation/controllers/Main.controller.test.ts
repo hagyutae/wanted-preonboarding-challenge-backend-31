@@ -1,26 +1,26 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { MainService } from "@product/application/services";
-import { ProductSummaryView } from "@product/infrastructure/views";
+import { BrowsingService } from "@browsing/application/services";
+import { ProductSummaryView } from "@browsing/infrastructure/views";
 import { CategoryEntity } from "@category/infrastructure/entities";
 import { ResponseDTO } from "../dto";
 import MainController from "./Main.controller";
 
 describe("MainController", () => {
   let controller: MainController;
-  let mockMainService: jest.Mocked<MainService>;
+  let mockService: jest.Mocked<BrowsingService>;
 
   beforeEach(async () => {
-    mockMainService = {
+    mockService = {
       find: jest.fn(),
-    } as unknown as jest.Mocked<MainService>;
+    } as unknown as jest.Mocked<BrowsingService>;
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MainController],
       providers: [
         {
-          provide: MainService,
-          useValue: mockMainService,
+          provide: BrowsingService,
+          useValue: mockService,
         },
       ],
     }).compile();
@@ -34,7 +34,7 @@ describe("MainController", () => {
       const mockPopularProducts = [{ id: 2, name: "인기 상품" }] as ProductSummaryView[];
       const mockFeaturedCategories = [{ id: 3, name: "추천 카테고리" }] as CategoryEntity[];
 
-      mockMainService.find.mockResolvedValue({
+      mockService.find.mockResolvedValue({
         new_products: mockNewProducts,
         popular_products: mockPopularProducts,
         featured_categories: mockFeaturedCategories,
@@ -42,7 +42,7 @@ describe("MainController", () => {
 
       const result: ResponseDTO<any> = await controller.read_main_products();
 
-      expect(mockMainService.find).toHaveBeenCalled();
+      expect(mockService.find).toHaveBeenCalled();
       expect(result).toEqual({
         success: true,
         data: {

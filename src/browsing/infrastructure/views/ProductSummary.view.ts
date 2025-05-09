@@ -1,6 +1,5 @@
 import { ViewEntity, ViewColumn, DataSource } from "typeorm";
 
-import { ReviewEntity } from "@review/infrastructure/entities";
 import {
   ProductEntity,
   ProductPriceEntity,
@@ -9,7 +8,8 @@ import {
   SellerEntity,
   ProductOptionGroupEntity,
   ProductOptionEntity,
-} from "../entities";
+} from "@product/infrastructure/entities";
+import { ReviewEntity } from "@review/infrastructure/entities";
 
 @ViewEntity({
   expression: (dataSource: DataSource) => {

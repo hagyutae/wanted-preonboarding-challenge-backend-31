@@ -5,8 +5,8 @@ import { BaseRepository } from "@libs/domain/repositories";
 import { ProductCatalogDTO, ProductSummaryDTO } from "@product/application/dto";
 import { Product } from "@product/domain/entities";
 import { CategoryEntity } from "@category/infrastructure/entities";
+import { ProductCatalogView, ProductSummaryView } from "@browsing/infrastructure/views";
 import { ProductCategoryEntity, ProductEntity } from "../entities";
-import { ProductCatalogView, ProductSummaryView } from "../views";
 
 @Injectable()
 export default class ProductRepository extends BaseRepository<

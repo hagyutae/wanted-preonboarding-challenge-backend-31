@@ -2,19 +2,19 @@ import { Controller, Get } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { ApiErrorResponse, ApiStandardResponse, ResponseType } from "@libs/common/decorators";
-import { MainService } from "@product/application/services";
-import { MainResponseBundle, ResponseDTO } from "../dto";
+import { BrowsingService } from "@browsing/application/services";
+import { MainResponseBundleDTO, ResponseDTO } from "../dto";
 
 @ApiTags("메인")
 @Controller("main")
 @ApiErrorResponse()
 export default class MainController {
-  constructor(private readonly service: MainService) {}
+  constructor(private readonly service: BrowsingService) {}
 
   @ApiOperation({ summary: "메인 페이지용 상품 목록" })
-  @ApiStandardResponse("메인 페이지 상품 목록을 성공적으로 조회했습니다.", MainResponseBundle)
+  @ApiStandardResponse("메인 페이지 상품 목록을 성공적으로 조회했습니다.", MainResponseBundleDTO)
   @Get()
-  @ResponseType(ResponseDTO<MainResponseBundle>)
+  @ResponseType(ResponseDTO<MainResponseBundleDTO>)
   async read_main_products() {
     const data = await this.service.find();
 

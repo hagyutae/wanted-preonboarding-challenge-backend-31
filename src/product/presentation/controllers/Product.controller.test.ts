@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 
 import { ProductService } from "@product/application/services";
 import { ProductEntity } from "@product/infrastructure/entities";
-import { ProductCatalogView, ProductSummaryView } from "@product/infrastructure/views";
+import { ProductCatalogView, ProductSummaryView } from "@browsing/infrastructure/views";
 import { ProductBodyDTO, ParamDTO, ProductQueryDTO, ResponseDTO } from "../dto";
 import ProductController from "./Product.controller";
 

@@ -1,14 +1,14 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { IMainRepository } from "@libs/domain/repositories";
-import MainService from "./Main.service";
+import { IBrowsingRepository } from "@libs/domain/repositories";
+import BrowsingService from "./Browsing.service";
 
-describe("MainService", () => {
-  let mainService: MainService;
-  let repository: jest.Mocked<IMainRepository>;
+describe("BrowsingService", () => {
+  let service: BrowsingService;
+  let repository: jest.Mocked<IBrowsingRepository>;
 
   beforeEach(async () => {
-    const mockRepository: jest.Mocked<IMainRepository> = {
+    const mockRepository: jest.Mocked<IBrowsingRepository> = {
       get_new_products: jest.fn(),
       get_popular_products: jest.fn(),
       get_featured_categories: jest.fn(),
@@ -16,16 +16,16 @@ describe("MainService", () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        MainService,
+        BrowsingService,
         {
-          provide: "IMainRepository",
+          provide: "IBrowsingRepository",
           useValue: mockRepository,
         },
       ],
     }).compile();
 
-    mainService = module.get<MainService>(MainService);
-    repository = module.get("IMainRepository");
+    service = module.get<BrowsingService>(BrowsingService);
+    repository = module.get("IBrowsingRepository");
   });
 
   it("새로운 상품, 인기 상품, 추천 카테고리를 조회", async () => {
@@ -46,7 +46,7 @@ describe("MainService", () => {
     repository.get_popular_products.mockResolvedValue(popularProducts);
     repository.get_featured_categories.mockResolvedValue(featuredCategories);
 
-    const result = await mainService.find();
+    const result = await service.find();
 
     expect(result).toEqual({
       new_products: newProducts,
