@@ -10,6 +10,7 @@ describe("BrowsingService", () => {
   beforeEach(async () => {
     const mockRepository: jest.Mocked<IBrowsingRepository> = {
       find_by_filters: jest.fn(),
+      find_by_id: jest.fn(),
       get_featured_categories: jest.fn(),
     };
 

@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { EntityManager } from "typeorm";
 
-import { IBaseRepository } from "@libs/domain/repositories";
+import { IBaseRepository, IBrowsingRepository } from "@libs/domain/repositories";
 import { Product, Product_Detail, Product_Image, Product_Price } from "@product/domain/entities";
 import {
   FilterDTO,
@@ -31,6 +31,8 @@ export default class ProductService {
     private readonly product_image_repository: IBaseRepository<Product_Image>,
     @Inject("IProductTagRepository")
     private readonly product_tag_repository: IBaseRepository<ProductTagDTO>,
+    @Inject("IBrowsingRepository")
+    private readonly browsing_repository: IBrowsingRepository,
   ) {}
 
   async register({
@@ -101,7 +103,7 @@ export default class ProductService {
   async find_all({ page = 1, per_page = 10, sort, ...rest }: FilterDTO) {
     const [sort_field, sort_order] = sort?.split(":") ?? ["created_at", "DESC"];
 
-    const items = (await this.repository.find_by_filters({
+    const items = (await this.browsing_repository.find_by_filters({
       page,
       per_page,
       sort_field,
@@ -121,7 +123,7 @@ export default class ProductService {
   }
 
   async find(id: number) {
-    const product = await this.repository.find_by_id(id);
+    const product = await this.browsing_repository.find_by_id(id);
 
     if (!product) {
       throw new NotFoundException({

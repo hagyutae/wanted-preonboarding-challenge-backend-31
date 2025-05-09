@@ -4,8 +4,8 @@ import { EntityManager } from "typeorm";
 import { IBrowsingRepository } from "@libs/domain/repositories";
 import { ProductCategoryEntity, ProductEntity } from "@product/infrastructure/entities";
 import { CategoryEntity } from "@category/infrastructure/entities";
-import { ProductSummaryView } from "@browsing/infrastructure/views";
-import { ProductSummaryDTO } from "@browsing/presentation/dto";
+import { ProductCatalogView, ProductSummaryView } from "@browsing/infrastructure/views";
+import { ProductCatalogDTO, ProductSummaryDTO } from "@browsing/presentation/dto";
 
 @Injectable()
 export default class BrowsingRepository implements IBrowsingRepository {
@@ -66,6 +66,10 @@ export default class BrowsingRepository implements IBrowsingRepository {
 
     // 쿼리 실행
     return await query.getMany();
+  }
+
+  async find_by_id(id: number): Promise<ProductCatalogDTO | null> {
+    return this.entity_manager.findOne(ProductCatalogView, { where: { id } });
   }
 
   async get_featured_categories(): Promise<CategoryEntity[]> {
