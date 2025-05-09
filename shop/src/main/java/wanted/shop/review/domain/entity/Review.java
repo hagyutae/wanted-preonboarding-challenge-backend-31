@@ -43,12 +43,14 @@ public class Review {
     private ReviewTimestamps timestamps;
 
     @Column(name = "verified_purchase")
-    private String verifiedPurchase;
+    private boolean verifiedPurchase;
 
     @Column(name = "helpful_votes")
     private Integer helpfulVotes;
 
-
+    public void delete() {
+        this.timestamps.delete();
+    }
     public ReviewDto toReviewDto() {
         return ReviewDto.builder()
                 .id(reviewId.getId())
@@ -63,7 +65,7 @@ public class Review {
                 .content(reviewData.getContent())
                 .createdAt(timestamps.getCreatedAt().toString())
                 .updatedAt(timestamps.getUpdatedAt().toString())
-                .verifiedPurchase("Y".equalsIgnoreCase(verifiedPurchase))
+                .verifiedPurchase(verifiedPurchase)
                 .helpfulVotes(helpfulVotes)
                 .build();
     }

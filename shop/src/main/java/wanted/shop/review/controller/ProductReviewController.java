@@ -14,7 +14,7 @@ import wanted.shop.review.service.ReviewService;
 @RequestMapping("/api/products")
 public class ProductReviewController {
 
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
     @GetMapping("/{productId}/reviews")
     public SuccessResponse<ReviewListResponse> getReviewsByProductId(

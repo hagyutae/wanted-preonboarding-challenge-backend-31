@@ -6,6 +6,7 @@ import wanted.shop.product.domain.ProductId;
 
 import wanted.shop.review.domain.entity.Review;
 import wanted.shop.review.domain.entity.ReviewData_;
+import wanted.shop.review.domain.entity.ReviewTimestamps_;
 import wanted.shop.review.domain.entity.Review_;
 
 import java.util.List;
@@ -23,6 +24,9 @@ public class ReviewSpecification {
                     cb.equal(
                             root.get(Review_.reviewData).get(ReviewData_.RATING),
                             rating.getValue()
+                    ),
+                    cb.isNull(
+                            root.get(Review_.timestamps).get(ReviewTimestamps_.DELETED_AT)
                     )
             );
 
@@ -37,6 +41,9 @@ public class ReviewSpecification {
                     cb.equal(
                             root.get(Review_.productId).get("id"),
                             productId.getId()
+                    ),
+                    cb.isNull(
+                            root.get(Review_.timestamps).get(ReviewTimestamps_.DELETED_AT)
                     )
             );
 

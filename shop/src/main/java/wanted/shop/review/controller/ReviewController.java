@@ -1,33 +1,25 @@
 package wanted.shop.review.controller;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-import wanted.shop.common.api.PaginatedData;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import wanted.shop.common.api.Message;
 import wanted.shop.common.api.SuccessResponse;
-import wanted.shop.product.domain.ProductId;
-import wanted.shop.review.domain.query.ReviewPageRequest;
-import wanted.shop.review.dto.ReviewDto;
-import wanted.shop.review.dto.ReviewListResponse;
+import wanted.shop.review.domain.entity.ReviewId;
 import wanted.shop.review.service.ReviewService;
-
-import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/reviews")
 public class ReviewController {
 
-    private ReviewService reviewService;
+    private final ReviewService reviewService;
 
-    @GetMapping("/{id}/reviews")
-    public SuccessResponse<ReviewListResponse> getReviewsByProductId(
-            @ModelAttribute @Valid ReviewPageRequest request,
-            @PathVariable long id
-    ) {
-        System.out.println(request.toString());
-        ReviewListResponse response = reviewService.getReviewsByProductId(new ProductId(id), request);
-        return new SuccessResponse<>(response);
+    @DeleteMapping("/{reviewId}")
+    public SuccessResponse<Void> deleteReview(@PathVariable Long reviewId){
+        reviewService.deleteReview(new ReviewId(reviewId));
+        return new SuccessResponse<>(null, new Message("리뷰가 성공적으로 삭제되었습니다"));
     }
 }
-

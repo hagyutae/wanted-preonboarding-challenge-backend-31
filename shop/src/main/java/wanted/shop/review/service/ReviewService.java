@@ -9,6 +9,7 @@ import wanted.shop.common.api.PaginatedData;
 import wanted.shop.common.api.Pagination;
 import wanted.shop.product.domain.ProductId;
 import wanted.shop.review.domain.entity.Review;
+import wanted.shop.review.domain.entity.ReviewId;
 import wanted.shop.review.domain.query.ReviewPageRequest;
 import wanted.shop.review.domain.query.ReviewSpecification;
 import wanted.shop.review.dto.ReviewDto;
@@ -41,5 +42,12 @@ public class ReviewService {
         ReviewSummaryDto reviewSummaryDto = ReviewSummaryDto.from(result.getContent());
 
         return new ReviewListResponse(reviewDtoList, reviewSummaryDto, pagination);
+    }
+
+    @Transactional
+    public void deleteReview(ReviewId reviewId) {
+        Review existingReview = reviewRepository.findById(reviewId);
+        existingReview.delete();
+        reviewRepository.save(existingReview);
     }
 }
