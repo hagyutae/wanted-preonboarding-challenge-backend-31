@@ -10,14 +10,14 @@ import {
   ResponseType,
 } from "@libs/common/decorators";
 import { to_FilterDTO } from "@libs/common/mappers";
-import { ReviewService } from "@product/application/services";
+import { ReviewService } from "@review/application/services";
 import {
-  ParamDTO,
-  ResponseDTO,
-  ReviewBodyDTO,
-  ReviewDTO,
-  ReviewQueryDTO,
   ReviewResponseBundle,
+  ResponseDTO,
+  ParamDTO,
+  ReviewQueryDTO,
+  ReviewDTO,
+  ReviewBodyDTO,
   ReviewResponseDTO,
 } from "../dto";
 

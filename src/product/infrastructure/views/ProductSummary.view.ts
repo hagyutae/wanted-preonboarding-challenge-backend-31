@@ -1,10 +1,10 @@
 import { ViewEntity, ViewColumn, DataSource } from "typeorm";
 
+import { ReviewEntity } from "@review/infrastructure/entities";
 import {
   ProductEntity,
   ProductPriceEntity,
   ProductImageEntity,
-  ReviewEntity,
   BrandEntity,
   SellerEntity,
   ProductOptionGroupEntity,

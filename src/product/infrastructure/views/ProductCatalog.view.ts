@@ -1,6 +1,7 @@
 import { DataSource, ViewColumn, ViewEntity } from "typeorm";
 
 import { CategoryEntity } from "@category/infrastructure/entities";
+import { ReviewEntity } from "@review/infrastructure/entities";
 import {
   BrandEntity,
   ProductCategoryEntity,
@@ -11,7 +12,6 @@ import {
   ProductOptionGroupEntity,
   ProductPriceEntity,
   ProductTagEntity,
-  ReviewEntity,
   SellerEntity,
   TagEntity,
 } from "../entities";

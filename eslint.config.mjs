@@ -68,6 +68,11 @@ export default tseslint.config(
               group: "internal",
               position: "after",
             },
+            {
+              pattern: "@review/**",
+              group: "internal",
+              position: "after",
+            },
           ],
           pathGroupsExcludedImportTypes: ["builtin"],
           alphabetize: { order: "asc", caseInsensitive: true },

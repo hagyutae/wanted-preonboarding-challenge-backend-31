@@ -5,6 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { type_orm_config } from "@libs/config/typeorm.config";
 import ProductModule from "@product/module";
 import CategoryModule from "@category/module";
+import ReviewModule from "@review/module";
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import CategoryModule from "@category/module";
     }),
     ProductModule,
     CategoryModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}

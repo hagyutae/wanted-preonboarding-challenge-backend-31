@@ -7,7 +7,5 @@ export { default as ProductOptionGroupEntity } from "./Product_Option_Group.enti
 export { default as ProductOptionEntity } from "./Product_Option.entity";
 export { default as ProductPriceEntity } from "./Product_Price.entity";
 export { default as ProductTagEntity } from "./Product_Tag.entity";
-export { default as ReviewEntity } from "./Review.entity";
 export { default as SellerEntity } from "./Seller.entity";
 export { default as TagEntity } from "./Tag.entity";
-export { default as UserEntity } from "./User.entity";

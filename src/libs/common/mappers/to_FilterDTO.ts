@@ -1,6 +1,7 @@
 import { FilterDTO } from "@product/application/dto";
-import { ProductQueryDTO, ReviewQueryDTO } from "@product/presentation/dto";
+import { ProductQueryDTO } from "@product/presentation/dto";
 import { CategoryQueryDTO } from "@category/presentation/dto";
+import { ReviewQueryDTO } from "@review/presentation/dto";
 
 const field_mapping = {
   includeSubcategories: "has_sub",

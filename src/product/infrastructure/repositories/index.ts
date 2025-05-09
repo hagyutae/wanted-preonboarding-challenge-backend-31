@@ -1,4 +1,5 @@
 export { default as BaseRepository } from "@libs/domain/repositories/BaseRepository";
+
 export { default as MainRepository } from "./Main.repository";
 export { default as ProductRepository } from "./Product.repository";
 export { default as ProductCategoryRepository } from "./Product_Category.repository";
@@ -8,4 +9,3 @@ export { default as ProductOptionGroupRepository } from "./Product_Option_Group.
 export { default as ProductOptionsRepository } from "./Product_Options.repository";
 export { default as ProductPriceRepository } from "./Product_Price.repository";
 export { default as ProductTagRepository } from "./Product_Tag.repository";
-export { default as ReviewRepository } from "./Review.repository";

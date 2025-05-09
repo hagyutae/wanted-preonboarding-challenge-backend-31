@@ -8,7 +8,6 @@ import {
   ProductPriceRepository,
   ProductRepository,
   ProductTagRepository,
-  ReviewRepository,
 } from "./repositories";
 
 export default [
@@ -20,6 +19,5 @@ export default [
   { provide: "IProductOptionGroupRepository", useClass: ProductOptionGroupRepository },
   { provide: "IProductImageRepository", useClass: ProductImageRepository },
   { provide: "IProductTagRepository", useClass: ProductTagRepository },
-  { provide: "IReviewRepository", useClass: ReviewRepository },
   { provide: "IMainRepository", useClass: MainRepository },
 ];

@@ -2,7 +2,7 @@ import { applyDecorators, Type } from "@nestjs/common";
 import { ApiExtraModels, ApiResponse, getSchemaPath } from "@nestjs/swagger";
 
 import extractDTOExample from "@utility/extractDTOExample";
-import { ResponseDTO } from "@product/presentation/dto";
+import { ResponseDTO } from "../dto";
 
 export function ApiStandardResponse<TModel extends Type<any>>(
   description: string,

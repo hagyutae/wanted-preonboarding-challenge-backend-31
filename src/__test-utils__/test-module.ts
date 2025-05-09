@@ -8,6 +8,8 @@ import product_repository_providers from "@product/infrastructure/provider";
 import * as views from "@product/infrastructure/views";
 import * as category_entities from "@category/infrastructure/entities";
 import category_repository_providers from "@category/infrastructure/provider";
+import * as review_entities from "@review/infrastructure/entities";
+import review_repository_providers from "@review/infrastructure/provider";
 
 let container: StartedPostgreSqlContainer;
 let test_module: TestingModule;
@@ -35,6 +37,7 @@ export async function get_module() {
           entities: [
             ...Object.values(product_entities),
             ...Object.values(category_entities),
+            ...Object.values(review_entities),
             ...Object.values(views),
           ],
           synchronize: true,
@@ -43,10 +46,15 @@ export async function get_module() {
       TypeOrmModule.forFeature([
         ...Object.values(product_entities),
         ...Object.values(category_entities),
+        ...Object.values(review_entities),
         ...Object.values(views),
       ]),
     ],
-    providers: [...product_repository_providers, ...category_repository_providers],
+    providers: [
+      ...product_repository_providers,
+      ...category_repository_providers,
+      ...review_repository_providers,
+    ],
   }).compile();
 
   return test_module;
