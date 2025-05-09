@@ -1,9 +1,15 @@
 package cqrs.precourse.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "product_categories")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductCategory {
 
     @Id

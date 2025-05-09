@@ -2,6 +2,9 @@ package cqrs.precourse.domain;
 
 import cqrs.precourse.converter.JsonbConverter;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -10,6 +13,9 @@ import java.util.Map;
 
 @Entity
 @Table(name = "product_details")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

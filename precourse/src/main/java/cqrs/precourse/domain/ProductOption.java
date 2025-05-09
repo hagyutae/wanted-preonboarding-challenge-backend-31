@@ -1,6 +1,9 @@
 package cqrs.precourse.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -8,6 +11,9 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product_options")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductOption {
 
     @Id
@@ -27,7 +33,7 @@ public class ProductOption {
     @Column(length = 100)
     private String sku;
 
-    private Integer stokck = 0;
+    private Integer stock = 0;
 
     private Integer displayOrder = 0;
 }
