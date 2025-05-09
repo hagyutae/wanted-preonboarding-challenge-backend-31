@@ -17,6 +17,7 @@ export const mockProductImageRepository = makeMockRepository();
 export const mockProductTagRepository = makeMockRepository();
 export const mockReviewRepository = makeMockRepository();
 export const mockCategoryRepository = makeMockRepository();
+export const mockBrowsingRepository = makeMockRepository();
 
 export const mockRepositoryProviders = [
   {
@@ -58,5 +59,9 @@ export const mockRepositoryProviders = [
   {
     provide: "ICategoryRepository",
     useValue: mockCategoryRepository,
+  },
+  {
+    provide: "IBrowsingRepository",
+    useValue: mockBrowsingRepository,
   },
 ];

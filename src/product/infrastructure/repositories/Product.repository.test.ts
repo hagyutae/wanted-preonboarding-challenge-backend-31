@@ -4,15 +4,18 @@ import { EntityManager, UpdateResult } from "typeorm";
 import { ProductCatalogDTO, ProductSummaryDTO } from "@product/application/dto";
 import { Product } from "@product/domain/entities";
 import ProductRepository from "./Product.repository";
+import { BrowsingRepository } from "@browsing/infrastructure/repositories";
 
 describe("ProductRepository", () => {
-  let repository: ProductRepository;
+  let productRepository: ProductRepository;
+  let browsingRepository: BrowsingRepository;
   const mockEntityManager = global.mockEntityManager;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductRepository,
+        BrowsingRepository,
         {
           provide: EntityManager,
           useValue: mockEntityManager,
@@ -20,7 +23,8 @@ describe("ProductRepository", () => {
       ],
     }).compile();
 
-    repository = module.get<ProductRepository>(ProductRepository);
+    productRepository = module.get<ProductRepository>(ProductRepository);
+    browsingRepository = module.get<BrowsingRepository>(BrowsingRepository);
   });
 
   describe("save", () => {
@@ -35,7 +39,7 @@ describe("ProductRepository", () => {
       const mockSavedProduct = { ...product, seller: { id: 10 }, brand: { id: 20 } };
       mockEntityManager.save.mockResolvedValue(mockSavedProduct);
 
-      const result = await repository.save(product);
+      const result = await productRepository.save(product);
 
       expect(result).toEqual(mockSavedProduct);
     });
@@ -62,7 +66,7 @@ describe("ProductRepository", () => {
         .fn()
         .mockResolvedValue(mockProducts);
 
-      const result = await repository.find_by_filters(filters);
+      const result = await browsingRepository.find_by_filters(filters);
 
       expect(result).toEqual(mockProducts);
     });
@@ -73,7 +77,7 @@ describe("ProductRepository", () => {
       const mockProduct = { id: 1, name: "Test Product" } as ProductCatalogDTO;
       mockEntityManager.findOne.mockResolvedValue(mockProduct);
 
-      const result = await repository.find_by_id(1);
+      const result = await browsingRepository.find_by_id(1);
 
       expect(result).toEqual(mockProduct);
     });
@@ -90,7 +94,7 @@ describe("ProductRepository", () => {
 
       mockEntityManager.update.mockResolvedValue({ affected: 1 } as UpdateResult);
 
-      const result = await repository.update(product, 1);
+      const result = await productRepository.update(product, 1);
 
       expect(result).toBe(true);
     });
@@ -100,7 +104,7 @@ describe("ProductRepository", () => {
     it("상품 삭제 성공", async () => {
       mockEntityManager.delete.mockResolvedValue({ affected: 1 } as UpdateResult);
 
-      const result = await repository.delete(1);
+      const result = await productRepository.delete(1);
 
       expect(result).toBe(true);
     });

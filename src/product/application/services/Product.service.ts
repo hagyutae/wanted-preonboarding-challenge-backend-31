@@ -174,7 +174,7 @@ export default class ProductService {
       });
     }
 
-    const updated_product = await this.repository.find_by_id(product_id);
+    const updated_product = await this.browsing_repository.find_by_id(product_id);
 
     return (({ id, name, slug, updated_at }) => ({
       id: id!,
