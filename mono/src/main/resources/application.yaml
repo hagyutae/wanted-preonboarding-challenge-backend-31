@@ -16,6 +16,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        default_batch_fetch_size: 100
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
@@ -23,8 +24,8 @@ spring:
     init:
       mode: always
 
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.hibernate.orm.jdbc.bind : TRACE
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+#    org.hibernate.orm.jdbc.bind : TRACE
