@@ -1,10 +1,11 @@
 package wanted.shop.test;
 
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 import wanted.shop.common.annotation.ValidationFailureMessage;
 import wanted.shop.common.api.PaginatedData;
 import wanted.shop.common.api.Pagination;
@@ -41,4 +42,14 @@ public class TestController {
         return new SuccessResponse<>(user);
     }
 
+    @PostMapping("/ping")
+    public String ping(@RequestBody PingRequest request) {
+        return "received: " + request.getMessage();
+    }
+
+    @Getter @Setter
+    @NoArgsConstructor
+    public static class PingRequest {
+        private String message;
+    }
 }

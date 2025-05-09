@@ -6,7 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wanted.shop.common.api.Pagination;
-import wanted.shop.product.domain.ProductId;
+import wanted.shop.product.domain.entity.ProductId;
 import wanted.shop.review.domain.entity.Review;
 import wanted.shop.review.domain.entity.ReviewId;
 import wanted.shop.review.domain.query.ReviewPageRequest;
@@ -46,7 +46,9 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(ReviewId reviewId) {
-        Review existingReview = reviewRepository.findById(reviewId);
+        Review existingReview = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("없는 리뷰입니다"));
+
         existingReview.delete();
         reviewRepository.save(existingReview);
     }
@@ -63,7 +65,9 @@ public class ReviewService {
 
     @Transactional
     public ReviewUpdateResponse updateReview(ReviewId reviewId, ReviewDataRequest reviewDataRequest) {
-        Review review = reviewRepository.findById(reviewId);
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("없는 리뷰입니다"));
+
         review.updateReviewData(reviewDataRequest.toReviewData());
         return review.toUpdateResponse();
     }

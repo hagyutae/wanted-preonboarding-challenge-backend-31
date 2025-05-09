@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import wanted.shop.common.api.Message;
 import wanted.shop.common.api.SuccessResponse;
-import wanted.shop.product.domain.ProductId;
+import wanted.shop.product.domain.entity.ProductId;
 import wanted.shop.review.domain.query.ReviewPageRequest;
 import wanted.shop.review.dto.ReviewDataRequest;
 import wanted.shop.review.dto.ReviewDto;

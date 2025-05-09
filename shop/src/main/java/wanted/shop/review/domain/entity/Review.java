@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import wanted.shop.product.domain.ProductId;
+import wanted.shop.product.domain.entity.ProductId;
 import wanted.shop.review.dto.ReviewDto;
 import wanted.shop.review.dto.ReviewUpdateResponse;
 import wanted.shop.user.domain.User;
@@ -18,7 +18,6 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_id_seq")
     @SequenceGenerator(name = "review_id_seq", sequenceName = "reviews_id_seq", allocationSize = 1)
-    @Column(name = "id")
     private Long id;
 
     public ReviewId getId() {

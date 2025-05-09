@@ -1,4 +1,4 @@
-package wanted.shop.review.domain.entity;
+package wanted.shop.brand.domain.entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -11,19 +11,20 @@ import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
-public class ReviewId implements Serializable {
+public class BrandId implements Serializable {
+
     private final Long value;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ReviewId reviewId)) return false;
-        return Objects.equals(value, reviewId.value);
+        if (!(o instanceof BrandId brandId)) return false;
+        return Objects.equals(value, brandId.value);
     }
 
     @Override
     public int hashCode() {
         return Objects.hashCode(value);
     }
-
 }
+

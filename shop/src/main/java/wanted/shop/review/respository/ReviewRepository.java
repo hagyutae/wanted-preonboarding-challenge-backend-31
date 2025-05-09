@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import wanted.shop.review.domain.entity.Review;
 import wanted.shop.review.domain.entity.ReviewId;
 
+import java.util.Optional;
+
 @Repository
 @AllArgsConstructor
 public class ReviewRepository {
@@ -18,9 +20,8 @@ public class ReviewRepository {
         return dataRepository.findAll(spec, pageable);
     }
 
-    public Review findById(ReviewId reviewId) {
-        return dataRepository.findById(reviewId.getValue())
-                .orElseThrow(() -> new RuntimeException("없는 리뷰입니다"));
+    public Optional<Review> findById(ReviewId reviewId) {
+        return dataRepository.findById(reviewId.getValue());
     }
 
     public Review save(Review review) {
