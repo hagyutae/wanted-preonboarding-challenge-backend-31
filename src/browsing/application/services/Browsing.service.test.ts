@@ -9,8 +9,7 @@ describe("BrowsingService", () => {
 
   beforeEach(async () => {
     const mockRepository: jest.Mocked<IBrowsingRepository> = {
-      get_new_products: jest.fn(),
-      get_popular_products: jest.fn(),
+      find_by_filters: jest.fn(),
       get_featured_categories: jest.fn(),
     };
 
@@ -42,8 +41,6 @@ describe("BrowsingService", () => {
       { id: 2, name: "카테고리2" },
     ];
 
-    repository.get_new_products.mockResolvedValue(newProducts);
-    repository.get_popular_products.mockResolvedValue(popularProducts);
     repository.get_featured_categories.mockResolvedValue(featuredCategories);
 
     const result = await service.find();
@@ -53,8 +50,6 @@ describe("BrowsingService", () => {
       popular_products: popularProducts,
       featured_categories: featuredCategories,
     });
-    expect(repository.get_new_products).toHaveBeenCalledWith(1, 5);
-    expect(repository.get_popular_products).toHaveBeenCalled();
     expect(repository.get_featured_categories).toHaveBeenCalled();
   });
 });

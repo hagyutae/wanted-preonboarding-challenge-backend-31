@@ -10,12 +10,15 @@ export default class BrowsingService {
   ) {}
 
   async find() {
-    const page = 1;
-    const per_page = 5;
+    const new_products = await this.repository.find_by_filters({
+      sort_field: "created_at",
+      sort_order: "DESC",
+    });
 
-    const new_products = await this.repository.get_new_products(page, per_page);
-
-    const popular_products = await this.repository.get_popular_products();
+    const popular_products = await this.repository.find_by_filters({
+      sort_field: "rating",
+      sort_order: "DESC",
+    });
 
     const featured_categories = await this.repository.get_featured_categories();
 
