@@ -5,8 +5,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -31,8 +34,8 @@ public class ProductDetail {
     private BigDecimal weight;
 
     @Column(columnDefinition = "jsonb")
-    @Convert(converter = JsonbConverter.class)
-    private Map<String, Object> dimensions;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private String dimensions;
 
     @Column(columnDefinition = "TEXT")
     private String materials;
@@ -47,8 +50,8 @@ public class ProductDetail {
     private String careInstructions;
 
     @Column(columnDefinition = "jsonb")
-    @Convert(converter = JsonbConverter.class)
-    private Map<String, Object> additionalInfo;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private String additionalInfo;
 
 
 }

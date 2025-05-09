@@ -1,11 +1,16 @@
 package cqrs.precourse.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import cqrs.precourse.converter.JsonbConverter;
 import cqrs.precourse.domain.*;
 import cqrs.precourse.dto.ProductDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cqrs.precourse.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +19,10 @@ import static cqrs.precourse.dto.ProductDto.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
+    private final ObjectMapper objectMapper;
     private JsonbConverter jsonbConverter;
 
     private final ProductRepository productRepository;
@@ -32,9 +39,12 @@ public class ProductService {
     private final ProductOptionGroupRepository productOptionGroupRepository;
 
 
-    public ProductCreateResponseDto createProduct(ProductCreateRequestDto requestDto) {
+    @Transactional
+    public ProductCreateResponseDto createProduct(ProductCreateRequestDto requestDto) throws JsonProcessingException {
 
         // seller 찾기
+        log.info("Finding seller with ID: {}", requestDto.sellerId());
+
         Seller seller = sellerRepository.findById(requestDto.sellerId())
                 .orElseThrow(()-> new IllegalArgumentException("Invalid seller"));
 
@@ -50,6 +60,7 @@ public class ProductService {
                 .fullDescription(requestDto.fullDescription())
                 .seller(seller)
                 .brand(brand)
+                .status(requestDto.status())
                 .build();
 
         productRepository.save(product);
@@ -61,29 +72,24 @@ public class ProductService {
         dimensions.put("height", requestDto.detail().dimensions().height());
         dimensions.put("depth", requestDto.detail().dimensions().depth());
 
+        String dimentionsJson = objectMapper.writeValueAsString(dimensions);
+
         // additionalInfo 맵으로 변환
         Map<String, Object> additionalInfo = new HashMap<>();
-        additionalInfo.put("assemblyRequired", requestDto.detail().additionalInfo().assemblyRequired());
-        additionalInfo.put("assemblyTime", requestDto.detail().additionalInfo().assemblyTime());
+        additionalInfo.put("assembly_required", requestDto.detail().additionalInfo().assemblyRequired());
+        additionalInfo.put("assembly_time", requestDto.detail().additionalInfo().assemblyTime());
 
-        /**
-         * public AdditionalInfoDto toDto(Map<String, Object> map) {
-         *     return new AdditionalInfoDto(
-         *         (Boolean) map.get("assembly_required"),
-         *         (String) map.get("assembly_time")
-         *     );
-         * }
-         */
+        String additionalInfojsonb = objectMapper.writeValueAsString(additionalInfo);
 
         // productDetail저장
         ProductDetail productDetail = ProductDetail.builder()
                 .product(product)
                 .weight(requestDto.detail().weight())
-                .dimensions(dimensions)
+                .dimensions(dimentionsJson)
                 .materials(requestDto.detail().materials())
                 .countryOfOrigin(requestDto.detail().countryOfOrigin())
                 .careInstructions(requestDto.detail().careInstructions())
-                .additionalInfo(additionalInfo)
+                .additionalInfo(additionalInfojsonb)
                 .build();
 
         productDetailRepository.save(productDetail);
@@ -115,7 +121,7 @@ public class ProductService {
         }
 
         // productOptionGroup 저장
-        for (OptionGroupDto optionGroupDto : requestDto.optionGroup()) {
+        for (OptionGroupDto optionGroupDto : requestDto.optionGroups()) {
             ProductOptionGroup productOptionGroup = ProductOptionGroup.builder()
                     .product(product)
                     .name(optionGroupDto.name())
@@ -142,8 +148,13 @@ public class ProductService {
 
         // productImage 저장
         for (ImagesDto dto : requestDto.images()) {
-            ProductOption productOption = productOptionRepository.findById(dto.optionId())
-                    .orElse(null);
+            ProductOption productOption =null;
+            if (dto.optionId()!=null) {
+                productOption = productOptionRepository.findById(dto.optionId())
+                        .orElseThrow(()-> new IllegalArgumentException("Invalid option"));
+
+            }
+
 
             ProductImage productImage = ProductImage.builder()
                     .product(product)
