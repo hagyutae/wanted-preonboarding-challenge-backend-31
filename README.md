@@ -58,210 +58,278 @@ wanted-preonboarding-challenge-backend-31
 │  ├─ 09.users.sql
 │  └─ 10.reviews.sql
 ├─ src
-│  ├─ domain
-│  │  ├─ entities
-│  │  │  └─ index.ts
-│  │  │     ├─ Product.ts
-│  │  │     ├─ Product_Detail.ts
-│  │  │     ├─ Product_Image.ts
-│  │  │     ├─ Product_Option.ts
-│  │  │     ├─ Product_Price.ts
-│  │  │     ├─ Brand.ts
-│  │  │     ├─ Category.ts
-│  │  │     ├─ Review.ts
-│  │  │     ├─ Seller.ts
-│  │  │     ├─ Tag.ts
-│  │  │     └─ User.ts
-│  │  └─ repositories
-│  │     └─ index.ts
-│  │        ├─ IMainRepository.ts
-│  │        └─ IRepository.ts
-│  ├─ application
-│  │  ├─ dto
-│  │  │  └─ index.ts
-│  │  │     ├─ Filter.dto.ts
-│  │  │     ├─ ProductCatalog.dto.ts
-│  │  │     ├─ ProductCategory.dto.ts
-│  │  │     ├─ ProductInput.dto.ts
-│  │  │     ├─ ProductOptionGroup.dto.ts
-│  │  │     ├─ ProductSummary.dto.ts
-│  │  │     └─ ProductTag.dto.ts
-│  │  └─ services
-│  │     └─ index.ts
-│  │        ├─ Product.service.ts
-│  │        │  └─ Product.service.test.ts
-│  │        ├─ Product_Options.service.ts
-│  │        │  └─ Product_Options.service.test.ts
-│  │        ├─ Main.service.ts
-│  │        │  └─ Main.service.test.ts
-│  │        ├─ Category.service.ts
-│  │        │  └─ Category.service.test.ts
-│  │        └─ Review.service.ts
-│  │           └─ Review.service.test.ts
-│  ├─ infrastructure
-│  │  ├─ auth
-│  │  │  ├─ jwtInterceptor.ts
-│  │  │  └─ verifier.ts
-│  │  ├─ entities
-│  │  │  └─ index.ts
-│  │  │     ├─ Product.entity.ts
-│  │  │     │  └─ Product.entity.test.ts
-│  │  │     ├─ Product_Category.entity.ts
-│  │  │     │  └─ Product_Category.entity.test.ts
-│  │  │     ├─ Product_Detail.entity.ts
-│  │  │     │  └─ Product_Detail.entity.test.ts
-│  │  │     ├─ Product_Image.entity.ts
-│  │  │     │  └─ Product_Image.entity.test.ts
-│  │  │     ├─ Product_Option.entity.ts
-│  │  │     │  └─ Product_Option.entity.test.ts
-│  │  │     ├─ Product_Option_Group.entity.ts
-│  │  │     │  └─ Product_Option_Group.entity.test.ts
-│  │  │     ├─ Product_Price.entity.ts
-│  │  │     │  └─ Product_Price.entity.test.ts
-│  │  │     ├─ Product_Tag.entity.ts
-│  │  │     │  └─ Product_Tag.entity.test.ts
-│  │  │     ├─ Brand.entity.ts
-│  │  │     │  └─ Brand.entity.test.ts
-│  │  │     ├─ Category.entity.ts
-│  │  │     │  └─ Category.entity.test.ts
-│  │  │     ├─ Review.entity.ts
-│  │  │     │  └─ Review.entity.test.ts
-│  │  │     ├─ Seller.entity.ts
-│  │  │     │  └─ Seller.entity.test.ts
-│  │  │     ├─ Tag.entity.ts
-│  │  │     │  └─ Tag.entity.test.ts
-│  │  │     └─ User.entity.ts
-│  │  │        └─ User.entity.test.ts
-│  │  ├─ repositories
-│  │  │  └─ index.ts
-│  │  │     ├─ BaseRepository.ts
-│  │  │     ├─ Product.repository.ts
-│  │  │     │  └─ Product.repository.test.ts
-│  │  │     ├─ Product_Category.repository.ts
-│  │  │     │  └─ Product_Category.repository.test.ts
-│  │  │     ├─ Product_Detail.repository.ts
-│  │  │     │  └─ Product_Detail.repository.test.ts
-│  │  │     ├─ Product_Image.repository.ts
-│  │  │     │  └─ Product_Image.repository.test.ts
-│  │  │     ├─ Product_Options.repository.ts
-│  │  │     │  └─ Product_Options.repository.test.ts
-│  │  │     ├─ Product_Option_Group.repository.ts
-│  │  │     │  └─ Product_Option_Group.repository.test.ts
-│  │  │     ├─ Product_Price.repository.ts
-│  │  │     │  └─ Product_Price.repository.test.ts
-│  │  │     ├─ Product_Tag.repository.ts
-│  │  │     │  └─ Product_Tag.repository.test.ts
-│  │  │     ├─ Main.repository.ts
-│  │  │     │  └─ Main.repository.test.ts
-│  │  │     ├─ Category.repository.ts
-│  │  │     │  └─ Category.repository.test.ts
-│  │  │     └─ Review.repository.ts
-│  │  │        └─ Review.repository.test.ts
-│  │  ├─ views
-│  │  │  └─ index.ts
-│  │  │     ├─ ProductCatalog.view.ts
-│  │  │     │  └─ ProductCatalog.view.test.ts
-│  │  │     └─ ProductSummary.view.ts
-│  │  │        └─ ProductSummary.view.test.ts
-│  │  └─ provider.ts
-│  ├─ presentation
-│  │  ├─ controllers
-│  │  │  └─ index.ts
-│  │  │     ├─ Product.controller.ts
-│  │  │     │  └─ Product.controller.test.ts
-│  │  │     ├─ Product_Options.controller.ts
-│  │  │     │  └─ Product_Options.controller.test.ts
-│  │  │     ├─ Main.controller.ts
-│  │  │     │  └─ Main.controller.test.ts
-│  │  │     ├─ Category.controller.ts
-│  │  │     │  └─ Category.controller.test.ts
-│  │  │     └─ Review.controller.ts
-│  │  │        └─ Review.controller.test.ts
+│  ├─ utility
+│  │  ├─ downloadOpenAPI.ts
+│  │  ├─ generatorSwagger.ts
+│  │  └─ extractDTOExample.ts
+│  ├─ libs
+│  │  ├─ config
+│  │  │  └─ typeorm.config.ts
+│  │  ├─ constants
+│  │  │  └─ ErrorCode.ts
 │  │  ├─ decorators
 │  │  │  └─ index.ts
 │  │  │     ├─ ApiErrorResponse.ts
-│  │  │     └─ ApiStandardResponse.ts
-│  │  ├─ dto
-│  │  │  └─ index.ts
-│  │  │     ├─ model
-│  │  │     │  ├─ Brand.dto.ts
-│  │  │     │  │  └─ Brand.dto.test.ts
-│  │  │     │  ├─ Category.dto.ts
-│  │  │     │  │  └─ Category.dto.test.ts
-│  │  │     │  ├─ Image.dto.ts
-│  │  │     │  │  └─ Image.dto.test.ts
-│  │  │     │  ├─ ProductDetail.dto.ts
-│  │  │     │  │  └─ ProductDetail.dto.test.ts
-│  │  │     │  ├─ ProductOption.dto.ts
-│  │  │     │  │  └─ ProductOption.dto.test.ts
-│  │  │     │  ├─ ProductOptionGroup.dto.ts
-│  │  │     │  │  └─ ProductOptionGroup.dto.test.ts
-│  │  │     │  ├─ ProductPrice.dto.ts
-│  │  │     │  │  └─ ProductPrice.dto.test.ts
-│  │  │     │  ├─ Review.dto.ts
-│  │  │     │  │  └─ Review.dto.test.ts
-│  │  │     │  ├─ Seller.dto.ts
-│  │  │     │  │  └─ Seller.dto.test.ts
-│  │  │     │  └─ Tag.dto.ts
-│  │  │     │     └─ Tag.dto.test.ts
-│  │  │     ├─ request
-│  │  │     │  ├─ CategoryQuery.dto.ts
-│  │  │     │  │  └─ CategoryQuery.dto.test.ts
-│  │  │     │  ├─ Param.dto.ts
-│  │  │     │  │  └─ Param.dto.test.ts
-│  │  │     │  ├─ ProductBody.dto.ts
-│  │  │     │  │  └─ ProductBody.dto.test.ts
-│  │  │     │  ├─ ProductQuery.dto.ts
-│  │  │     │  │  └─ ProductQuery.dto.test.ts
-│  │  │     │  ├─ ReviewBody.dto.ts
-│  │  │     │  │  └─ ReviewBody.dto.test.ts
-│  │  │     │  └─ ReviewQuery.dto.ts
-│  │  │     │     └─ ReviewQuery.dto.test.ts
-│  │  │     ├─ response
-│  │  │     │  ├─ CategoryResponseBundle.dto.ts
-│  │  │     │  │  └─ CategoryResponseBundle.dto.test.ts
-│  │  │     │  ├─ MainResponseBundle.dto.ts
-│  │  │     │  │  └─ MainResponseBundle.dto.test.ts
-│  │  │     │  ├─ NestedCategory.dto.ts
-│  │  │     │  │  └─ NestedCategory.dto.test.ts
-│  │  │     │  ├─ PaginationSummary.dto.ts
-│  │  │     │  │  └─ PaginationSummary.dto.test.ts
-│  │  │     │  ├─ ProductCatalog.dto.ts
-│  │  │     │  │  └─ ProductCatalog.dto.test.ts
-│  │  │     │  ├─ ProductResponse.dto.ts
-│  │  │     │  │  └─ ProductResponse.dto.test.ts
-│  │  │     │  ├─ ProductResponseBundle.dto.ts
-│  │  │     │  │  └─ ProductResponseBundle.dto.test.ts
-│  │  │     │  ├─ ProductSummary.dto.ts
-│  │  │     │  │  └─ ProductSummary.dto.test.ts
-│  │  │     │  ├─ Rating.dto.ts
-│  │  │     │  │  └─ Rating.dto.test.ts
-│  │  │     │  ├─ ReviewResponse.dto.ts
-│  │  │     │  │  └─ ReviewResponse.dto.test.ts
-│  │  │     │  ├─ ReviewResponseBundle.dto.ts
-│  │  │     │  │  └─ ReviewResponseBundle.dto.test.ts
-│  │  │     │  └─ ReviewSummary.dto.ts
-│  │  │     │     └─ ReviewSummary.dto.test.ts
-│  │  │     ├─ Error.dto.ts
-│  │  │     │  └─ Error.dto.test.ts
-│  │  │     └─ Response.dto.ts
-│  │  │        └─ Response.dto.test.ts
+│  │  │     ├─ ApiStandardResponse.ts
+│  │  │     └─ ResponseType.ts
 │  │  ├─ filters
 │  │  │  └─ index.ts
 │  │  │     ├─ BadRequestExceptionFilter.ts
 │  │  │     ├─ ConflictExceptionFilter.ts
 │  │  │     ├─ ForbiddenExceptionFilter.ts
-│  │  │     ├─ InternalServerErrorExceptionFilter.ts
+│  │  │     ├─ internalServerErrorExceptionFilter.ts
 │  │  │     ├─ NotFoundExceptionFilter.ts
 │  │  │     ├─ QueryFailedExceptionFilter.ts
 │  │  │     └─ UnauthorizedExceptionFilter.ts
-│  │  └─ mappers
+│  │  └─ interceptors
+│  │     └─ ResponseInterceptor.ts
+│  ├─ shared
+│  │  ├─ dto
+│  │  │  └─ index.ts
+│  │  │     ├─ Error.dto.ts
+│  │  │     │  └─ Error.dto.test.ts
+│  │  │     ├─ PaginationSummary.dto.ts
+│  │  │     │  └─ PaginationSummary.dto.test.ts
+│  │  │     ├─ Param.dto.ts
+│  │  │     │  └─ Param.dto.test.ts
+│  │  │     └─ Response.dto.ts
+│  │  │        └─ Response.dto.test.ts
+│  │  ├─ mappers
+│  │  │  └─ index.ts
+│  │  │     └─ to_FilterDTO.ts
+│  │  └─ repositories
 │  │     └─ index.ts
-│  │        └─ to_FilterDTO.ts
-│  ├─ utility
-│  │  ├─ downloadOpenAPI.ts
-│  │  ├─ generatorSwagger.ts
-│  │  └─ extractDTOExample.ts
+│  │        ├─ BaseRepository.ts
+│  │        ├─ iBaseRepository.ts
+│  │        └─ IBrowsingRepository.ts
+│  ├─ product
+│  │  ├─ application
+│  │  │  ├─ dto
+│  │  │  │  └─ index.ts
+│  │  │  │     ├─ Filter.dto.ts
+│  │  │  │     ├─ ProductCatalog.dto.ts
+│  │  │  │     ├─ ProductCategory.dto.ts
+│  │  │  │     ├─ ProductInput.dto.ts
+│  │  │  │     ├─ ProductOptionGroup.dto.ts
+│  │  │  │     ├─ ProductSummary.dto.ts
+│  │  │  │     └─ ProductTag.dto.ts
+│  │  │  └─ services
+│  │  │     └─ index.ts
+│  │  │        ├─ Product.service.ts
+│  │  │        │  └─ Product.service.test.ts
+│  │  │        └─ Product_Options.service.ts
+│  │  │           └─ Product_Options.service.test.ts
+│  │  ├─ domain
+│  │  │  └─ entities
+│  │  │     └─ index.ts
+│  │  │        ├─ Brand.ts
+│  │  │        ├─ Product.ts
+│  │  │        ├─ Product_Detail.ts
+│  │  │        ├─ Product_Image.ts
+│  │  │        ├─ Product_Option.ts
+│  │  │        ├─ Product_Price.ts
+│  │  │        ├─ Seller.ts
+│  │  │        └─ Tag.ts
+│  │  └─ infrastructure
+│  │  │  ├─ auth
+│  │  │  │  ├─ jwtInterceptor.ts
+│  │  │  │  └─ verifier.ts
+│  │  │  ├─ entities
+│  │  │  │  └─ index.ts
+│  │  │  │     ├─ Brand.entity.ts
+│  │  │  │     │  └─ Brand.entity.test.ts
+│  │  │  │     ├─ Product.entity.ts
+│  │  │  │     │  └─ Product.entity.test.ts
+│  │  │  │     ├─ Product_Category.entity.ts
+│  │  │  │     │  └─ Product_Category.entity.test.ts
+│  │  │  │     ├─ Product_Detail.entity.ts
+│  │  │  │     │  └─ Product_Detail.entity.test.ts
+│  │  │  │     ├─ Product_Image.entity.ts
+│  │  │  │     │  └─ Product_Image.entity.test.ts
+│  │  │  │     ├─ Product_Option.entity.ts
+│  │  │  │     │  └─ Product_Option.entity.test.ts
+│  │  │  │     ├─ Product_Option_Group.entity.ts
+│  │  │  │     │  └─ Product_Option_Group.entity.test.ts
+│  │  │  │     ├─ Product_Price.entity.ts
+│  │  │  │     │  └─ Product_Price.entity.test.ts
+│  │  │  │     ├─ Product_Tag.entity.ts
+│  │  │  │     │  └─ Product_Tag.entity.test.ts
+│  │  │  │     ├─ Seller.entity.ts
+│  │  │  │     │  └─ Seller.entity.test.ts
+│  │  │  │     └─ Tag.entity.ts
+│  │  │  │        └─ Tag.entity.test.ts
+│  │  │  ├─ repositories
+│  │  │  │  └─ index.ts
+│  │  │  │     ├─ Product.repository.ts
+│  │  │  │     │  └─ Product.repository.test.ts
+│  │  │  │     ├─ Product_Category.repository.ts
+│  │  │  │     │  └─ Product_Category.repository.test.ts
+│  │  │  │     ├─ Product_Detail.repository.ts
+│  │  │  │     │  └─ Product_Detail.repository.test.ts
+│  │  │  │     ├─ Product_Image.repository.ts
+│  │  │  │     │  └─ Product_Image.repository.test.ts
+│  │  │  │     ├─ Product_Options.repository.ts
+│  │  │  │     │  └─ Product_Options.repository.test.ts
+│  │  │  │     ├─ Product_Option_Group.repository.ts
+│  │  │  │     │  └─ Product_Option_Group.repository.test.ts
+│  │  │  │     ├─ Product_Price.repository.ts
+│  │  │  │     │  └─ Product_Price.repository.test.ts
+│  │  │  │     └─ Product_Tag.repository.ts
+│  │  │  │        └─ Product_Tag.repository.test.ts
+│  │  │  └─ provider.ts
+│  │  ├─ module.ts
+│  │  └─ presentation
+│  │     ├─ controllers
+│  │     │  └─ index.ts
+│  │     │     ├─ Product.controller.ts
+│  │     │     │  └─ Product.controller.test.ts
+│  │     │     └─ Product_Options.controller.ts
+│  │     │        └─ Product_Options.controller.test.ts
+│  │     └─ dto
+│  │        └─ index.ts
+│  │           ├─ model
+│  │           │  ├─ Brand.dto.ts
+│  │           │  │  └─ Brand.dto.test.ts
+│  │           │  └─ image.dto.ts
+│  │           │  │  └─ image.dto.test.ts
+│  │           │  ├─ ProductDetail.dto.ts
+│  │           │  │  └─ ProductDetail.dto.test.ts
+│  │           │  ├─ ProductOption.dto.ts
+│  │           │  │  └─ ProductOption.dto.test.ts
+│  │           │  ├─ ProductOptionGroup.dto.ts
+│  │           │  │  └─ ProductOptionGroup.dto.test.ts
+│  │           │  ├─ ProductPrice.dto.ts
+│  │           │  │  └─ ProductPrice.dto.test.ts
+│  │           │  ├─ Seller.dto.ts
+│  │           │  │  └─ Seller.dto.test.ts
+│  │           │  └─ Tag.dto.ts
+│  │           │     └─ Tag.dto.test.ts
+│  │           ├─ request
+│  │           │  ├─ ProductBody.dto.ts
+│  │           │  │  └─ ProductBody.dto.test.ts
+│  │           │  └─ ProductQuery.dto.ts
+│  │           │     └─ ProductQuery.dto.test.ts
+│  │           └─ response
+│  │              ├─ ProductResponse.dto.ts
+│  │              │  └─ ProductResponse.dto.test.ts
+│  │              ├─ ProductResponseBundle.dto.ts
+│  │              │  └─ ProductResponseBundle.dto.test.ts
+│  │              └─ Rating.dto.ts
+│  │                 └─ Rating.dto.test.ts
+│  ├─ category
+│  │  ├─ application
+│  │  │  └─ services
+│  │  │     └─ index.ts
+│  │  │        └─ Category.service.ts
+│  │  │           └ Category.service.test.ts
+│  │  ├─ domain
+│  │  │  └─ entities
+│  │  │     └─ index.ts
+│  │  │        └─ Category.ts
+│  │  └─ infrastructure
+│  │  │  ├─ entities
+│  │  │  │  └─ index.ts
+│  │  │  │     └─ Category.entity.ts
+│  │  │  │        └─ Category.entity.test.ts
+│  │  │  ├─ repositories
+│  │  │  │  └─ index.ts
+│  │  │  │     └─ Category.repository.ts
+│  │  │  │        └─ Category.repository.test.ts
+│  │  │  └─ provider.ts
+│  │  ├─ module.ts
+│  │  └─ presentation
+│  │     ├─ controllers
+│  │     │  └─ index.ts
+│  │     │     └─ Category.controller.ts
+│  │     │        └─ Category.controller.test.ts
+│  │     └─ dto
+│  │        └─ index.ts
+│  │           ├─ Category.dto.ts
+│  │           │  └─ Category.dto.test.ts
+│  │           ├─ CategoryQuery.dto.ts
+│  │           │  └─ CategoryQuery.dto.test.ts
+│  │           ├─ CategoryResponseBundle.dto.ts
+│  │           │  └─ CategoryResponseBundle.dto.test.ts
+│  │           └─ NestedCategory.dto.ts
+│  │              └─ NestedCategory.dto.test.ts
+│  ├─ review
+│  │  ├─ application
+│  │  │  ├─ dto
+│  │  │  │  └─ index.ts
+│  │  │  │     └─ Filter.dto.ts
+│  │  │  └─ services
+│  │  │     └─ index.ts
+│  │  │        └─ Review.service.ts
+│  │  │           └─ Review.service.test.ts
+│  │  ├─ domain
+│  │  │  └─ entities
+│  │  │     └─ index.ts
+│  │  │        ├─ Review.ts
+│  │  │        └─ User.ts
+│  │  └─ infrastructure
+│  │  │  ├─ entities
+│  │  │  │  └─ index.ts
+│  │  │  │     ├─ Review.entity.ts
+│  │  │  │     │  └─ Review.entity.test.ts
+│  │  │  │     └─ User.entity.ts
+│  │  │  │        └─ User.entity.test.ts
+│  │  │  ├─ repositories
+│  │  │  │  └─ index.ts
+│  │  │  │     └─ Review.repository.ts
+│  │  │  │        └─ Review.repository.test.ts
+│  │  │  └─ provider.ts
+│  │  ├─ module.ts
+│  │  └─ presentation
+│  │     ├─ controllers
+│  │     │  └─ index.ts
+│  │     │     └─ Review.controller.ts
+│  │     │        └─ Review.controller.test.ts
+│  │     └─ dto
+│  │        └─ index.ts
+│  │           ├─ Review.dto.ts
+│  │           │  └─ Review.dto.test.ts
+│  │           ├─ ReviewBody.dto.ts
+│  │           │  └─ ReviewBody.dto.test.ts
+│  │           ├─ ReviewQuery.dto.ts
+│  │           │  └─ ReviewQuery.dto.test.ts
+│  │           ├─ ReviewResponse.dto.ts
+│  │           │  └─ ReviewResponse.dto.test.ts
+│  │           ├─ ReviewResponseBundle.dto.ts
+│  │           │  └─ ReviewResponseBundle.dto.test.ts
+│  │           └─ ReviewSummary.dto.ts
+│  │              └─ ReviewSummary.dto.test.ts
+│  ├─ browsing
+│  │  ├─ application
+│  │  │  └─ services
+│  │  │     └─ index.ts
+│  │  │        └─ Browsing.service.ts
+│  │  │           └─ Browsing.service.test.ts
+│  │  └─ infrastructure
+│  │  │  ├─ repositories
+│  │  │  │  └─ index.ts
+│  │  │  │     └─ Browsing.repository.ts
+│  │  │  │        └─ Browsing.repository.test.ts
+│  │  │  ├─ views
+│  │  │  │  └─ index.ts
+│  │  │  │     ├─ ProductCatalog.view.ts
+│  │  │  │     │  └─ ProductCatalog.view.test.ts
+│  │  │  │     └─ ProductSummary.view.ts
+│  │  │  │        └─ ProductSummary.view.test.ts
+│  │  │  └─ provider.ts
+│  │  ├─ module.ts
+│  │  └─ presentation
+│  │     ├─ controllers
+│  │     │  └─ index.ts
+│  │     │     └─ Main.controller.ts
+│  │     │        └─ Main.controller.test.ts
+│  │     └─ dto
+│  │        └─ index.ts
+│  │           ├─ MainResponseBundle.dto.ts
+│  │           │  └─ MainResponseBundle.dto.test.ts
+│  │           ├─ ProductCatalog.dto.ts
+│  │           │  └─ ProductCatalog.dto.test.ts
+│  │           └─ ProductSummary.dto.ts
+│  │              └─ ProductSummary.dto.test.ts
 │  ├─ __mocks__
 │  │  ├─ entityManagerMock.ts
 │  │  └─ repositoryMock.ts
