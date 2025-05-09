@@ -4,7 +4,7 @@ import lombok.Setter;
 import wanted.shop.review.domain.entity.ReviewData;
 
 @Setter
-public class ReviewCreateRequest {
+public class ReviewDataRequest {
     private Integer rating;
     private String title;
     private String content;

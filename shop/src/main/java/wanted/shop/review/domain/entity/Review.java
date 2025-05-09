@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wanted.shop.product.domain.ProductId;
 import wanted.shop.review.dto.ReviewDto;
+import wanted.shop.review.dto.ReviewUpdateResponse;
 import wanted.shop.user.domain.User;
 
 @Getter
@@ -90,6 +91,19 @@ public class Review {
         return review;
     }
 
+    public ReviewUpdateResponse toUpdateResponse() {
+        return ReviewUpdateResponse.builder()
+                .id(this.id)
+                .rating(reviewData.getRating())
+                .title(reviewData.getTitle())
+                .content(reviewData.getContent())
+                .updatedAt(timestamps.getUpdatedAt().toString())
+                .build();
+    }
 
+    public void updateReviewData(ReviewData reviewData) {
+        this.reviewData = reviewData;
+        this.timestamps.markUpdated();
+    }
 
 }

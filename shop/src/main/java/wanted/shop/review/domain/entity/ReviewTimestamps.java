@@ -22,6 +22,10 @@ public class ReviewTimestamps {
         return reviewTimestamps;
     }
 
+    public void markUpdated() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public void delete() {
         this.deletedAt = LocalDateTime.now();
     }

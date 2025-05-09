@@ -8,9 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import wanted.shop.common.api.Message;
 import wanted.shop.common.api.SuccessResponse;
 import wanted.shop.product.domain.ProductId;
-import wanted.shop.review.domain.entity.Review;
 import wanted.shop.review.domain.query.ReviewPageRequest;
-import wanted.shop.review.dto.ReviewCreateRequest;
+import wanted.shop.review.dto.ReviewDataRequest;
 import wanted.shop.review.dto.ReviewDto;
 import wanted.shop.review.dto.ReviewListResponse;
 import wanted.shop.review.service.ReviewService;
@@ -37,10 +36,10 @@ public class ProductReviewController {
     @PostMapping("/{productId}/reviews")
     public ResponseEntity<SuccessResponse<Object>> createReview(
             @PathVariable Long productId,
-            @RequestBody ReviewCreateRequest reviewCreateRequest) {
+            @RequestBody ReviewDataRequest reviewDataRequest) {
 
         // 임의의 유저
-        ReviewDto response = reviewService.createReview(reviewCreateRequest, new UserId(1L), new ProductId(productId));
+        ReviewDto response = reviewService.createReview(reviewDataRequest, new UserId(1L), new ProductId(productId));
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import wanted.shop.common.api.Message;
 import wanted.shop.common.api.SuccessResponse;
 import wanted.shop.review.domain.entity.ReviewId;
+import wanted.shop.review.dto.ReviewDataRequest;
+import wanted.shop.review.dto.ReviewUpdateResponse;
 import wanted.shop.review.service.ReviewService;
 
 @AllArgsConstructor
@@ -18,5 +20,14 @@ public class ReviewController {
     public SuccessResponse<Void> deleteReview(@PathVariable Long reviewId){
         reviewService.deleteReview(new ReviewId(reviewId));
         return new SuccessResponse<>(null, new Message("리뷰가 성공적으로 삭제되었습니다"));
+    }
+
+    @PutMapping("/{reviewId}")
+    public SuccessResponse<ReviewUpdateResponse> updateReview(
+            @PathVariable Long reviewId,
+            @RequestBody ReviewDataRequest reviewDataRequest) {
+
+        ReviewUpdateResponse response = reviewService.updateReview(new ReviewId(reviewId), reviewDataRequest);
+        return new SuccessResponse<>(response, new Message("리뷰가 성공적으로 수정되었습니다"));
     }
 }
