@@ -6,20 +6,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import wanted.shop.product.domain.ProductId;
 import wanted.shop.review.dto.ReviewDto;
-import wanted.shop.review.dto.ReviewSummaryDto;
 import wanted.shop.user.domain.User;
 
 @Getter
 @Entity
-@Table(name = "Reviews")
+@Table(name = "reviews")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review {
 
-    @EmbeddedId
-    private ReviewId reviewId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_id_seq")
+    @SequenceGenerator(name = "review_id_seq", sequenceName = "reviews_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private Long id;
+
+    public ReviewId getId() {
+        return new ReviewId(this.id);
+    }
 
     @Embedded
-    @AttributeOverride(name = "id", column = @Column(name = "product_id"))
+    @AttributeOverride(name = "value", column = @Column(name = "product_id"))
     private ProductId productId;
 
     @ManyToOne
@@ -53,9 +59,9 @@ public class Review {
     }
     public ReviewDto toReviewDto() {
         return ReviewDto.builder()
-                .id(reviewId.getId())
+                .id(id)
                 .user(ReviewDto.UserDto.builder()
-                        .id(user.getUserid().getId())
+                        .id(user.getId().getValue())
                         .name(user.getUserInfo().getName())
                         .email(user.getUserInfo().getEmail())
                         .avatarUrl(user.getUserInfo().getAvatarUrl())
@@ -69,5 +75,21 @@ public class Review {
                 .helpfulVotes(helpfulVotes)
                 .build();
     }
+
+    public static Review create(User user, ProductId productId, ReviewData reviewData) {
+        Review review = new Review();
+
+        review.user = user;
+        review.productId = productId;
+        review.reviewData = reviewData;
+        review.verifiedPurchase = true;
+        review.helpfulVotes = 0;
+        review.timestamps = ReviewTimestamps.createNow();
+
+        System.out.println(reviewData);
+        return review;
+    }
+
+
 
 }

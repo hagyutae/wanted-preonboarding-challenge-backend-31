@@ -15,6 +15,13 @@ public class ReviewTimestamps {
 
     private LocalDateTime deletedAt;
 
+    public static ReviewTimestamps createNow() {
+        ReviewTimestamps reviewTimestamps = new ReviewTimestamps();
+        reviewTimestamps.createdAt = LocalDateTime.now();
+        reviewTimestamps.updatedAt = LocalDateTime.now();
+        return reviewTimestamps;
+    }
+
     public void delete() {
         this.deletedAt = LocalDateTime.now();
     }

@@ -18,8 +18,8 @@ public class ReviewSpecification {
 
             List<Predicate> predicates = List.of(
                     cb.equal(
-                            root.get(Review_.productId).get("id"),
-                            productId.getId()
+                            root.get(Review_.productId).get("value"),
+                            productId.getValue()
                     ),
                     cb.equal(
                             root.get(Review_.reviewData).get(ReviewData_.RATING),
@@ -39,8 +39,8 @@ public class ReviewSpecification {
 
             List<Predicate> predicates = List.of(
                     cb.equal(
-                            root.get(Review_.productId).get("id"),
-                            productId.getId()
+                            root.get(Review_.productId).get("value"),
+                            productId.getValue()
                     ),
                     cb.isNull(
                             root.get(Review_.timestamps).get(ReviewTimestamps_.DELETED_AT)

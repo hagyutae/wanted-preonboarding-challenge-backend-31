@@ -18,9 +18,9 @@ public enum ReviewSortField {
     HELPFUL_VOTES("helpfulVotes"),
     VERIFIED_PURCHASE("verifiedPurchase"),
 
-    PRODUCT_ID("productId.id"),
+    PRODUCT_ID("productId.value"),
     USER_ID("user.id"),
-    REVIEW_ID("reviewId.id");
+    REVIEW_ID("id");
 
     private final String path;
 

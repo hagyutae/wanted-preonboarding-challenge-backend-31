@@ -19,11 +19,11 @@ public class ReviewRepository {
     }
 
     public Review findById(ReviewId reviewId) {
-        return dataRepository.findById(reviewId)
+        return dataRepository.findById(reviewId.getValue())
                 .orElseThrow(() -> new RuntimeException("없는 리뷰입니다"));
     }
 
-    public void save(Review review) {
-        dataRepository.save(review);
+    public Review save(Review review) {
+        return dataRepository.save(review);
     }
 }

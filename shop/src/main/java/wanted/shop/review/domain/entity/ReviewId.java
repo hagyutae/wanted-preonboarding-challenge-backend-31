@@ -14,18 +14,18 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewId implements Serializable {
-    Long id;
+    private Long value;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ReviewId reviewId)) return false;
-        return Objects.equals(id, reviewId.id);
+        return Objects.equals(value, reviewId.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(value);
     }
 
 }

@@ -2,12 +2,19 @@ package wanted.shop.review.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import wanted.shop.common.api.Message;
 import wanted.shop.common.api.SuccessResponse;
 import wanted.shop.product.domain.ProductId;
+import wanted.shop.review.domain.entity.Review;
 import wanted.shop.review.domain.query.ReviewPageRequest;
+import wanted.shop.review.dto.ReviewCreateRequest;
+import wanted.shop.review.dto.ReviewDto;
 import wanted.shop.review.dto.ReviewListResponse;
 import wanted.shop.review.service.ReviewService;
+import wanted.shop.user.domain.UserId;
 
 @AllArgsConstructor
 @RestController
@@ -17,7 +24,8 @@ public class ProductReviewController {
     private final ReviewService reviewService;
 
     @GetMapping("/{productId}/reviews")
-    public SuccessResponse<ReviewListResponse> getReviewsByProductId(
+    public SuccessResponse<ReviewListResponse
+            > getReviewsByProductId(
             @ModelAttribute @Valid ReviewPageRequest request,
             @PathVariable Long productId
     ) {
@@ -26,5 +34,17 @@ public class ProductReviewController {
         return new SuccessResponse<>(response);
     }
 
+    @PostMapping("/{productId}/reviews")
+    public ResponseEntity<SuccessResponse<Object>> createReview(
+            @PathVariable Long productId,
+            @RequestBody ReviewCreateRequest reviewCreateRequest) {
+
+        // 임의의 유저
+        ReviewDto response = reviewService.createReview(reviewCreateRequest, new UserId(1L), new ProductId(productId));
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new SuccessResponse<>(response, new Message("리뷰가 성공적으로 등록되었습니다.")));
+    }
 }
 

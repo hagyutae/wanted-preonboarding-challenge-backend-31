@@ -2,6 +2,7 @@ package wanted.shop.user.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import wanted.shop.review.domain.entity.ReviewId;
 
 import java.time.LocalDateTime;
 
@@ -10,8 +11,15 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 public class User {
 
-    @EmbeddedId
-    private UserId userid;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
+    @SequenceGenerator(name = "user_id_seq", sequenceName = "users_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private Long id;
+
+    public UserId getId() {
+        return new UserId(this.id);
+    }
 
     @Embedded
     @AttributeOverrides({

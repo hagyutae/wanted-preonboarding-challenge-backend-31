@@ -1,6 +1,5 @@
 package wanted.shop.user.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,18 +14,18 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserId implements Serializable {
-    private Long id;
+    private Long value;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserId userId)) return false;
-        return Objects.equals(id, userId.id);
+        return Objects.equals(value, userId.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(value);
     }
 
 }
