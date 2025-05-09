@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.wanted_preonboarding_challenge_backend.eCommerce.common.ApiResponse;
+import com.wanted_preonboarding_challenge_backend.eCommerce.dto.common.ApiResponse;
 
 import java.util.List;
 

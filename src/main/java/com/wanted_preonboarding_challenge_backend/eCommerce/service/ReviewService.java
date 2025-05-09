@@ -1,6 +1,6 @@
 package com.wanted_preonboarding_challenge_backend.eCommerce.service;
 
-import com.wanted_preonboarding_challenge_backend.eCommerce.common.PaginationDto;
+import com.wanted_preonboarding_challenge_backend.eCommerce.dto.common.PaginationDto;
 import com.wanted_preonboarding_challenge_backend.eCommerce.domain.Product;
 import com.wanted_preonboarding_challenge_backend.eCommerce.domain.Review;
 import com.wanted_preonboarding_challenge_backend.eCommerce.dto.SummaryDto;

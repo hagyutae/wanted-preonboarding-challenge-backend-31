@@ -1,6 +1,6 @@
 package com.wanted_preonboarding_challenge_backend.eCommerce.controller;
 
-import com.wanted_preonboarding_challenge_backend.eCommerce.common.ApiResponse;
+import com.wanted_preonboarding_challenge_backend.eCommerce.dto.common.ApiResponse;
 import com.wanted_preonboarding_challenge_backend.eCommerce.dto.review.request.ReviewCreateRequest;
 import com.wanted_preonboarding_challenge_backend.eCommerce.dto.review.request.ReviewUpdateRequest;
 import com.wanted_preonboarding_challenge_backend.eCommerce.dto.review.response.ReviewCreateResponse;

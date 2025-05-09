@@ -1,4 +1,4 @@
-package com.wanted_preonboarding_challenge_backend.eCommerce.common;
+package com.wanted_preonboarding_challenge_backend.eCommerce.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

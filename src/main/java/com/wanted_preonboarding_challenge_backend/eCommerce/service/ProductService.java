@@ -1,7 +1,7 @@
 package com.wanted_preonboarding_challenge_backend.eCommerce.service;
 
 
-import com.wanted_preonboarding_challenge_backend.eCommerce.common.PaginationDto;
+import com.wanted_preonboarding_challenge_backend.eCommerce.dto.common.PaginationDto;
 import com.wanted_preonboarding_challenge_backend.eCommerce.domain.*;
 import com.wanted_preonboarding_challenge_backend.eCommerce.dto.Image.request.ImageAddRequest;
 import com.wanted_preonboarding_challenge_backend.eCommerce.dto.Image.response.ImageAddResponse;

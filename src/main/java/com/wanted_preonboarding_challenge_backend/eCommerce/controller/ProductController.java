@@ -12,7 +12,7 @@ import com.wanted_preonboarding_challenge_backend.eCommerce.dto.product.response
 import com.wanted_preonboarding_challenge_backend.eCommerce.dto.product.response.ProductDetailResponse;
 import com.wanted_preonboarding_challenge_backend.eCommerce.dto.product.response.ProductListResponse;
 import com.wanted_preonboarding_challenge_backend.eCommerce.dto.product.response.ProductUpdateResponse;
-import com.wanted_preonboarding_challenge_backend.eCommerce.common.ApiResponse;
+import com.wanted_preonboarding_challenge_backend.eCommerce.dto.common.ApiResponse;
 import com.wanted_preonboarding_challenge_backend.eCommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package com.wanted_preonboarding_challenge_backend.eCommerce.dto.product.response;
 
-import com.wanted_preonboarding_challenge_backend.eCommerce.common.PaginationDto;
+import com.wanted_preonboarding_challenge_backend.eCommerce.dto.common.PaginationDto;
 import com.wanted_preonboarding_challenge_backend.eCommerce.dto.ProductSummaryDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
