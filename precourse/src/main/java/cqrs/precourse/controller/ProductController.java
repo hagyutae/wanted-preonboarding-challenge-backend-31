@@ -24,12 +24,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getProducts() {
+    public void getProducts() {
 
     }
 
     @GetMapping("/{id}")
-    public Product getProduct() {}
+    public void getProduct() {}
 
     @PutMapping("/{id}")
     public void updateProduct() {}
