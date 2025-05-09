@@ -1,17 +1,18 @@
-package wanted.shop.common.domain;
+package wanted.shop.review.domain.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Embeddable
-public class DbDate {
+public class ReviewTimestamps {
 
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    private LocalDateTime deletedAt;
 
 }

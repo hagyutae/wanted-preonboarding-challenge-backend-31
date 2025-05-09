@@ -7,11 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wanted.shop.common.api.PaginatedData;
 import wanted.shop.common.api.Pagination;
-import wanted.shop.review.domain.ProductId;
-import wanted.shop.review.domain.Review;
-import wanted.shop.review.dto.ReviewPageRequest;
-import wanted.shop.review.dto.ReviewSpecification;
+import wanted.shop.product.domain.ProductId;
+import wanted.shop.review.domain.entity.Review;
+import wanted.shop.review.domain.query.ReviewPageRequest;
+import wanted.shop.review.domain.query.ReviewSpecification;
+import wanted.shop.review.dto.ReviewDto;
+import wanted.shop.review.dto.ReviewListResponse;
+import wanted.shop.review.dto.ReviewSummaryDto;
 import wanted.shop.review.respository.ReviewRepository;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +25,7 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     @Transactional(readOnly = true)
-    public PaginatedData<Review> getReviewsByProductId(ProductId productId, ReviewPageRequest request) {
+    public ReviewListResponse getReviewsByProductId(ProductId productId, ReviewPageRequest request) {
 
         Specification<Review> spec = request.getRating()
                 .map(rating -> ReviewSpecification.withFilters(productId, rating))
@@ -30,6 +35,11 @@ public class ReviewService {
 
         Pagination pagination = Pagination.from(result);
 
-        return new PaginatedData<>(result.getContent(), pagination);
+        List<ReviewDto> reviewDtoList = result.getContent().stream()
+                .map(Review::toReviewDto)
+                .toList();
+        ReviewSummaryDto reviewSummaryDto = ReviewSummaryDto.from(result.getContent());
+
+        return new ReviewListResponse(reviewDtoList, reviewSummaryDto, pagination);
     }
 }

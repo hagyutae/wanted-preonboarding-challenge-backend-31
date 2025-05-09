@@ -5,9 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
-import wanted.shop.review.domain.Review;
-
-import java.util.List;
+import wanted.shop.review.domain.entity.Review;
 
 @Repository
 @AllArgsConstructor

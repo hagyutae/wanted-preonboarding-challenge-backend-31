@@ -1,18 +1,15 @@
 package wanted.shop.test;
 
 import jakarta.validation.Valid;
-import lombok.Getter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wanted.shop.common.annotation.ValidationFailureMessage;
-import wanted.shop.common.api.ErrorCode;
 import wanted.shop.common.api.PaginatedData;
 import wanted.shop.common.api.Pagination;
 import wanted.shop.common.api.SuccessResponse;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

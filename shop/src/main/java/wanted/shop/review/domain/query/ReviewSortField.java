@@ -1,4 +1,4 @@
-package wanted.shop.review.dto;
+package wanted.shop.review.domain.query;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,16 +9,17 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum ReviewSortField {
 
-    CREATED_AT("date.createdAt"),
-    UPDATED_AT("date.updatedAt"),
-    RATING("data.rating"),
-    TITLE("data.title"),
-    CONTENT("data.content"),
+    CREATED_AT("timestamps.createdAt"),
+    UPDATED_AT("timestamps.updatedAt"),
+    DELETED_AT("timestamps.deletedAt"),
+    RATING("reviewData.rating"),
+    TITLE("reviewData.title"),
+    CONTENT("reviewData.content"),
     HELPFUL_VOTES("helpfulVotes"),
     VERIFIED_PURCHASE("verifiedPurchase"),
 
     PRODUCT_ID("productId.id"),
-    USER_ID("userId.id"),
+    USER_ID("user.id"),
     REVIEW_ID("reviewId.id");
 
     private final String path;

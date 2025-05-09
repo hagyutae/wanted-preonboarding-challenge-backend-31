@@ -1,7 +1,9 @@
-package wanted.shop.review.domain;
+package wanted.shop.review.domain.entity;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
+@Getter
 @Embeddable
 public class ReviewData {
     private int rating;

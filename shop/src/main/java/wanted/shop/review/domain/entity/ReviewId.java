@@ -1,6 +1,5 @@
-package wanted.shop.review.domain;
+package wanted.shop.review.domain.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserId {
-    @Column(name = "user_id")
-    private long id;
+public class ReviewId {
+    long id;
 }
