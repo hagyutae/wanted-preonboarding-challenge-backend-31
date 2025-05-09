@@ -1,15 +1,12 @@
-package com.preonboarding.challenge.service.dto;
+package com.preonboarding.challenge.service.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,70 +55,6 @@ public class ProductDto {
         private boolean inStock;
         private String status;
         private LocalDateTime createdAt;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class ListRequest {
-        private String status;
-        private BigDecimal minPrice;
-        private BigDecimal maxPrice;
-        private List<Long> category;
-        private Long seller;
-        private Long brand;
-        private Boolean inStock;
-        private List<Long> tag;
-        private String search;
-
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        private LocalDate createdFrom;
-
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-        private LocalDate createdTo;
-
-        private PaginationDto.PaginationRequest pagination;
-    }
-
-    @Data
-    @Builder
-    public static class CreateRequest {
-        private String name;
-        private String slug;
-        private String shortDescription;
-        private String fullDescription;
-        private Long sellerId;
-        private Long brandId;
-        private String status; // ACTIVE, OUT_OF_STOCK, DELETED
-
-        private Detail detail;
-        private Price price;
-        @Builder.Default
-        private List<ProductCategory> categories = new ArrayList<>();
-        @Builder.Default
-        private List<OptionGroup> optionGroups = new ArrayList<>();
-        @Builder.Default
-        private List<Image> images = new ArrayList<>();
-        @Builder.Default
-        private List<Long> tagIds = new ArrayList<>();
-    }
-
-    @Data
-    @Builder
-    public static class UpdateRequest {
-        private String name;
-        private String slug;
-        private String shortDescription;
-        private String fullDescription;
-        private Long sellerId;
-        private Long brandId;
-        private String status;
-
-        private Detail detail;
-        private Price price;
-        private List<ProductCategory> categories;
-        private List<Long> tagIds;
     }
 
     @Data

@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.preonboarding.challenge.entity.*;
-import com.preonboarding.challenge.service.dto.ProductDto;
+import com.preonboarding.challenge.service.product.ProductDto;
+import com.preonboarding.challenge.service.product.command.ProductCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +19,13 @@ public class ProductMapper {
 
     private final ObjectMapper om;
 
-    public Product toProductEntity(ProductDto.CreateRequest request) {
+    public Product toProductEntity(ProductCommand.CreateProduct command) {
         return Product.builder()
-                .name(request.getName())
-                .slug(request.getSlug())
-                .shortDescription(request.getShortDescription())
-                .fullDescription(request.getFullDescription())
-                .status(ProductStatus.valueOf(request.getStatus()))
+                .name(command.getName())
+                .slug(command.getSlug())
+                .shortDescription(command.getShortDescription())
+                .fullDescription(command.getFullDescription())
+                .status(ProductStatus.valueOf(command.getStatus()))
                 .build();
     }
 
@@ -81,21 +82,21 @@ public class ProductMapper {
                 .build();
     }
 
-    public Product updateProductEntity(ProductDto.UpdateRequest request, Product product) {
-        if (request.getName() != null) {
-            product.setName(request.getName());
+    public Product updateProductEntity(ProductCommand.UpdateProduct command, Product product) {
+        if (command.getName() != null) {
+            product.setName(command.getName());
         }
-        if (request.getSlug() != null) {
-            product.setSlug(request.getSlug());
+        if (command.getSlug() != null) {
+            product.setSlug(command.getSlug());
         }
-        if (request.getShortDescription() != null) {
-            product.setShortDescription(request.getShortDescription());
+        if (command.getShortDescription() != null) {
+            product.setShortDescription(command.getShortDescription());
         }
-        if (request.getFullDescription() != null) {
-            product.setFullDescription(request.getFullDescription());
+        if (command.getFullDescription() != null) {
+            product.setFullDescription(command.getFullDescription());
         }
-        if (request.getStatus() != null) {
-            product.setStatus(ProductStatus.valueOf(request.getStatus()));
+        if (command.getStatus() != null) {
+            product.setStatus(ProductStatus.valueOf(command.getStatus()));
         }
         return product;
     }
@@ -175,6 +176,9 @@ public class ProductMapper {
     }
 
     public ProductDto.Brand toBrandDto(Brand brand) {
+        if (brand == null) {
+            return null;
+        }
         return ProductDto.Brand.builder()
                 .id(brand.getId())
                 .name(brand.getName())
@@ -182,6 +186,9 @@ public class ProductMapper {
     }
 
     public ProductDto.Seller toSellerDto(Seller seller) {
+        if (seller == null) {
+            return null;
+        }
         return ProductDto.Seller.builder()
                 .id(seller.getId())
                 .name(seller.getName())
@@ -189,6 +196,9 @@ public class ProductMapper {
     }
 
     public ProductDto.Detail toDetailDto(ProductDetail detail) {
+        if (detail == null) {
+            return null;
+        }
         return ProductDto.Detail.builder()
                 .weight(detail.getWeight())
                 .dimensions(convertJsonStringToMap(detail.getDimensions()))
@@ -230,6 +240,9 @@ public class ProductMapper {
     }
 
     public ProductDto.Price toPriceDto(ProductPrice price) {
+        if (price == null) {
+            return null;
+        }
         return ProductDto.Price.builder()
                 .basePrice(price.getBasePrice())
                 .salePrice(price.getSalePrice())

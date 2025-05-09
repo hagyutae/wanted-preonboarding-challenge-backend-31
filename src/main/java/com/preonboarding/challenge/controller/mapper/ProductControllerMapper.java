@@ -2,14 +2,16 @@ package com.preonboarding.challenge.controller.mapper;
 
 import com.preonboarding.challenge.controller.dto.*;
 import com.preonboarding.challenge.service.dto.PaginationDto;
-import com.preonboarding.challenge.service.dto.ProductDto;
+import com.preonboarding.challenge.service.product.ProductDto;
+import com.preonboarding.challenge.service.product.command.ProductCommand;
+import com.preonboarding.challenge.service.product.query.ProductQuery;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductControllerMapper {
     // Controller DTO → Service DTO 매핑
-    public ProductDto.CreateRequest toProductDtoCreateRequest(ProductCreateRequest request) {
-        return ProductDto.CreateRequest.builder()
+    public ProductCommand.CreateProduct toCreateProductCommand(ProductCreateRequest request) {
+        return ProductCommand.CreateProduct.builder()
                 .name(request.getName())
                 .slug(request.getSlug())
                 .shortDescription(request.getShortDescription())
@@ -26,8 +28,9 @@ public class ProductControllerMapper {
                 .build();
     }
 
-    public ProductDto.UpdateRequest toServiceUpdateDto(ProductUpdateRequest request) {
-        return ProductDto.UpdateRequest.builder()
+    public ProductCommand.UpdateProduct toUpdateProductCommand(Long productId, ProductUpdateRequest request) {
+        return ProductCommand.UpdateProduct.builder()
+                .productId(productId)
                 .name(request.getName())
                 .slug(request.getSlug())
                 .shortDescription(request.getShortDescription())
@@ -129,8 +132,8 @@ public class ProductControllerMapper {
                 .build();
     }
 
-    public ProductDto.ListRequest toProductDtoListRequest(ProductListRequest request) {
-        return ProductDto.ListRequest.builder()
+    public ProductQuery.ListProducts toProductDtoListRequest(ProductListRequest request) {
+        return ProductQuery.ListProducts.builder()
                 .status(request.getStatus())
                 .minPrice(request.getMinPrice())
                 .maxPrice(request.getMaxPrice())

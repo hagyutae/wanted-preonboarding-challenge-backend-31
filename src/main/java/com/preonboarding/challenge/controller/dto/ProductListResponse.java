@@ -1,7 +1,7 @@
 package com.preonboarding.challenge.controller.dto;
 
 import com.preonboarding.challenge.service.dto.PaginationDto;
-import com.preonboarding.challenge.service.dto.ProductDto;
+import com.preonboarding.challenge.service.product.ProductDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
