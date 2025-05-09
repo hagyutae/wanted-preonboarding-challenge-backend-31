@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: mono
+  messages:
+    encoding: UTF-8
+  datasource:
+    url: jdbc:postgresql://localhost:5432/wanted
+    username: postgres
+    password: 1106
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+#    org.hibernate.orm.jdbc.bind : TRACE
