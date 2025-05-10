@@ -1,10 +1,10 @@
 package com.wanted.ecommerce.product.service.impl;
 
+import com.wanted.ecommerce.common.dto.response.ProductItemResponse.ProductImageResponse;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductImage;
 import com.wanted.ecommerce.product.domain.ProductOption;
 import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest.ProductImageRequest;
-import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse.ProductImageCreateResponse;
 import com.wanted.ecommerce.product.repository.ProductImageRepository;
 import com.wanted.ecommerce.product.service.ProductImageService;

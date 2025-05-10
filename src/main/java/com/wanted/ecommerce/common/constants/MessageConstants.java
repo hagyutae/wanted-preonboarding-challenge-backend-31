@@ -15,6 +15,8 @@ public enum MessageConstants {
     UPDATED_OPTION("상품 옵션이 성공적으로 수정되었습니다."),
     DELETED_OPTION("상품 옵션이 성공적으로 삭제되었습니다."),
     CREATED_IMAGE("상품 이미지가 성공적으로 추가되었습니다."),
-    FUNDED_CATEGORIES("카테고리 목록을 성공적으로 조회했습니다.");
+    FUNDED_CATEGORIES("카테고리 목록을 성공적으로 조회했습니다."),
+    FUNDED_CATEGORY_PRODUCTS("카테고리 상품 목록을 성공적으로 조회했습니다.");
+
     private final String message;
 }

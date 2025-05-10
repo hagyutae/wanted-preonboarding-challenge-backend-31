@@ -3,6 +3,7 @@ package com.wanted.ecommerce.product.dto.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.wanted.ecommerce.brand.dto.response.BrandDetailResponse;
 import com.wanted.ecommerce.category.dto.response.CategoryResponse;
+import com.wanted.ecommerce.common.dto.response.ProductItemResponse.ProductImageResponse;
 import com.wanted.ecommerce.product.domain.Dimensions;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductDetail;

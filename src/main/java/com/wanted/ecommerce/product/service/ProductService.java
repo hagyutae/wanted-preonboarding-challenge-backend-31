@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 
 public interface ProductService {
 
-    ProductRegisterResponse registProduct(ProductRegisterRequest request);
+    ProductRegisterResponse registerProduct(ProductRegisterRequest request);
 
     Page<ProductListResponse> readAll(ProductSearchRequest request);
 

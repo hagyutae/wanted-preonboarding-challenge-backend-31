@@ -1,5 +1,6 @@
 package com.wanted.ecommerce.category.dto.response;
 
+import com.wanted.ecommerce.category.dto.response.CategoryResponse.ParentCategoryResponse;
 import lombok.Builder;
 
 @Builder

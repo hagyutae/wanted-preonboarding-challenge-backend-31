@@ -2,7 +2,6 @@ package com.wanted.ecommerce.product.service.impl;
 
 import com.wanted.ecommerce.category.domain.Category;
 import com.wanted.ecommerce.category.dto.response.CategoryResponse;
-import com.wanted.ecommerce.category.dto.response.ParentCategoryResponse;
 import com.wanted.ecommerce.category.service.CategoryService;
 import com.wanted.ecommerce.product.domain.Product;
 import com.wanted.ecommerce.product.domain.ProductCategory;
@@ -47,13 +46,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         return productCategories.stream().map(productCategory ->
         {
             Category category = productCategory.getCategory();
-            Category parent = category.getParent();
-            if (parent == null) {
-                return CategoryResponse.of(category, productCategory, null);
-            }
-            ParentCategoryResponse parentResponse = ParentCategoryResponse.of(parent.getId(),
-                parent.getName(), parent.getSlug());
-            return CategoryResponse.of(category, productCategory, parentResponse);
+            return CategoryResponse.of(category, productCategory);
         }).toList();
     }
 

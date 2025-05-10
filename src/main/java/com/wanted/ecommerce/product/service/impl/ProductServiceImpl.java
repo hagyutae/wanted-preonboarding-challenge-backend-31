@@ -2,9 +2,11 @@ package com.wanted.ecommerce.product.service.impl;
 
 import com.wanted.ecommerce.brand.domain.Brand;
 import com.wanted.ecommerce.brand.dto.response.BrandDetailResponse;
-import com.wanted.ecommerce.brand.dto.response.BrandResponse;
 import com.wanted.ecommerce.brand.service.BrandService;
 import com.wanted.ecommerce.category.dto.response.CategoryResponse;
+import com.wanted.ecommerce.common.dto.response.ProductItemResponse.BrandResponse;
+import com.wanted.ecommerce.common.dto.response.ProductItemResponse.ProductImageResponse;
+import com.wanted.ecommerce.common.dto.response.ProductItemResponse.SellerResponse;
 import com.wanted.ecommerce.common.exception.ErrorType;
 import com.wanted.ecommerce.common.exception.ResourceNotFoundException;
 import com.wanted.ecommerce.product.domain.Product;
@@ -14,7 +16,6 @@ import com.wanted.ecommerce.product.domain.ProductStatus;
 import com.wanted.ecommerce.product.domain.ProductTag;
 import com.wanted.ecommerce.product.dto.request.ProductRegisterRequest;
 import com.wanted.ecommerce.product.dto.request.ProductSearchRequest;
-import com.wanted.ecommerce.product.dto.response.ProductImageResponse;
 import com.wanted.ecommerce.product.dto.response.ProductListResponse;
 import com.wanted.ecommerce.product.dto.response.ProductRegisterResponse;
 import com.wanted.ecommerce.product.dto.response.ProductResponse;
@@ -37,7 +38,6 @@ import com.wanted.ecommerce.review.dto.response.RatingResponse;
 import com.wanted.ecommerce.review.service.ReviewService;
 import com.wanted.ecommerce.seller.domain.Seller;
 import com.wanted.ecommerce.seller.dto.response.SellerDetailResponse;
-import com.wanted.ecommerce.seller.dto.response.SellerResponse;
 import com.wanted.ecommerce.seller.service.SellerService;
 import com.wanted.ecommerce.tag.domain.Tag;
 import com.wanted.ecommerce.tag.dto.response.TagResponse;
@@ -69,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductRegisterResponse registProduct(ProductRegisterRequest request) {
+    public ProductRegisterResponse registerProduct(ProductRegisterRequest request) {
         Seller seller = sellerService.getSellerById(request.getSellerId());
         Brand brand = brandService.getBrandById(request.getBrandId());
 

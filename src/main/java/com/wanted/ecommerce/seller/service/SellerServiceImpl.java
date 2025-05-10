@@ -1,10 +1,10 @@
 package com.wanted.ecommerce.seller.service;
 
+import com.wanted.ecommerce.common.dto.response.ProductItemResponse.SellerResponse;
 import com.wanted.ecommerce.common.exception.ErrorType;
 import com.wanted.ecommerce.common.exception.ResourceNotFoundException;
 import com.wanted.ecommerce.seller.domain.Seller;
 import com.wanted.ecommerce.seller.dto.response.SellerDetailResponse;
-import com.wanted.ecommerce.seller.dto.response.SellerResponse;
 import com.wanted.ecommerce.seller.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public SellerResponse createSellerResponse(Seller seller) {
-        return SellerResponse.of(seller.getId(), seller.getName());
+        return SellerResponse.of(seller);
     }
 
     @Override

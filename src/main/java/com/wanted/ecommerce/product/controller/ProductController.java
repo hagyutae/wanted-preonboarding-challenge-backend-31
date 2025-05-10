@@ -37,7 +37,7 @@ public class ProductController {
         @Valid @RequestBody ProductRegisterRequest productRegisterRequest
     ) {
         ApiResponse<ProductRegisterResponse> response = ApiResponse.success(
-            productService.registProduct(productRegisterRequest),
+            productService.registerProduct(productRegisterRequest),
             MessageConstants.CREATED_PRODUCTS.getMessage());
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(response);
